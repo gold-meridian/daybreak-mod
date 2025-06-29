@@ -12,10 +12,6 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <UseFeature_DynamicModCalls>enable</UseFeature_DynamicModCalls>
-    </PropertyGroup>
-
     <ItemGroup>
         <Publicize Include="FNA" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
         <Publicize Include="ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>

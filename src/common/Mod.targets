@@ -15,10 +15,6 @@
         <NoWarn>$(NoWarn);MSB3277</NoWarn>
     </PropertyGroup>
 
-    <ItemGroup Condition="$(UseFeature_DynamicModCalls) == 'enable'">
-        <Compile Include="$(MSBuildThisFileDirectory)../libs/include/DynamicModCalls.cs" Link="_include/DynamicModCalls.cs"/>
-    </ItemGroup>
-
     <ItemGroup>
         <!-- Helpful to automaticlly important any libraryes placed in `lib/`
              (still necessary to explicitly add them to `dllReferences`!). -->
