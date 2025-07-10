@@ -1,0 +1,9 @@
+<Project>
+
+    <Import Project="$([MSBuild]::GetPathOfFileAbove($(MSBuildThisFile), '$(MSBuildThisFileDirectory)../'))" Condition="$([MSBuild]::GetPathOfFileAbove($(MSBuildThisFile), '$(MSBuildThisFileDirectory)../')) != ''" />
+
+    <PropertyGroup>
+        <BrokenWingsRoot Condition="'$(BrokenWingsRoot)' == ''">$(MSBuildThisFileDirectory)broken-wings\</BrokenWingsRoot>
+    </PropertyGroup>
+
+</Project>

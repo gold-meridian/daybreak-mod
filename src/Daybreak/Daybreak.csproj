@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\..\broken-wings\src\Mod.targets"/>
+    <Import Project="$(BrokenWingsRoot)src\Mod.targets"/>
 
     <PropertyGroup>
         <AssemblyName>Daybreak</AssemblyName>
