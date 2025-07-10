@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common/Mod.targets"/>
+    <Import Project="..\..\broken-wings\src\Mod.targets"/>
 
     <PropertyGroup>
         <AssemblyName>Daybreak</AssemblyName>
@@ -19,10 +19,6 @@
     <ItemGroup>
         <Publicize Include="FNA" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
         <Publicize Include="ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Common\Features\Tiles\_AlchHerbs\" />
     </ItemGroup>
 
 </Project>
