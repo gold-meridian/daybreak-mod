@@ -1,5 +1,0 @@
-displayName = Not Quite Nitrate (Performance and Bug Fixes)
-author = Tomat
-version = 1.0.8
-homepage = https://discord.gg/vPTUZcvXjg
-side = NoSync

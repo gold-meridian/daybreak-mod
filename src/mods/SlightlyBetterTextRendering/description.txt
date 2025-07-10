@@ -1,6 +1,0 @@
-Decreases the contrast of the stroke ("shadow") around most text by using a darkened version of the inner text color rather than plain black.
-
-Includes config options to give all white text black stroke anyway and an option to configure the darkening factor if you want more or less contrast than the default.
-
-Join the homepage for support: https://discord.gg/UTXC8fM3NK
-Send me money to support me: https://ko-fi.com/steviegt6

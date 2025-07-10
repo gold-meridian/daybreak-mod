@@ -1,5 +1,0 @@
-displayName = Revised Configuration
-author = Tomat
-version = 1.0.0
-homepage = https://discord.gg/UTXC8fM3NK
-side = NoSync

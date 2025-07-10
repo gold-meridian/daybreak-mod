@@ -1,6 +1,0 @@
-displayName = Full Project Decompiler
-author = Tomat
-version = 1.0.0
-homepage = https://discord.gg/UTXC8fM3NK
-side = Client
-dllReferences = ICSharpCode.Decompiler, ICSharpCode.ILSpyX, K4os.Compression.LZ4, Mono.Cecil, Mono.Cecil.Mdb, Mono.Cecil.Pdb, Mono.Cecil.Rocks, Reaganism.CDC, Reaganism.FBI, System.Collections.Immutable, System.Composition.AttributedModel, System.Reflection.Metadata, SixLabors.ImageSharp

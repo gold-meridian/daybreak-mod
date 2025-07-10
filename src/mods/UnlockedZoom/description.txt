@@ -1,3 +1,0 @@
-Use with Better Zoom for best results.
-
-Unlocks zoom limits for wider resolutions and allows tiles to render past their regular limits.

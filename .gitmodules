@@ -1,6 +1,0 @@
-[submodule "src/cdc"]
-	path = src/cdc
-	url = https://github.com/reaganism/cdc.git
-[submodule "src/shader-reader"]
-	path = src/shader-reader
-	url = https://github.com/steviegt6/shader-reader

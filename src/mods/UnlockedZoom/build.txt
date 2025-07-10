@@ -1,5 +1,0 @@
-displayName = Tomat's Unlocked Zoom
-author = Tomat
-version = 0.1.0
-homepage = https://discord.gg/UTXC8fM3NK
-side = Client

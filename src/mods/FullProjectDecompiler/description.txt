@@ -1,1 +1,0 @@
-Makes it easy to decompile a mod into a workable MSBuild C# project, written to a subdirectory in ModSources and directly re-compilable from source.
