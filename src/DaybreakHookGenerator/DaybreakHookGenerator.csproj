@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\Mod.targets"/>
+    <Import Project="$(BrokenWingsRoot)src\Mod.targets"/>
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
