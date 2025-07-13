@@ -435,6 +435,7 @@ public sealed class LiquidRendering : ModSystem
                     if (!onTop && (onLeft || onRight))
                     {
                         liquidFrame.Height = (int)(liquidAmount / 255f * 16f);
+                        // ReSharper disable once PossibleLossOfFraction
                         liquidPos.Y += 16 - liquidAmount / 16;
                     }
                     else
@@ -481,26 +482,14 @@ public sealed class LiquidRendering : ModSystem
                     }
                 }
 
-                var realStyle = waterStyle;
-                switch (liquidType)
+                var realStyle = liquidType switch
                 {
-                    default:
-                    case LiquidID.Water:
-                        realStyle = waterStyle;
-                        break;
-
-                    case LiquidID.Lava:
-                        realStyle = WaterStyleID.Lava;
-                        break;
-
-                    case LiquidID.Honey:
-                        realStyle = WaterStyleID.Honey;
-                        break;
-
-                    case LiquidID.Shimmer:
-                        realStyle = 14;
-                        break;
-                }
+                    LiquidID.Water => waterStyle,
+                    LiquidID.Lava => WaterStyleID.Lava,
+                    LiquidID.Honey => WaterStyleID.Honey,
+                    LiquidID.Shimmer => 14,
+                    _ => throw new NotImplementedException(),
+                };
 
                 DrawLiquidTile(i, j, liquidType, realStyle, liquidPos - Main.screenPosition + new Vector2(Main.drawToScreen ? 0 : Main.offScreenRange), liquidFrame, alpha, bg);
             }
@@ -555,7 +544,7 @@ public sealed class LiquidRendering : ModSystem
         {
             self.DrawWaters();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             //
         }
