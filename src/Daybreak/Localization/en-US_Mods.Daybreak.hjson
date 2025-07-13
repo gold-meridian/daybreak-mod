@@ -32,4 +32,18 @@ Configs: {
 		AlwaysEnable.Label: Always Enable
 		AlwaysDisable.Label: Always Disable
 	}
+
+	LiquidConfig: {
+		DisplayName: Liquid Settings
+
+		FixLiquidSlopes: {
+			Label: Fix Liquid Slopes
+			Tooltip:
+				'''
+				Whether to fix rendering of liquid slopes to make them more seamless with the rest of the liquid.
+				This is a purely visual change which looks good when it works, but may break if mods make their own complicated edits to liquid rendering.
+				If you notice issues, disable this option and report it to us.
+				'''
+		}
+	}
 }

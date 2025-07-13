@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 
 using Daybreak.Common.Features.Tiles;
+using Daybreak.Content.Config;
 using Daybreak.Core;
 
 using Microsoft.Xna.Framework;
@@ -54,7 +55,7 @@ public sealed class LiquidRendering : ModSystem
     ///     the fix even if <see cref="SlopeFixEnabled"/> is
     ///     <see langword="true"/>.
     /// </summary>
-    public static bool ShouldFixSlopes => SlopeFixEnabled && !Main.drawToScreen;
+    public static bool ShouldFixSlopes => SlopeFixEnabled && !Main.drawToScreen && ModContent.GetInstance<LiquidConfig>().FixLiquidSlopes;
 
     /// <inheritdoc />
     public override void Load()
