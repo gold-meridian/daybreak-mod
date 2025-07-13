@@ -41,7 +41,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
             base.DrawSelf(spriteBatch);
         }
 
-        private static string GetPulsatingText(string text, float time)
+        public static string GetPulsatingText(string text, float time)
         {
             var lightPurple = color_1;
             var darkPurple = color_2;
