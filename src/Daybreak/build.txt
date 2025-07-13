@@ -2,4 +2,4 @@ displayName = DAYBREAK
 author = Tomat, dreitone
 version = 1.4.0
 homepage = https://discord.gg/6Fm4ZTHVub
-side = Both
+side = NoSync
