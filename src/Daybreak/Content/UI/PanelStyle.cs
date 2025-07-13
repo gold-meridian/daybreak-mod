@@ -164,12 +164,12 @@ internal sealed class PanelStyle : ModPanelStyleExt
         };
     }
 
-    public override bool PreSetHoverColors(UIModItem element, bool hovered)
+    /*public override bool PreSetHoverColors(UIModItem element, bool hovered)
     {
-        // element.BorderColor = new Color(25, 5, 5);
+        element.BorderColor = new Color(25, 5, 5);
 
         return false;
-    }
+    }*/
 
     public override bool PreDrawPanel(UIModItem element, SpriteBatch sb, ref bool drawDivider)
     {
