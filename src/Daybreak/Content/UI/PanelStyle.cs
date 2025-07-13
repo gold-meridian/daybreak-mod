@@ -1,28 +1,25 @@
 using System;
+using System.Diagnostics;
+using System.Text;
 
 using Daybreak.Common.Features.ModPanel;
 using Daybreak.Common.Rendering;
 using Daybreak.Core;
 
-using System.Diagnostics;
-using System.Text;
-
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using Terraria;
-using Terraria.ModLoader.UI;
-
-using Microsoft.Xna.Framework;
-
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader.UI;
 using Terraria.UI.Chat;
 
-namespace Daybreak.Content.VisualTweaks.UI;
+namespace Daybreak.Content.UI;
 
-internal sealed class DaybreakPanelStyle : ModPanelStyleExt
+internal sealed class PanelStyle : ModPanelStyleExt
 {
-    private sealed class ModName : UIText
+    public sealed class ModName : UIText
     {
         private readonly string originalText;
 
