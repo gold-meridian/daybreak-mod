@@ -2,10 +2,8 @@ DAYBREAK is a library mod, it's most relevant to other mod developers.
 
 This library is being developed for use in the currently-unreleased mod NIGHTSHADE (feel free to join the Discord in the homepage for more information) as well as a future release of Wrath of the Gods.
 
-It has convenient things like some utilities for IL editing, transient asset replacement, and a whole API for transforming your mod's panel in the Mods List (animated mod icons, shaders applied to panels, etc.).
+It has convenient things like some utilities for IL editing, transient asset replacement, a whole API for transforming your mod's panel in the Mods List (animated mod icons, shaders applied to panels, etc.), and a lot more.
 
 For more information:
-- https://github.com/steviegt6/terraria-mods/tree/master/src/libs/Daybreak
+- https://github.com/gold-meridian/daybreak-mod
 - https://discord.gg/6Fm4ZTHVub
-
-DAYBREAK's animated panel shaders are by dreitone.
