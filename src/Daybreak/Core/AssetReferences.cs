@@ -18,6 +18,39 @@ internal static class AssetReferences
     {
         public static class Shaders
         {
+            public static class ImageMask
+            {
+                public sealed class Parameters : IShaderParameters
+                {
+                    public Microsoft.Xna.Framework.Graphics.Texture2D? uImage0 { get; set; }
+
+                    public Microsoft.Xna.Framework.Graphics.Texture2D? uMaskTexture { get; set; }
+
+                    public Microsoft.Xna.Framework.Graphics.Texture2D? maskTexture { get; set; }
+
+                    public bool invert { get; set; }
+
+                    public void Apply(Microsoft.Xna.Framework.Graphics.EffectParameterCollection parameters)
+                    {
+                        parameters["uImage0"]?.SetValue(uImage0);
+                        parameters["uMaskTexture"]?.SetValue(uMaskTexture);
+                        parameters["maskTexture"]?.SetValue(maskTexture);
+                        parameters["invert"]?.SetValue(invert);
+                    }
+                }
+
+                public const string KEY = "Daybreak/Assets/Shaders/ImageMask";
+
+                public static ReLogic.Content.Asset<Microsoft.Xna.Framework.Graphics.Effect> Asset => lazy.Value;
+
+                private static readonly System.Lazy<ReLogic.Content.Asset<Microsoft.Xna.Framework.Graphics.Effect>> lazy = new(() => Terraria.ModLoader.ModContent.Request<Microsoft.Xna.Framework.Graphics.Effect>(KEY));
+
+                public static WrapperShaderData<Parameters> CreateMaskShader()
+                {
+                    return new WrapperShaderData<Parameters>(Asset, "MaskShader");
+                }
+            }
+
             public static class UI
             {
                 public static class ModPanelShader
