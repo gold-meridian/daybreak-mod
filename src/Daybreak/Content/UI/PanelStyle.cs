@@ -136,14 +136,14 @@ internal sealed class PanelStyle : ModPanelStyleExt
         );
     }
 
-    public override bool PreInitialize(UIModItem element)
+    /*public override bool PreInitialize(UIModItem element)
     {
         element.BorderColor = new Color(25, 5, 5);
 
         return base.PreInitialize(element);
-    }
+    }*/
 
-    public override UIImage ModifyModIcon(UIModItem element, UIImage modIcon, ref int modIconAdjust)
+    /*public override UIImage ModifyModIcon(UIModItem element, UIImage modIcon, ref int modIconAdjust)
     {
         return new ModIcon
         {
@@ -152,7 +152,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
             Width = modIcon.Width,
             Height = modIcon.Height,
         };
-    }
+    }*/
 
     public override UIText ModifyModName(UIModItem element, UIText modName)
     {
@@ -164,17 +164,19 @@ internal sealed class PanelStyle : ModPanelStyleExt
         };
     }
 
-    public override bool PreSetHoverColors(UIModItem element, bool hovered)
+    /*public override bool PreSetHoverColors(UIModItem element, bool hovered)
     {
         element.BorderColor = new Color(25, 5, 5);
 
         return false;
-    }
+    }*/
 
     public override bool PreDrawPanel(UIModItem element, SpriteBatch sb, ref bool drawDivider)
     {
+        return true;
+
         drawDivider = false;
-        
+
         if (element._needsTextureLoading)
         {
             element._needsTextureLoading = false;
