@@ -16,10 +16,7 @@ internal sealed class AchievementConfig : ModConfig
         AlwaysDisable,
     }
 
-    // Need to sync across the server because achievements need to be synced in
-    // case a mod uses the server to trigger an achievement completion on the
-    // client.
-    public override ConfigScope Mode => ConfigScope.ServerSide;
+    public override ConfigScope Mode => ConfigScope.ClientSide;
 
     public bool AreAchievementsPresent => AchievementImpl.ACHIEVEMENTS.Count > VanillaAchievements.VANILLA_ACHIEVEMENTS_BY_NAME.Keys.Count;
 
