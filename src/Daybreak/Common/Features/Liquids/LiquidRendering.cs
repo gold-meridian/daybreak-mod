@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 
 using Daybreak.Common.Features.Tiles;
 using Daybreak.Core;
@@ -69,6 +70,11 @@ public sealed class LiquidRendering : ModSystem
         On_TileDrawing.DrawTile_LiquidBehindTile += DrawTile_LiquidBehindTile_StopDrawingLiquidsBehindTiles;
         On_Main.DrawLiquid += DrawLiquid_DrawLiquid;
         On_Main.RenderWater += RenderWater_RenderWater;
+
+        if (ModLoader.TryGetMod("SpiritReforged", out var spiritMod))
+        {
+            SpiritCompat(spiritMod);
+        }
     }
 
     /// <inheritdoc />
@@ -497,7 +503,9 @@ public sealed class LiquidRendering : ModSystem
 
         static void DrawLiquidTile(int i, int j, int liquidType, int waterStyle, Vector2 position, Rectangle frame, float alpha, bool bg)
         {
+            SetIsLiquid(true);
             Lighting.GetCornerColors(i, j, out var colors);
+            SetIsLiquid(false);
 
             var liquidOpacity = LiquidRenderer.DEFAULT_OPACITY[liquidType];
 
@@ -524,7 +532,15 @@ public sealed class LiquidRendering : ModSystem
                 }
             }
 
-            Main.instance.TilesRenderer.DrawPartialLiquid(bg, Main.tile[i, j], ref position, ref frame, waterStyle, ref colors);
+            try
+            {
+                disableSpiritColors = true;
+                Main.instance.TilesRenderer.DrawPartialLiquid(bg, Main.tile[i, j], ref position, ref frame, waterStyle, ref colors);
+            }
+            finally
+            {
+                disableSpiritColors = false;
+            }
         }
     }
 
@@ -650,5 +666,43 @@ public sealed class LiquidRendering : ModSystem
             var bottomOff = (int)tile.Slope <= 2 ? 14 : 0;
             Main.tileBatch.Draw(tileTexture, tilePos + new Vector2(0, bottomOff) - offset, new Rectangle(tile.TileFrameX, tile.TileFrameY + bottomOff, 16, 2), color, Vector2.Zero, 1f, 0);
         }
+    }
+
+    private static bool disableSpiritColors;
+    private static FieldInfo? isLiquidField;
+
+    private static void SpiritCompat(Mod mod)
+    {
+        if (mod.Code.GetType("SpiritReforged.Common.Visuals.WaterAlpha") is not { } waterAlphaType)
+        {
+            return;
+        }
+
+        if (waterAlphaType.GetMethod("ModifyColors", BindingFlags.NonPublic | BindingFlags.Static) is not { } modifyColors)
+        {
+            return;
+        }
+
+        MonoModHooks.Add(
+            modifyColors,
+            ModifyColors_DontModifyColorsWhenDisabled
+        );
+
+        isLiquidField = waterAlphaType.GetField("IsLiquid", BindingFlags.NonPublic | BindingFlags.Static);
+    }
+
+    private delegate void ModifyColorsOrig(int x, int y, ref VertexColors colors, bool isPartial);
+
+    private static void ModifyColors_DontModifyColorsWhenDisabled(ModifyColorsOrig orig, int x, int y, ref VertexColors colors, bool isPartial)
+    {
+        if (!disableSpiritColors)
+        {
+            orig(x, y, ref colors, isPartial);
+        }
+    }
+
+    private static void SetIsLiquid(bool value)
+    {
+        isLiquidField?.SetValue(null, value);
     }
 }
