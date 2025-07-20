@@ -604,6 +604,9 @@ internal sealed class CustomModPanelImpl
         c.EmitDelegate(static (UIModStateText self) =>
             {
                 var text = self._enabled ? Language.GetTextValue("GameUI.Enabled") : Language.GetTextValue("GameUI.Disabled");
+                if (self.Parent is null)
+                    return text;
+
                 var modName = ((UIModItem)self.Parent)._mod.Name;
                 if (!ModLoader.TryGetMod(modName, out var mod) || !TryGetPanelStyle(mod, out var style))
                 {
