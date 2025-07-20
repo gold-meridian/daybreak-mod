@@ -43,8 +43,8 @@ internal sealed class PanelStyle : ModPanelStyleExt
 
         public static string GetPulsatingText(string text, float time)
         {
-            var lightPurple = color_1;
-            var darkPurple = color_2;
+            var lightOrange = color_1 with { A = 200 };
+            var darkOrange = color_2 with { A = 200 };
 
             const float speed = 3f;
             const float offset = 0.3f;
@@ -58,7 +58,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
                 var wave = MathF.Sin(time * speed + i * offset);
 
                 // Factor normalized 0-1.
-                var color = Color.Lerp(lightPurple, darkPurple, (wave + 1f) / 2f);
+                var color = Color.Lerp(lightOrange, darkOrange, (wave + 1f) / 2f);
 
                 sb.Append($"[c/{color.Hex3()}:{text[i]}]");
             }
@@ -66,57 +66,106 @@ internal sealed class PanelStyle : ModPanelStyleExt
         }
     }
 
-    private sealed class ModIcon() : UIImage(TextureAssets.MagicPixel)
+	private sealed class ModIcon() : UIImage(TextureAssets.MagicPixel)
     {
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            spriteBatch.End(out var ss);
-            spriteBatch.Begin(
-                SpriteSortMode.Immediate,
-                BlendState.Additive,
-                SamplerState.PointClamp,
-                DepthStencilState.None,
-                ss.RasterizerState,
-                null,
-                Main.UIScaleMatrix
-            );
+            bool aprilFools = DateTime.Now.Month == 4 && DateTime.Now.Day == 1;
 
-            // const int offset = (80 - 46) / 2;
             var dims = GetDimensions().ToRectangle();
 
-            Debug.Assert(whenDayBreaksShaderData is not null);
-            whenDayBreaksShaderData.Parameters.uGrayness = 1f;
-            whenDayBreaksShaderData.Parameters.uInColor = new Vector3(1f, 0f, 1f);
-            whenDayBreaksShaderData.Parameters.uSpeed = 0.2f;
-            whenDayBreaksShaderData.Parameters.uSource = Transform(new Vector4(dims.Width, dims.Height - 2f, dims.X, dims.Y));
-            whenDayBreaksShaderData.Parameters.uPixel = 2f;
-            whenDayBreaksShaderData.Parameters.uColorResolution = 10f;
-            whenDayBreaksShaderData.Apply();
+            Texture2D texture = aprilFools ?
+                TextureAssets.Sun2.Value :
+                Assets.Images.DaybreakSun.Asset.Value;
+            Texture2D pulseTexture = Assets.Images.DaybreakSunPulse.Asset.Value;
 
-            spriteBatch.Draw(
-                TextureAssets.MagicPixel.Value,
-                dims.TopLeft(),
-                dims,
-                Color.Red,
-                0f,
-                Vector2.Zero,
-                1f,
+			float scale = 1f + hoverIntensity * 0.1f + MathF.Sin(Main.GlobalTimeWrappedHourly / 4f) * 0.1f;
+            Vector2 center = dims.Center() + new Vector2(0, MathF.Sin(Main.GlobalTimeWrappedHourly) * 2);
+            float rotation = MathF.Sin(Main.GlobalTimeWrappedHourly / 2) * 0.15f;
+
+			spriteBatch.Draw(
+				texture,
+				center,
+				texture.Frame(),
+				Color.Orange,
+				rotation,
+				texture.Size() / 2,
+				scale,
+				SpriteEffects.None,
+				0f
+			);
+
+			spriteBatch.Draw(
+				texture,
+                center,
+				texture.Frame(),
+                Color.White with { A = 200 },
+				rotation,
+				texture.Size() / 2,
+                scale,
                 SpriteEffects.None,
                 0f
             );
 
-            spriteBatch.Restart(ss);
-        }
-    }
+			float pulseTime = (Main.GlobalTimeWrappedHourly / 3f) % 1f;
+			float upScale = scale * (0.2f + pulseTime * 0.8f);
+			float colorFade = 0.8f * MathF.Sin(pulseTime * MathHelper.Pi);
+			spriteBatch.Draw(
+				pulseTexture,
+				center,
+				pulseTexture.Frame(),
+				Color.DarkOrange with { A = 0 } * colorFade,
+				rotation,
+				pulseTexture.Size() / 2,
+				upScale,
+				SpriteEffects.None,
+				0f
+			);
+
+            if (aprilFools)
+                return;
+
+			spriteBatch.End(out var ss);
+			spriteBatch.Begin(
+				SpriteSortMode.Immediate,
+				BlendState.Additive,
+				SamplerState.PointClamp,
+				DepthStencilState.None,
+				ss.RasterizerState,
+				null,
+				Main.UIScaleMatrix
+			);
+
+			Debug.Assert(whenDayBreaksShaderData is not null);
+			whenDayBreaksShaderData.Parameters.uGrayness = 1f;
+			whenDayBreaksShaderData.Parameters.uSpeed = 0.3f;
+			whenDayBreaksShaderData.Parameters.uPixel = 2f;
+			whenDayBreaksShaderData.Parameters.uColorResolution = 10f;
+            whenDayBreaksShaderData.Parameters.uSource = new Vector4(0, 0, texture.Width, texture.Height);
+            whenDayBreaksShaderData.Parameters.uInColor = new Vector3(1f, 0.1f, 0f);
+			whenDayBreaksShaderData.Apply();
+
+			spriteBatch.Draw(
+				texture,
+				center,
+				texture.Frame(),
+				Color.Orange with { A = 128 } * colorFade,
+				rotation,
+				texture.Size() / 2,
+				upScale,
+				SpriteEffects.None,
+				0f
+			);
+
+			spriteBatch.Restart(ss);
+		}
+	}
 
     private static readonly Color color_1 = new(255, 147, 0);
     private static readonly Color color_2 = new(255, 182, 55);
 
-    private static WrapperShaderData<Assets.Shaders.UI.ModPanelShader.Parameters>? panelShaderData;
-    private static WrapperShaderData<Assets.Shaders.UI.ModPanelShaderSampler.Parameters>? panelShaderDataSampler;
+    private static WrapperShaderData<Assets.Shaders.UI.ModPanelShaderNew.Parameters>? panelShaderData;
     private static WrapperShaderData<Assets.Shaders.UI.PowerfulSunIcon.Parameters>? whenDayBreaksShaderData;
-
-    private static RenderTarget2D? panelTargetToBeUpscaled;
 
     private static float hoverIntensity;
 
@@ -124,16 +173,8 @@ internal sealed class PanelStyle : ModPanelStyleExt
     {
         base.Load();
 
-        panelShaderData = Assets.Shaders.UI.ModPanelShader.CreatePanelShader();
-        panelShaderDataSampler = Assets.Shaders.UI.ModPanelShaderSampler.CreatePanelShader();
+        panelShaderData = Assets.Shaders.UI.ModPanelShaderNew.CreatePanelShader();
         whenDayBreaksShaderData = Assets.Shaders.UI.PowerfulSunIcon.CreatePanelShader();
-
-        Main.RunOnMainThread(() =>
-            {
-                Main.graphics.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-                Main.graphics.ApplyChanges();
-            }
-        );
     }
 
     /*public override bool PreInitialize(UIModItem element)
@@ -143,7 +184,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
         return base.PreInitialize(element);
     }*/
 
-    /*public override UIImage ModifyModIcon(UIModItem element, UIImage modIcon, ref int modIconAdjust)
+    public override UIImage ModifyModIcon(UIModItem element, UIImage modIcon, ref int modIconAdjust)
     {
         return new ModIcon
         {
@@ -152,7 +193,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
             Width = modIcon.Width,
             Height = modIcon.Height,
         };
-    }*/
+    }
 
     public override UIText ModifyModName(UIModItem element, UIText modName)
     {
@@ -173,10 +214,6 @@ internal sealed class PanelStyle : ModPanelStyleExt
 
     public override bool PreDrawPanel(UIModItem element, SpriteBatch sb, ref bool drawDivider)
     {
-        return true;
-
-        drawDivider = false;
-
         if (element._needsTextureLoading)
         {
             element._needsTextureLoading = false;
@@ -188,39 +225,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
             sb.End(out var ss);
 
             var dims = element.GetDimensions();
-
-            var targetWidth = (int)(dims.Width / 2f);
-            var targetHeight = (int)((dims.Height - 2f) / 2f);
-
-            if (panelTargetToBeUpscaled is null || panelTargetToBeUpscaled.Width != targetWidth || panelTargetToBeUpscaled.Height != targetHeight)
-            {
-                panelTargetToBeUpscaled?.Dispose();
-                panelTargetToBeUpscaled = new RenderTarget2D(
-                    Main.instance.GraphicsDevice,
-                    targetWidth,
-                    targetHeight,
-                    false,
-                    SurfaceFormat.Color,
-                    DepthFormat.None,
-                    0,
-                    RenderTargetUsage.PreserveContents
-                );
-            }
-
-            var oldRts = Main.instance.GraphicsDevice.GetRenderTargets();
-            var scissor = Main.instance.GraphicsDevice.ScissorRectangle;
-            foreach (var oldRt in oldRts)
-            {
-                if (oldRt.RenderTarget is RenderTarget2D rt)
-                {
-                    rt.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-                }
-            }
-
-            Main.instance.GraphicsDevice.SetRenderTarget(panelTargetToBeUpscaled);
-            Main.instance.GraphicsDevice.Clear(Color.Transparent);
-            Main.instance.GraphicsDevice.ScissorRectangle = new Rectangle(0, 0, Main.graphics.PreferredBackBufferWidth, Main.graphics.PreferredBackBufferHeight);
-
+			
             sb.Begin(
                 SpriteSortMode.Immediate,
                 BlendState.NonPremultiplied,
@@ -231,55 +236,29 @@ internal sealed class PanelStyle : ModPanelStyleExt
                 Main.UIScaleMatrix
             );
             {
-                hoverIntensity += (element.IsMouseHovering ? 1f : -1f) / 15f;
-                hoverIntensity = Math.Clamp(hoverIntensity, 0f, 1f);
-
                 Debug.Assert(panelShaderData is not null);
-                panelShaderData.Parameters.uGrayness = 1f;
-                panelShaderData.Parameters.uInColor = new Vector3(1f, 0f, 1f);
-                panelShaderData.Parameters.uSpeed = 0.2f;
-                panelShaderData.Parameters.uSource = new Vector4(targetWidth, targetHeight, 0, 0);
-                panelShaderData.Parameters.uHoverIntensity = hoverIntensity;
-                panelShaderData.Parameters.uPixel = 1f;
-                panelShaderData.Parameters.uColorResolution = 10f;
-                panelShaderData.Apply();
 
-                sb.Draw(
-                    TextureAssets.MagicPixel.Value,
-                    new Rectangle(0, 0, targetWidth, targetHeight),
-                    Color.White
-                );
-            }
-            sb.End();
+                hoverIntensity = MathHelper.Lerp(hoverIntensity, element.IsMouseHovering ? 1f : 0f, 0.2f);
+				hoverIntensity = Math.Clamp(MathF.Round(hoverIntensity, 2), 0f, 1f);
 
-            Main.instance.GraphicsDevice.SetRenderTargets(oldRts);
-            Main.instance.GraphicsDevice.ScissorRectangle = scissor;
+				panelShaderData.Parameters.uGrayness = 1f;
+				panelShaderData.Parameters.uColor = new Vector4(1.3f, 0.7f, 0f, 1f);
+				panelShaderData.Parameters.uSecondaryColor = new Vector4(0.7f, 0f, 0f, 1f);
+				panelShaderData.Parameters.uSpeed = 0.3f;
+				panelShaderData.Parameters.uSource = Transform(new Vector4(dims.Width, dims.Height, dims.X, dims.Y));
+				panelShaderData.Parameters.uHoverIntensity = hoverIntensity;
+				panelShaderData.Parameters.uPixel = 2f;
+				panelShaderData.Parameters.uColorResolution = 10f;
+				panelShaderData.Apply();
 
-            sb.Begin(
-                SpriteSortMode.Immediate,
-                BlendState.NonPremultiplied,
-                SamplerState.PointClamp,
-                DepthStencilState.None,
-                ss.RasterizerState,
-                null,
-                Main.UIScaleMatrix
-            );
-            {
-                Debug.Assert(panelShaderDataSampler is not null);
-                panelShaderDataSampler.Parameters.uSource = Transform(new Vector4(dims.Width, dims.Height, dims.X, dims.Y));
-
-                Main.instance.GraphicsDevice.Textures[1] = panelTargetToBeUpscaled;
-                Main.instance.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-
-                panelShaderDataSampler.Apply();
                 Debug.Assert(element._backgroundTexture is not null);
-                element.DrawPanel(sb, element._backgroundTexture.Value, element.BackgroundColor);
+                element.DrawPanel(sb, Assets.Images.DaybreakPanel.Asset.Value, new Color(83, 92, 170));
             }
             sb.Restart(in ss);
         }
 
-        Debug.Assert(element._borderTexture is not null);
-        element.DrawPanel(sb, element._borderTexture.Value, element.BorderColor);
+        // Debug.Assert(element._borderTexture is not null);
+        // element.DrawPanel(sb, element._borderTexture.Value, element.BorderColor);
 
         return false;
     }
