@@ -137,7 +137,6 @@ internal sealed class PanelStyle : ModPanelStyleExt
 			);
 
 			Debug.Assert(whenDayBreaksShaderData is not null);
-			whenDayBreaksShaderData.Parameters.uGrayness = 1f;
 			whenDayBreaksShaderData.Parameters.uSpeed = 0.3f;
 			whenDayBreaksShaderData.Parameters.uPixel = 2f;
 			whenDayBreaksShaderData.Parameters.uColorResolution = 10f;
@@ -149,10 +148,10 @@ internal sealed class PanelStyle : ModPanelStyleExt
 				texture,
 				center,
 				texture.Frame(),
-				Color.Orange with { A = 128 } * colorFade,
+				Color.Orange with { A = 128 },
 				rotation,
 				texture.Size() / 2,
-				upScale,
+				scale,
 				SpriteEffects.None,
 				0f
 			);
