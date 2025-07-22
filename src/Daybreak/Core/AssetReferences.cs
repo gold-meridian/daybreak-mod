@@ -126,6 +126,8 @@ internal static class AssetReferences
 
                         public float uSpeed { get; set; }
 
+                        public bool uSmallPanel { get; set; }
+
                         public void Apply(Microsoft.Xna.Framework.Graphics.EffectParameterCollection parameters)
                         {
                             parameters["uImage0"]?.SetValue(uImage0);
@@ -140,6 +142,7 @@ internal static class AssetReferences
                             parameters["uColor"]?.SetValue(uColor);
                             parameters["uSecondaryColor"]?.SetValue(uSecondaryColor);
                             parameters["uSpeed"]?.SetValue(uSpeed);
+                            parameters["uSmallPanel"]?.SetValue(uSmallPanel);
                         }
                     }
 

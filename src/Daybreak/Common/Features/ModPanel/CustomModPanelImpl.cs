@@ -257,31 +257,34 @@ internal sealed class CustomModPanelImpl
         );
 
         // readjust dependency button position
-        MonoModHooks.Modify(
-            GetMethod(nameof(UIModItem.UpdateUIForEnabledChange)),
-            static il =>
-            {
-                var c = new ILCursor(il);
+        if (!ModLoader.HasMod("ConciseModList"))
+        {
+            MonoModHooks.Modify(
+                GetMethod(nameof(UIModItem.UpdateUIForEnabledChange)),
+                static il =>
+                {
+                    var c = new ILCursor(il);
 
-                c.GotoNext(MoveType.After, i => i.MatchCallvirt<UIModStateText>(nameof(UIModStateText.SetEnabled)));
+                    c.GotoNext(MoveType.After, i => i.MatchCallvirt<UIModStateText>(nameof(UIModStateText.SetEnabled)));
 
-                c.EmitLdarg0();
-                c.EmitDelegate((UIModItem self) =>
-                    {
-                        self._modReferenceIcon?.Left.Set(self._uiModStateText.Left.Pixels + self._uiModStateText.Width.Pixels + 5, 0);
-                    }
-                );
+                    c.EmitLdarg0();
+                    c.EmitDelegate((UIModItem self) =>
+                        {
+                            self._modReferenceIcon?.Left.Set(self._uiModStateText.Left.Pixels + self._uiModStateText.Width.Pixels + 5, 0);
+                        }
+                    );
 
-                c.GotoNext(MoveType.After, i => i.MatchCallvirt<UIModStateText>(nameof(UIModStateText.SetDisabled)));
+                    c.GotoNext(MoveType.After, i => i.MatchCallvirt<UIModStateText>(nameof(UIModStateText.SetDisabled)));
 
-                c.EmitLdarg0();
-                c.EmitDelegate((UIModItem self) =>
-                    {
-                        self._modReferenceIcon?.Left.Set(self._uiModStateText.Left.Pixels + self._uiModStateText.Width.Pixels + 5, 0);
-                    }
-                );
-            }
-        );
+                    c.EmitLdarg0();
+                    c.EmitDelegate((UIModItem self) =>
+                        {
+                            self._modReferenceIcon?.Left.Set(self._uiModStateText.Left.Pixels + self._uiModStateText.Width.Pixels + 5, 0);
+                        }
+                    );
+                }
+            );
+        }
         return;
 
         static MethodInfo GetMethod(string name)
@@ -605,7 +608,9 @@ internal sealed class CustomModPanelImpl
             {
                 var text = self._enabled ? Language.GetTextValue("GameUI.Enabled") : Language.GetTextValue("GameUI.Disabled");
                 if (self.Parent is null)
+                {
                     return text;
+                }
 
                 var modName = ((UIModItem)self.Parent)._mod.Name;
                 if (!ModLoader.TryGetMod(modName, out var mod) || !TryGetPanelStyle(mod, out var style))

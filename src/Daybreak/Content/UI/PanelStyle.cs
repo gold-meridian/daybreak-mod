@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI.Chat;
 
@@ -248,6 +249,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
 				panelShaderData.Parameters.uHoverIntensity = hoverIntensity;
 				panelShaderData.Parameters.uPixel = 2f;
 				panelShaderData.Parameters.uColorResolution = 10f;
+				panelShaderData.Parameters.uSmallPanel = ModLoader.HasMod("ConciseModList");
 				panelShaderData.Apply();
 
                 Debug.Assert(element._backgroundTexture is not null);
