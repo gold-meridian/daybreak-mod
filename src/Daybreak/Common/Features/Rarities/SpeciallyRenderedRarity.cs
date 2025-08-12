@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using Daybreak.Common.Features.Hooks;
+using Daybreak.Common.IDs;
 
 using JetBrains.Annotations;
 
@@ -13,6 +15,7 @@ using MonoMod.Cil;
 using ReLogic.Graphics;
 
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
@@ -21,6 +24,11 @@ namespace Daybreak.Common.Features.Rarities;
 /// <summary>
 ///     Enables special rendering of this rarity in the tooltip and pickup text
 ///     displays.
+///     <br />
+///     Automatically applied when implemented by a <see cref="ModRarity"/>.  If
+///     you need to apply it to a type not defined in your assembly or in a
+///     weak-referenced scenario, see
+///     <see cref="DaybreakRaritySets.SpecialRarity"/>.
 /// </summary>
 [PublicAPI]
 public interface ISpeciallyRenderedRarity
@@ -71,7 +79,7 @@ public interface ISpeciallyRenderedRarity
             return true;
         }
 
-        if (RarityLoader.GetRarity(item.rare) is not ISpeciallyRenderedRarity rarity)
+        if (!TryGetSpecialRarity(item, out var rarity))
         {
             return true;
         }
@@ -128,7 +136,7 @@ public interface ISpeciallyRenderedRarity
 
         c.EmitPop();
         c.EmitLdloc(popupTextLoc);
-        c.EmitDelegate((PopupText text) => RarityLoader.GetRarity(text.rarity) is ISpeciallyRenderedRarity ? 4 : 0);
+        c.EmitDelegate((PopupText text) => TryGetSpecialRarity(text, out _) ? 4 : 0);
 
         // Go to the end again (could also manually match DrawString three
         // times).
@@ -138,10 +146,9 @@ public interface ISpeciallyRenderedRarity
         c.GotoPrev(MoveType.Before, x => x.MatchCall(typeof(DynamicSpriteFontExtensionMethods), nameof(DynamicSpriteFontExtensionMethods.DrawString)));
         c.Remove();
         c.EmitLdloc(popupTextLoc); // So we can check the rarity.
-        c.EmitDelegate(
-            (SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth, PopupText popupText) =>
+        c.EmitDelegate((SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth, PopupText popupText) =>
             {
-                if (RarityLoader.GetRarity(popupText.rarity) is not ISpeciallyRenderedRarity rarity)
+                if (!TryGetSpecialRarity(popupText, out var rarity))
                 {
                     spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, effects, layerDepth);
                     return;
@@ -161,8 +168,7 @@ public interface ISpeciallyRenderedRarity
 
         c.EmitLdarg1(); // info
         c.EmitLdfld(typeof(Main.MouseTextCache).GetField(nameof(Main.MouseTextCache.rare), BindingFlags.Public | BindingFlags.Instance)!);
-        c.EmitDelegate(
-            (
+        c.EmitDelegate((
                 SpriteBatch spriteBatch,
                 DynamicSpriteFont font,
                 string text,
@@ -176,7 +182,7 @@ public interface ISpeciallyRenderedRarity
                 int rare
             ) =>
             {
-                if (RarityLoader.GetRarity(rare) is not ISpeciallyRenderedRarity rarity)
+                if (!TryGetSpecialRarity(rare, out var rarity))
                 {
                     ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, text, position, baseColor, rotation, origin, baseScale, maxWidth, spread);
                     return Vector2.Zero;
@@ -186,5 +192,43 @@ public interface ISpeciallyRenderedRarity
                 return Vector2.Zero;
             }
         );
+    }
+
+    private static bool TryGetSpecialRarity(
+        Item item,
+        [NotNullWhen(returnValue: true)] out ISpeciallyRenderedRarity? specialRarity
+    )
+    {
+        var rarity = item.master ? ItemRarityID.Master : item.expert ? ItemRarityID.Expert : item.rare;
+        return TryGetSpecialRarity(rarity, out specialRarity);
+    }
+
+    private static bool TryGetSpecialRarity(
+        PopupText popupText,
+        [NotNullWhen(returnValue: true)] out ISpeciallyRenderedRarity? specialRarity
+    )
+    {
+        var rarity = popupText.master ? ItemRarityID.Master : popupText.expert ? ItemRarityID.Expert : popupText.rarity;
+        return TryGetSpecialRarity(rarity, out specialRarity);
+    }
+
+    private static bool TryGetSpecialRarity(
+        int rarity,
+        [NotNullWhen(returnValue: true)] out ISpeciallyRenderedRarity? specialRarity
+    )
+    {
+        if (RarityLoader.GetRarity(rarity) is ISpeciallyRenderedRarity sr)
+        {
+            specialRarity = sr;
+            return true;
+        }
+
+        if (DaybreakRaritySets.SpecialRarity.TryGetValue(rarity, out specialRarity))
+        {
+            return true;
+        }
+
+        specialRarity = null;
+        return false;
     }
 }

@@ -59,9 +59,7 @@ public sealed class DaybreakNpcSets : ModSystem
     /// </summary>
     public static bool?[] ContributesToTownNpcSpawnCount = [];
 
-    /// <summary>
-    ///     Resizes sets.
-    /// </summary>
+    /// <inheritdoc />
     public override void ResizeArrays()
     {
         base.ResizeArrays();
