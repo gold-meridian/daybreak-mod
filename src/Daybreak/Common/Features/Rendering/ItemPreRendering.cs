@@ -1,10 +1,14 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+using Daybreak.Common.IDs;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.Prefixes;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -78,7 +82,7 @@ public sealed class ItemPreRenderer : ModSystem
 
         for (var i = ItemID.Count; i < ItemLoader.ItemCount; i++)
         {
-            if (ItemLoader.GetItem(i) is not IPreRenderedItem preRenderedItem)
+            if (!TryGetPreRenderedItem(i, out var preRenderedItem))
             {
                 continue;
             }
@@ -130,5 +134,26 @@ public sealed class ItemPreRenderer : ModSystem
         }
 
         orig(self, gameTime);
+    }
+
+    private static bool TryGetPreRenderedItem(
+        int itemType,
+        [NotNullWhen(returnValue: true)] out IPreRenderedItem? item
+    )
+    {
+        if (ItemLoader.GetItem(itemType) is IPreRenderedItem preRenderedItem)
+        {
+            item = preRenderedItem;
+            return true;
+        }
+
+        if (DaybreakItemSets.PreRenderedItems[itemType] is { } polyfillItem)
+        {
+            item = polyfillItem;
+            return true;
+        }
+
+        item = null;
+        return false;
     }
 }
