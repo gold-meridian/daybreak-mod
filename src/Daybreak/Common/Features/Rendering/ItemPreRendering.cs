@@ -80,7 +80,7 @@ public sealed class ItemPreRenderer : ModSystem
     {
         base.PostSetupContent();
 
-        for (var i = ItemID.Count; i < ItemLoader.ItemCount; i++)
+        for (var i = 0; i < ItemLoader.ItemCount; i++)
         {
             if (!TryGetPreRenderedItem(i, out var preRenderedItem))
             {
