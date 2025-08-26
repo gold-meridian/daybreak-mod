@@ -78,6 +78,11 @@ public static class DownedFlagHandler
         {
             base.NetSend(writer);
 
+            if (Mod.NetID < 0)
+            {
+                return;
+            }
+
             writer.Write(NAMED_DOWNS.Count);
             foreach (var (name, val) in NAMED_DOWNS)
             {
@@ -89,6 +94,11 @@ public static class DownedFlagHandler
         public override void NetReceive(BinaryReader reader)
         {
             base.NetReceive(reader);
+            
+            if (Mod.NetID < 0)
+            {
+                return;
+            }
 
             var amt = reader.ReadInt32();
             for (var i = 0; i < amt; i++)
