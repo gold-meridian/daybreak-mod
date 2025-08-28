@@ -56,6 +56,8 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.GlobalItem::UpdateEquip(Terraria.Item,Terraria.Player)
 //     System.Void Terraria.ModLoader.GlobalItem::UpdateAccessory(Terraria.Item,Terraria.Player,System.Boolean)
 //     System.Void Terraria.ModLoader.GlobalItem::UpdateVanity(Terraria.Item,Terraria.Player)
+//     System.Void Terraria.ModLoader.GlobalItem::UpdateVisibleAccessory(Terraria.Item,Terraria.Player,System.Boolean)
+//     System.Void Terraria.ModLoader.GlobalItem::UpdateItemDye(Terraria.Item,Terraria.Player,System.Int32,System.Boolean)
 //     System.Void Terraria.ModLoader.GlobalItem::UpdateArmorSet(Terraria.Player,System.String)
 //     System.Void Terraria.ModLoader.GlobalItem::PreUpdateVanitySet(Terraria.Player,System.String)
 //     System.Void Terraria.ModLoader.GlobalItem::UpdateVanitySet(Terraria.Player,System.String)
@@ -1473,6 +1475,62 @@ public static partial class GlobalItemHooks
         )
         {
             Event?.Invoke(self, item, player);
+        }
+    }
+
+    public sealed partial class UpdateVisibleAccessory
+    {
+        public delegate void Definition(
+            Terraria.ModLoader.GlobalItem self,
+            Terraria.Item item,
+            Terraria.Player player,
+            bool hideVisual
+        );
+
+        public static event Definition? Event;
+
+        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        {
+            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+        }
+
+        public static void Invoke(
+            Terraria.ModLoader.GlobalItem self,
+            Terraria.Item item,
+            Terraria.Player player,
+            bool hideVisual
+        )
+        {
+            Event?.Invoke(self, item, player, hideVisual);
+        }
+    }
+
+    public sealed partial class UpdateItemDye
+    {
+        public delegate void Definition(
+            Terraria.ModLoader.GlobalItem self,
+            Terraria.Item item,
+            Terraria.Player player,
+            int dye,
+            bool hideVisual
+        );
+
+        public static event Definition? Event;
+
+        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        {
+            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+        }
+
+        public static void Invoke(
+            Terraria.ModLoader.GlobalItem self,
+            Terraria.Item item,
+            Terraria.Player player,
+            int dye,
+            bool hideVisual
+        )
+        {
+            Event?.Invoke(self, item, player, dye, hideVisual);
         }
     }
 
@@ -4001,6 +4059,57 @@ public sealed partial class GlobalItemImpl : Terraria.ModLoader.GlobalItem
             this,
             item,
             player
+        );
+    }
+
+    public override void UpdateVisibleAccessory(
+        Terraria.Item item,
+        Terraria.Player player,
+        bool hideVisual
+    )
+    {
+        if (!GlobalItemHooks.UpdateVisibleAccessory.GetInvocationList().Any())
+        {
+            base.UpdateVisibleAccessory(
+                item,
+                player,
+                hideVisual
+            );
+            return;
+        }
+
+        GlobalItemHooks.UpdateVisibleAccessory.Invoke(
+            this,
+            item,
+            player,
+            hideVisual
+        );
+    }
+
+    public override void UpdateItemDye(
+        Terraria.Item item,
+        Terraria.Player player,
+        int dye,
+        bool hideVisual
+    )
+    {
+        if (!GlobalItemHooks.UpdateItemDye.GetInvocationList().Any())
+        {
+            base.UpdateItemDye(
+                item,
+                player,
+                dye,
+                hideVisual
+            );
+            return;
+        }
+
+        GlobalItemHooks.UpdateItemDye.Invoke(
+            this,
+            item,
+            player,
+            dye,
+            hideVisual
         );
     }
 

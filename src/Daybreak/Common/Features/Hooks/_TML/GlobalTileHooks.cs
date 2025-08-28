@@ -24,6 +24,8 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.GlobalTile::DrawEffects(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteBatch,Terraria.DataStructures.TileDrawInfo&)
 //     System.Void Terraria.ModLoader.GlobalTile::EmitParticles(System.Int32,System.Int32,Terraria.Tile,System.UInt16,System.Int16,System.Int16,Microsoft.Xna.Framework.Color,System.Boolean)
 //     System.Void Terraria.ModLoader.GlobalTile::SpecialDraw(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteBatch)
+//     System.Boolean Terraria.ModLoader.GlobalTile::PreDrawPlacementPreview(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Rectangle&,Microsoft.Xna.Framework.Vector2&,Microsoft.Xna.Framework.Color&,System.Boolean,Microsoft.Xna.Framework.Graphics.SpriteEffects&)
+//     System.Void Terraria.ModLoader.GlobalTile::PostDrawPlacementPreview(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color,System.Boolean,Microsoft.Xna.Framework.Graphics.SpriteEffects)
 //     System.Boolean Terraria.ModLoader.GlobalTile::TileFrame(System.Int32,System.Int32,System.Int32,System.Boolean&,System.Boolean&)
 //     System.Int32[] Terraria.ModLoader.GlobalTile::AdjTiles(System.Int32)
 //     System.Void Terraria.ModLoader.GlobalTile::RightClick(System.Int32,System.Int32,System.Int32)
@@ -515,6 +517,95 @@ public static partial class GlobalTileHooks
         )
         {
             Event?.Invoke(self, i, j, type, spriteBatch);
+        }
+    }
+
+    public sealed partial class PreDrawPlacementPreview
+    {
+        public delegate bool Definition(
+            Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int type,
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            ref Microsoft.Xna.Framework.Rectangle frame,
+            ref Microsoft.Xna.Framework.Vector2 position,
+            ref Microsoft.Xna.Framework.Color color,
+            bool validPlacement,
+            ref Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
+        );
+
+        public static event Definition? Event;
+
+        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        {
+            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+        }
+
+        public static bool Invoke(
+            Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int type,
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            ref Microsoft.Xna.Framework.Rectangle frame,
+            ref Microsoft.Xna.Framework.Vector2 position,
+            ref Microsoft.Xna.Framework.Color color,
+            bool validPlacement,
+            ref Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
+        )
+        {
+            var result = true;
+            if (Event == null)
+            {
+                return result;
+            }
+
+            foreach (var handler in GetInvocationList())
+            {
+                result &= handler.Invoke(self, i, j, type, spriteBatch, ref frame, ref position, ref color, validPlacement, ref spriteEffects);
+            }
+
+            return result;
+        }
+    }
+
+    public sealed partial class PostDrawPlacementPreview
+    {
+        public delegate void Definition(
+            Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int type,
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            Microsoft.Xna.Framework.Rectangle frame,
+            Microsoft.Xna.Framework.Vector2 position,
+            Microsoft.Xna.Framework.Color color,
+            bool validPlacement,
+            Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
+        );
+
+        public static event Definition? Event;
+
+        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        {
+            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+        }
+
+        public static void Invoke(
+            Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int type,
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            Microsoft.Xna.Framework.Rectangle frame,
+            Microsoft.Xna.Framework.Vector2 position,
+            Microsoft.Xna.Framework.Color color,
+            bool validPlacement,
+            Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
+        )
+        {
+            Event?.Invoke(self, i, j, type, spriteBatch, frame, position, color, validPlacement, spriteEffects);
         }
     }
 
@@ -1303,6 +1394,89 @@ public sealed partial class GlobalTileImpl : Terraria.ModLoader.GlobalTile
             j,
             type,
             spriteBatch
+        );
+    }
+
+    public override bool PreDrawPlacementPreview(
+        int i,
+        int j,
+        int type,
+        Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+        ref Microsoft.Xna.Framework.Rectangle frame,
+        ref Microsoft.Xna.Framework.Vector2 position,
+        ref Microsoft.Xna.Framework.Color color,
+        bool validPlacement,
+        ref Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
+    )
+    {
+        if (!GlobalTileHooks.PreDrawPlacementPreview.GetInvocationList().Any())
+        {
+            return base.PreDrawPlacementPreview(
+                i,
+                j,
+                type,
+                spriteBatch,
+                ref frame,
+                ref position,
+                ref color,
+                validPlacement,
+                ref spriteEffects
+            );
+        }
+
+        return GlobalTileHooks.PreDrawPlacementPreview.Invoke(
+            this,
+            i,
+            j,
+            type,
+            spriteBatch,
+            ref frame,
+            ref position,
+            ref color,
+            validPlacement,
+            ref spriteEffects
+        );
+    }
+
+    public override void PostDrawPlacementPreview(
+        int i,
+        int j,
+        int type,
+        Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+        Microsoft.Xna.Framework.Rectangle frame,
+        Microsoft.Xna.Framework.Vector2 position,
+        Microsoft.Xna.Framework.Color color,
+        bool validPlacement,
+        Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
+    )
+    {
+        if (!GlobalTileHooks.PostDrawPlacementPreview.GetInvocationList().Any())
+        {
+            base.PostDrawPlacementPreview(
+                i,
+                j,
+                type,
+                spriteBatch,
+                frame,
+                position,
+                color,
+                validPlacement,
+                spriteEffects
+            );
+            return;
+        }
+
+        GlobalTileHooks.PostDrawPlacementPreview.Invoke(
+            this,
+            i,
+            j,
+            type,
+            spriteBatch,
+            frame,
+            position,
+            color,
+            validPlacement,
+            spriteEffects
         );
     }
 

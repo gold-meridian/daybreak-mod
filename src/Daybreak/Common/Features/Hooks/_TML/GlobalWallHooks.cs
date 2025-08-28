@@ -13,6 +13,7 @@ using System.Linq;
 //     System.Boolean Terraria.ModLoader.GlobalWall::Drop(System.Int32,System.Int32,System.Int32,System.Int32&)
 //     System.Void Terraria.ModLoader.GlobalWall::KillWall(System.Int32,System.Int32,System.Int32,System.Boolean&)
 //     System.Boolean Terraria.ModLoader.GlobalWall::WallFrame(System.Int32,System.Int32,System.Int32,System.Boolean,System.Int32&,System.Int32&)
+//     System.Boolean Terraria.ModLoader.GlobalWall::CanBeTeleportedTo(System.Int32,System.Int32,System.Int32,Terraria.Player,System.String)
 public static partial class GlobalWallHooks
 {
     public sealed partial class Drop
@@ -131,6 +132,50 @@ public static partial class GlobalWallHooks
             return true;
         }
     }
+
+    public sealed partial class CanBeTeleportedTo
+    {
+        public delegate bool Definition(
+            Terraria.ModLoader.GlobalWall self,
+            int i,
+            int j,
+            int type,
+            Terraria.Player player,
+            string context
+        );
+
+        public static event Definition? Event;
+
+        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        {
+            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+        }
+
+        public static bool Invoke(
+            Terraria.ModLoader.GlobalWall self,
+            int i,
+            int j,
+            int type,
+            Terraria.Player player,
+            string context
+        )
+        {
+            if (Event == null)
+            {
+                return true;
+            }
+
+            foreach (var handler in GetInvocationList())
+            {
+                if (!handler.Invoke(self, i, j, type, player, context))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
 }
 
 public sealed partial class GlobalWallImpl : Terraria.ModLoader.GlobalWall
@@ -217,6 +262,35 @@ public sealed partial class GlobalWallImpl : Terraria.ModLoader.GlobalWall
             randomizeFrame,
             ref style,
             ref frameNumber
+        );
+    }
+
+    public override bool CanBeTeleportedTo(
+        int i,
+        int j,
+        int type,
+        Terraria.Player player,
+        string context
+    )
+    {
+        if (!GlobalWallHooks.CanBeTeleportedTo.GetInvocationList().Any())
+        {
+            return base.CanBeTeleportedTo(
+                i,
+                j,
+                type,
+                player,
+                context
+            );
+        }
+
+        return GlobalWallHooks.CanBeTeleportedTo.Invoke(
+            this,
+            i,
+            j,
+            type,
+            player,
+            context
         );
     }
 }

@@ -64,6 +64,7 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.GlobalNPC::SetupTravelShop(System.Int32[],System.Int32&)
 //     System.Void Terraria.ModLoader.GlobalNPC::OnGoToStatue(Terraria.NPC,System.Boolean)
 //     System.Void Terraria.ModLoader.GlobalNPC::BuffTownNPC(System.Single&,System.Int32&)
+//     System.Boolean Terraria.ModLoader.GlobalNPC::ModifyDeathMessage(Terraria.NPC,Terraria.Localization.NetworkText&,Microsoft.Xna.Framework.Color&)
 //     System.Void Terraria.ModLoader.GlobalNPC::TownNPCAttackStrength(Terraria.NPC,System.Int32&,System.Single&)
 //     System.Void Terraria.ModLoader.GlobalNPC::TownNPCAttackCooldown(Terraria.NPC,System.Int32&,System.Int32&)
 //     System.Void Terraria.ModLoader.GlobalNPC::TownNPCAttackProj(Terraria.NPC,System.Int32&,System.Int32&)
@@ -1574,6 +1575,44 @@ public static partial class GlobalNPCHooks
         )
         {
             Event?.Invoke(self, ref damageMult, ref defense);
+        }
+    }
+
+    public sealed partial class ModifyDeathMessage
+    {
+        public delegate bool Definition(
+            Terraria.ModLoader.GlobalNPC self,
+            Terraria.NPC npc,
+            ref Terraria.Localization.NetworkText customText,
+            ref Microsoft.Xna.Framework.Color color
+        );
+
+        public static event Definition? Event;
+
+        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        {
+            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+        }
+
+        public static bool Invoke(
+            Terraria.ModLoader.GlobalNPC self,
+            Terraria.NPC npc,
+            ref Terraria.Localization.NetworkText customText,
+            ref Microsoft.Xna.Framework.Color color
+        )
+        {
+            var result = true;
+            if (Event == null)
+            {
+                return result;
+            }
+
+            foreach (var handler in GetInvocationList())
+            {
+                result &= handler.Invoke(self, npc, ref customText, ref color);
+            }
+
+            return result;
         }
     }
 
@@ -3217,6 +3256,29 @@ public sealed partial class GlobalNPCImpl : Terraria.ModLoader.GlobalNPC
             this,
             ref damageMult,
             ref defense
+        );
+    }
+
+    public override bool ModifyDeathMessage(
+        Terraria.NPC npc,
+        ref Terraria.Localization.NetworkText customText,
+        ref Microsoft.Xna.Framework.Color color
+    )
+    {
+        if (!GlobalNPCHooks.ModifyDeathMessage.GetInvocationList().Any())
+        {
+            return base.ModifyDeathMessage(
+                npc,
+                ref customText,
+                ref color
+            );
+        }
+
+        return GlobalNPCHooks.ModifyDeathMessage.Invoke(
+            this,
+            npc,
+            ref customText,
+            ref color
         );
     }
 

@@ -126,6 +126,8 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.ModPlayer::PostNurseHeal(Terraria.NPC,System.Int32,System.Boolean,System.Int32)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyStartingInventory(System.Collections.Generic.IReadOnlyDictionary`2<System.String,System.Collections.Generic.List`1<Terraria.Item>>,System.Boolean)
 //     System.Boolean Terraria.ModLoader.ModPlayer::OnPickup(Terraria.Item)
+//     System.Boolean Terraria.ModLoader.ModPlayer::CanBeTeleportedTo(Microsoft.Xna.Framework.Vector2,System.String)
+//     System.Void Terraria.ModLoader.ModPlayer::OnEquipmentLoadoutSwitched(System.Int32,System.Int32)
 public static partial class ModPlayerHooks
 {
     public sealed partial class Initialize
@@ -3227,6 +3229,69 @@ public static partial class ModPlayerHooks
             return true;
         }
     }
+
+    public sealed partial class CanBeTeleportedTo
+    {
+        public delegate bool Definition(
+            Terraria.ModLoader.ModPlayer self,
+            Microsoft.Xna.Framework.Vector2 teleportPosition,
+            string context
+        );
+
+        public static event Definition? Event;
+
+        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        {
+            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+        }
+
+        public static bool Invoke(
+            Terraria.ModLoader.ModPlayer self,
+            Microsoft.Xna.Framework.Vector2 teleportPosition,
+            string context
+        )
+        {
+            if (Event == null)
+            {
+                return true;
+            }
+
+            foreach (var handler in GetInvocationList())
+            {
+                if (!handler.Invoke(self, teleportPosition, context))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    public sealed partial class OnEquipmentLoadoutSwitched
+    {
+        public delegate void Definition(
+            Terraria.ModLoader.ModPlayer self,
+            int oldLoadoutIndex,
+            int loadoutIndex
+        );
+
+        public static event Definition? Event;
+
+        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        {
+            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+        }
+
+        public static void Invoke(
+            Terraria.ModLoader.ModPlayer self,
+            int oldLoadoutIndex,
+            int loadoutIndex
+        )
+        {
+            Event?.Invoke(self, oldLoadoutIndex, loadoutIndex);
+        }
+    }
 }
 
 public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
@@ -5439,6 +5504,47 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         return ModPlayerHooks.OnPickup.Invoke(
             this,
             item
+        );
+    }
+
+    public override bool CanBeTeleportedTo(
+        Microsoft.Xna.Framework.Vector2 teleportPosition,
+        string context
+    )
+    {
+        if (!ModPlayerHooks.CanBeTeleportedTo.GetInvocationList().Any())
+        {
+            return base.CanBeTeleportedTo(
+                teleportPosition,
+                context
+            );
+        }
+
+        return ModPlayerHooks.CanBeTeleportedTo.Invoke(
+            this,
+            teleportPosition,
+            context
+        );
+    }
+
+    public override void OnEquipmentLoadoutSwitched(
+        int oldLoadoutIndex,
+        int loadoutIndex
+    )
+    {
+        if (!ModPlayerHooks.OnEquipmentLoadoutSwitched.GetInvocationList().Any())
+        {
+            base.OnEquipmentLoadoutSwitched(
+                oldLoadoutIndex,
+                loadoutIndex
+            );
+            return;
+        }
+
+        ModPlayerHooks.OnEquipmentLoadoutSwitched.Invoke(
+            this,
+            oldLoadoutIndex,
+            loadoutIndex
         );
     }
 }

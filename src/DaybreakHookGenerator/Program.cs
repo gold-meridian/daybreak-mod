@@ -41,7 +41,7 @@ internal static class Program
     public static void Main()
     {
         // Run this from the repository root.
-        var path = Path.Combine("src", "libs", "Daybreak", "Common", "Features", "Hooks", "_TML");
+        var path = Path.Combine("src", "Daybreak", "Common", "Features", "Hooks", "_TML");
 
         // TODO: Can we include GlobalBlockType?
         // TODO: GlobalBuilderToggle
@@ -138,7 +138,8 @@ internal static class Program
                .WithInvokeStrategy(nameof(GlobalNPC.PreDraw), new BoolCombinerStrategy(true, "&="))
                .WithInvokeStrategy(nameof(GlobalNPC.PreChatButtonClicked), new BoolCombinerStrategy(true, "&="))
                .WithInvokeStrategy(nameof(GlobalNPC.ModifyCollisionData), new BoolCombinerStrategy(true, "&="))
-               .WithInvokeStrategy(nameof(GlobalNPC.NeedSaving), new BoolCombinerStrategy(false, "|=")), // TODO: Should we?
+               .WithInvokeStrategy(nameof(GlobalNPC.NeedSaving), new BoolCombinerStrategy(false, "|=")) // TODO: Should we?
+               .WithInvokeStrategy(nameof(GlobalNPC.ModifyDeathMessage), new BoolCombinerStrategy(true, "&=")),
             new TypeHookDefinition(typeof(GlobalProjectile))
                .WithExclusions(
                     nameof(GlobalProjectile.CanCutTiles),
@@ -176,10 +177,12 @@ internal static class Program
                .WithInvokeStrategy(nameof(GlobalTile.AdjTiles), new ArrayCombinerStrategy("int"))
                .WithInvokeStrategy(nameof(GlobalTile.PreHitWire), new EarlyReturnOnFalseStrategy())
                .WithInvokeStrategy(nameof(GlobalTile.CanReplace), new EarlyReturnOnFalseStrategy())
-               .WithInvokeStrategy(nameof(GlobalTile.ShakeTree), new EarlyReturnOnTrueStrategy()),
+               .WithInvokeStrategy(nameof(GlobalTile.ShakeTree), new EarlyReturnOnTrueStrategy())
+               .WithInvokeStrategy(nameof(GlobalTile.PreDrawPlacementPreview), new BoolCombinerStrategy(true, "&=")),
             new TypeHookDefinition(typeof(GlobalWall))
                .WithInvokeStrategy(nameof(GlobalWall.Drop), new EarlyReturnOnFalseStrategy())
-               .WithInvokeStrategy(nameof(GlobalWall.WallFrame), new EarlyReturnOnFalseStrategy()),
+               .WithInvokeStrategy(nameof(GlobalWall.WallFrame), new EarlyReturnOnFalseStrategy())
+               .WithInvokeStrategy(nameof(GlobalWall.CanBeTeleportedTo), new EarlyReturnOnFalseStrategy()),
             new TypeHookDefinition(typeof(ModSystem))
                .WithExclusions(
                     nameof(ModSystem.OnModLoad),
@@ -188,7 +191,9 @@ internal static class Program
                     nameof(ModSystem.CanWorldBePlayed),
                     nameof(ModSystem.WorldCanBePlayedRejectionMessage),
                     nameof(ModSystem.HijackGetData),
-                    nameof(ModSystem.HijackSendData)
+                    nameof(ModSystem.HijackSendData),
+                    nameof(ModSystem.NetSend),
+                    nameof(ModSystem.NetReceive)
                 )
             /*.WithInvokeStrategy(nameof(ModSystem.CanWorldBePlayed), new EarlyReturnOnFalseStrategy())*/,
             new TypeHookDefinition(typeof(ModPlayer))
@@ -229,7 +234,8 @@ internal static class Program
                .WithInvokeStrategy(nameof(ModPlayer.CanBuyItem), new EarlyReturnOnFalseStrategy())
                .WithInvokeStrategy(nameof(ModPlayer.CanUseItem), new EarlyReturnOnFalseStrategy())
                .WithInvokeStrategy(nameof(ModPlayer.ModifyNurseHeal), new EarlyReturnOnFalseStrategy())
-               .WithInvokeStrategy(nameof(ModPlayer.OnPickup), new EarlyReturnOnFalseStrategy()),
+               .WithInvokeStrategy(nameof(ModPlayer.OnPickup), new EarlyReturnOnFalseStrategy())
+               .WithInvokeStrategy(nameof(ModPlayer.CanBeTeleportedTo), new EarlyReturnOnFalseStrategy()),
         };
 
         var modDef = ModuleDefinition.ReadModule(typeof(ModLoader).Assembly.Location);

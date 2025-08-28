@@ -54,8 +54,6 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.ModSystem::SaveWorldData(Terraria.ModLoader.IO.TagCompound)
 //     System.Void Terraria.ModLoader.ModSystem::LoadWorldData(Terraria.ModLoader.IO.TagCompound)
 //     System.Void Terraria.ModLoader.ModSystem::SaveWorldHeader(Terraria.ModLoader.IO.TagCompound)
-//     System.Void Terraria.ModLoader.ModSystem::NetSend(System.IO.BinaryWriter)
-//     System.Void Terraria.ModLoader.ModSystem::NetReceive(System.IO.BinaryReader)
 //     System.Void Terraria.ModLoader.ModSystem::PreWorldGen()
 //     System.Void Terraria.ModLoader.ModSystem::ModifyWorldGenTasks(System.Collections.Generic.List`1<Terraria.WorldBuilding.GenPass>,System.Double&)
 //     System.Void Terraria.ModLoader.ModSystem::PostWorldGen()
@@ -1019,52 +1017,6 @@ public static partial class ModSystemHooks
         }
     }
 
-    public sealed partial class NetSend
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.ModSystem self,
-            System.IO.BinaryWriter writer
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.ModSystem self,
-            System.IO.BinaryWriter writer
-        )
-        {
-            Event?.Invoke(self, writer);
-        }
-    }
-
-    public sealed partial class NetReceive
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.ModSystem self,
-            System.IO.BinaryReader reader
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.ModSystem self,
-            System.IO.BinaryReader reader
-        )
-        {
-            Event?.Invoke(self, reader);
-        }
-    }
-
     public sealed partial class PreWorldGen
     {
         public delegate void Definition(
@@ -1904,42 +1856,6 @@ public sealed partial class ModSystemImpl : Terraria.ModLoader.ModSystem
         ModSystemHooks.SaveWorldHeader.Invoke(
             this,
             tag
-        );
-    }
-
-    public override void NetSend(
-        System.IO.BinaryWriter writer
-    )
-    {
-        if (!ModSystemHooks.NetSend.GetInvocationList().Any())
-        {
-            base.NetSend(
-                writer
-            );
-            return;
-        }
-
-        ModSystemHooks.NetSend.Invoke(
-            this,
-            writer
-        );
-    }
-
-    public override void NetReceive(
-        System.IO.BinaryReader reader
-    )
-    {
-        if (!ModSystemHooks.NetReceive.GetInvocationList().Any())
-        {
-            base.NetReceive(
-                reader
-            );
-            return;
-        }
-
-        ModSystemHooks.NetReceive.Invoke(
-            this,
-            reader
         );
     }
 
