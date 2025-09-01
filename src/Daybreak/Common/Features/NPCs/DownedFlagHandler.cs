@@ -48,6 +48,11 @@ public static class DownedFlagHandler
     {
         internal static readonly Dictionary<string, bool> NAMED_DOWNS = [];
 
+        public override bool IsLoadingEnabled(Mod mod)
+        {
+            return false;
+        }
+
         public override void SaveWorldData(TagCompound tag)
         {
             base.SaveWorldData(tag);
