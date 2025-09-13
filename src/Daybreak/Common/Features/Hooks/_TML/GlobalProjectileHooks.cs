@@ -14,8 +14,6 @@ using System.Linq;
 //     System.Boolean Terraria.ModLoader.GlobalProjectile::PreAI(Terraria.Projectile)
 //     System.Void Terraria.ModLoader.GlobalProjectile::AI(Terraria.Projectile)
 //     System.Void Terraria.ModLoader.GlobalProjectile::PostAI(Terraria.Projectile)
-//     System.Void Terraria.ModLoader.GlobalProjectile::SendExtraAI(Terraria.Projectile,Terraria.ModLoader.IO.BitWriter,System.IO.BinaryWriter)
-//     System.Void Terraria.ModLoader.GlobalProjectile::ReceiveExtraAI(Terraria.Projectile,Terraria.ModLoader.IO.BitReader,System.IO.BinaryReader)
 //     System.Boolean Terraria.ModLoader.GlobalProjectile::ShouldUpdatePosition(Terraria.Projectile)
 //     System.Boolean Terraria.ModLoader.GlobalProjectile::TileCollideStyle(Terraria.Projectile,System.Int32&,System.Int32&,System.Boolean&,Microsoft.Xna.Framework.Vector2&)
 //     System.Boolean Terraria.ModLoader.GlobalProjectile::OnTileCollide(Terraria.Projectile,Microsoft.Xna.Framework.Vector2)
@@ -143,60 +141,6 @@ public static partial class GlobalProjectileHooks
         )
         {
             Event?.Invoke(self, projectile);
-        }
-    }
-
-    public sealed partial class SendExtraAI
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.GlobalProjectile self,
-            Terraria.Projectile projectile,
-            Terraria.ModLoader.IO.BitWriter bitWriter,
-            System.IO.BinaryWriter binaryWriter
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.GlobalProjectile self,
-            Terraria.Projectile projectile,
-            Terraria.ModLoader.IO.BitWriter bitWriter,
-            System.IO.BinaryWriter binaryWriter
-        )
-        {
-            Event?.Invoke(self, projectile, bitWriter, binaryWriter);
-        }
-    }
-
-    public sealed partial class ReceiveExtraAI
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.GlobalProjectile self,
-            Terraria.Projectile projectile,
-            Terraria.ModLoader.IO.BitReader bitReader,
-            System.IO.BinaryReader binaryReader
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.GlobalProjectile self,
-            Terraria.Projectile projectile,
-            Terraria.ModLoader.IO.BitReader bitReader,
-            System.IO.BinaryReader binaryReader
-        )
-        {
-            Event?.Invoke(self, projectile, bitReader, binaryReader);
         }
     }
 
@@ -962,54 +906,6 @@ public sealed partial class GlobalProjectileImpl : Terraria.ModLoader.GlobalProj
         GlobalProjectileHooks.PostAI.Invoke(
             this,
             projectile
-        );
-    }
-
-    public override void SendExtraAI(
-        Terraria.Projectile projectile,
-        Terraria.ModLoader.IO.BitWriter bitWriter,
-        System.IO.BinaryWriter binaryWriter
-    )
-    {
-        if (!GlobalProjectileHooks.SendExtraAI.GetInvocationList().Any())
-        {
-            base.SendExtraAI(
-                projectile,
-                bitWriter,
-                binaryWriter
-            );
-            return;
-        }
-
-        GlobalProjectileHooks.SendExtraAI.Invoke(
-            this,
-            projectile,
-            bitWriter,
-            binaryWriter
-        );
-    }
-
-    public override void ReceiveExtraAI(
-        Terraria.Projectile projectile,
-        Terraria.ModLoader.IO.BitReader bitReader,
-        System.IO.BinaryReader binaryReader
-    )
-    {
-        if (!GlobalProjectileHooks.ReceiveExtraAI.GetInvocationList().Any())
-        {
-            base.ReceiveExtraAI(
-                projectile,
-                bitReader,
-                binaryReader
-            );
-            return;
-        }
-
-        GlobalProjectileHooks.ReceiveExtraAI.Invoke(
-            this,
-            projectile,
-            bitReader,
-            binaryReader
         );
     }
 

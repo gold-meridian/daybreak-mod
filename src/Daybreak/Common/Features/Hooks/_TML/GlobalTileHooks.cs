@@ -36,6 +36,7 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.GlobalTile::FloorVisuals(System.Int32,Terraria.Player)
 //     System.Void Terraria.ModLoader.GlobalTile::ChangeWaterfallStyle(System.Int32,System.Int32&)
 //     System.Boolean Terraria.ModLoader.GlobalTile::CanReplace(System.Int32,System.Int32,System.Int32,System.Int32)
+//     System.Void Terraria.ModLoader.GlobalTile::ReplaceTile(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
 //     System.Void Terraria.ModLoader.GlobalTile::PostSetupTileMerge()
 //     System.Void Terraria.ModLoader.GlobalTile::PreShakeTree(System.Int32,System.Int32,Terraria.Enums.TreeTypes)
 //     System.Boolean Terraria.ModLoader.GlobalTile::ShakeTree(System.Int32,System.Int32,Terraria.Enums.TreeTypes)
@@ -929,6 +930,37 @@ public static partial class GlobalTileHooks
         }
     }
 
+    public sealed partial class ReplaceTile
+    {
+        public delegate void Definition(
+            Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int type,
+            int targetType,
+            int targetStyle
+        );
+
+        public static event Definition? Event;
+
+        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        {
+            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+        }
+
+        public static void Invoke(
+            Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int type,
+            int targetType,
+            int targetStyle
+        )
+        {
+            Event?.Invoke(self, i, j, type, targetType, targetStyle);
+        }
+    }
+
     public sealed partial class PostSetupTileMerge
     {
         public delegate void Definition(
@@ -1710,6 +1742,36 @@ public sealed partial class GlobalTileImpl : Terraria.ModLoader.GlobalTile
             j,
             type,
             tileTypeBeingPlaced
+        );
+    }
+
+    public override void ReplaceTile(
+        int i,
+        int j,
+        int type,
+        int targetType,
+        int targetStyle
+    )
+    {
+        if (!GlobalTileHooks.ReplaceTile.GetInvocationList().Any())
+        {
+            base.ReplaceTile(
+                i,
+                j,
+                type,
+                targetType,
+                targetStyle
+            );
+            return;
+        }
+
+        GlobalTileHooks.ReplaceTile.Invoke(
+            this,
+            i,
+            j,
+            type,
+            targetType,
+            targetStyle
         );
     }
 

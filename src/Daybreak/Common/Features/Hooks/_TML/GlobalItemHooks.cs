@@ -102,8 +102,6 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.GlobalItem::ModifyTooltips(Terraria.Item,System.Collections.Generic.List`1<Terraria.ModLoader.TooltipLine>)
 //     System.Void Terraria.ModLoader.GlobalItem::SaveData(Terraria.Item,Terraria.ModLoader.IO.TagCompound)
 //     System.Void Terraria.ModLoader.GlobalItem::LoadData(Terraria.Item,Terraria.ModLoader.IO.TagCompound)
-//     System.Void Terraria.ModLoader.GlobalItem::NetSend(Terraria.Item,System.IO.BinaryWriter)
-//     System.Void Terraria.ModLoader.GlobalItem::NetReceive(Terraria.Item,System.IO.BinaryReader)
 public static partial class GlobalItemHooks
 {
     public sealed partial class OnCreated
@@ -2908,56 +2906,6 @@ public static partial class GlobalItemHooks
             Event?.Invoke(self, item, tag);
         }
     }
-
-    public sealed partial class NetSend
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
-            System.IO.BinaryWriter writer
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
-            System.IO.BinaryWriter writer
-        )
-        {
-            Event?.Invoke(self, item, writer);
-        }
-    }
-
-    public sealed partial class NetReceive
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
-            System.IO.BinaryReader reader
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
-            System.IO.BinaryReader reader
-        )
-        {
-            Event?.Invoke(self, item, reader);
-        }
-    }
 }
 
 public sealed partial class GlobalItemImpl : Terraria.ModLoader.GlobalItem
@@ -5158,48 +5106,6 @@ public sealed partial class GlobalItemImpl : Terraria.ModLoader.GlobalItem
             this,
             item,
             tag
-        );
-    }
-
-    public override void NetSend(
-        Terraria.Item item,
-        System.IO.BinaryWriter writer
-    )
-    {
-        if (!GlobalItemHooks.NetSend.GetInvocationList().Any())
-        {
-            base.NetSend(
-                item,
-                writer
-            );
-            return;
-        }
-
-        GlobalItemHooks.NetSend.Invoke(
-            this,
-            item,
-            writer
-        );
-    }
-
-    public override void NetReceive(
-        Terraria.Item item,
-        System.IO.BinaryReader reader
-    )
-    {
-        if (!GlobalItemHooks.NetReceive.GetInvocationList().Any())
-        {
-            base.NetReceive(
-                item,
-                reader
-            );
-            return;
-        }
-
-        GlobalItemHooks.NetReceive.Invoke(
-            this,
-            item,
-            reader
         );
     }
 }

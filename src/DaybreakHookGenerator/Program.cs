@@ -86,7 +86,9 @@ internal static class Program
                     nameof(GlobalItem.HoldoutOffset),
                     nameof(GlobalItem.CanAccessoryBeEquippedWith),
                     nameof(GlobalItem.IsAnglerQuestAvailable),
-                    nameof(GlobalItem.HoldoutOrigin)
+                    nameof(GlobalItem.HoldoutOrigin),
+                    nameof(GlobalItem.NetSend),
+                    nameof(GlobalItem.NetReceive)
                 )
                .WithInvokeStrategy(nameof(GlobalItem.AllowPrefix), new BoolCombinerStrategy(true, "&="))
                .WithInvokeStrategy(nameof(GlobalItem.CanUseItem), new EarlyReturnOnFalseStrategy())
@@ -126,7 +128,10 @@ internal static class Program
                     nameof(GlobalNPC.DrawHealthBar),
                     nameof(GlobalNPC.CanChat),
                     nameof(GlobalNPC.CanGoToStatue),
-                    nameof(GlobalNPC.PickEmote)
+                    nameof(GlobalNPC.PickEmote),
+                    nameof(GlobalNPC.SendExtraAI),
+                    nameof(GlobalNPC.ReceiveExtraAI),
+                    nameof(GlobalNPC.PreHoverInteract) // TODO
                 )
                .WithInvokeStrategy(nameof(GlobalNPC.PreAI), new BoolCombinerStrategy(true, "&="))
                .WithInvokeStrategy(nameof(GlobalNPC.CheckActive), new EarlyReturnOnFalseStrategy())
@@ -150,7 +155,9 @@ internal static class Program
                     nameof(GlobalProjectile.Colliding),
                     nameof(GlobalProjectile.GetAlpha),
                     nameof(GlobalProjectile.CanUseGrapple),
-                    nameof(GlobalProjectile.GrappleCanLatchOnTo)
+                    nameof(GlobalProjectile.GrappleCanLatchOnTo),
+                    nameof(GlobalProjectile.SendExtraAI),
+                    nameof(GlobalProjectile.ReceiveExtraAI)
                 ) // lazy
                .WithInvokeStrategy(nameof(GlobalProjectile.PreAI), new BoolCombinerStrategy(true, "&="))
                .WithInvokeStrategy(nameof(GlobalProjectile.ShouldUpdatePosition), new EarlyReturnOnFalseStrategy())

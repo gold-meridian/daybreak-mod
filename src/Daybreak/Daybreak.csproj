@@ -10,6 +10,8 @@
         <AssemblyVersion>1.0.0</AssemblyVersion>
 
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        
+        <LangVersion>13</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup>

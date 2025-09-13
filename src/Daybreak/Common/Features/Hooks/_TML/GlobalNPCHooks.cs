@@ -21,8 +21,6 @@ using System.Linq;
 //     System.Boolean Terraria.ModLoader.GlobalNPC::PreAI(Terraria.NPC)
 //     System.Void Terraria.ModLoader.GlobalNPC::AI(Terraria.NPC)
 //     System.Void Terraria.ModLoader.GlobalNPC::PostAI(Terraria.NPC)
-//     System.Void Terraria.ModLoader.GlobalNPC::SendExtraAI(Terraria.NPC,Terraria.ModLoader.IO.BitWriter,System.IO.BinaryWriter)
-//     System.Void Terraria.ModLoader.GlobalNPC::ReceiveExtraAI(Terraria.NPC,Terraria.ModLoader.IO.BitReader,System.IO.BinaryReader)
 //     System.Void Terraria.ModLoader.GlobalNPC::FindFrame(Terraria.NPC,System.Int32)
 //     System.Void Terraria.ModLoader.GlobalNPC::HitEffect(Terraria.NPC,Terraria.NPC/HitInfo)
 //     System.Void Terraria.ModLoader.GlobalNPC::UpdateLifeRegen(Terraria.NPC,System.Int32&)
@@ -362,60 +360,6 @@ public static partial class GlobalNPCHooks
         )
         {
             Event?.Invoke(self, npc);
-        }
-    }
-
-    public sealed partial class SendExtraAI
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.GlobalNPC self,
-            Terraria.NPC npc,
-            Terraria.ModLoader.IO.BitWriter bitWriter,
-            System.IO.BinaryWriter binaryWriter
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.GlobalNPC self,
-            Terraria.NPC npc,
-            Terraria.ModLoader.IO.BitWriter bitWriter,
-            System.IO.BinaryWriter binaryWriter
-        )
-        {
-            Event?.Invoke(self, npc, bitWriter, binaryWriter);
-        }
-    }
-
-    public sealed partial class ReceiveExtraAI
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.GlobalNPC self,
-            Terraria.NPC npc,
-            Terraria.ModLoader.IO.BitReader bitReader,
-            System.IO.BinaryReader binaryReader
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.GlobalNPC self,
-            Terraria.NPC npc,
-            Terraria.ModLoader.IO.BitReader bitReader,
-            System.IO.BinaryReader binaryReader
-        )
-        {
-            Event?.Invoke(self, npc, bitReader, binaryReader);
         }
     }
 
@@ -2298,54 +2242,6 @@ public sealed partial class GlobalNPCImpl : Terraria.ModLoader.GlobalNPC
         GlobalNPCHooks.PostAI.Invoke(
             this,
             npc
-        );
-    }
-
-    public override void SendExtraAI(
-        Terraria.NPC npc,
-        Terraria.ModLoader.IO.BitWriter bitWriter,
-        System.IO.BinaryWriter binaryWriter
-    )
-    {
-        if (!GlobalNPCHooks.SendExtraAI.GetInvocationList().Any())
-        {
-            base.SendExtraAI(
-                npc,
-                bitWriter,
-                binaryWriter
-            );
-            return;
-        }
-
-        GlobalNPCHooks.SendExtraAI.Invoke(
-            this,
-            npc,
-            bitWriter,
-            binaryWriter
-        );
-    }
-
-    public override void ReceiveExtraAI(
-        Terraria.NPC npc,
-        Terraria.ModLoader.IO.BitReader bitReader,
-        System.IO.BinaryReader binaryReader
-    )
-    {
-        if (!GlobalNPCHooks.ReceiveExtraAI.GetInvocationList().Any())
-        {
-            base.ReceiveExtraAI(
-                npc,
-                bitReader,
-                binaryReader
-            );
-            return;
-        }
-
-        GlobalNPCHooks.ReceiveExtraAI.Invoke(
-            this,
-            npc,
-            bitReader,
-            binaryReader
         );
     }
 
