@@ -17,7 +17,6 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.ModSystem::PostSetupRecipes()
 //     System.Void Terraria.ModLoader.ModSystem::AddRecipeGroups()
 //     System.Void Terraria.ModLoader.ModSystem::OnWorldLoad()
-//     System.Void Terraria.ModLoader.ModSystem::PostWorldLoad()
 //     System.Void Terraria.ModLoader.ModSystem::OnWorldUnload()
 //     System.Void Terraria.ModLoader.ModSystem::ClearWorld()
 //     System.Void Terraria.ModLoader.ModSystem::ModifyScreenPosition()
@@ -193,27 +192,6 @@ public static partial class ModSystemHooks
     }
 
     public sealed partial class OnWorldLoad
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.ModSystem self
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.ModSystem self
-        )
-        {
-            Event?.Invoke(self);
-        }
-    }
-
-    public sealed partial class PostWorldLoad
     {
         public delegate void Definition(
             Terraria.ModLoader.ModSystem self
@@ -1332,19 +1310,6 @@ public sealed partial class ModSystemImpl : Terraria.ModLoader.ModSystem
         }
 
         ModSystemHooks.OnWorldLoad.Invoke(
-            this
-        );
-    }
-
-    public override void PostWorldLoad()
-    {
-        if (!ModSystemHooks.PostWorldLoad.GetInvocationList().Any())
-        {
-            base.PostWorldLoad();
-            return;
-        }
-
-        ModSystemHooks.PostWorldLoad.Invoke(
             this
         );
     }
