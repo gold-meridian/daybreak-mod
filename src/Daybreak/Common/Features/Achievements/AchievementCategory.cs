@@ -1,3 +1,5 @@
+using System;
+
 using JetBrains.Annotations;
 
 using Microsoft.Xna.Framework;
@@ -15,6 +17,7 @@ namespace Daybreak.Common.Features.Achievements;
 ///     number of.
 /// </summary>
 [PublicAPI]
+[Obsolete("Use upcoming tML ModAchievement API")]
 public abstract class AchievementCategory : ModTexturedType, ILocalizedModType
 {
     /// <inheritdoc cref="ILocalizedModType.LocalizationCategory"/>

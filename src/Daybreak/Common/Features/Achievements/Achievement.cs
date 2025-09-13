@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -18,6 +19,7 @@ namespace Daybreak.Common.Features.Achievements;
 ///     implementation wholly replaces.
 /// </summary>
 [PublicAPI]
+[Obsolete("Use upcoming tML ModAchievement API")]
 public abstract class Achievement : ModTexturedType, ILocalizedModType
 {
     /// <inheritdoc cref="ILocalizedModType.LocalizationCategory"/>
