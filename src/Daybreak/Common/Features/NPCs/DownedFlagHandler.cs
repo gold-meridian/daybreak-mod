@@ -6,14 +6,12 @@ using System.Runtime.CompilerServices;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-[assembly: InternalsVisibleTo("Nightshade")]
-
 namespace Daybreak.Common.Features.NPCs;
 
 /// <summary>
 ///     Manages "downed" flags for bosses or other NPCs.
 /// </summary>
-internal static class DownedFlagHandler
+public static class DownedFlagHandler
 {
     /// <summary>
     ///     A handle to a "downed" flag.
@@ -148,6 +146,11 @@ internal static class DownedFlagHandler
     /// <returns>The handle to this handler.</returns>
     public static Handle RegisterDefaultHandle(Mod mod, string name)
     {
+        if (!ModContent.GetInstance<ModImpl>().IsNetSynced)
+        {
+            throw new InvalidOperationException("Cannot register default handler; DAYBREAK is not present on both the client and server!");
+        }
+        
         var id = GetId(mod, name);
         if (handlers.ContainsKey(id))
         {
