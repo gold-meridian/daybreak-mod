@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
-
-using Daybreak.Common.Features.Hooks;
 
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Default;
 using Terraria.ModLoader.IO;
 
 namespace Daybreak.Common.Features.NPCs;
@@ -15,12 +12,11 @@ namespace Daybreak.Common.Features.NPCs;
 public delegate bool DownedGetter();
 
 public delegate void DownedSetter(bool value);
-    
+
 internal readonly record struct DownedHandler(
     DownedGetter Getter,
     DownedSetter Setter
 );
-
 
 /// <summary>
 ///     Manages &quot;downed&quot; flags, which are typically the status of the
@@ -96,22 +92,6 @@ public static class DownedFlagHandler
     private static readonly Dictionary<Mod, DownedFlagSystem> systems = [];
     private static readonly Dictionary<string, DownedHandler> handlers = [];
 
-#pragma warning disable CA2255
-    [ModuleInitializer]
-    internal static void InitializeSystemsOnMods()
-    {
-        HookLoader.OnEarlyModLoad += mod =>
-        {
-            if (mod is ModLoaderMod || mod.Side != ModSide.Both)
-            {
-                return;
-            }
-            
-            mod.AddContent(systems[mod] = new DownedFlagSystem());
-        };
-    }
-#pragma warning restore CA2255
-
     internal static bool IsHandleRegistered(DownedFlagHandle handle)
     {
         return handlers.ContainsKey(handle.FullName);
@@ -134,9 +114,8 @@ public static class DownedFlagHandler
     internal static DownedFlagHandle GetHandle(string modName, string name)
     {
         return new DownedFlagHandle(GetId(modName, name));
-        
     }
-    
+
     /// <summary>
     ///     Registers a handler with default behavior (that is, handled by
     ///     DAYBREAK).
@@ -148,9 +127,40 @@ public static class DownedFlagHandler
     {
         if (!systems.TryGetValue(mod, out var system))
         {
-            throw new InvalidOperationException($"Cannot register default handle: \"{mod.Name}/{name}\"; the mod is not labeled as ModSide.Both and cannot be guaranteed to sync!");
+            // I had to rewrite our systems to instead inject a handler system
+            // with network syncing into existing Both-synced mods, but we still
+            // need to ensure DAYBREAK is present on both the client and server
+            // for syncing to actually work.  If we don't guarantee this, we run
+            // into similar issues with DAYBREAK doing it on its own.  Even if
+            // we don't run any code ourselves, the presence of a system will
+            // write data automatically -- which causes de-syncs -- this
+            // circumvents that.
+            if (Main.netMode != NetmodeID.SinglePlayer && !ModContent.GetInstance<ModImpl>().IsNetSynced)
+            {
+                throw new InvalidOperationException($"Cannot register default handle: \"{mod.Name}/{name}\"; DAYBREAK needs to be present on both the client and server!");
+            }
+            
+            // Similar to the above, we need to ensure it exists on both the
+            // client and server.
+            if (mod.Side != ModSide.Both)
+            {
+                throw new InvalidOperationException($"Cannot register default handle: \"{mod.Name}/{name}\"; the mod is not labeled as ModSide.Both and cannot be guaranteed to sync!");
+            }
+
+            // We don't actually need this restriction for registration, but we
+            // do need the mod to be loading to initialize our syncing system on
+            // the mod.  Since this code is unreachable if the system *IS*
+            // present, we technically do allow mods to register after loading
+            // so long as they call it during loading at least once.
+            if (!mod.loading)
+            {
+                throw new InvalidOperationException($"Cannot register default handle: \"{mod.Name}/{name}\"; initial registration needs to occur during mod load!");
+            }
+
+            system = systems[mod] = new DownedFlagSystem();
+            mod.AddContent(system);
         }
-        
+
         var id = GetId(mod.Name, name);
         if (handlers.ContainsKey(id))
         {
@@ -181,7 +191,7 @@ public static class DownedFlagHandler
     {
         return RegisterCustomHandle(mod.Name, name, getter, setter);
     }
-    
+
     internal static DownedFlagHandle RegisterCustomHandle(string modName, string name, DownedGetter getter, DownedSetter setter)
     {
         var id = GetId(modName, name);
