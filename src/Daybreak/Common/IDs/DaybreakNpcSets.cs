@@ -23,41 +23,41 @@ public sealed class DaybreakNpcSets : ModSystem
     /// <summary>
     ///     Whether the NPC can participate in parties.
     /// </summary>
-    public static bool?[] CanParty = [];
+    public static bool?[] CanParty { get; private set; } = [];
 
     /// <summary>
     ///     Whether the NPC should be counted when determining whether the Eye
     ///     of Cthulhu is eligible to spawn.
     /// </summary>
-    public static bool?[] ContributesToEocSpawn = [];
+    public static bool?[] ContributesToEocSpawn { get; private set; } = [];
 
     /// <summary>
     ///     Whether the NPC should be counted when determing whether the
     ///     Traveling Merchant is eligible to spawn.
     /// </summary>
-    public static bool?[] ContributesToTravelingMerchantSpawn = [];
+    public static bool?[] ContributesToTravelingMerchantSpawn { get; private set; } = [];
 
     /// <summary>
     ///     Whether the Traveling Merchant can choose this NPC as an NPC to
     ///     randomly spawn near.
     /// </summary>
-    public static bool?[] TravelingMerchantCanSpawnNear = [];
+    public static bool?[] TravelingMerchantCanSpawnNear { get; private set; } = [];
 
     /// <summary>
     ///     Whether this NPC may be killed when the 'after-party of doom' is
     ///     triggered.
     /// </summary>
-    public static bool?[] VulnerableToAfterPartyOfDoom = [];
+    public static bool?[] VulnerableToAfterPartyOfDoom { get; private set; } = [];
 
     /// <summary>
     ///     Whether this town NPC contributes to town NPC slot counts.
     /// </summary>
-    public static bool[] TownNpcContributesToTownNpcSlots = [];
+    public static bool[] TownNpcContributesToTownNpcSlots { get; private set; } = [];
 
     /// <summary>
     ///     Whether this NPC contributes to the town NPC spawn count.
     /// </summary>
-    public static bool?[] ContributesToTownNpcSpawnCount = [];
+    public static bool?[] ContributesToTownNpcSpawnCount { get; private set; } = [];
 
     /// <inheritdoc />
     public override void ResizeArrays()
