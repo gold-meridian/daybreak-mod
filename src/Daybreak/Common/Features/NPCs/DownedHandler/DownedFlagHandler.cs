@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
+
+using Daybreak.Common.Features.Hooks;
 
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Default;
 using Terraria.ModLoader.IO;
 
 namespace Daybreak.Common.Features.NPCs;
@@ -24,20 +28,16 @@ internal readonly record struct DownedHandler(
 /// </summary>
 public static class DownedFlagHandler
 {
+    [Autoload(false)]
     private sealed class DownedFlagSystem : ModSystem
     {
-        internal static readonly Dictionary<string, bool> NAMED_DOWNS = [];
-
-        public override bool IsLoadingEnabled(Mod mod)
-        {
-            return false;
-        }
+        public Dictionary<string, bool> NamedDowns { get; } = [];
 
         public override void SaveWorldData(TagCompound tag)
         {
             base.SaveWorldData(tag);
 
-            foreach (var (name, val) in NAMED_DOWNS)
+            foreach (var (name, val) in NamedDowns)
             {
                 tag.Add(name, val);
             }
@@ -47,11 +47,11 @@ public static class DownedFlagHandler
         {
             base.LoadWorldData(tag);
 
-            foreach (var name in NAMED_DOWNS.Keys)
+            foreach (var name in NamedDowns.Keys)
             {
                 if (tag.TryGet<bool>(name, out var val))
                 {
-                    NAMED_DOWNS[name] = val;
+                    NamedDowns[name] = val;
                 }
             }
         }
@@ -68,8 +68,8 @@ public static class DownedFlagHandler
                 return;
             }
 
-            writer.Write(NAMED_DOWNS.Count);
-            foreach (var (name, val) in NAMED_DOWNS)
+            writer.Write(NamedDowns.Count);
+            foreach (var (name, val) in NamedDowns)
             {
                 writer.Write(name);
                 writer.Write(val);
@@ -88,12 +88,29 @@ public static class DownedFlagHandler
             var amt = reader.ReadInt32();
             for (var i = 0; i < amt; i++)
             {
-                NAMED_DOWNS[reader.ReadString()] = reader.ReadBoolean();
+                NamedDowns[reader.ReadString()] = reader.ReadBoolean();
             }
         }
     }
-    
+
+    private static readonly Dictionary<Mod, DownedFlagSystem> systems = [];
     private static readonly Dictionary<string, DownedHandler> handlers = [];
+
+#pragma warning disable CA2255
+    [ModuleInitializer]
+    internal static void InitializeSystemsOnMods()
+    {
+        HookLoader.OnEarlyModLoad += mod =>
+        {
+            if (mod is ModLoaderMod || mod.Side != ModSide.Both)
+            {
+                return;
+            }
+            
+            mod.AddContent(systems[mod] = new DownedFlagSystem());
+        };
+    }
+#pragma warning restore CA2255
 
     internal static bool IsHandleRegistered(DownedFlagHandle handle)
     {
@@ -129,19 +146,24 @@ public static class DownedFlagHandler
     /// <returns>The handle to this handler.</returns>
     public static DownedFlagHandle RegisterDefaultHandle(Mod mod, string name)
     {
+        if (!systems.TryGetValue(mod, out var system))
+        {
+            throw new InvalidOperationException($"Cannot register default handle: \"{mod.Name}/{name}\"; the mod is not labeled as ModSide.Both and cannot be guaranteed to sync!");
+        }
+        
         var id = GetId(mod.Name, name);
         if (handlers.ContainsKey(id))
         {
             throw new InvalidOperationException($"Duplicate handle ID: {id}");
         }
 
-        DownedFlagSystem.NAMED_DOWNS[name] = false;
+        system.NamedDowns[name] = false;
 
         handlers.Add(
             id,
             new DownedHandler(
-                () => DownedFlagSystem.NAMED_DOWNS[name],
-                val => DownedFlagSystem.NAMED_DOWNS[name] = val
+                () => system.NamedDowns[name],
+                val => system.NamedDowns[name] = val
             )
         );
         return new DownedFlagHandle(id);
