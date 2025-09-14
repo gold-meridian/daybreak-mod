@@ -36,7 +36,7 @@ internal static class Program
     public static void Main()
     {
         // Run this from the repository root.
-        var path = Path.Combine("src", "Daybreak", "Common", "Features", "Hooks", "_TML");
+        var path = Path.Combine("src", "Daybreak", "Common", "Features", "Hooks", "TML");
 
         var globalBlockTypeDef = new TypeHookDefinition(typeof(GlobalBlockType));
 
