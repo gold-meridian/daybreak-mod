@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,6 +10,7 @@ using Terraria;
 using Terraria.GameContent.Liquid;
 using Terraria.Graphics;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 
 namespace LiquidSlopesPatch.Common;
@@ -77,41 +79,7 @@ public partial class RewrittenLiquidRenderer
         public Rectangle SourceRectangle;
         public Vector2 LiquidOffset;
     }
-
-    private const int ANIMATION_FRAME_COUNT = 16;
-    private const int CACHE_PADDING = 2;
-    private const int CACHE_PADDING_2 = 4;
-
-    public static readonly int[] WATERFALL_LENGTH = new int[4]
-    {
-        10,
-        3,
-        2,
-        10
-    };
-
-    public static readonly float[] DEFAULT_OPACITY = new float[4]
-    {
-        0.6f,
-        0.95f,
-        0.95f,
-        0.75f
-    };
-
-    private static readonly byte[] WAVE_MASK_STRENGTH = new byte[5];
-
-    private static readonly byte[] VISCOSITY_MASK = new byte[5]
-    {
-        0,
-        200,
-        240,
-        0,
-        0
-    };
-
-    public const float MIN_LIQUID_SIZE = 0.25f;
-    public static LiquidRenderer Instance;
-    public Asset<Texture2D>[] _liquidTextures = new Asset<Texture2D>[15];
+    
     private LiquidCache[] _cache = new LiquidCache[1];
 
     private LiquidDrawCache[] _drawCache = new LiquidDrawCache[1];
@@ -127,15 +95,17 @@ public partial class RewrittenLiquidRenderer
     private static Tile[,] Tiles => Main.tile;
     */
 
-    public event Action<Color[], Rectangle> WaveFilters;
+    // public event Action<Color[], Rectangle> WaveFilters;
 
-    public static void LoadContent()
+    private static RewrittenLiquidRenderer Instance => ModContent.GetInstance<RewrittenLiquidRenderer>();
+
+    /*public static void LoadContent()
     {
-        Instance = new LiquidRenderer();
+        // Instance = new LiquidRenderer();
         Instance.PrepareAssets();
-    }
+    }*/
 
-    private void PrepareAssets()
+    /*private void PrepareAssets()
     {
         if (!Main.dedServ)
         {
@@ -144,7 +114,7 @@ public partial class RewrittenLiquidRenderer
                 _liquidTextures[i] = Main.Assets.Request<Texture2D>("Images/Misc/water_" + i);
             }
         }
-    }
+    }*/
 
     private unsafe void InternalPrepareDraw(Rectangle drawArea)
     {
@@ -250,12 +220,12 @@ public partial class RewrittenLiquidRenderer
                     {
                         ptr2->Opacity = 1f;
                         ptr2->VisibleType = ptr2->Type;
-                        float num3 = 1f / (float)(WATERFALL_LENGTH[ptr2->Type] + 1);
+                        float num3 = 1f / (float)(LiquidRenderer.WATERFALL_LENGTH[ptr2->Type] + 1);
                         float num4 = 1f;
                         // TML(liquid-slopes): Duplicate original validity check without edge
                         // data to avoid waterfalls appearing beneath solid tiles.
                         if (!ptr2->IsSolid || ptr2->IsHalfBrick)
-                            for (int num5 = 1; num5 <= WATERFALL_LENGTH[ptr2->Type]; num5++)
+                            for (int num5 = 1; num5 <= LiquidRenderer.WATERFALL_LENGTH[ptr2->Type]; num5++)
                             {
                                 num4 -= num3;
                                 if (ptr2[num5].IsSolid)
@@ -521,10 +491,10 @@ public partial class RewrittenLiquidRenderer
                                 ptr4->LiquidOffset = new Vector2((float)Math.Floor(num20 * 16f), (float)Math.Floor(num22 * 16f));
                                 ptr4->Type = ptr2->VisibleType;
                                 ptr4->HasWall = ptr2->HasWall;
-                                byte b = WAVE_MASK_STRENGTH[ptr2->VisibleType];
+                                byte b = LiquidRenderer.WAVE_MASK_STRENGTH[ptr2->VisibleType];
                                 byte g = (ptr6->R = (byte)(b >> 1));
                                 ptr6->G = g;
-                                ptr6->B = VISCOSITY_MASK[ptr2->VisibleType];
+                                ptr6->B = LiquidRenderer.VISCOSITY_MASK[ptr2->VisibleType];
                                 ptr6->A = b;
                                 LiquidCache* ptr7 = ptr2 - 1;
                                 if (num19 != 2 && !ptr7->HasVisibleLiquid && !ptr7->IsSolid && !ptr7->IsHalfBrick)
@@ -540,10 +510,10 @@ public partial class RewrittenLiquidRenderer
                             {
                                 ptr4->IsVisible = false;
                                 int num24 = ((!ptr2->IsSolid && !ptr2->IsHalfBrick) ? 4 : 3);
-                                byte b3 = WAVE_MASK_STRENGTH[num24];
+                                byte b3 = LiquidRenderer.WAVE_MASK_STRENGTH[num24];
                                 byte g2 = (ptr6->R = (byte)(b3 >> 1));
                                 ptr6->G = g2;
-                                ptr6->B = VISCOSITY_MASK[num24];
+                                ptr6->B = LiquidRenderer.VISCOSITY_MASK[num24];
                                 ptr6->A = b3;
                             }
 
@@ -616,8 +586,29 @@ public partial class RewrittenLiquidRenderer
             */
         }
 
-        if (this.WaveFilters != null)
-            this.WaveFilters(_waveMask, GetCachedDrawArea());
+        /*if (LiquidRenderer.Instance.WaveFilters != null)
+            LiquidRenderer.Instance.WaveFilters(_waveMask, GetCachedDrawArea());*/
+        ForceRaise(LiquidRenderer.Instance, nameof(LiquidRenderer.Instance.WaveFilters), _waveMask, GetCachedDrawArea());
+
+        return;
+        
+        static void ForceRaise(object target, string eventName, params object[] args)
+        {
+            var type = target.GetType();
+            var field = type.GetField(eventName, 
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            if (field == null)
+                throw new InvalidOperationException($"Event {eventName} not found");
+
+            var eventDelegate = (MulticastDelegate)field.GetValue(target);
+            if (eventDelegate != null)
+            {
+                foreach (var handler in eventDelegate.GetInvocationList())
+                {
+                    handler.DynamicInvoke(args);
+                }
+            }
+        }
     }
 
     public unsafe void DrawNormalLiquids(SpriteBatch spriteBatch, Vector2 drawOffset, int waterStyle, float globalAlpha, bool isBackgroundDraw)
@@ -647,7 +638,7 @@ public partial class RewrittenLiquidRenderer
                             sourceRectangle.Y += _animationFrame * 80;
 
                         Vector2 liquidOffset = ptr2->LiquidOffset;
-                        float num = ptr2->Opacity * (isBackgroundDraw ? 1f : DEFAULT_OPACITY[ptr2->Type]);
+                        float num = ptr2->Opacity * (isBackgroundDraw ? 1f : LiquidRenderer.DEFAULT_OPACITY[ptr2->Type]);
                         int num2 = ptr2->Type;
                         switch (num2)
                         {
@@ -671,7 +662,7 @@ public partial class RewrittenLiquidRenderer
                         vertices.TopLeftColor *= num;
                         vertices.TopRightColor *= num;
                         Main.DrawTileInWater(drawOffset, i, j);
-                        Main.tileBatch.Draw(_liquidTextures[num2].Value, new Vector2(i << 4, j << 4) + drawOffset + liquidOffset, sourceRectangle, vertices, Vector2.Zero, 1f, SpriteEffects.None);
+                        Main.tileBatch.Draw(LiquidRenderer.Instance._liquidTextures[num2].Value, new Vector2(i << 4, j << 4) + drawOffset + liquidOffset, sourceRectangle, vertices, Vector2.Zero, 1f, SpriteEffects.None);
                     }
 
                     ptr2++;
@@ -723,7 +714,7 @@ public partial class RewrittenLiquidRenderer
                 Lighting.GetCornerColors(num3, num4, out var vertices);
                 SetShimmerVertexColors(ref vertices, val, num3, num4);
                 Main.DrawTileInWater(drawOffset, num3, num4);
-                Main.tileBatch.Draw(_liquidTextures[num2].Value, new Vector2(num3 << 4, num4 << 4) + drawOffset + liquidOffset, sourceRectangle, vertices, Vector2.Zero, 1f, SpriteEffects.None);
+                Main.tileBatch.Draw(LiquidRenderer.Instance._liquidTextures[num2].Value, new Vector2(num3 << 4, num4 << 4) + drawOffset + liquidOffset, sourceRectangle, vertices, Vector2.Zero, 1f, SpriteEffects.None);
                 sourceRectangle = ptr2->SourceRectangle;
                 bool flag = sourceRectangle.X != 16 || sourceRectangle.Y % 80 != 48;
                 if (flag || (num3 + num4) % 2 == 0)
@@ -731,7 +722,7 @@ public partial class RewrittenLiquidRenderer
                     sourceRectangle.X += 48;
                     sourceRectangle.Y += 80 * GetShimmerFrame(flag, num3, num4);
                     SetShimmerVertexColors_Sparkle(ref vertices, ptr2->Opacity, num3, num4, flag);
-                    Main.tileBatch.Draw(_liquidTextures[num2].Value, new Vector2(num3 << 4, num4 << 4) + drawOffset + liquidOffset, sourceRectangle, vertices, Vector2.Zero, 1f, SpriteEffects.None);
+                    Main.tileBatch.Draw(LiquidRenderer.Instance._liquidTextures[num2].Value, new Vector2(num3 << 4, num4 << 4) + drawOffset + liquidOffset, sourceRectangle, vertices, Vector2.Zero, 1f, SpriteEffects.None);
                 }
 
                 ptr2++;
