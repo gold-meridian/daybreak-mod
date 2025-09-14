@@ -13,20 +13,6 @@ using Terraria.ModLoader;
 namespace Daybreak.Common.Features.Rendering;
 
 /// <summary>
-///     Implementing this interface allows the item to pre-render a texture for
-///     the frame which all item rendering will use instead of the original
-///     texture.
-/// </summary>
-public interface IPreRenderedItem
-{
-    /// <summary>
-    ///     Renders the item's texture for use for the current frame.
-    /// </summary>
-    /// <param name="sourceTexture">The actual texture of the item.</param>
-    void PreRender(Texture2D sourceTexture);
-}
-
-/// <summary>
 ///     Pre-renders items each frame.  Useful for items which have shaders
 ///     applied for visual effects that should also apply in contexts such as
 ///     item use and hover.
@@ -35,7 +21,7 @@ public interface IPreRenderedItem
 ///     may be used for all instances of the item without variation.
 /// </summary>
 [Autoload(Side = ModSide.Client)]
-public sealed class ItemPreRenderer : ModSystem
+internal sealed class ItemPreRenderer : ModSystem
 {
     private static readonly Dictionary<int, Texture2D> original_textures = [];
     private static readonly Dictionary<int, IPreRenderedItem> pre_rendered_items = [];

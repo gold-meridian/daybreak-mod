@@ -1,5 +1,7 @@
 namespace Daybreak.Common.Features.PotLoot;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 /// <summary>
 ///     Well-known pot styles for the vanilla pot types.
 /// </summary>

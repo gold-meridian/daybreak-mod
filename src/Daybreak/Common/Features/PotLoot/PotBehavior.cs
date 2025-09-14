@@ -10,7 +10,7 @@ namespace Daybreak.Common.Features.PotLoot;
 /// <summary>
 ///     Describes the behavior of a pot.
 /// </summary>
-public abstract class PotBehavior
+public abstract partial class PotBehavior
 {
 #region Break actions
     // Used only for vanilla pots; modded tiles have better control over their
