@@ -56,8 +56,6 @@ internal sealed class BetterExpertRarityCompat : ModSystem
         }
     }
 
-    public static Mod RarityMod => ModLoader.GetMod("BetterExpertRarity");
-
     public override void Load()
     {
         base.Load();
