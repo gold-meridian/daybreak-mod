@@ -23,7 +23,7 @@ using Terraria.UI;
 
 namespace Daybreak.Common.Features.ModPanel;
 
-internal sealed class CustomModPanelImpl
+internal sealed class ModPanelRenderer
 {
     // TODO : 
     // UIModItem:

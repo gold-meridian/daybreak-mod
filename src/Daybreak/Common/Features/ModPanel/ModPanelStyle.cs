@@ -174,7 +174,7 @@ public abstract class ModPanelStyle : ModType
     /// </summary>
     protected sealed override void Register()
     {
-        CustomModPanelImpl.AddPanelStyle(Mod, this);
+        ModPanelRenderer.AddPanelStyle(Mod, this);
     }
 
     /// <summary>
