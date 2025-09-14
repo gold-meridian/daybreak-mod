@@ -1,7 +1,5 @@
 namespace Daybreak.Common.Features.Hooks;
 
-using System.Linq;
-
 // ReSharper disable PartialTypeWithSinglePart
 // ReSharper disable UnusedType.Global
 // ReSharper disable InconsistentNaming
@@ -16,45 +14,36 @@ public static partial class GlobalInfoDisplayHooks
 {
     public sealed partial class Active
     {
+        public delegate bool? Original(
+            Terraria.ModLoader.InfoDisplay currentDisplay
+        );
+
         public delegate bool? Definition(
+            Original orig,
             Terraria.ModLoader.GlobalInfoDisplay self,
             Terraria.ModLoader.InfoDisplay currentDisplay
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalInfoDisplay_Active_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalInfoDisplay::Active")));
 
-        public static bool? Invoke(
-            Terraria.ModLoader.GlobalInfoDisplay self,
-            Terraria.ModLoader.InfoDisplay currentDisplay
-        )
-        {
-            var result = default(bool?);
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                var newValue = handler.Invoke(self, currentDisplay);
-                if (newValue.HasValue)
-                {
-                    result &= newValue;
-                }
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalInfoDisplay::Active; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyDisplayParameters
     {
+        public delegate void Original(
+            Terraria.ModLoader.InfoDisplay currentDisplay,
+            ref string displayValue,
+            ref string displayName,
+            ref Microsoft.Xna.Framework.Color displayColor,
+            ref Microsoft.Xna.Framework.Color displayShadowColor
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalInfoDisplay self,
             Terraria.ModLoader.InfoDisplay currentDisplay,
             ref string displayValue,
@@ -63,45 +52,38 @@ public static partial class GlobalInfoDisplayHooks
             ref Microsoft.Xna.Framework.Color displayShadowColor
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalInfoDisplay_ModifyDisplayParameters_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalInfoDisplay::ModifyDisplayParameters")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalInfoDisplay self,
-            Terraria.ModLoader.InfoDisplay currentDisplay,
-            ref string displayValue,
-            ref string displayName,
-            ref Microsoft.Xna.Framework.Color displayColor,
-            ref Microsoft.Xna.Framework.Color displayShadowColor
-        )
-        {
-            Event?.Invoke(self, currentDisplay, ref displayValue, ref displayName, ref displayColor, ref displayShadowColor);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalInfoDisplay::ModifyDisplayParameters; use a flag to disable behavior.");
         }
     }
 }
 
-public sealed partial class GlobalInfoDisplayImpl : Terraria.ModLoader.GlobalInfoDisplay
+public sealed partial class GlobalInfoDisplay_Active_Impl(GlobalInfoDisplayHooks.Active.Definition hook) : Terraria.ModLoader.GlobalInfoDisplay
 {
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
     public override bool? Active(
         Terraria.ModLoader.InfoDisplay currentDisplay
     )
     {
-        if (!GlobalInfoDisplayHooks.Active.GetInvocationList().Any())
-        {
-            return base.Active(
-                currentDisplay
-            );
-        }
-
-        return GlobalInfoDisplayHooks.Active.Invoke(
+        return hook(
+            (
+                Terraria.ModLoader.InfoDisplay currentDisplay_captured
+            ) => base.Active(
+                currentDisplay_captured
+            ),
             this,
             currentDisplay
         );
     }
+}
+
+public sealed partial class GlobalInfoDisplay_ModifyDisplayParameters_Impl(GlobalInfoDisplayHooks.ModifyDisplayParameters.Definition hook) : Terraria.ModLoader.GlobalInfoDisplay
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override void ModifyDisplayParameters(
         Terraria.ModLoader.InfoDisplay currentDisplay,
@@ -111,19 +93,20 @@ public sealed partial class GlobalInfoDisplayImpl : Terraria.ModLoader.GlobalInf
         ref Microsoft.Xna.Framework.Color displayShadowColor
     )
     {
-        if (!GlobalInfoDisplayHooks.ModifyDisplayParameters.GetInvocationList().Any())
-        {
-            base.ModifyDisplayParameters(
-                currentDisplay,
-                ref displayValue,
-                ref displayName,
-                ref displayColor,
-                ref displayShadowColor
-            );
-            return;
-        }
-
-        GlobalInfoDisplayHooks.ModifyDisplayParameters.Invoke(
+        hook(
+            (
+                Terraria.ModLoader.InfoDisplay currentDisplay_captured,
+                ref string displayValue_captured,
+                ref string displayName_captured,
+                ref Microsoft.Xna.Framework.Color displayColor_captured,
+                ref Microsoft.Xna.Framework.Color displayShadowColor_captured
+            ) => base.ModifyDisplayParameters(
+                currentDisplay_captured,
+                ref displayValue_captured,
+                ref displayName_captured,
+                ref displayColor_captured,
+                ref displayShadowColor_captured
+            ),
             this,
             currentDisplay,
             ref displayValue,

@@ -48,7 +48,11 @@ public sealed class ItemPreRenderer : ModSystem
     {
         base.Load();
 
-        On_Main.DoDraw += UpdateItemRenders;
+        Main.RunOnMainThread(() =>
+            {
+                On_Main.DoDraw += UpdateItemRenders;
+            }
+        );
     }
 
     /// <inheritdoc />

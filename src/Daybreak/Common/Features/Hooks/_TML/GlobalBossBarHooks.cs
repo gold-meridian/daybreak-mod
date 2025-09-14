@@ -1,7 +1,5 @@
 namespace Daybreak.Common.Features.Hooks;
 
-using System.Linq;
-
 // ReSharper disable PartialTypeWithSinglePart
 // ReSharper disable UnusedType.Global
 // ReSharper disable InconsistentNaming
@@ -16,94 +14,84 @@ public static partial class GlobalBossBarHooks
 {
     public sealed partial class PreDraw
     {
+        public delegate bool Original(
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            Terraria.NPC npc,
+            ref Terraria.DataStructures.BossBarDrawParams drawParams
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBossBar self,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Terraria.NPC npc,
             ref Terraria.DataStructures.BossBarDrawParams drawParams
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBossBar_PreDraw_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBossBar::PreDraw")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.GlobalBossBar self,
-            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
-            Terraria.NPC npc,
-            ref Terraria.DataStructures.BossBarDrawParams drawParams
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, spriteBatch, npc, ref drawParams);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBossBar::PreDraw; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostDraw
     {
+        public delegate void Original(
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            Terraria.NPC npc,
+            Terraria.DataStructures.BossBarDrawParams drawParams
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBossBar self,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Terraria.NPC npc,
             Terraria.DataStructures.BossBarDrawParams drawParams
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBossBar_PostDraw_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBossBar::PostDraw")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalBossBar self,
-            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
-            Terraria.NPC npc,
-            Terraria.DataStructures.BossBarDrawParams drawParams
-        )
-        {
-            Event?.Invoke(self, spriteBatch, npc, drawParams);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBossBar::PostDraw; use a flag to disable behavior.");
         }
     }
 }
 
-public sealed partial class GlobalBossBarImpl : Terraria.ModLoader.GlobalBossBar
+public sealed partial class GlobalBossBar_PreDraw_Impl(GlobalBossBarHooks.PreDraw.Definition hook) : Terraria.ModLoader.GlobalBossBar
 {
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
     public override bool PreDraw(
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
         Terraria.NPC npc,
         ref Terraria.DataStructures.BossBarDrawParams drawParams
     )
     {
-        if (!GlobalBossBarHooks.PreDraw.GetInvocationList().Any())
-        {
-            return base.PreDraw(
-                spriteBatch,
-                npc,
-                ref drawParams
-            );
-        }
-
-        return GlobalBossBarHooks.PreDraw.Invoke(
+        return hook(
+            (
+                Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
+                Terraria.NPC npc_captured,
+                ref Terraria.DataStructures.BossBarDrawParams drawParams_captured
+            ) => base.PreDraw(
+                spriteBatch_captured,
+                npc_captured,
+                ref drawParams_captured
+            ),
             this,
             spriteBatch,
             npc,
             ref drawParams
         );
     }
+}
+
+public sealed partial class GlobalBossBar_PostDraw_Impl(GlobalBossBarHooks.PostDraw.Definition hook) : Terraria.ModLoader.GlobalBossBar
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override void PostDraw(
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -111,17 +99,16 @@ public sealed partial class GlobalBossBarImpl : Terraria.ModLoader.GlobalBossBar
         Terraria.DataStructures.BossBarDrawParams drawParams
     )
     {
-        if (!GlobalBossBarHooks.PostDraw.GetInvocationList().Any())
-        {
-            base.PostDraw(
-                spriteBatch,
-                npc,
-                drawParams
-            );
-            return;
-        }
-
-        GlobalBossBarHooks.PostDraw.Invoke(
+        hook(
+            (
+                Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
+                Terraria.NPC npc_captured,
+                Terraria.DataStructures.BossBarDrawParams drawParams_captured
+            ) => base.PostDraw(
+                spriteBatch_captured,
+                npc_captured,
+                drawParams_captured
+            ),
             this,
             spriteBatch,
             npc,

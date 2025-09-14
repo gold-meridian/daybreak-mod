@@ -1,7 +1,5 @@
 namespace Daybreak.Common.Features.Hooks;
 
-using System.Linq;
-
 // ReSharper disable PartialTypeWithSinglePart
 // ReSharper disable UnusedType.Global
 // ReSharper disable InconsistentNaming
@@ -17,13 +15,8 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyMaxStats(Terraria.ModLoader.StatModifier&,Terraria.ModLoader.StatModifier&)
 //     System.Void Terraria.ModLoader.ModPlayer::UpdateDead()
 //     System.Void Terraria.ModLoader.ModPlayer::PreSaveCustomData()
-//     System.Void Terraria.ModLoader.ModPlayer::SaveData(Terraria.ModLoader.IO.TagCompound)
-//     System.Void Terraria.ModLoader.ModPlayer::LoadData(Terraria.ModLoader.IO.TagCompound)
 //     System.Void Terraria.ModLoader.ModPlayer::PreSavePlayer()
 //     System.Void Terraria.ModLoader.ModPlayer::PostSavePlayer()
-//     System.Void Terraria.ModLoader.ModPlayer::CopyClientState(Terraria.ModLoader.ModPlayer)
-//     System.Void Terraria.ModLoader.ModPlayer::SyncPlayer(System.Int32,System.Int32,System.Boolean)
-//     System.Void Terraria.ModLoader.ModPlayer::SendClientChanges(Terraria.ModLoader.ModPlayer)
 //     System.Void Terraria.ModLoader.ModPlayer::UpdateBadLifeRegen()
 //     System.Void Terraria.ModLoader.ModPlayer::UpdateLifeRegen()
 //     System.Void Terraria.ModLoader.ModPlayer::NaturalLifeRegen(System.Single&)
@@ -65,6 +58,9 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyLuck(System.Single&)
 //     System.Boolean Terraria.ModLoader.ModPlayer::PreItemCheck()
 //     System.Void Terraria.ModLoader.ModPlayer::PostItemCheck()
+//     System.Single Terraria.ModLoader.ModPlayer::UseTimeMultiplier(Terraria.Item)
+//     System.Single Terraria.ModLoader.ModPlayer::UseAnimationMultiplier(Terraria.Item)
+//     System.Single Terraria.ModLoader.ModPlayer::UseSpeedMultiplier(Terraria.Item)
 //     System.Void Terraria.ModLoader.ModPlayer::GetHealLife(Terraria.Item,System.Boolean,System.Int32&)
 //     System.Void Terraria.ModLoader.ModPlayer::GetHealMana(Terraria.Item,System.Boolean,System.Int32&)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyManaCost(Terraria.Item,System.Single&,System.Single&)
@@ -80,14 +76,18 @@ using System.Linq;
 //     System.Boolean Terraria.ModLoader.ModPlayer::Shoot(Terraria.Item,Terraria.DataStructures.EntitySource_ItemUse_WithAmmo,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Int32,System.Int32,System.Single)
 //     System.Void Terraria.ModLoader.ModPlayer::MeleeEffects(Terraria.Item,Microsoft.Xna.Framework.Rectangle)
 //     System.Void Terraria.ModLoader.ModPlayer::EmitEnchantmentVisualsAt(Terraria.Projectile,Microsoft.Xna.Framework.Vector2,System.Int32,System.Int32)
+//     System.Nullable`1<System.Boolean> Terraria.ModLoader.ModPlayer::CanCatchNPC(Terraria.NPC,Terraria.Item)
 //     System.Void Terraria.ModLoader.ModPlayer::OnCatchNPC(Terraria.NPC,Terraria.Item,System.Boolean)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyItemScale(Terraria.Item,System.Single&)
 //     System.Void Terraria.ModLoader.ModPlayer::OnHitAnything(System.Single,System.Single,Terraria.Entity)
 //     System.Boolean Terraria.ModLoader.ModPlayer::CanHitNPC(Terraria.NPC)
+//     System.Nullable`1<System.Boolean> Terraria.ModLoader.ModPlayer::CanMeleeAttackCollideWithNPC(Terraria.Item,Microsoft.Xna.Framework.Rectangle,Terraria.NPC)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyHitNPC(Terraria.NPC,Terraria.NPC/HitModifiers&)
 //     System.Void Terraria.ModLoader.ModPlayer::OnHitNPC(Terraria.NPC,Terraria.NPC/HitInfo,System.Int32)
+//     System.Nullable`1<System.Boolean> Terraria.ModLoader.ModPlayer::CanHitNPCWithItem(Terraria.Item,Terraria.NPC)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyHitNPCWithItem(Terraria.Item,Terraria.NPC,Terraria.NPC/HitModifiers&)
 //     System.Void Terraria.ModLoader.ModPlayer::OnHitNPCWithItem(Terraria.Item,Terraria.NPC,Terraria.NPC/HitInfo,System.Int32)
+//     System.Nullable`1<System.Boolean> Terraria.ModLoader.ModPlayer::CanHitNPCWithProj(Terraria.Projectile,Terraria.NPC)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyHitNPCWithProj(Terraria.Projectile,Terraria.NPC,Terraria.NPC/HitModifiers&)
 //     System.Void Terraria.ModLoader.ModPlayer::OnHitNPCWithProj(Terraria.Projectile,Terraria.NPC,Terraria.NPC/HitInfo,System.Int32)
 //     System.Boolean Terraria.ModLoader.ModPlayer::CanHitPvp(Terraria.Item,Terraria.Player)
@@ -101,6 +101,7 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyFishingAttempt(Terraria.DataStructures.FishingAttempt&)
 //     System.Void Terraria.ModLoader.ModPlayer::CatchFish(Terraria.DataStructures.FishingAttempt,System.Int32&,System.Int32&,Terraria.AdvancedPopupRequest&,Microsoft.Xna.Framework.Vector2&)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyCaughtFish(Terraria.Item)
+//     System.Nullable`1<System.Boolean> Terraria.ModLoader.ModPlayer::CanConsumeBait(Terraria.Item)
 //     System.Void Terraria.ModLoader.ModPlayer::GetFishingLevel(Terraria.Item,Terraria.Item,System.Single&)
 //     System.Void Terraria.ModLoader.ModPlayer::AnglerQuestReward(System.Single,System.Collections.Generic.List`1<Terraria.Item>)
 //     System.Void Terraria.ModLoader.ModPlayer::GetDyeTraderReward(System.Collections.Generic.List`1<System.Int32>)
@@ -121,10 +122,13 @@ using System.Linq;
 //     System.Void Terraria.ModLoader.ModPlayer::PostBuyItem(Terraria.NPC,Terraria.Item[],Terraria.Item)
 //     System.Boolean Terraria.ModLoader.ModPlayer::CanBuyItem(Terraria.NPC,Terraria.Item[],Terraria.Item)
 //     System.Boolean Terraria.ModLoader.ModPlayer::CanUseItem(Terraria.Item)
+//     System.Nullable`1<System.Boolean> Terraria.ModLoader.ModPlayer::CanAutoReuseItem(Terraria.Item)
 //     System.Boolean Terraria.ModLoader.ModPlayer::ModifyNurseHeal(Terraria.NPC,System.Int32&,System.Boolean&,System.String&)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyNursePrice(Terraria.NPC,System.Int32,System.Boolean,System.Int32&)
 //     System.Void Terraria.ModLoader.ModPlayer::PostNurseHeal(Terraria.NPC,System.Int32,System.Boolean,System.Int32)
+//     System.Collections.Generic.IEnumerable`1<Terraria.Item> Terraria.ModLoader.ModPlayer::AddStartingItems(System.Boolean)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyStartingInventory(System.Collections.Generic.IReadOnlyDictionary`2<System.String,System.Collections.Generic.List`1<Terraria.Item>>,System.Boolean)
+//     System.Collections.Generic.IEnumerable`1<Terraria.Item> Terraria.ModLoader.ModPlayer::AddMaterialsForCrafting(Terraria.ModLoader.ModPlayer/ItemConsumedCallback&)
 //     System.Boolean Terraria.ModLoader.ModPlayer::OnPickup(Terraria.Item)
 //     System.Boolean Terraria.ModLoader.ModPlayer::CanBeTeleportedTo(Microsoft.Xna.Framework.Vector2,System.String)
 //     System.Void Terraria.ModLoader.ModPlayer::OnEquipmentLoadoutSwitched(System.Int32,System.Int32)
@@ -132,1166 +136,832 @@ public static partial class ModPlayerHooks
 {
     public sealed partial class Initialize
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_Initialize_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::Initialize")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::Initialize; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ResetEffects
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ResetEffects_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ResetEffects")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ResetEffects; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ResetInfoAccessories
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ResetInfoAccessories_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ResetInfoAccessories")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ResetInfoAccessories; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class RefreshInfoAccessoriesFromTeamPlayers
     {
+        public delegate void Original(
+            Terraria.Player otherPlayer
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Player otherPlayer
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_RefreshInfoAccessoriesFromTeamPlayers_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::RefreshInfoAccessoriesFromTeamPlayers")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Player otherPlayer
-        )
-        {
-            Event?.Invoke(self, otherPlayer);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::RefreshInfoAccessoriesFromTeamPlayers; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyMaxStats
     {
+        public delegate void Original(
+            out Terraria.ModLoader.StatModifier health,
+            out Terraria.ModLoader.StatModifier mana
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             out Terraria.ModLoader.StatModifier health,
             out Terraria.ModLoader.StatModifier mana
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyMaxStats_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyMaxStats")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            out Terraria.ModLoader.StatModifier health,
-            out Terraria.ModLoader.StatModifier mana
-        )
-        {
-            health = default;
-            mana = default;
-
-            Event?.Invoke(self, out health, out mana);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyMaxStats; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateDead
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UpdateDead_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UpdateDead")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateDead; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreSaveCustomData
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PreSaveCustomData_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PreSaveCustomData")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
-        }
-    }
-
-    public sealed partial class SaveData
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.IO.TagCompound tag
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.IO.TagCompound tag
-        )
-        {
-            Event?.Invoke(self, tag);
-        }
-    }
-
-    public sealed partial class LoadData
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.IO.TagCompound tag
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.IO.TagCompound tag
-        )
-        {
-            Event?.Invoke(self, tag);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreSaveCustomData; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreSavePlayer
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PreSavePlayer_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PreSavePlayer")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreSavePlayer; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostSavePlayer
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostSavePlayer_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostSavePlayer")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
-        }
-    }
-
-    public sealed partial class CopyClientState
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ModPlayer targetCopy
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ModPlayer targetCopy
-        )
-        {
-            Event?.Invoke(self, targetCopy);
-        }
-    }
-
-    public sealed partial class SyncPlayer
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.ModPlayer self,
-            int toWho,
-            int fromWho,
-            bool newPlayer
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            int toWho,
-            int fromWho,
-            bool newPlayer
-        )
-        {
-            Event?.Invoke(self, toWho, fromWho, newPlayer);
-        }
-    }
-
-    public sealed partial class SendClientChanges
-    {
-        public delegate void Definition(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ModPlayer clientPlayer
-        );
-
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
-        {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
-
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ModPlayer clientPlayer
-        )
-        {
-            Event?.Invoke(self, clientPlayer);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostSavePlayer; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateBadLifeRegen
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UpdateBadLifeRegen_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UpdateBadLifeRegen")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateBadLifeRegen; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateLifeRegen
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UpdateLifeRegen_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UpdateLifeRegen")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateLifeRegen; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class NaturalLifeRegen
     {
+        public delegate void Original(
+            ref float regen
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             ref float regen
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_NaturalLifeRegen_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::NaturalLifeRegen")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            ref float regen
-        )
-        {
-            Event?.Invoke(self, ref regen);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::NaturalLifeRegen; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateAutopause
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UpdateAutopause_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UpdateAutopause")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateAutopause; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreUpdate
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PreUpdate_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PreUpdate")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreUpdate; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ProcessTriggers
     {
+        public delegate void Original(
+            Terraria.GameInput.TriggersSet triggersSet
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.GameInput.TriggersSet triggersSet
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ProcessTriggers_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ProcessTriggers")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.GameInput.TriggersSet triggersSet
-        )
-        {
-            Event?.Invoke(self, triggersSet);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ProcessTriggers; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ArmorSetBonusActivated
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ArmorSetBonusActivated_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ArmorSetBonusActivated")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ArmorSetBonusActivated; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ArmorSetBonusHeld
     {
+        public delegate void Original(
+            int holdTime
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             int holdTime
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ArmorSetBonusHeld_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ArmorSetBonusHeld")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            int holdTime
-        )
-        {
-            Event?.Invoke(self, holdTime);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ArmorSetBonusHeld; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class SetControls
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_SetControls_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::SetControls")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::SetControls; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreUpdateBuffs
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PreUpdateBuffs_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PreUpdateBuffs")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreUpdateBuffs; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostUpdateBuffs
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostUpdateBuffs_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostUpdateBuffs")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostUpdateBuffs; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateEquips
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UpdateEquips_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UpdateEquips")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateEquips; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostUpdateEquips
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostUpdateEquips_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostUpdateEquips")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostUpdateEquips; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateVisibleAccessories
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UpdateVisibleAccessories_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UpdateVisibleAccessories")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateVisibleAccessories; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateVisibleVanityAccessories
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UpdateVisibleVanityAccessories_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UpdateVisibleVanityAccessories")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateVisibleVanityAccessories; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateDyes
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UpdateDyes_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UpdateDyes")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateDyes; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostUpdateMiscEffects
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostUpdateMiscEffects_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostUpdateMiscEffects")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostUpdateMiscEffects; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostUpdateRunSpeeds
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostUpdateRunSpeeds_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostUpdateRunSpeeds")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostUpdateRunSpeeds; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreUpdateMovement
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PreUpdateMovement_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PreUpdateMovement")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreUpdateMovement; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostUpdate
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostUpdate_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostUpdate")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostUpdate; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyExtraJumpDurationMultiplier
     {
+        public delegate void Original(
+            Terraria.ModLoader.ExtraJump jump,
+            ref float duration
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.ModLoader.ExtraJump jump,
             ref float duration
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyExtraJumpDurationMultiplier_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyExtraJumpDurationMultiplier")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ExtraJump jump,
-            ref float duration
-        )
-        {
-            Event?.Invoke(self, jump, ref duration);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyExtraJumpDurationMultiplier; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanStartExtraJump
     {
+        public delegate bool Original(
+            Terraria.ModLoader.ExtraJump jump
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.ModLoader.ExtraJump jump
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanStartExtraJump_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanStartExtraJump")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ExtraJump jump
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, jump))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanStartExtraJump; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnExtraJumpStarted
     {
+        public delegate void Original(
+            Terraria.ModLoader.ExtraJump jump,
+            ref bool playSound
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.ModLoader.ExtraJump jump,
             ref bool playSound
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnExtraJumpStarted_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnExtraJumpStarted")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ExtraJump jump,
-            ref bool playSound
-        )
-        {
-            Event?.Invoke(self, jump, ref playSound);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnExtraJumpStarted; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnExtraJumpEnded
     {
+        public delegate void Original(
+            Terraria.ModLoader.ExtraJump jump
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.ModLoader.ExtraJump jump
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnExtraJumpEnded_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnExtraJumpEnded")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ExtraJump jump
-        )
-        {
-            Event?.Invoke(self, jump);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnExtraJumpEnded; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnExtraJumpRefreshed
     {
+        public delegate void Original(
+            Terraria.ModLoader.ExtraJump jump
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.ModLoader.ExtraJump jump
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnExtraJumpRefreshed_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnExtraJumpRefreshed")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ExtraJump jump
-        )
-        {
-            Event?.Invoke(self, jump);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnExtraJumpRefreshed; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ExtraJumpVisuals
     {
+        public delegate void Original(
+            Terraria.ModLoader.ExtraJump jump
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.ModLoader.ExtraJump jump
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ExtraJumpVisuals_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ExtraJumpVisuals")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ExtraJump jump
-        )
-        {
-            Event?.Invoke(self, jump);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ExtraJumpVisuals; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanShowExtraJumpVisuals
     {
+        public delegate bool Original(
+            Terraria.ModLoader.ExtraJump jump
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.ModLoader.ExtraJump jump
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanShowExtraJumpVisuals_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanShowExtraJumpVisuals")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ExtraJump jump
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, jump))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanShowExtraJumpVisuals; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnExtraJumpCleared
     {
+        public delegate void Original(
+            Terraria.ModLoader.ExtraJump jump
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.ModLoader.ExtraJump jump
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnExtraJumpCleared_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnExtraJumpCleared")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.ModLoader.ExtraJump jump
-        )
-        {
-            Event?.Invoke(self, jump);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnExtraJumpCleared; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class FrameEffects
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_FrameEffects_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::FrameEffects")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::FrameEffects; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ImmuneTo
     {
+        public delegate bool Original(
+            Terraria.DataStructures.PlayerDeathReason damageSource,
+            int cooldownCounter,
+            bool dodgeable
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.DataStructures.PlayerDeathReason damageSource,
             int cooldownCounter,
             bool dodgeable
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ImmuneTo_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ImmuneTo")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.DataStructures.PlayerDeathReason damageSource,
-            int cooldownCounter,
-            bool dodgeable
-        )
-        {
-            if (Event == null)
-            {
-                return false;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (handler.Invoke(self, damageSource, cooldownCounter, dodgeable))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ImmuneTo; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class FreeDodge
     {
+        public delegate bool Original(
+            Terraria.Player.HurtInfo info
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Player.HurtInfo info
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_FreeDodge_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::FreeDodge")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Player.HurtInfo info
-        )
-        {
-            if (Event == null)
-            {
-                return false;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (handler.Invoke(self, info))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::FreeDodge; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ConsumableDodge
     {
+        public delegate bool Original(
+            Terraria.Player.HurtInfo info
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Player.HurtInfo info
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ConsumableDodge_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ConsumableDodge")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Player.HurtInfo info
-        )
-        {
-            if (Event == null)
-            {
-                return false;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (handler.Invoke(self, info))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ConsumableDodge; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyHurt
     {
+        public delegate void Original(
+            ref Terraria.Player.HurtModifiers modifiers
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             ref Terraria.Player.HurtModifiers modifiers
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyHurt_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyHurt")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            ref Terraria.Player.HurtModifiers modifiers
-        )
-        {
-            Event?.Invoke(self, ref modifiers);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHurt; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnHurt
     {
+        public delegate void Original(
+            Terraria.Player.HurtInfo info
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Player.HurtInfo info
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnHurt_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnHurt")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Player.HurtInfo info
-        )
-        {
-            Event?.Invoke(self, info);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnHurt; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostHurt
     {
+        public delegate void Original(
+            Terraria.Player.HurtInfo info
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Player.HurtInfo info
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostHurt_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostHurt")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Player.HurtInfo info
-        )
-        {
-            Event?.Invoke(self, info);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostHurt; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreKill
     {
+        public delegate bool Original(
+            double damage,
+            int hitDirection,
+            bool pvp,
+            ref bool playSound,
+            ref bool genDust,
+            ref Terraria.DataStructures.PlayerDeathReason damageSource
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             double damage,
             int hitDirection,
@@ -1301,41 +971,25 @@ public static partial class ModPlayerHooks
             ref Terraria.DataStructures.PlayerDeathReason damageSource
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PreKill_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PreKill")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            double damage,
-            int hitDirection,
-            bool pvp,
-            ref bool playSound,
-            ref bool genDust,
-            ref Terraria.DataStructures.PlayerDeathReason damageSource
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, damage, hitDirection, pvp, ref playSound, ref genDust, ref damageSource);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreKill; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class Kill
     {
+        public delegate void Original(
+            double damage,
+            int hitDirection,
+            bool pvp,
+            Terraria.DataStructures.PlayerDeathReason damageSource
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             double damage,
             int hitDirection,
@@ -1343,441 +997,407 @@ public static partial class ModPlayerHooks
             Terraria.DataStructures.PlayerDeathReason damageSource
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_Kill_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::Kill")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            double damage,
-            int hitDirection,
-            bool pvp,
-            Terraria.DataStructures.PlayerDeathReason damageSource
-        )
-        {
-            Event?.Invoke(self, damage, hitDirection, pvp, damageSource);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::Kill; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreModifyLuck
     {
+        public delegate bool Original(
+            ref float luck
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             ref float luck
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PreModifyLuck_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PreModifyLuck")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            ref float luck
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, ref luck);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreModifyLuck; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyLuck
     {
+        public delegate void Original(
+            ref float luck
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             ref float luck
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyLuck_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyLuck")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            ref float luck
-        )
-        {
-            Event?.Invoke(self, ref luck);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyLuck; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreItemCheck
     {
+        public delegate bool Original();
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PreItemCheck_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PreItemCheck")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreItemCheck; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostItemCheck
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostItemCheck_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostItemCheck")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostItemCheck; use a flag to disable behavior.");
         }
+    }
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
+    public sealed partial class UseTimeMultiplier
+    {
+        public delegate float Original(
+            Terraria.Item item
+        );
+
+        public delegate float Definition(
+            Original orig,
+            Terraria.ModLoader.ModPlayer self,
+            Terraria.Item item
+        );
+
+        public static event Definition? Event
         {
-            Event?.Invoke(self);
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UseTimeMultiplier_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UseTimeMultiplier")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UseTimeMultiplier; use a flag to disable behavior.");
+        }
+    }
+
+    public sealed partial class UseAnimationMultiplier
+    {
+        public delegate float Original(
+            Terraria.Item item
+        );
+
+        public delegate float Definition(
+            Original orig,
+            Terraria.ModLoader.ModPlayer self,
+            Terraria.Item item
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UseAnimationMultiplier_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UseAnimationMultiplier")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UseAnimationMultiplier; use a flag to disable behavior.");
+        }
+    }
+
+    public sealed partial class UseSpeedMultiplier
+    {
+        public delegate float Original(
+            Terraria.Item item
+        );
+
+        public delegate float Definition(
+            Original orig,
+            Terraria.ModLoader.ModPlayer self,
+            Terraria.Item item
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_UseSpeedMultiplier_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::UseSpeedMultiplier")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UseSpeedMultiplier; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class GetHealLife
     {
+        public delegate void Original(
+            Terraria.Item item,
+            bool quickHeal,
+            ref int healValue
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             bool quickHeal,
             ref int healValue
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_GetHealLife_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::GetHealLife")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            bool quickHeal,
-            ref int healValue
-        )
-        {
-            Event?.Invoke(self, item, quickHeal, ref healValue);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::GetHealLife; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class GetHealMana
     {
+        public delegate void Original(
+            Terraria.Item item,
+            bool quickHeal,
+            ref int healValue
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             bool quickHeal,
             ref int healValue
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_GetHealMana_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::GetHealMana")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            bool quickHeal,
-            ref int healValue
-        )
-        {
-            Event?.Invoke(self, item, quickHeal, ref healValue);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::GetHealMana; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyManaCost
     {
+        public delegate void Original(
+            Terraria.Item item,
+            ref float reduce,
+            ref float mult
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             ref float reduce,
             ref float mult
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyManaCost_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyManaCost")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            ref float reduce,
-            ref float mult
-        )
-        {
-            Event?.Invoke(self, item, ref reduce, ref mult);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyManaCost; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnMissingMana
     {
+        public delegate void Original(
+            Terraria.Item item,
+            int neededMana
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             int neededMana
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnMissingMana_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnMissingMana")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            int neededMana
-        )
-        {
-            Event?.Invoke(self, item, neededMana);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnMissingMana; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnConsumeMana
     {
+        public delegate void Original(
+            Terraria.Item item,
+            int manaConsumed
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             int manaConsumed
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnConsumeMana_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnConsumeMana")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            int manaConsumed
-        )
-        {
-            Event?.Invoke(self, item, manaConsumed);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnConsumeMana; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyWeaponDamage
     {
+        public delegate void Original(
+            Terraria.Item item,
+            ref Terraria.ModLoader.StatModifier damage
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             ref Terraria.ModLoader.StatModifier damage
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyWeaponDamage_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyWeaponDamage")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            ref Terraria.ModLoader.StatModifier damage
-        )
-        {
-            Event?.Invoke(self, item, ref damage);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyWeaponDamage; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyWeaponKnockback
     {
+        public delegate void Original(
+            Terraria.Item item,
+            ref Terraria.ModLoader.StatModifier knockback
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             ref Terraria.ModLoader.StatModifier knockback
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyWeaponKnockback_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyWeaponKnockback")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            ref Terraria.ModLoader.StatModifier knockback
-        )
-        {
-            Event?.Invoke(self, item, ref knockback);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyWeaponKnockback; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyWeaponCrit
     {
+        public delegate void Original(
+            Terraria.Item item,
+            ref float crit
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             ref float crit
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyWeaponCrit_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyWeaponCrit")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            ref float crit
-        )
-        {
-            Event?.Invoke(self, item, ref crit);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyWeaponCrit; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanConsumeAmmo
     {
+        public delegate bool Original(
+            Terraria.Item weapon,
+            Terraria.Item ammo
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item weapon,
             Terraria.Item ammo
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanConsumeAmmo_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanConsumeAmmo")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item weapon,
-            Terraria.Item ammo
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, weapon, ammo))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanConsumeAmmo; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnConsumeAmmo
     {
+        public delegate void Original(
+            Terraria.Item weapon,
+            Terraria.Item ammo
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item weapon,
             Terraria.Item ammo
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnConsumeAmmo_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnConsumeAmmo")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item weapon,
-            Terraria.Item ammo
-        )
-        {
-            Event?.Invoke(self, weapon, ammo);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnConsumeAmmo; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanShoot
     {
+        public delegate bool Original(
+            Terraria.Item item
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanShoot_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanShoot")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, item);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanShoot; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyShootStats
     {
+        public delegate void Original(
+            Terraria.Item item,
+            ref Microsoft.Xna.Framework.Vector2 position,
+            ref Microsoft.Xna.Framework.Vector2 velocity,
+            ref int type,
+            ref int damage,
+            ref float knockback
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             ref Microsoft.Xna.Framework.Vector2 position,
@@ -1787,30 +1407,28 @@ public static partial class ModPlayerHooks
             ref float knockback
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyShootStats_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyShootStats")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            ref Microsoft.Xna.Framework.Vector2 position,
-            ref Microsoft.Xna.Framework.Vector2 velocity,
-            ref int type,
-            ref int damage,
-            ref float knockback
-        )
-        {
-            Event?.Invoke(self, item, ref position, ref velocity, ref type, ref damage, ref knockback);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyShootStats; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class Shoot
     {
+        public delegate bool Original(
+            Terraria.Item item,
+            Terraria.DataStructures.EntitySource_ItemUse_WithAmmo source,
+            Microsoft.Xna.Framework.Vector2 position,
+            Microsoft.Xna.Framework.Vector2 velocity,
+            int type,
+            int damage,
+            float knockback
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             Terraria.DataStructures.EntitySource_ItemUse_WithAmmo source,
@@ -1821,67 +1439,47 @@ public static partial class ModPlayerHooks
             float knockback
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_Shoot_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::Shoot")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            Terraria.DataStructures.EntitySource_ItemUse_WithAmmo source,
-            Microsoft.Xna.Framework.Vector2 position,
-            Microsoft.Xna.Framework.Vector2 velocity,
-            int type,
-            int damage,
-            float knockback
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, item, source, position, velocity, type, damage, knockback);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::Shoot; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class MeleeEffects
     {
+        public delegate void Original(
+            Terraria.Item item,
+            Microsoft.Xna.Framework.Rectangle hitbox
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             Microsoft.Xna.Framework.Rectangle hitbox
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_MeleeEffects_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::MeleeEffects")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            Microsoft.Xna.Framework.Rectangle hitbox
-        )
-        {
-            Event?.Invoke(self, item, hitbox);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::MeleeEffects; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class EmitEnchantmentVisualsAt
     {
+        public delegate void Original(
+            Terraria.Projectile projectile,
+            Microsoft.Xna.Framework.Vector2 boxPosition,
+            int boxWidth,
+            int boxHeight
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Projectile projectile,
             Microsoft.Xna.Framework.Vector2 boxPosition,
@@ -1889,222 +1487,253 @@ public static partial class ModPlayerHooks
             int boxHeight
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_EmitEnchantmentVisualsAt_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::EmitEnchantmentVisualsAt")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::EmitEnchantmentVisualsAt; use a flag to disable behavior.");
         }
+    }
 
-        public static void Invoke(
+    public sealed partial class CanCatchNPC
+    {
+        public delegate bool? Original(
+            Terraria.NPC target,
+            Terraria.Item item
+        );
+
+        public delegate bool? Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
-            Terraria.Projectile projectile,
-            Microsoft.Xna.Framework.Vector2 boxPosition,
-            int boxWidth,
-            int boxHeight
-        )
+            Terraria.NPC target,
+            Terraria.Item item
+        );
+
+        public static event Definition? Event
         {
-            Event?.Invoke(self, projectile, boxPosition, boxWidth, boxHeight);
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanCatchNPC_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanCatchNPC")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanCatchNPC; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnCatchNPC
     {
+        public delegate void Original(
+            Terraria.NPC npc,
+            Terraria.Item item,
+            bool failed
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC npc,
             Terraria.Item item,
             bool failed
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnCatchNPC_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnCatchNPC")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC npc,
-            Terraria.Item item,
-            bool failed
-        )
-        {
-            Event?.Invoke(self, npc, item, failed);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnCatchNPC; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyItemScale
     {
+        public delegate void Original(
+            Terraria.Item item,
+            ref float scale
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             ref float scale
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyItemScale_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyItemScale")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            ref float scale
-        )
-        {
-            Event?.Invoke(self, item, ref scale);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyItemScale; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnHitAnything
     {
+        public delegate void Original(
+            float x,
+            float y,
+            Terraria.Entity victim
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             float x,
             float y,
             Terraria.Entity victim
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnHitAnything_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnHitAnything")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            float x,
-            float y,
-            Terraria.Entity victim
-        )
-        {
-            Event?.Invoke(self, x, y, victim);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnHitAnything; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanHitNPC
     {
+        public delegate bool Original(
+            Terraria.NPC target
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC target
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanHitNPC_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanHitNPC")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanHitNPC; use a flag to disable behavior.");
         }
+    }
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
+    public sealed partial class CanMeleeAttackCollideWithNPC
+    {
+        public delegate bool? Original(
+            Terraria.Item item,
+            Microsoft.Xna.Framework.Rectangle meleeAttackHitbox,
             Terraria.NPC target
-        )
+        );
+
+        public delegate bool? Definition(
+            Original orig,
+            Terraria.ModLoader.ModPlayer self,
+            Terraria.Item item,
+            Microsoft.Xna.Framework.Rectangle meleeAttackHitbox,
+            Terraria.NPC target
+        );
+
+        public static event Definition? Event
         {
-            if (Event == null)
-            {
-                return true;
-            }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanMeleeAttackCollideWithNPC_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanMeleeAttackCollideWithNPC")));
 
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, target))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanMeleeAttackCollideWithNPC; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyHitNPC
     {
+        public delegate void Original(
+            Terraria.NPC target,
+            ref Terraria.NPC.HitModifiers modifiers
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC target,
             ref Terraria.NPC.HitModifiers modifiers
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyHitNPC_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyHitNPC")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC target,
-            ref Terraria.NPC.HitModifiers modifiers
-        )
-        {
-            Event?.Invoke(self, target, ref modifiers);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHitNPC; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnHitNPC
     {
+        public delegate void Original(
+            Terraria.NPC target,
+            Terraria.NPC.HitInfo hit,
+            int damageDone
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC target,
             Terraria.NPC.HitInfo hit,
             int damageDone
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnHitNPC_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnHitNPC")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnHitNPC; use a flag to disable behavior.");
         }
+    }
 
-        public static void Invoke(
+    public sealed partial class CanHitNPCWithItem
+    {
+        public delegate bool? Original(
+            Terraria.Item item,
+            Terraria.NPC target
+        );
+
+        public delegate bool? Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC target,
-            Terraria.NPC.HitInfo hit,
-            int damageDone
-        )
+            Terraria.Item item,
+            Terraria.NPC target
+        );
+
+        public static event Definition? Event
         {
-            Event?.Invoke(self, target, hit, damageDone);
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanHitNPCWithItem_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanHitNPCWithItem")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanHitNPCWithItem; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyHitNPCWithItem
     {
+        public delegate void Original(
+            Terraria.Item item,
+            Terraria.NPC target,
+            ref Terraria.NPC.HitModifiers modifiers
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             Terraria.NPC target,
             ref Terraria.NPC.HitModifiers modifiers
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyHitNPCWithItem_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyHitNPCWithItem")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            Terraria.NPC target,
-            ref Terraria.NPC.HitModifiers modifiers
-        )
-        {
-            Event?.Invoke(self, item, target, ref modifiers);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHitNPCWithItem; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnHitNPCWithItem
     {
+        public delegate void Original(
+            Terraria.Item item,
+            Terraria.NPC target,
+            Terraria.NPC.HitInfo hit,
+            int damageDone
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             Terraria.NPC target,
@@ -2112,55 +1741,71 @@ public static partial class ModPlayerHooks
             int damageDone
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnHitNPCWithItem_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnHitNPCWithItem")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnHitNPCWithItem; use a flag to disable behavior.");
         }
+    }
 
-        public static void Invoke(
+    public sealed partial class CanHitNPCWithProj
+    {
+        public delegate bool? Original(
+            Terraria.Projectile proj,
+            Terraria.NPC target
+        );
+
+        public delegate bool? Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            Terraria.NPC target,
-            Terraria.NPC.HitInfo hit,
-            int damageDone
-        )
+            Terraria.Projectile proj,
+            Terraria.NPC target
+        );
+
+        public static event Definition? Event
         {
-            Event?.Invoke(self, item, target, hit, damageDone);
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanHitNPCWithProj_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanHitNPCWithProj")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanHitNPCWithProj; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyHitNPCWithProj
     {
+        public delegate void Original(
+            Terraria.Projectile proj,
+            Terraria.NPC target,
+            ref Terraria.NPC.HitModifiers modifiers
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Projectile proj,
             Terraria.NPC target,
             ref Terraria.NPC.HitModifiers modifiers
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyHitNPCWithProj_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyHitNPCWithProj")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Projectile proj,
-            Terraria.NPC target,
-            ref Terraria.NPC.HitModifiers modifiers
-        )
-        {
-            Event?.Invoke(self, proj, target, ref modifiers);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHitNPCWithProj; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnHitNPCWithProj
     {
+        public delegate void Original(
+            Terraria.Projectile proj,
+            Terraria.NPC target,
+            Terraria.NPC.HitInfo hit,
+            int damageDone
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Projectile proj,
             Terraria.NPC target,
@@ -2168,301 +1813,220 @@ public static partial class ModPlayerHooks
             int damageDone
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnHitNPCWithProj_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnHitNPCWithProj")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Projectile proj,
-            Terraria.NPC target,
-            Terraria.NPC.HitInfo hit,
-            int damageDone
-        )
-        {
-            Event?.Invoke(self, proj, target, hit, damageDone);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnHitNPCWithProj; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanHitPvp
     {
+        public delegate bool Original(
+            Terraria.Item item,
+            Terraria.Player target
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item,
             Terraria.Player target
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanHitPvp_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanHitPvp")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item,
-            Terraria.Player target
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, item, target))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanHitPvp; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanHitPvpWithProj
     {
+        public delegate bool Original(
+            Terraria.Projectile proj,
+            Terraria.Player target
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Projectile proj,
             Terraria.Player target
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanHitPvpWithProj_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanHitPvpWithProj")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Projectile proj,
-            Terraria.Player target
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, proj, target))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanHitPvpWithProj; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanBeHitByNPC
     {
+        public delegate bool Original(
+            Terraria.NPC npc,
+            ref int cooldownSlot
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC npc,
             ref int cooldownSlot
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanBeHitByNPC_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanBeHitByNPC")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC npc,
-            ref int cooldownSlot
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, npc, ref cooldownSlot))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanBeHitByNPC; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyHitByNPC
     {
+        public delegate void Original(
+            Terraria.NPC npc,
+            ref Terraria.Player.HurtModifiers modifiers
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC npc,
             ref Terraria.Player.HurtModifiers modifiers
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyHitByNPC_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyHitByNPC")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC npc,
-            ref Terraria.Player.HurtModifiers modifiers
-        )
-        {
-            Event?.Invoke(self, npc, ref modifiers);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHitByNPC; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnHitByNPC
     {
+        public delegate void Original(
+            Terraria.NPC npc,
+            Terraria.Player.HurtInfo hurtInfo
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC npc,
             Terraria.Player.HurtInfo hurtInfo
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnHitByNPC_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnHitByNPC")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC npc,
-            Terraria.Player.HurtInfo hurtInfo
-        )
-        {
-            Event?.Invoke(self, npc, hurtInfo);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnHitByNPC; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanBeHitByProjectile
     {
+        public delegate bool Original(
+            Terraria.Projectile proj
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Projectile proj
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanBeHitByProjectile_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanBeHitByProjectile")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Projectile proj
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, proj))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanBeHitByProjectile; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyHitByProjectile
     {
+        public delegate void Original(
+            Terraria.Projectile proj,
+            ref Terraria.Player.HurtModifiers modifiers
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Projectile proj,
             ref Terraria.Player.HurtModifiers modifiers
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyHitByProjectile_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyHitByProjectile")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Projectile proj,
-            ref Terraria.Player.HurtModifiers modifiers
-        )
-        {
-            Event?.Invoke(self, proj, ref modifiers);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHitByProjectile; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnHitByProjectile
     {
+        public delegate void Original(
+            Terraria.Projectile proj,
+            Terraria.Player.HurtInfo hurtInfo
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Projectile proj,
             Terraria.Player.HurtInfo hurtInfo
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnHitByProjectile_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnHitByProjectile")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Projectile proj,
-            Terraria.Player.HurtInfo hurtInfo
-        )
-        {
-            Event?.Invoke(self, proj, hurtInfo);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnHitByProjectile; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyFishingAttempt
     {
+        public delegate void Original(
+            ref Terraria.DataStructures.FishingAttempt attempt
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             ref Terraria.DataStructures.FishingAttempt attempt
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyFishingAttempt_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyFishingAttempt")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            ref Terraria.DataStructures.FishingAttempt attempt
-        )
-        {
-            Event?.Invoke(self, ref attempt);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyFishingAttempt; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CatchFish
     {
+        public delegate void Original(
+            Terraria.DataStructures.FishingAttempt attempt,
+            ref int itemDrop,
+            ref int npcSpawn,
+            ref Terraria.AdvancedPopupRequest sonar,
+            ref Microsoft.Xna.Framework.Vector2 sonarPosition
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.DataStructures.FishingAttempt attempt,
             ref int itemDrop,
@@ -2471,127 +2035,133 @@ public static partial class ModPlayerHooks
             ref Microsoft.Xna.Framework.Vector2 sonarPosition
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CatchFish_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CatchFish")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.DataStructures.FishingAttempt attempt,
-            ref int itemDrop,
-            ref int npcSpawn,
-            ref Terraria.AdvancedPopupRequest sonar,
-            ref Microsoft.Xna.Framework.Vector2 sonarPosition
-        )
-        {
-            Event?.Invoke(self, attempt, ref itemDrop, ref npcSpawn, ref sonar, ref sonarPosition);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CatchFish; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyCaughtFish
     {
+        public delegate void Original(
+            Terraria.Item fish
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item fish
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyCaughtFish_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyCaughtFish")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyCaughtFish; use a flag to disable behavior.");
         }
+    }
 
-        public static void Invoke(
+    public sealed partial class CanConsumeBait
+    {
+        public delegate bool? Original(
+            Terraria.Item bait
+        );
+
+        public delegate bool? Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
-            Terraria.Item fish
-        )
+            Terraria.Item bait
+        );
+
+        public static event Definition? Event
         {
-            Event?.Invoke(self, fish);
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanConsumeBait_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanConsumeBait")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanConsumeBait; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class GetFishingLevel
     {
+        public delegate void Original(
+            Terraria.Item fishingRod,
+            Terraria.Item bait,
+            ref float fishingLevel
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item fishingRod,
             Terraria.Item bait,
             ref float fishingLevel
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_GetFishingLevel_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::GetFishingLevel")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item fishingRod,
-            Terraria.Item bait,
-            ref float fishingLevel
-        )
-        {
-            Event?.Invoke(self, fishingRod, bait, ref fishingLevel);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::GetFishingLevel; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class AnglerQuestReward
     {
+        public delegate void Original(
+            float rareMultiplier,
+            System.Collections.Generic.List<Terraria.Item> rewardItems
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             float rareMultiplier,
             System.Collections.Generic.List<Terraria.Item> rewardItems
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_AnglerQuestReward_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::AnglerQuestReward")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            float rareMultiplier,
-            System.Collections.Generic.List<Terraria.Item> rewardItems
-        )
-        {
-            Event?.Invoke(self, rareMultiplier, rewardItems);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::AnglerQuestReward; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class GetDyeTraderReward
     {
+        public delegate void Original(
+            System.Collections.Generic.List<int> rewardPool
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             System.Collections.Generic.List<int> rewardPool
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_GetDyeTraderReward_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::GetDyeTraderReward")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            System.Collections.Generic.List<int> rewardPool
-        )
-        {
-            Event?.Invoke(self, rewardPool);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::GetDyeTraderReward; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class DrawEffects
     {
+        public delegate void Original(
+            Terraria.DataStructures.PlayerDrawSet drawInfo,
+            ref float r,
+            ref float g,
+            ref float b,
+            ref float a,
+            ref bool fullBright
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.DataStructures.PlayerDrawSet drawInfo,
             ref float r,
@@ -2601,477 +2171,374 @@ public static partial class ModPlayerHooks
             ref bool fullBright
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_DrawEffects_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::DrawEffects")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.DataStructures.PlayerDrawSet drawInfo,
-            ref float r,
-            ref float g,
-            ref float b,
-            ref float a,
-            ref bool fullBright
-        )
-        {
-            Event?.Invoke(self, drawInfo, ref r, ref g, ref b, ref a, ref fullBright);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::DrawEffects; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyDrawInfo
     {
+        public delegate void Original(
+            ref Terraria.DataStructures.PlayerDrawSet drawInfo
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             ref Terraria.DataStructures.PlayerDrawSet drawInfo
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyDrawInfo_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyDrawInfo")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            ref Terraria.DataStructures.PlayerDrawSet drawInfo
-        )
-        {
-            Event?.Invoke(self, ref drawInfo);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyDrawInfo; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyDrawLayerOrdering
     {
+        public delegate void Original(
+            System.Collections.Generic.IDictionary<Terraria.ModLoader.PlayerDrawLayer, Terraria.ModLoader.PlayerDrawLayer.Position> positions
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             System.Collections.Generic.IDictionary<Terraria.ModLoader.PlayerDrawLayer, Terraria.ModLoader.PlayerDrawLayer.Position> positions
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyDrawLayerOrdering_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyDrawLayerOrdering")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            System.Collections.Generic.IDictionary<Terraria.ModLoader.PlayerDrawLayer, Terraria.ModLoader.PlayerDrawLayer.Position> positions
-        )
-        {
-            Event?.Invoke(self, positions);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyDrawLayerOrdering; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class HideDrawLayers
     {
+        public delegate void Original(
+            Terraria.DataStructures.PlayerDrawSet drawInfo
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.DataStructures.PlayerDrawSet drawInfo
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_HideDrawLayers_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::HideDrawLayers")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.DataStructures.PlayerDrawSet drawInfo
-        )
-        {
-            Event?.Invoke(self, drawInfo);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::HideDrawLayers; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyScreenPosition
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyScreenPosition_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyScreenPosition")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyScreenPosition; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyZoom
     {
+        public delegate void Original(
+            ref float zoom
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             ref float zoom
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyZoom_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyZoom")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            ref float zoom
-        )
-        {
-            Event?.Invoke(self, ref zoom);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyZoom; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PlayerConnect
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PlayerConnect_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PlayerConnect")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PlayerConnect; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PlayerDisconnect
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PlayerDisconnect_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PlayerDisconnect")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PlayerDisconnect; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnEnterWorld
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnEnterWorld_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnEnterWorld")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnEnterWorld; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnRespawn
     {
+        public delegate void Original();
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnRespawn_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnRespawn")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self
-        )
-        {
-            Event?.Invoke(self);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnRespawn; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ShiftClickSlot
     {
+        public delegate bool Original(
+            Terraria.Item[] inventory,
+            int context,
+            int slot
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item[] inventory,
             int context,
             int slot
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ShiftClickSlot_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ShiftClickSlot")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item[] inventory,
-            int context,
-            int slot
-        )
-        {
-            if (Event == null)
-            {
-                return false;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (handler.Invoke(self, inventory, context, slot))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ShiftClickSlot; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class HoverSlot
     {
+        public delegate bool Original(
+            Terraria.Item[] inventory,
+            int context,
+            int slot
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item[] inventory,
             int context,
             int slot
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_HoverSlot_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::HoverSlot")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item[] inventory,
-            int context,
-            int slot
-        )
-        {
-            if (Event == null)
-            {
-                return false;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (handler.Invoke(self, inventory, context, slot))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::HoverSlot; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostSellItem
     {
+        public delegate void Original(
+            Terraria.NPC vendor,
+            Terraria.Item[] shopInventory,
+            Terraria.Item item
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC vendor,
             Terraria.Item[] shopInventory,
             Terraria.Item item
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostSellItem_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostSellItem")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC vendor,
-            Terraria.Item[] shopInventory,
-            Terraria.Item item
-        )
-        {
-            Event?.Invoke(self, vendor, shopInventory, item);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostSellItem; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanSellItem
     {
+        public delegate bool Original(
+            Terraria.NPC vendor,
+            Terraria.Item[] shopInventory,
+            Terraria.Item item
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC vendor,
             Terraria.Item[] shopInventory,
             Terraria.Item item
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanSellItem_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanSellItem")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC vendor,
-            Terraria.Item[] shopInventory,
-            Terraria.Item item
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, vendor, shopInventory, item))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanSellItem; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostBuyItem
     {
+        public delegate void Original(
+            Terraria.NPC vendor,
+            Terraria.Item[] shopInventory,
+            Terraria.Item item
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC vendor,
             Terraria.Item[] shopInventory,
             Terraria.Item item
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostBuyItem_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostBuyItem")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC vendor,
-            Terraria.Item[] shopInventory,
-            Terraria.Item item
-        )
-        {
-            Event?.Invoke(self, vendor, shopInventory, item);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostBuyItem; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanBuyItem
     {
+        public delegate bool Original(
+            Terraria.NPC vendor,
+            Terraria.Item[] shopInventory,
+            Terraria.Item item
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC vendor,
             Terraria.Item[] shopInventory,
             Terraria.Item item
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanBuyItem_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanBuyItem")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC vendor,
-            Terraria.Item[] shopInventory,
-            Terraria.Item item
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, vendor, shopInventory, item))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanBuyItem; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanUseItem
     {
+        public delegate bool Original(
+            Terraria.Item item
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanUseItem_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanUseItem")));
 
-        public static bool Invoke(
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanUseItem; use a flag to disable behavior.");
+        }
+    }
+
+    public sealed partial class CanAutoReuseItem
+    {
+        public delegate bool? Original(
+            Terraria.Item item
+        );
+
+        public delegate bool? Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item
-        )
+        );
+
+        public static event Definition? Event
         {
-            if (Event == null)
-            {
-                return true;
-            }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanAutoReuseItem_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanAutoReuseItem")));
 
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, item))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanAutoReuseItem; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyNurseHeal
     {
+        public delegate bool Original(
+            Terraria.NPC nurse,
+            ref int health,
+            ref bool removeDebuffs,
+            ref string chatText
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC nurse,
             ref int health,
@@ -3079,41 +2546,25 @@ public static partial class ModPlayerHooks
             ref string chatText
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyNurseHeal_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyNurseHeal")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC nurse,
-            ref int health,
-            ref bool removeDebuffs,
-            ref string chatText
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, nurse, ref health, ref removeDebuffs, ref chatText))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyNurseHeal; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyNursePrice
     {
+        public delegate void Original(
+            Terraria.NPC nurse,
+            int health,
+            bool removeDebuffs,
+            ref int price
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC nurse,
             int health,
@@ -3121,28 +2572,25 @@ public static partial class ModPlayerHooks
             ref int price
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyNursePrice_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyNursePrice")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC nurse,
-            int health,
-            bool removeDebuffs,
-            ref int price
-        )
-        {
-            Event?.Invoke(self, nurse, health, removeDebuffs, ref price);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyNursePrice; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostNurseHeal
     {
+        public delegate void Original(
+            Terraria.NPC nurse,
+            int health,
+            bool removeDebuffs,
+            int price
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.NPC nurse,
             int health,
@@ -3150,207 +2598,237 @@ public static partial class ModPlayerHooks
             int price
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_PostNurseHeal_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::PostNurseHeal")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostNurseHeal; use a flag to disable behavior.");
         }
+    }
 
-        public static void Invoke(
+    public sealed partial class AddStartingItems
+    {
+        public delegate System.Collections.Generic.IEnumerable<Terraria.Item> Original(
+            bool mediumCoreDeath
+        );
+
+        public delegate System.Collections.Generic.IEnumerable<Terraria.Item> Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
-            Terraria.NPC nurse,
-            int health,
-            bool removeDebuffs,
-            int price
-        )
+            bool mediumCoreDeath
+        );
+
+        public static event Definition? Event
         {
-            Event?.Invoke(self, nurse, health, removeDebuffs, price);
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_AddStartingItems_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::AddStartingItems")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::AddStartingItems; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyStartingInventory
     {
+        public delegate void Original(
+            System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.List<Terraria.Item>> itemsByMod,
+            bool mediumCoreDeath
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.List<Terraria.Item>> itemsByMod,
             bool mediumCoreDeath
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ModifyStartingInventory_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ModifyStartingInventory")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyStartingInventory; use a flag to disable behavior.");
         }
+    }
 
-        public static void Invoke(
+    public sealed partial class AddMaterialsForCrafting
+    {
+        public delegate System.Collections.Generic.IEnumerable<Terraria.Item> Original(
+            out Terraria.ModLoader.ModPlayer.ItemConsumedCallback itemConsumedCallback
+        );
+
+        public delegate System.Collections.Generic.IEnumerable<Terraria.Item> Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
-            System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.List<Terraria.Item>> itemsByMod,
-            bool mediumCoreDeath
-        )
+            out Terraria.ModLoader.ModPlayer.ItemConsumedCallback itemConsumedCallback
+        );
+
+        public static event Definition? Event
         {
-            Event?.Invoke(self, itemsByMod, mediumCoreDeath);
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_AddMaterialsForCrafting_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::AddMaterialsForCrafting")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::AddMaterialsForCrafting; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnPickup
     {
+        public delegate bool Original(
+            Terraria.Item item
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Terraria.Item item
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnPickup_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnPickup")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, item))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnPickup; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CanBeTeleportedTo
     {
+        public delegate bool Original(
+            Microsoft.Xna.Framework.Vector2 teleportPosition,
+            string context
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             Microsoft.Xna.Framework.Vector2 teleportPosition,
             string context
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_CanBeTeleportedTo_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::CanBeTeleportedTo")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            Microsoft.Xna.Framework.Vector2 teleportPosition,
-            string context
-        )
-        {
-            if (Event == null)
-            {
-                return true;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (!handler.Invoke(self, teleportPosition, context))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanBeTeleportedTo; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class OnEquipmentLoadoutSwitched
     {
+        public delegate void Original(
+            int oldLoadoutIndex,
+            int loadoutIndex
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.ModPlayer self,
             int oldLoadoutIndex,
             int loadoutIndex
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnEquipmentLoadoutSwitched_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnEquipmentLoadoutSwitched")));
 
-        public static void Invoke(
-            Terraria.ModLoader.ModPlayer self,
-            int oldLoadoutIndex,
-            int loadoutIndex
-        )
-        {
-            Event?.Invoke(self, oldLoadoutIndex, loadoutIndex);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnEquipmentLoadoutSwitched; use a flag to disable behavior.");
         }
     }
 }
 
-public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
+public sealed partial class ModPlayer_Initialize_Impl(ModPlayerHooks.Initialize.Definition hook) : Terraria.ModLoader.ModPlayer
 {
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_Initialize_Impl(hook);
+    }
+
     public override void Initialize()
     {
-        if (!ModPlayerHooks.Initialize.GetInvocationList().Any())
-        {
-            base.Initialize();
-            return;
-        }
-
-        ModPlayerHooks.Initialize.Invoke(
+        hook(
+            () => base.Initialize(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_ResetEffects_Impl(ModPlayerHooks.ResetEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ResetEffects_Impl(hook);
     }
 
     public override void ResetEffects()
     {
-        if (!ModPlayerHooks.ResetEffects.GetInvocationList().Any())
-        {
-            base.ResetEffects();
-            return;
-        }
-
-        ModPlayerHooks.ResetEffects.Invoke(
+        hook(
+            () => base.ResetEffects(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_ResetInfoAccessories_Impl(ModPlayerHooks.ResetInfoAccessories.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ResetInfoAccessories_Impl(hook);
     }
 
     public override void ResetInfoAccessories()
     {
-        if (!ModPlayerHooks.ResetInfoAccessories.GetInvocationList().Any())
-        {
-            base.ResetInfoAccessories();
-            return;
-        }
-
-        ModPlayerHooks.ResetInfoAccessories.Invoke(
+        hook(
+            () => base.ResetInfoAccessories(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_RefreshInfoAccessoriesFromTeamPlayers_Impl(ModPlayerHooks.RefreshInfoAccessoriesFromTeamPlayers.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_RefreshInfoAccessoriesFromTeamPlayers_Impl(hook);
     }
 
     public override void RefreshInfoAccessoriesFromTeamPlayers(
         Terraria.Player otherPlayer
     )
     {
-        if (!ModPlayerHooks.RefreshInfoAccessoriesFromTeamPlayers.GetInvocationList().Any())
-        {
-            base.RefreshInfoAccessoriesFromTeamPlayers(
-                otherPlayer
-            );
-            return;
-        }
-
-        ModPlayerHooks.RefreshInfoAccessoriesFromTeamPlayers.Invoke(
+        hook(
+            (
+                Terraria.Player otherPlayer_captured
+            ) => base.RefreshInfoAccessoriesFromTeamPlayers(
+                otherPlayer_captured
+            ),
             this,
             otherPlayer
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyMaxStats_Impl(ModPlayerHooks.ModifyMaxStats.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyMaxStats_Impl(hook);
     }
 
     public override void ModifyMaxStats(
@@ -3358,443 +2836,531 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         out Terraria.ModLoader.StatModifier mana
     )
     {
-        if (!ModPlayerHooks.ModifyMaxStats.GetInvocationList().Any())
-        {
-            base.ModifyMaxStats(
-                out health,
-                out mana
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyMaxStats.Invoke(
+        hook(
+            (
+                out Terraria.ModLoader.StatModifier health_captured,
+                out Terraria.ModLoader.StatModifier mana_captured
+            ) => base.ModifyMaxStats(
+                out health_captured,
+                out mana_captured
+            ),
             this,
             out health,
             out mana
         );
     }
+}
+
+public sealed partial class ModPlayer_UpdateDead_Impl(ModPlayerHooks.UpdateDead.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UpdateDead_Impl(hook);
+    }
 
     public override void UpdateDead()
     {
-        if (!ModPlayerHooks.UpdateDead.GetInvocationList().Any())
-        {
-            base.UpdateDead();
-            return;
-        }
-
-        ModPlayerHooks.UpdateDead.Invoke(
+        hook(
+            () => base.UpdateDead(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PreSaveCustomData_Impl(ModPlayerHooks.PreSaveCustomData.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PreSaveCustomData_Impl(hook);
     }
 
     public override void PreSaveCustomData()
     {
-        if (!ModPlayerHooks.PreSaveCustomData.GetInvocationList().Any())
-        {
-            base.PreSaveCustomData();
-            return;
-        }
-
-        ModPlayerHooks.PreSaveCustomData.Invoke(
+        hook(
+            () => base.PreSaveCustomData(),
             this
         );
     }
+}
 
-    public override void SaveData(
-        Terraria.ModLoader.IO.TagCompound tag
-    )
+public sealed partial class ModPlayer_PreSavePlayer_Impl(ModPlayerHooks.PreSavePlayer.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
     {
-        if (!ModPlayerHooks.SaveData.GetInvocationList().Any())
-        {
-            base.SaveData(
-                tag
-            );
-            return;
-        }
-
-        ModPlayerHooks.SaveData.Invoke(
-            this,
-            tag
-        );
-    }
-
-    public override void LoadData(
-        Terraria.ModLoader.IO.TagCompound tag
-    )
-    {
-        if (!ModPlayerHooks.LoadData.GetInvocationList().Any())
-        {
-            base.LoadData(
-                tag
-            );
-            return;
-        }
-
-        ModPlayerHooks.LoadData.Invoke(
-            this,
-            tag
-        );
+        return new ModPlayer_PreSavePlayer_Impl(hook);
     }
 
     public override void PreSavePlayer()
     {
-        if (!ModPlayerHooks.PreSavePlayer.GetInvocationList().Any())
-        {
-            base.PreSavePlayer();
-            return;
-        }
-
-        ModPlayerHooks.PreSavePlayer.Invoke(
+        hook(
+            () => base.PreSavePlayer(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostSavePlayer_Impl(ModPlayerHooks.PostSavePlayer.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostSavePlayer_Impl(hook);
     }
 
     public override void PostSavePlayer()
     {
-        if (!ModPlayerHooks.PostSavePlayer.GetInvocationList().Any())
-        {
-            base.PostSavePlayer();
-            return;
-        }
-
-        ModPlayerHooks.PostSavePlayer.Invoke(
+        hook(
+            () => base.PostSavePlayer(),
             this
         );
     }
+}
 
-    public override void CopyClientState(
-        Terraria.ModLoader.ModPlayer targetCopy
-    )
+public sealed partial class ModPlayer_UpdateBadLifeRegen_Impl(ModPlayerHooks.UpdateBadLifeRegen.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
     {
-        if (!ModPlayerHooks.CopyClientState.GetInvocationList().Any())
-        {
-            base.CopyClientState(
-                targetCopy
-            );
-            return;
-        }
-
-        ModPlayerHooks.CopyClientState.Invoke(
-            this,
-            targetCopy
-        );
-    }
-
-    public override void SyncPlayer(
-        int toWho,
-        int fromWho,
-        bool newPlayer
-    )
-    {
-        if (!ModPlayerHooks.SyncPlayer.GetInvocationList().Any())
-        {
-            base.SyncPlayer(
-                toWho,
-                fromWho,
-                newPlayer
-            );
-            return;
-        }
-
-        ModPlayerHooks.SyncPlayer.Invoke(
-            this,
-            toWho,
-            fromWho,
-            newPlayer
-        );
-    }
-
-    public override void SendClientChanges(
-        Terraria.ModLoader.ModPlayer clientPlayer
-    )
-    {
-        if (!ModPlayerHooks.SendClientChanges.GetInvocationList().Any())
-        {
-            base.SendClientChanges(
-                clientPlayer
-            );
-            return;
-        }
-
-        ModPlayerHooks.SendClientChanges.Invoke(
-            this,
-            clientPlayer
-        );
+        return new ModPlayer_UpdateBadLifeRegen_Impl(hook);
     }
 
     public override void UpdateBadLifeRegen()
     {
-        if (!ModPlayerHooks.UpdateBadLifeRegen.GetInvocationList().Any())
-        {
-            base.UpdateBadLifeRegen();
-            return;
-        }
-
-        ModPlayerHooks.UpdateBadLifeRegen.Invoke(
+        hook(
+            () => base.UpdateBadLifeRegen(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_UpdateLifeRegen_Impl(ModPlayerHooks.UpdateLifeRegen.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UpdateLifeRegen_Impl(hook);
     }
 
     public override void UpdateLifeRegen()
     {
-        if (!ModPlayerHooks.UpdateLifeRegen.GetInvocationList().Any())
-        {
-            base.UpdateLifeRegen();
-            return;
-        }
-
-        ModPlayerHooks.UpdateLifeRegen.Invoke(
+        hook(
+            () => base.UpdateLifeRegen(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_NaturalLifeRegen_Impl(ModPlayerHooks.NaturalLifeRegen.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_NaturalLifeRegen_Impl(hook);
     }
 
     public override void NaturalLifeRegen(
         ref float regen
     )
     {
-        if (!ModPlayerHooks.NaturalLifeRegen.GetInvocationList().Any())
-        {
-            base.NaturalLifeRegen(
-                ref regen
-            );
-            return;
-        }
-
-        ModPlayerHooks.NaturalLifeRegen.Invoke(
+        hook(
+            (
+                ref float regen_captured
+            ) => base.NaturalLifeRegen(
+                ref regen_captured
+            ),
             this,
             ref regen
         );
     }
+}
+
+public sealed partial class ModPlayer_UpdateAutopause_Impl(ModPlayerHooks.UpdateAutopause.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UpdateAutopause_Impl(hook);
+    }
 
     public override void UpdateAutopause()
     {
-        if (!ModPlayerHooks.UpdateAutopause.GetInvocationList().Any())
-        {
-            base.UpdateAutopause();
-            return;
-        }
-
-        ModPlayerHooks.UpdateAutopause.Invoke(
+        hook(
+            () => base.UpdateAutopause(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PreUpdate_Impl(ModPlayerHooks.PreUpdate.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PreUpdate_Impl(hook);
     }
 
     public override void PreUpdate()
     {
-        if (!ModPlayerHooks.PreUpdate.GetInvocationList().Any())
-        {
-            base.PreUpdate();
-            return;
-        }
-
-        ModPlayerHooks.PreUpdate.Invoke(
+        hook(
+            () => base.PreUpdate(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_ProcessTriggers_Impl(ModPlayerHooks.ProcessTriggers.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ProcessTriggers_Impl(hook);
     }
 
     public override void ProcessTriggers(
         Terraria.GameInput.TriggersSet triggersSet
     )
     {
-        if (!ModPlayerHooks.ProcessTriggers.GetInvocationList().Any())
-        {
-            base.ProcessTriggers(
-                triggersSet
-            );
-            return;
-        }
-
-        ModPlayerHooks.ProcessTriggers.Invoke(
+        hook(
+            (
+                Terraria.GameInput.TriggersSet triggersSet_captured
+            ) => base.ProcessTriggers(
+                triggersSet_captured
+            ),
             this,
             triggersSet
         );
     }
+}
+
+public sealed partial class ModPlayer_ArmorSetBonusActivated_Impl(ModPlayerHooks.ArmorSetBonusActivated.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ArmorSetBonusActivated_Impl(hook);
+    }
 
     public override void ArmorSetBonusActivated()
     {
-        if (!ModPlayerHooks.ArmorSetBonusActivated.GetInvocationList().Any())
-        {
-            base.ArmorSetBonusActivated();
-            return;
-        }
-
-        ModPlayerHooks.ArmorSetBonusActivated.Invoke(
+        hook(
+            () => base.ArmorSetBonusActivated(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_ArmorSetBonusHeld_Impl(ModPlayerHooks.ArmorSetBonusHeld.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ArmorSetBonusHeld_Impl(hook);
     }
 
     public override void ArmorSetBonusHeld(
         int holdTime
     )
     {
-        if (!ModPlayerHooks.ArmorSetBonusHeld.GetInvocationList().Any())
-        {
-            base.ArmorSetBonusHeld(
-                holdTime
-            );
-            return;
-        }
-
-        ModPlayerHooks.ArmorSetBonusHeld.Invoke(
+        hook(
+            (
+                int holdTime_captured
+            ) => base.ArmorSetBonusHeld(
+                holdTime_captured
+            ),
             this,
             holdTime
         );
     }
+}
+
+public sealed partial class ModPlayer_SetControls_Impl(ModPlayerHooks.SetControls.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_SetControls_Impl(hook);
+    }
 
     public override void SetControls()
     {
-        if (!ModPlayerHooks.SetControls.GetInvocationList().Any())
-        {
-            base.SetControls();
-            return;
-        }
-
-        ModPlayerHooks.SetControls.Invoke(
+        hook(
+            () => base.SetControls(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PreUpdateBuffs_Impl(ModPlayerHooks.PreUpdateBuffs.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PreUpdateBuffs_Impl(hook);
     }
 
     public override void PreUpdateBuffs()
     {
-        if (!ModPlayerHooks.PreUpdateBuffs.GetInvocationList().Any())
-        {
-            base.PreUpdateBuffs();
-            return;
-        }
-
-        ModPlayerHooks.PreUpdateBuffs.Invoke(
+        hook(
+            () => base.PreUpdateBuffs(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostUpdateBuffs_Impl(ModPlayerHooks.PostUpdateBuffs.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostUpdateBuffs_Impl(hook);
     }
 
     public override void PostUpdateBuffs()
     {
-        if (!ModPlayerHooks.PostUpdateBuffs.GetInvocationList().Any())
-        {
-            base.PostUpdateBuffs();
-            return;
-        }
-
-        ModPlayerHooks.PostUpdateBuffs.Invoke(
+        hook(
+            () => base.PostUpdateBuffs(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_UpdateEquips_Impl(ModPlayerHooks.UpdateEquips.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UpdateEquips_Impl(hook);
     }
 
     public override void UpdateEquips()
     {
-        if (!ModPlayerHooks.UpdateEquips.GetInvocationList().Any())
-        {
-            base.UpdateEquips();
-            return;
-        }
-
-        ModPlayerHooks.UpdateEquips.Invoke(
+        hook(
+            () => base.UpdateEquips(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostUpdateEquips_Impl(ModPlayerHooks.PostUpdateEquips.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostUpdateEquips_Impl(hook);
     }
 
     public override void PostUpdateEquips()
     {
-        if (!ModPlayerHooks.PostUpdateEquips.GetInvocationList().Any())
-        {
-            base.PostUpdateEquips();
-            return;
-        }
-
-        ModPlayerHooks.PostUpdateEquips.Invoke(
+        hook(
+            () => base.PostUpdateEquips(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_UpdateVisibleAccessories_Impl(ModPlayerHooks.UpdateVisibleAccessories.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UpdateVisibleAccessories_Impl(hook);
     }
 
     public override void UpdateVisibleAccessories()
     {
-        if (!ModPlayerHooks.UpdateVisibleAccessories.GetInvocationList().Any())
-        {
-            base.UpdateVisibleAccessories();
-            return;
-        }
-
-        ModPlayerHooks.UpdateVisibleAccessories.Invoke(
+        hook(
+            () => base.UpdateVisibleAccessories(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_UpdateVisibleVanityAccessories_Impl(ModPlayerHooks.UpdateVisibleVanityAccessories.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UpdateVisibleVanityAccessories_Impl(hook);
     }
 
     public override void UpdateVisibleVanityAccessories()
     {
-        if (!ModPlayerHooks.UpdateVisibleVanityAccessories.GetInvocationList().Any())
-        {
-            base.UpdateVisibleVanityAccessories();
-            return;
-        }
-
-        ModPlayerHooks.UpdateVisibleVanityAccessories.Invoke(
+        hook(
+            () => base.UpdateVisibleVanityAccessories(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_UpdateDyes_Impl(ModPlayerHooks.UpdateDyes.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UpdateDyes_Impl(hook);
     }
 
     public override void UpdateDyes()
     {
-        if (!ModPlayerHooks.UpdateDyes.GetInvocationList().Any())
-        {
-            base.UpdateDyes();
-            return;
-        }
-
-        ModPlayerHooks.UpdateDyes.Invoke(
+        hook(
+            () => base.UpdateDyes(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostUpdateMiscEffects_Impl(ModPlayerHooks.PostUpdateMiscEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostUpdateMiscEffects_Impl(hook);
     }
 
     public override void PostUpdateMiscEffects()
     {
-        if (!ModPlayerHooks.PostUpdateMiscEffects.GetInvocationList().Any())
-        {
-            base.PostUpdateMiscEffects();
-            return;
-        }
-
-        ModPlayerHooks.PostUpdateMiscEffects.Invoke(
+        hook(
+            () => base.PostUpdateMiscEffects(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostUpdateRunSpeeds_Impl(ModPlayerHooks.PostUpdateRunSpeeds.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostUpdateRunSpeeds_Impl(hook);
     }
 
     public override void PostUpdateRunSpeeds()
     {
-        if (!ModPlayerHooks.PostUpdateRunSpeeds.GetInvocationList().Any())
-        {
-            base.PostUpdateRunSpeeds();
-            return;
-        }
-
-        ModPlayerHooks.PostUpdateRunSpeeds.Invoke(
+        hook(
+            () => base.PostUpdateRunSpeeds(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PreUpdateMovement_Impl(ModPlayerHooks.PreUpdateMovement.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PreUpdateMovement_Impl(hook);
     }
 
     public override void PreUpdateMovement()
     {
-        if (!ModPlayerHooks.PreUpdateMovement.GetInvocationList().Any())
-        {
-            base.PreUpdateMovement();
-            return;
-        }
-
-        ModPlayerHooks.PreUpdateMovement.Invoke(
+        hook(
+            () => base.PreUpdateMovement(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostUpdate_Impl(ModPlayerHooks.PostUpdate.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostUpdate_Impl(hook);
     }
 
     public override void PostUpdate()
     {
-        if (!ModPlayerHooks.PostUpdate.GetInvocationList().Any())
-        {
-            base.PostUpdate();
-            return;
-        }
-
-        ModPlayerHooks.PostUpdate.Invoke(
+        hook(
+            () => base.PostUpdate(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyExtraJumpDurationMultiplier_Impl(ModPlayerHooks.ModifyExtraJumpDurationMultiplier.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyExtraJumpDurationMultiplier_Impl(hook);
     }
 
     public override void ModifyExtraJumpDurationMultiplier(
@@ -3802,37 +3368,57 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref float duration
     )
     {
-        if (!ModPlayerHooks.ModifyExtraJumpDurationMultiplier.GetInvocationList().Any())
-        {
-            base.ModifyExtraJumpDurationMultiplier(
-                jump,
-                ref duration
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyExtraJumpDurationMultiplier.Invoke(
+        hook(
+            (
+                Terraria.ModLoader.ExtraJump jump_captured,
+                ref float duration_captured
+            ) => base.ModifyExtraJumpDurationMultiplier(
+                jump_captured,
+                ref duration_captured
+            ),
             this,
             jump,
             ref duration
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanStartExtraJump_Impl(ModPlayerHooks.CanStartExtraJump.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanStartExtraJump_Impl(hook);
     }
 
     public override bool CanStartExtraJump(
         Terraria.ModLoader.ExtraJump jump
     )
     {
-        if (!ModPlayerHooks.CanStartExtraJump.GetInvocationList().Any())
-        {
-            return base.CanStartExtraJump(
-                jump
-            );
-        }
-
-        return ModPlayerHooks.CanStartExtraJump.Invoke(
+        return hook(
+            (
+                Terraria.ModLoader.ExtraJump jump_captured
+            ) => base.CanStartExtraJump(
+                jump_captured
+            ),
             this,
             jump
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnExtraJumpStarted_Impl(ModPlayerHooks.OnExtraJumpStarted.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnExtraJumpStarted_Impl(hook);
     }
 
     public override void OnExtraJumpStarted(
@@ -3840,122 +3426,185 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref bool playSound
     )
     {
-        if (!ModPlayerHooks.OnExtraJumpStarted.GetInvocationList().Any())
-        {
-            base.OnExtraJumpStarted(
-                jump,
-                ref playSound
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnExtraJumpStarted.Invoke(
+        hook(
+            (
+                Terraria.ModLoader.ExtraJump jump_captured,
+                ref bool playSound_captured
+            ) => base.OnExtraJumpStarted(
+                jump_captured,
+                ref playSound_captured
+            ),
             this,
             jump,
             ref playSound
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnExtraJumpEnded_Impl(ModPlayerHooks.OnExtraJumpEnded.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnExtraJumpEnded_Impl(hook);
     }
 
     public override void OnExtraJumpEnded(
         Terraria.ModLoader.ExtraJump jump
     )
     {
-        if (!ModPlayerHooks.OnExtraJumpEnded.GetInvocationList().Any())
-        {
-            base.OnExtraJumpEnded(
-                jump
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnExtraJumpEnded.Invoke(
+        hook(
+            (
+                Terraria.ModLoader.ExtraJump jump_captured
+            ) => base.OnExtraJumpEnded(
+                jump_captured
+            ),
             this,
             jump
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnExtraJumpRefreshed_Impl(ModPlayerHooks.OnExtraJumpRefreshed.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnExtraJumpRefreshed_Impl(hook);
     }
 
     public override void OnExtraJumpRefreshed(
         Terraria.ModLoader.ExtraJump jump
     )
     {
-        if (!ModPlayerHooks.OnExtraJumpRefreshed.GetInvocationList().Any())
-        {
-            base.OnExtraJumpRefreshed(
-                jump
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnExtraJumpRefreshed.Invoke(
+        hook(
+            (
+                Terraria.ModLoader.ExtraJump jump_captured
+            ) => base.OnExtraJumpRefreshed(
+                jump_captured
+            ),
             this,
             jump
         );
+    }
+}
+
+public sealed partial class ModPlayer_ExtraJumpVisuals_Impl(ModPlayerHooks.ExtraJumpVisuals.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ExtraJumpVisuals_Impl(hook);
     }
 
     public override void ExtraJumpVisuals(
         Terraria.ModLoader.ExtraJump jump
     )
     {
-        if (!ModPlayerHooks.ExtraJumpVisuals.GetInvocationList().Any())
-        {
-            base.ExtraJumpVisuals(
-                jump
-            );
-            return;
-        }
-
-        ModPlayerHooks.ExtraJumpVisuals.Invoke(
+        hook(
+            (
+                Terraria.ModLoader.ExtraJump jump_captured
+            ) => base.ExtraJumpVisuals(
+                jump_captured
+            ),
             this,
             jump
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanShowExtraJumpVisuals_Impl(ModPlayerHooks.CanShowExtraJumpVisuals.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanShowExtraJumpVisuals_Impl(hook);
     }
 
     public override bool CanShowExtraJumpVisuals(
         Terraria.ModLoader.ExtraJump jump
     )
     {
-        if (!ModPlayerHooks.CanShowExtraJumpVisuals.GetInvocationList().Any())
-        {
-            return base.CanShowExtraJumpVisuals(
-                jump
-            );
-        }
-
-        return ModPlayerHooks.CanShowExtraJumpVisuals.Invoke(
+        return hook(
+            (
+                Terraria.ModLoader.ExtraJump jump_captured
+            ) => base.CanShowExtraJumpVisuals(
+                jump_captured
+            ),
             this,
             jump
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnExtraJumpCleared_Impl(ModPlayerHooks.OnExtraJumpCleared.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnExtraJumpCleared_Impl(hook);
     }
 
     public override void OnExtraJumpCleared(
         Terraria.ModLoader.ExtraJump jump
     )
     {
-        if (!ModPlayerHooks.OnExtraJumpCleared.GetInvocationList().Any())
-        {
-            base.OnExtraJumpCleared(
-                jump
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnExtraJumpCleared.Invoke(
+        hook(
+            (
+                Terraria.ModLoader.ExtraJump jump_captured
+            ) => base.OnExtraJumpCleared(
+                jump_captured
+            ),
             this,
             jump
         );
     }
+}
+
+public sealed partial class ModPlayer_FrameEffects_Impl(ModPlayerHooks.FrameEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_FrameEffects_Impl(hook);
+    }
 
     public override void FrameEffects()
     {
-        if (!ModPlayerHooks.FrameEffects.GetInvocationList().Any())
-        {
-            base.FrameEffects();
-            return;
-        }
-
-        ModPlayerHooks.FrameEffects.Invoke(
+        hook(
+            () => base.FrameEffects(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_ImmuneTo_Impl(ModPlayerHooks.ImmuneTo.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ImmuneTo_Impl(hook);
     }
 
     public override bool ImmuneTo(
@@ -3964,109 +3613,168 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         bool dodgeable
     )
     {
-        if (!ModPlayerHooks.ImmuneTo.GetInvocationList().Any())
-        {
-            return base.ImmuneTo(
-                damageSource,
-                cooldownCounter,
-                dodgeable
-            );
-        }
-
-        return ModPlayerHooks.ImmuneTo.Invoke(
+        return hook(
+            (
+                Terraria.DataStructures.PlayerDeathReason damageSource_captured,
+                int cooldownCounter_captured,
+                bool dodgeable_captured
+            ) => base.ImmuneTo(
+                damageSource_captured,
+                cooldownCounter_captured,
+                dodgeable_captured
+            ),
             this,
             damageSource,
             cooldownCounter,
             dodgeable
         );
     }
+}
+
+public sealed partial class ModPlayer_FreeDodge_Impl(ModPlayerHooks.FreeDodge.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_FreeDodge_Impl(hook);
+    }
 
     public override bool FreeDodge(
         Terraria.Player.HurtInfo info
     )
     {
-        if (!ModPlayerHooks.FreeDodge.GetInvocationList().Any())
-        {
-            return base.FreeDodge(
-                info
-            );
-        }
-
-        return ModPlayerHooks.FreeDodge.Invoke(
+        return hook(
+            (
+                Terraria.Player.HurtInfo info_captured
+            ) => base.FreeDodge(
+                info_captured
+            ),
             this,
             info
         );
+    }
+}
+
+public sealed partial class ModPlayer_ConsumableDodge_Impl(ModPlayerHooks.ConsumableDodge.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ConsumableDodge_Impl(hook);
     }
 
     public override bool ConsumableDodge(
         Terraria.Player.HurtInfo info
     )
     {
-        if (!ModPlayerHooks.ConsumableDodge.GetInvocationList().Any())
-        {
-            return base.ConsumableDodge(
-                info
-            );
-        }
-
-        return ModPlayerHooks.ConsumableDodge.Invoke(
+        return hook(
+            (
+                Terraria.Player.HurtInfo info_captured
+            ) => base.ConsumableDodge(
+                info_captured
+            ),
             this,
             info
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyHurt_Impl(ModPlayerHooks.ModifyHurt.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyHurt_Impl(hook);
     }
 
     public override void ModifyHurt(
         ref Terraria.Player.HurtModifiers modifiers
     )
     {
-        if (!ModPlayerHooks.ModifyHurt.GetInvocationList().Any())
-        {
-            base.ModifyHurt(
-                ref modifiers
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyHurt.Invoke(
+        hook(
+            (
+                ref Terraria.Player.HurtModifiers modifiers_captured
+            ) => base.ModifyHurt(
+                ref modifiers_captured
+            ),
             this,
             ref modifiers
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnHurt_Impl(ModPlayerHooks.OnHurt.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnHurt_Impl(hook);
     }
 
     public override void OnHurt(
         Terraria.Player.HurtInfo info
     )
     {
-        if (!ModPlayerHooks.OnHurt.GetInvocationList().Any())
-        {
-            base.OnHurt(
-                info
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnHurt.Invoke(
+        hook(
+            (
+                Terraria.Player.HurtInfo info_captured
+            ) => base.OnHurt(
+                info_captured
+            ),
             this,
             info
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostHurt_Impl(ModPlayerHooks.PostHurt.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostHurt_Impl(hook);
     }
 
     public override void PostHurt(
         Terraria.Player.HurtInfo info
     )
     {
-        if (!ModPlayerHooks.PostHurt.GetInvocationList().Any())
-        {
-            base.PostHurt(
-                info
-            );
-            return;
-        }
-
-        ModPlayerHooks.PostHurt.Invoke(
+        hook(
+            (
+                Terraria.Player.HurtInfo info_captured
+            ) => base.PostHurt(
+                info_captured
+            ),
             this,
             info
         );
+    }
+}
+
+public sealed partial class ModPlayer_PreKill_Impl(ModPlayerHooks.PreKill.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PreKill_Impl(hook);
     }
 
     public override bool PreKill(
@@ -4078,19 +3786,22 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref Terraria.DataStructures.PlayerDeathReason damageSource
     )
     {
-        if (!ModPlayerHooks.PreKill.GetInvocationList().Any())
-        {
-            return base.PreKill(
-                damage,
-                hitDirection,
-                pvp,
-                ref playSound,
-                ref genDust,
-                ref damageSource
-            );
-        }
-
-        return ModPlayerHooks.PreKill.Invoke(
+        return hook(
+            (
+                double damage_captured,
+                int hitDirection_captured,
+                bool pvp_captured,
+                ref bool playSound_captured,
+                ref bool genDust_captured,
+                ref Terraria.DataStructures.PlayerDeathReason damageSource_captured
+            ) => base.PreKill(
+                damage_captured,
+                hitDirection_captured,
+                pvp_captured,
+                ref playSound_captured,
+                ref genDust_captured,
+                ref damageSource_captured
+            ),
             this,
             damage,
             hitDirection,
@@ -4100,6 +3811,18 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
             ref damageSource
         );
     }
+}
+
+public sealed partial class ModPlayer_Kill_Impl(ModPlayerHooks.Kill.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_Kill_Impl(hook);
+    }
 
     public override void Kill(
         double damage,
@@ -4108,18 +3831,18 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.DataStructures.PlayerDeathReason damageSource
     )
     {
-        if (!ModPlayerHooks.Kill.GetInvocationList().Any())
-        {
-            base.Kill(
-                damage,
-                hitDirection,
-                pvp,
-                damageSource
-            );
-            return;
-        }
-
-        ModPlayerHooks.Kill.Invoke(
+        hook(
+            (
+                double damage_captured,
+                int hitDirection_captured,
+                bool pvp_captured,
+                Terraria.DataStructures.PlayerDeathReason damageSource_captured
+            ) => base.Kill(
+                damage_captured,
+                hitDirection_captured,
+                pvp_captured,
+                damageSource_captured
+            ),
             this,
             damage,
             hitDirection,
@@ -4127,65 +3850,192 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
             damageSource
         );
     }
+}
+
+public sealed partial class ModPlayer_PreModifyLuck_Impl(ModPlayerHooks.PreModifyLuck.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PreModifyLuck_Impl(hook);
+    }
 
     public override bool PreModifyLuck(
         ref float luck
     )
     {
-        if (!ModPlayerHooks.PreModifyLuck.GetInvocationList().Any())
-        {
-            return base.PreModifyLuck(
-                ref luck
-            );
-        }
-
-        return ModPlayerHooks.PreModifyLuck.Invoke(
+        return hook(
+            (
+                ref float luck_captured
+            ) => base.PreModifyLuck(
+                ref luck_captured
+            ),
             this,
             ref luck
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyLuck_Impl(ModPlayerHooks.ModifyLuck.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyLuck_Impl(hook);
     }
 
     public override void ModifyLuck(
         ref float luck
     )
     {
-        if (!ModPlayerHooks.ModifyLuck.GetInvocationList().Any())
-        {
-            base.ModifyLuck(
-                ref luck
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyLuck.Invoke(
+        hook(
+            (
+                ref float luck_captured
+            ) => base.ModifyLuck(
+                ref luck_captured
+            ),
             this,
             ref luck
         );
     }
+}
+
+public sealed partial class ModPlayer_PreItemCheck_Impl(ModPlayerHooks.PreItemCheck.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PreItemCheck_Impl(hook);
+    }
 
     public override bool PreItemCheck()
     {
-        if (!ModPlayerHooks.PreItemCheck.GetInvocationList().Any())
-        {
-            return base.PreItemCheck();
-        }
-
-        return ModPlayerHooks.PreItemCheck.Invoke(
+        return hook(
+            () => base.PreItemCheck(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostItemCheck_Impl(ModPlayerHooks.PostItemCheck.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostItemCheck_Impl(hook);
     }
 
     public override void PostItemCheck()
     {
-        if (!ModPlayerHooks.PostItemCheck.GetInvocationList().Any())
-        {
-            base.PostItemCheck();
-            return;
-        }
-
-        ModPlayerHooks.PostItemCheck.Invoke(
+        hook(
+            () => base.PostItemCheck(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_UseTimeMultiplier_Impl(ModPlayerHooks.UseTimeMultiplier.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UseTimeMultiplier_Impl(hook);
+    }
+
+    public override float UseTimeMultiplier(
+        Terraria.Item item
+    )
+    {
+        return hook(
+            (
+                Terraria.Item item_captured
+            ) => base.UseTimeMultiplier(
+                item_captured
+            ),
+            this,
+            item
+        );
+    }
+}
+
+public sealed partial class ModPlayer_UseAnimationMultiplier_Impl(ModPlayerHooks.UseAnimationMultiplier.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UseAnimationMultiplier_Impl(hook);
+    }
+
+    public override float UseAnimationMultiplier(
+        Terraria.Item item
+    )
+    {
+        return hook(
+            (
+                Terraria.Item item_captured
+            ) => base.UseAnimationMultiplier(
+                item_captured
+            ),
+            this,
+            item
+        );
+    }
+}
+
+public sealed partial class ModPlayer_UseSpeedMultiplier_Impl(ModPlayerHooks.UseSpeedMultiplier.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_UseSpeedMultiplier_Impl(hook);
+    }
+
+    public override float UseSpeedMultiplier(
+        Terraria.Item item
+    )
+    {
+        return hook(
+            (
+                Terraria.Item item_captured
+            ) => base.UseSpeedMultiplier(
+                item_captured
+            ),
+            this,
+            item
+        );
+    }
+}
+
+public sealed partial class ModPlayer_GetHealLife_Impl(ModPlayerHooks.GetHealLife.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_GetHealLife_Impl(hook);
     }
 
     public override void GetHealLife(
@@ -4194,22 +4044,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref int healValue
     )
     {
-        if (!ModPlayerHooks.GetHealLife.GetInvocationList().Any())
-        {
-            base.GetHealLife(
-                item,
-                quickHeal,
-                ref healValue
-            );
-            return;
-        }
-
-        ModPlayerHooks.GetHealLife.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                bool quickHeal_captured,
+                ref int healValue_captured
+            ) => base.GetHealLife(
+                item_captured,
+                quickHeal_captured,
+                ref healValue_captured
+            ),
             this,
             item,
             quickHeal,
             ref healValue
         );
+    }
+}
+
+public sealed partial class ModPlayer_GetHealMana_Impl(ModPlayerHooks.GetHealMana.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_GetHealMana_Impl(hook);
     }
 
     public override void GetHealMana(
@@ -4218,22 +4079,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref int healValue
     )
     {
-        if (!ModPlayerHooks.GetHealMana.GetInvocationList().Any())
-        {
-            base.GetHealMana(
-                item,
-                quickHeal,
-                ref healValue
-            );
-            return;
-        }
-
-        ModPlayerHooks.GetHealMana.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                bool quickHeal_captured,
+                ref int healValue_captured
+            ) => base.GetHealMana(
+                item_captured,
+                quickHeal_captured,
+                ref healValue_captured
+            ),
             this,
             item,
             quickHeal,
             ref healValue
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyManaCost_Impl(ModPlayerHooks.ModifyManaCost.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyManaCost_Impl(hook);
     }
 
     public override void ModifyManaCost(
@@ -4242,22 +4114,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref float mult
     )
     {
-        if (!ModPlayerHooks.ModifyManaCost.GetInvocationList().Any())
-        {
-            base.ModifyManaCost(
-                item,
-                ref reduce,
-                ref mult
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyManaCost.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                ref float reduce_captured,
+                ref float mult_captured
+            ) => base.ModifyManaCost(
+                item_captured,
+                ref reduce_captured,
+                ref mult_captured
+            ),
             this,
             item,
             ref reduce,
             ref mult
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnMissingMana_Impl(ModPlayerHooks.OnMissingMana.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnMissingMana_Impl(hook);
     }
 
     public override void OnMissingMana(
@@ -4265,20 +4148,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int neededMana
     )
     {
-        if (!ModPlayerHooks.OnMissingMana.GetInvocationList().Any())
-        {
-            base.OnMissingMana(
-                item,
-                neededMana
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnMissingMana.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                int neededMana_captured
+            ) => base.OnMissingMana(
+                item_captured,
+                neededMana_captured
+            ),
             this,
             item,
             neededMana
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnConsumeMana_Impl(ModPlayerHooks.OnConsumeMana.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnConsumeMana_Impl(hook);
     }
 
     public override void OnConsumeMana(
@@ -4286,20 +4179,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int manaConsumed
     )
     {
-        if (!ModPlayerHooks.OnConsumeMana.GetInvocationList().Any())
-        {
-            base.OnConsumeMana(
-                item,
-                manaConsumed
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnConsumeMana.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                int manaConsumed_captured
+            ) => base.OnConsumeMana(
+                item_captured,
+                manaConsumed_captured
+            ),
             this,
             item,
             manaConsumed
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyWeaponDamage_Impl(ModPlayerHooks.ModifyWeaponDamage.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyWeaponDamage_Impl(hook);
     }
 
     public override void ModifyWeaponDamage(
@@ -4307,20 +4210,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref Terraria.ModLoader.StatModifier damage
     )
     {
-        if (!ModPlayerHooks.ModifyWeaponDamage.GetInvocationList().Any())
-        {
-            base.ModifyWeaponDamage(
-                item,
-                ref damage
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyWeaponDamage.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                ref Terraria.ModLoader.StatModifier damage_captured
+            ) => base.ModifyWeaponDamage(
+                item_captured,
+                ref damage_captured
+            ),
             this,
             item,
             ref damage
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyWeaponKnockback_Impl(ModPlayerHooks.ModifyWeaponKnockback.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyWeaponKnockback_Impl(hook);
     }
 
     public override void ModifyWeaponKnockback(
@@ -4328,20 +4241,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref Terraria.ModLoader.StatModifier knockback
     )
     {
-        if (!ModPlayerHooks.ModifyWeaponKnockback.GetInvocationList().Any())
-        {
-            base.ModifyWeaponKnockback(
-                item,
-                ref knockback
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyWeaponKnockback.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                ref Terraria.ModLoader.StatModifier knockback_captured
+            ) => base.ModifyWeaponKnockback(
+                item_captured,
+                ref knockback_captured
+            ),
             this,
             item,
             ref knockback
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyWeaponCrit_Impl(ModPlayerHooks.ModifyWeaponCrit.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyWeaponCrit_Impl(hook);
     }
 
     public override void ModifyWeaponCrit(
@@ -4349,20 +4272,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref float crit
     )
     {
-        if (!ModPlayerHooks.ModifyWeaponCrit.GetInvocationList().Any())
-        {
-            base.ModifyWeaponCrit(
-                item,
-                ref crit
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyWeaponCrit.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                ref float crit_captured
+            ) => base.ModifyWeaponCrit(
+                item_captured,
+                ref crit_captured
+            ),
             this,
             item,
             ref crit
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanConsumeAmmo_Impl(ModPlayerHooks.CanConsumeAmmo.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanConsumeAmmo_Impl(hook);
     }
 
     public override bool CanConsumeAmmo(
@@ -4370,19 +4303,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Item ammo
     )
     {
-        if (!ModPlayerHooks.CanConsumeAmmo.GetInvocationList().Any())
-        {
-            return base.CanConsumeAmmo(
-                weapon,
-                ammo
-            );
-        }
-
-        return ModPlayerHooks.CanConsumeAmmo.Invoke(
+        return hook(
+            (
+                Terraria.Item weapon_captured,
+                Terraria.Item ammo_captured
+            ) => base.CanConsumeAmmo(
+                weapon_captured,
+                ammo_captured
+            ),
             this,
             weapon,
             ammo
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnConsumeAmmo_Impl(ModPlayerHooks.OnConsumeAmmo.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnConsumeAmmo_Impl(hook);
     }
 
     public override void OnConsumeAmmo(
@@ -4390,37 +4334,57 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Item ammo
     )
     {
-        if (!ModPlayerHooks.OnConsumeAmmo.GetInvocationList().Any())
-        {
-            base.OnConsumeAmmo(
-                weapon,
-                ammo
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnConsumeAmmo.Invoke(
+        hook(
+            (
+                Terraria.Item weapon_captured,
+                Terraria.Item ammo_captured
+            ) => base.OnConsumeAmmo(
+                weapon_captured,
+                ammo_captured
+            ),
             this,
             weapon,
             ammo
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanShoot_Impl(ModPlayerHooks.CanShoot.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanShoot_Impl(hook);
     }
 
     public override bool CanShoot(
         Terraria.Item item
     )
     {
-        if (!ModPlayerHooks.CanShoot.GetInvocationList().Any())
-        {
-            return base.CanShoot(
-                item
-            );
-        }
-
-        return ModPlayerHooks.CanShoot.Invoke(
+        return hook(
+            (
+                Terraria.Item item_captured
+            ) => base.CanShoot(
+                item_captured
+            ),
             this,
             item
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyShootStats_Impl(ModPlayerHooks.ModifyShootStats.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyShootStats_Impl(hook);
     }
 
     public override void ModifyShootStats(
@@ -4432,20 +4396,22 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref float knockback
     )
     {
-        if (!ModPlayerHooks.ModifyShootStats.GetInvocationList().Any())
-        {
-            base.ModifyShootStats(
-                item,
-                ref position,
-                ref velocity,
-                ref type,
-                ref damage,
-                ref knockback
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyShootStats.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                ref Microsoft.Xna.Framework.Vector2 position_captured,
+                ref Microsoft.Xna.Framework.Vector2 velocity_captured,
+                ref int type_captured,
+                ref int damage_captured,
+                ref float knockback_captured
+            ) => base.ModifyShootStats(
+                item_captured,
+                ref position_captured,
+                ref velocity_captured,
+                ref type_captured,
+                ref damage_captured,
+                ref knockback_captured
+            ),
             this,
             item,
             ref position,
@@ -4454,6 +4420,18 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
             ref damage,
             ref knockback
         );
+    }
+}
+
+public sealed partial class ModPlayer_Shoot_Impl(ModPlayerHooks.Shoot.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_Shoot_Impl(hook);
     }
 
     public override bool Shoot(
@@ -4466,20 +4444,24 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         float knockback
     )
     {
-        if (!ModPlayerHooks.Shoot.GetInvocationList().Any())
-        {
-            return base.Shoot(
-                item,
-                source,
-                position,
-                velocity,
-                type,
-                damage,
-                knockback
-            );
-        }
-
-        return ModPlayerHooks.Shoot.Invoke(
+        return hook(
+            (
+                Terraria.Item item_captured,
+                Terraria.DataStructures.EntitySource_ItemUse_WithAmmo source_captured,
+                Microsoft.Xna.Framework.Vector2 position_captured,
+                Microsoft.Xna.Framework.Vector2 velocity_captured,
+                int type_captured,
+                int damage_captured,
+                float knockback_captured
+            ) => base.Shoot(
+                item_captured,
+                source_captured,
+                position_captured,
+                velocity_captured,
+                type_captured,
+                damage_captured,
+                knockback_captured
+            ),
             this,
             item,
             source,
@@ -4490,26 +4472,48 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
             knockback
         );
     }
+}
+
+public sealed partial class ModPlayer_MeleeEffects_Impl(ModPlayerHooks.MeleeEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_MeleeEffects_Impl(hook);
+    }
 
     public override void MeleeEffects(
         Terraria.Item item,
         Microsoft.Xna.Framework.Rectangle hitbox
     )
     {
-        if (!ModPlayerHooks.MeleeEffects.GetInvocationList().Any())
-        {
-            base.MeleeEffects(
-                item,
-                hitbox
-            );
-            return;
-        }
-
-        ModPlayerHooks.MeleeEffects.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                Microsoft.Xna.Framework.Rectangle hitbox_captured
+            ) => base.MeleeEffects(
+                item_captured,
+                hitbox_captured
+            ),
             this,
             item,
             hitbox
         );
+    }
+}
+
+public sealed partial class ModPlayer_EmitEnchantmentVisualsAt_Impl(ModPlayerHooks.EmitEnchantmentVisualsAt.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_EmitEnchantmentVisualsAt_Impl(hook);
     }
 
     public override void EmitEnchantmentVisualsAt(
@@ -4519,24 +4523,67 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int boxHeight
     )
     {
-        if (!ModPlayerHooks.EmitEnchantmentVisualsAt.GetInvocationList().Any())
-        {
-            base.EmitEnchantmentVisualsAt(
-                projectile,
-                boxPosition,
-                boxWidth,
-                boxHeight
-            );
-            return;
-        }
-
-        ModPlayerHooks.EmitEnchantmentVisualsAt.Invoke(
+        hook(
+            (
+                Terraria.Projectile projectile_captured,
+                Microsoft.Xna.Framework.Vector2 boxPosition_captured,
+                int boxWidth_captured,
+                int boxHeight_captured
+            ) => base.EmitEnchantmentVisualsAt(
+                projectile_captured,
+                boxPosition_captured,
+                boxWidth_captured,
+                boxHeight_captured
+            ),
             this,
             projectile,
             boxPosition,
             boxWidth,
             boxHeight
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanCatchNPC_Impl(ModPlayerHooks.CanCatchNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanCatchNPC_Impl(hook);
+    }
+
+    public override bool? CanCatchNPC(
+        Terraria.NPC target,
+        Terraria.Item item
+    )
+    {
+        return hook(
+            (
+                Terraria.NPC target_captured,
+                Terraria.Item item_captured
+            ) => base.CanCatchNPC(
+                target_captured,
+                item_captured
+            ),
+            this,
+            target,
+            item
+        );
+    }
+}
+
+public sealed partial class ModPlayer_OnCatchNPC_Impl(ModPlayerHooks.OnCatchNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnCatchNPC_Impl(hook);
     }
 
     public override void OnCatchNPC(
@@ -4545,22 +4592,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         bool failed
     )
     {
-        if (!ModPlayerHooks.OnCatchNPC.GetInvocationList().Any())
-        {
-            base.OnCatchNPC(
-                npc,
-                item,
-                failed
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnCatchNPC.Invoke(
+        hook(
+            (
+                Terraria.NPC npc_captured,
+                Terraria.Item item_captured,
+                bool failed_captured
+            ) => base.OnCatchNPC(
+                npc_captured,
+                item_captured,
+                failed_captured
+            ),
             this,
             npc,
             item,
             failed
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyItemScale_Impl(ModPlayerHooks.ModifyItemScale.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyItemScale_Impl(hook);
     }
 
     public override void ModifyItemScale(
@@ -4568,20 +4626,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref float scale
     )
     {
-        if (!ModPlayerHooks.ModifyItemScale.GetInvocationList().Any())
-        {
-            base.ModifyItemScale(
-                item,
-                ref scale
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyItemScale.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                ref float scale_captured
+            ) => base.ModifyItemScale(
+                item_captured,
+                ref scale_captured
+            ),
             this,
             item,
             ref scale
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnHitAnything_Impl(ModPlayerHooks.OnHitAnything.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnHitAnything_Impl(hook);
     }
 
     public override void OnHitAnything(
@@ -4590,39 +4658,95 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Entity victim
     )
     {
-        if (!ModPlayerHooks.OnHitAnything.GetInvocationList().Any())
-        {
-            base.OnHitAnything(
-                x,
-                y,
-                victim
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnHitAnything.Invoke(
+        hook(
+            (
+                float x_captured,
+                float y_captured,
+                Terraria.Entity victim_captured
+            ) => base.OnHitAnything(
+                x_captured,
+                y_captured,
+                victim_captured
+            ),
             this,
             x,
             y,
             victim
         );
     }
+}
+
+public sealed partial class ModPlayer_CanHitNPC_Impl(ModPlayerHooks.CanHitNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanHitNPC_Impl(hook);
+    }
 
     public override bool CanHitNPC(
         Terraria.NPC target
     )
     {
-        if (!ModPlayerHooks.CanHitNPC.GetInvocationList().Any())
-        {
-            return base.CanHitNPC(
-                target
-            );
-        }
-
-        return ModPlayerHooks.CanHitNPC.Invoke(
+        return hook(
+            (
+                Terraria.NPC target_captured
+            ) => base.CanHitNPC(
+                target_captured
+            ),
             this,
             target
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanMeleeAttackCollideWithNPC_Impl(ModPlayerHooks.CanMeleeAttackCollideWithNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanMeleeAttackCollideWithNPC_Impl(hook);
+    }
+
+    public override bool? CanMeleeAttackCollideWithNPC(
+        Terraria.Item item,
+        Microsoft.Xna.Framework.Rectangle meleeAttackHitbox,
+        Terraria.NPC target
+    )
+    {
+        return hook(
+            (
+                Terraria.Item item_captured,
+                Microsoft.Xna.Framework.Rectangle meleeAttackHitbox_captured,
+                Terraria.NPC target_captured
+            ) => base.CanMeleeAttackCollideWithNPC(
+                item_captured,
+                meleeAttackHitbox_captured,
+                target_captured
+            ),
+            this,
+            item,
+            meleeAttackHitbox,
+            target
+        );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyHitNPC_Impl(ModPlayerHooks.ModifyHitNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyHitNPC_Impl(hook);
     }
 
     public override void ModifyHitNPC(
@@ -4630,20 +4754,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref Terraria.NPC.HitModifiers modifiers
     )
     {
-        if (!ModPlayerHooks.ModifyHitNPC.GetInvocationList().Any())
-        {
-            base.ModifyHitNPC(
-                target,
-                ref modifiers
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyHitNPC.Invoke(
+        hook(
+            (
+                Terraria.NPC target_captured,
+                ref Terraria.NPC.HitModifiers modifiers_captured
+            ) => base.ModifyHitNPC(
+                target_captured,
+                ref modifiers_captured
+            ),
             this,
             target,
             ref modifiers
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnHitNPC_Impl(ModPlayerHooks.OnHitNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnHitNPC_Impl(hook);
     }
 
     public override void OnHitNPC(
@@ -4652,22 +4786,64 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int damageDone
     )
     {
-        if (!ModPlayerHooks.OnHitNPC.GetInvocationList().Any())
-        {
-            base.OnHitNPC(
-                target,
-                hit,
-                damageDone
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnHitNPC.Invoke(
+        hook(
+            (
+                Terraria.NPC target_captured,
+                Terraria.NPC.HitInfo hit_captured,
+                int damageDone_captured
+            ) => base.OnHitNPC(
+                target_captured,
+                hit_captured,
+                damageDone_captured
+            ),
             this,
             target,
             hit,
             damageDone
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanHitNPCWithItem_Impl(ModPlayerHooks.CanHitNPCWithItem.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanHitNPCWithItem_Impl(hook);
+    }
+
+    public override bool? CanHitNPCWithItem(
+        Terraria.Item item,
+        Terraria.NPC target
+    )
+    {
+        return hook(
+            (
+                Terraria.Item item_captured,
+                Terraria.NPC target_captured
+            ) => base.CanHitNPCWithItem(
+                item_captured,
+                target_captured
+            ),
+            this,
+            item,
+            target
+        );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyHitNPCWithItem_Impl(ModPlayerHooks.ModifyHitNPCWithItem.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyHitNPCWithItem_Impl(hook);
     }
 
     public override void ModifyHitNPCWithItem(
@@ -4676,22 +4852,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref Terraria.NPC.HitModifiers modifiers
     )
     {
-        if (!ModPlayerHooks.ModifyHitNPCWithItem.GetInvocationList().Any())
-        {
-            base.ModifyHitNPCWithItem(
-                item,
-                target,
-                ref modifiers
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyHitNPCWithItem.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                Terraria.NPC target_captured,
+                ref Terraria.NPC.HitModifiers modifiers_captured
+            ) => base.ModifyHitNPCWithItem(
+                item_captured,
+                target_captured,
+                ref modifiers_captured
+            ),
             this,
             item,
             target,
             ref modifiers
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnHitNPCWithItem_Impl(ModPlayerHooks.OnHitNPCWithItem.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnHitNPCWithItem_Impl(hook);
     }
 
     public override void OnHitNPCWithItem(
@@ -4701,24 +4888,67 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int damageDone
     )
     {
-        if (!ModPlayerHooks.OnHitNPCWithItem.GetInvocationList().Any())
-        {
-            base.OnHitNPCWithItem(
-                item,
-                target,
-                hit,
-                damageDone
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnHitNPCWithItem.Invoke(
+        hook(
+            (
+                Terraria.Item item_captured,
+                Terraria.NPC target_captured,
+                Terraria.NPC.HitInfo hit_captured,
+                int damageDone_captured
+            ) => base.OnHitNPCWithItem(
+                item_captured,
+                target_captured,
+                hit_captured,
+                damageDone_captured
+            ),
             this,
             item,
             target,
             hit,
             damageDone
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanHitNPCWithProj_Impl(ModPlayerHooks.CanHitNPCWithProj.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanHitNPCWithProj_Impl(hook);
+    }
+
+    public override bool? CanHitNPCWithProj(
+        Terraria.Projectile proj,
+        Terraria.NPC target
+    )
+    {
+        return hook(
+            (
+                Terraria.Projectile proj_captured,
+                Terraria.NPC target_captured
+            ) => base.CanHitNPCWithProj(
+                proj_captured,
+                target_captured
+            ),
+            this,
+            proj,
+            target
+        );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyHitNPCWithProj_Impl(ModPlayerHooks.ModifyHitNPCWithProj.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyHitNPCWithProj_Impl(hook);
     }
 
     public override void ModifyHitNPCWithProj(
@@ -4727,22 +4957,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref Terraria.NPC.HitModifiers modifiers
     )
     {
-        if (!ModPlayerHooks.ModifyHitNPCWithProj.GetInvocationList().Any())
-        {
-            base.ModifyHitNPCWithProj(
-                proj,
-                target,
-                ref modifiers
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyHitNPCWithProj.Invoke(
+        hook(
+            (
+                Terraria.Projectile proj_captured,
+                Terraria.NPC target_captured,
+                ref Terraria.NPC.HitModifiers modifiers_captured
+            ) => base.ModifyHitNPCWithProj(
+                proj_captured,
+                target_captured,
+                ref modifiers_captured
+            ),
             this,
             proj,
             target,
             ref modifiers
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnHitNPCWithProj_Impl(ModPlayerHooks.OnHitNPCWithProj.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnHitNPCWithProj_Impl(hook);
     }
 
     public override void OnHitNPCWithProj(
@@ -4752,18 +4993,18 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int damageDone
     )
     {
-        if (!ModPlayerHooks.OnHitNPCWithProj.GetInvocationList().Any())
-        {
-            base.OnHitNPCWithProj(
-                proj,
-                target,
-                hit,
-                damageDone
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnHitNPCWithProj.Invoke(
+        hook(
+            (
+                Terraria.Projectile proj_captured,
+                Terraria.NPC target_captured,
+                Terraria.NPC.HitInfo hit_captured,
+                int damageDone_captured
+            ) => base.OnHitNPCWithProj(
+                proj_captured,
+                target_captured,
+                hit_captured,
+                damageDone_captured
+            ),
             this,
             proj,
             target,
@@ -4771,25 +5012,48 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
             damageDone
         );
     }
+}
+
+public sealed partial class ModPlayer_CanHitPvp_Impl(ModPlayerHooks.CanHitPvp.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanHitPvp_Impl(hook);
+    }
 
     public override bool CanHitPvp(
         Terraria.Item item,
         Terraria.Player target
     )
     {
-        if (!ModPlayerHooks.CanHitPvp.GetInvocationList().Any())
-        {
-            return base.CanHitPvp(
-                item,
-                target
-            );
-        }
-
-        return ModPlayerHooks.CanHitPvp.Invoke(
+        return hook(
+            (
+                Terraria.Item item_captured,
+                Terraria.Player target_captured
+            ) => base.CanHitPvp(
+                item_captured,
+                target_captured
+            ),
             this,
             item,
             target
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanHitPvpWithProj_Impl(ModPlayerHooks.CanHitPvpWithProj.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanHitPvpWithProj_Impl(hook);
     }
 
     public override bool CanHitPvpWithProj(
@@ -4797,19 +5061,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Player target
     )
     {
-        if (!ModPlayerHooks.CanHitPvpWithProj.GetInvocationList().Any())
-        {
-            return base.CanHitPvpWithProj(
-                proj,
-                target
-            );
-        }
-
-        return ModPlayerHooks.CanHitPvpWithProj.Invoke(
+        return hook(
+            (
+                Terraria.Projectile proj_captured,
+                Terraria.Player target_captured
+            ) => base.CanHitPvpWithProj(
+                proj_captured,
+                target_captured
+            ),
             this,
             proj,
             target
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanBeHitByNPC_Impl(ModPlayerHooks.CanBeHitByNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanBeHitByNPC_Impl(hook);
     }
 
     public override bool CanBeHitByNPC(
@@ -4817,19 +5092,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref int cooldownSlot
     )
     {
-        if (!ModPlayerHooks.CanBeHitByNPC.GetInvocationList().Any())
-        {
-            return base.CanBeHitByNPC(
-                npc,
-                ref cooldownSlot
-            );
-        }
-
-        return ModPlayerHooks.CanBeHitByNPC.Invoke(
+        return hook(
+            (
+                Terraria.NPC npc_captured,
+                ref int cooldownSlot_captured
+            ) => base.CanBeHitByNPC(
+                npc_captured,
+                ref cooldownSlot_captured
+            ),
             this,
             npc,
             ref cooldownSlot
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyHitByNPC_Impl(ModPlayerHooks.ModifyHitByNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyHitByNPC_Impl(hook);
     }
 
     public override void ModifyHitByNPC(
@@ -4837,20 +5123,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref Terraria.Player.HurtModifiers modifiers
     )
     {
-        if (!ModPlayerHooks.ModifyHitByNPC.GetInvocationList().Any())
-        {
-            base.ModifyHitByNPC(
-                npc,
-                ref modifiers
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyHitByNPC.Invoke(
+        hook(
+            (
+                Terraria.NPC npc_captured,
+                ref Terraria.Player.HurtModifiers modifiers_captured
+            ) => base.ModifyHitByNPC(
+                npc_captured,
+                ref modifiers_captured
+            ),
             this,
             npc,
             ref modifiers
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnHitByNPC_Impl(ModPlayerHooks.OnHitByNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnHitByNPC_Impl(hook);
     }
 
     public override void OnHitByNPC(
@@ -4858,37 +5154,57 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Player.HurtInfo hurtInfo
     )
     {
-        if (!ModPlayerHooks.OnHitByNPC.GetInvocationList().Any())
-        {
-            base.OnHitByNPC(
-                npc,
-                hurtInfo
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnHitByNPC.Invoke(
+        hook(
+            (
+                Terraria.NPC npc_captured,
+                Terraria.Player.HurtInfo hurtInfo_captured
+            ) => base.OnHitByNPC(
+                npc_captured,
+                hurtInfo_captured
+            ),
             this,
             npc,
             hurtInfo
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanBeHitByProjectile_Impl(ModPlayerHooks.CanBeHitByProjectile.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanBeHitByProjectile_Impl(hook);
     }
 
     public override bool CanBeHitByProjectile(
         Terraria.Projectile proj
     )
     {
-        if (!ModPlayerHooks.CanBeHitByProjectile.GetInvocationList().Any())
-        {
-            return base.CanBeHitByProjectile(
-                proj
-            );
-        }
-
-        return ModPlayerHooks.CanBeHitByProjectile.Invoke(
+        return hook(
+            (
+                Terraria.Projectile proj_captured
+            ) => base.CanBeHitByProjectile(
+                proj_captured
+            ),
             this,
             proj
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyHitByProjectile_Impl(ModPlayerHooks.ModifyHitByProjectile.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyHitByProjectile_Impl(hook);
     }
 
     public override void ModifyHitByProjectile(
@@ -4896,20 +5212,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref Terraria.Player.HurtModifiers modifiers
     )
     {
-        if (!ModPlayerHooks.ModifyHitByProjectile.GetInvocationList().Any())
-        {
-            base.ModifyHitByProjectile(
-                proj,
-                ref modifiers
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyHitByProjectile.Invoke(
+        hook(
+            (
+                Terraria.Projectile proj_captured,
+                ref Terraria.Player.HurtModifiers modifiers_captured
+            ) => base.ModifyHitByProjectile(
+                proj_captured,
+                ref modifiers_captured
+            ),
             this,
             proj,
             ref modifiers
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnHitByProjectile_Impl(ModPlayerHooks.OnHitByProjectile.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnHitByProjectile_Impl(hook);
     }
 
     public override void OnHitByProjectile(
@@ -4917,38 +5243,57 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Player.HurtInfo hurtInfo
     )
     {
-        if (!ModPlayerHooks.OnHitByProjectile.GetInvocationList().Any())
-        {
-            base.OnHitByProjectile(
-                proj,
-                hurtInfo
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnHitByProjectile.Invoke(
+        hook(
+            (
+                Terraria.Projectile proj_captured,
+                Terraria.Player.HurtInfo hurtInfo_captured
+            ) => base.OnHitByProjectile(
+                proj_captured,
+                hurtInfo_captured
+            ),
             this,
             proj,
             hurtInfo
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyFishingAttempt_Impl(ModPlayerHooks.ModifyFishingAttempt.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyFishingAttempt_Impl(hook);
     }
 
     public override void ModifyFishingAttempt(
         ref Terraria.DataStructures.FishingAttempt attempt
     )
     {
-        if (!ModPlayerHooks.ModifyFishingAttempt.GetInvocationList().Any())
-        {
-            base.ModifyFishingAttempt(
-                ref attempt
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyFishingAttempt.Invoke(
+        hook(
+            (
+                ref Terraria.DataStructures.FishingAttempt attempt_captured
+            ) => base.ModifyFishingAttempt(
+                ref attempt_captured
+            ),
             this,
             ref attempt
         );
+    }
+}
+
+public sealed partial class ModPlayer_CatchFish_Impl(ModPlayerHooks.CatchFish.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CatchFish_Impl(hook);
     }
 
     public override void CatchFish(
@@ -4959,19 +5304,20 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref Microsoft.Xna.Framework.Vector2 sonarPosition
     )
     {
-        if (!ModPlayerHooks.CatchFish.GetInvocationList().Any())
-        {
-            base.CatchFish(
-                attempt,
-                ref itemDrop,
-                ref npcSpawn,
-                ref sonar,
-                ref sonarPosition
-            );
-            return;
-        }
-
-        ModPlayerHooks.CatchFish.Invoke(
+        hook(
+            (
+                Terraria.DataStructures.FishingAttempt attempt_captured,
+                ref int itemDrop_captured,
+                ref int npcSpawn_captured,
+                ref Terraria.AdvancedPopupRequest sonar_captured,
+                ref Microsoft.Xna.Framework.Vector2 sonarPosition_captured
+            ) => base.CatchFish(
+                attempt_captured,
+                ref itemDrop_captured,
+                ref npcSpawn_captured,
+                ref sonar_captured,
+                ref sonarPosition_captured
+            ),
             this,
             attempt,
             ref itemDrop,
@@ -4980,23 +5326,71 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
             ref sonarPosition
         );
     }
+}
+
+public sealed partial class ModPlayer_ModifyCaughtFish_Impl(ModPlayerHooks.ModifyCaughtFish.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyCaughtFish_Impl(hook);
+    }
 
     public override void ModifyCaughtFish(
         Terraria.Item fish
     )
     {
-        if (!ModPlayerHooks.ModifyCaughtFish.GetInvocationList().Any())
-        {
-            base.ModifyCaughtFish(
-                fish
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyCaughtFish.Invoke(
+        hook(
+            (
+                Terraria.Item fish_captured
+            ) => base.ModifyCaughtFish(
+                fish_captured
+            ),
             this,
             fish
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanConsumeBait_Impl(ModPlayerHooks.CanConsumeBait.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanConsumeBait_Impl(hook);
+    }
+
+    public override bool? CanConsumeBait(
+        Terraria.Item bait
+    )
+    {
+        return hook(
+            (
+                Terraria.Item bait_captured
+            ) => base.CanConsumeBait(
+                bait_captured
+            ),
+            this,
+            bait
+        );
+    }
+}
+
+public sealed partial class ModPlayer_GetFishingLevel_Impl(ModPlayerHooks.GetFishingLevel.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_GetFishingLevel_Impl(hook);
     }
 
     public override void GetFishingLevel(
@@ -5005,22 +5399,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref float fishingLevel
     )
     {
-        if (!ModPlayerHooks.GetFishingLevel.GetInvocationList().Any())
-        {
-            base.GetFishingLevel(
-                fishingRod,
-                bait,
-                ref fishingLevel
-            );
-            return;
-        }
-
-        ModPlayerHooks.GetFishingLevel.Invoke(
+        hook(
+            (
+                Terraria.Item fishingRod_captured,
+                Terraria.Item bait_captured,
+                ref float fishingLevel_captured
+            ) => base.GetFishingLevel(
+                fishingRod_captured,
+                bait_captured,
+                ref fishingLevel_captured
+            ),
             this,
             fishingRod,
             bait,
             ref fishingLevel
         );
+    }
+}
+
+public sealed partial class ModPlayer_AnglerQuestReward_Impl(ModPlayerHooks.AnglerQuestReward.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_AnglerQuestReward_Impl(hook);
     }
 
     public override void AnglerQuestReward(
@@ -5028,38 +5433,57 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         System.Collections.Generic.List<Terraria.Item> rewardItems
     )
     {
-        if (!ModPlayerHooks.AnglerQuestReward.GetInvocationList().Any())
-        {
-            base.AnglerQuestReward(
-                rareMultiplier,
-                rewardItems
-            );
-            return;
-        }
-
-        ModPlayerHooks.AnglerQuestReward.Invoke(
+        hook(
+            (
+                float rareMultiplier_captured,
+                System.Collections.Generic.List<Terraria.Item> rewardItems_captured
+            ) => base.AnglerQuestReward(
+                rareMultiplier_captured,
+                rewardItems_captured
+            ),
             this,
             rareMultiplier,
             rewardItems
         );
+    }
+}
+
+public sealed partial class ModPlayer_GetDyeTraderReward_Impl(ModPlayerHooks.GetDyeTraderReward.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_GetDyeTraderReward_Impl(hook);
     }
 
     public override void GetDyeTraderReward(
         System.Collections.Generic.List<int> rewardPool
     )
     {
-        if (!ModPlayerHooks.GetDyeTraderReward.GetInvocationList().Any())
-        {
-            base.GetDyeTraderReward(
-                rewardPool
-            );
-            return;
-        }
-
-        ModPlayerHooks.GetDyeTraderReward.Invoke(
+        hook(
+            (
+                System.Collections.Generic.List<int> rewardPool_captured
+            ) => base.GetDyeTraderReward(
+                rewardPool_captured
+            ),
             this,
             rewardPool
         );
+    }
+}
+
+public sealed partial class ModPlayer_DrawEffects_Impl(ModPlayerHooks.DrawEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_DrawEffects_Impl(hook);
     }
 
     public override void DrawEffects(
@@ -5071,20 +5495,22 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref bool fullBright
     )
     {
-        if (!ModPlayerHooks.DrawEffects.GetInvocationList().Any())
-        {
-            base.DrawEffects(
-                drawInfo,
-                ref r,
-                ref g,
-                ref b,
-                ref a,
-                ref fullBright
-            );
-            return;
-        }
-
-        ModPlayerHooks.DrawEffects.Invoke(
+        hook(
+            (
+                Terraria.DataStructures.PlayerDrawSet drawInfo_captured,
+                ref float r_captured,
+                ref float g_captured,
+                ref float b_captured,
+                ref float a_captured,
+                ref bool fullBright_captured
+            ) => base.DrawEffects(
+                drawInfo_captured,
+                ref r_captured,
+                ref g_captured,
+                ref b_captured,
+                ref a_captured,
+                ref fullBright_captured
+            ),
             this,
             drawInfo,
             ref r,
@@ -5094,142 +5520,225 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
             ref fullBright
         );
     }
+}
+
+public sealed partial class ModPlayer_ModifyDrawInfo_Impl(ModPlayerHooks.ModifyDrawInfo.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyDrawInfo_Impl(hook);
+    }
 
     public override void ModifyDrawInfo(
         ref Terraria.DataStructures.PlayerDrawSet drawInfo
     )
     {
-        if (!ModPlayerHooks.ModifyDrawInfo.GetInvocationList().Any())
-        {
-            base.ModifyDrawInfo(
-                ref drawInfo
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyDrawInfo.Invoke(
+        hook(
+            (
+                ref Terraria.DataStructures.PlayerDrawSet drawInfo_captured
+            ) => base.ModifyDrawInfo(
+                ref drawInfo_captured
+            ),
             this,
             ref drawInfo
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyDrawLayerOrdering_Impl(ModPlayerHooks.ModifyDrawLayerOrdering.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyDrawLayerOrdering_Impl(hook);
     }
 
     public override void ModifyDrawLayerOrdering(
         System.Collections.Generic.IDictionary<Terraria.ModLoader.PlayerDrawLayer, Terraria.ModLoader.PlayerDrawLayer.Position> positions
     )
     {
-        if (!ModPlayerHooks.ModifyDrawLayerOrdering.GetInvocationList().Any())
-        {
-            base.ModifyDrawLayerOrdering(
-                positions
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyDrawLayerOrdering.Invoke(
+        hook(
+            (
+                System.Collections.Generic.IDictionary<Terraria.ModLoader.PlayerDrawLayer, Terraria.ModLoader.PlayerDrawLayer.Position> positions_captured
+            ) => base.ModifyDrawLayerOrdering(
+                positions_captured
+            ),
             this,
             positions
         );
+    }
+}
+
+public sealed partial class ModPlayer_HideDrawLayers_Impl(ModPlayerHooks.HideDrawLayers.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_HideDrawLayers_Impl(hook);
     }
 
     public override void HideDrawLayers(
         Terraria.DataStructures.PlayerDrawSet drawInfo
     )
     {
-        if (!ModPlayerHooks.HideDrawLayers.GetInvocationList().Any())
-        {
-            base.HideDrawLayers(
-                drawInfo
-            );
-            return;
-        }
-
-        ModPlayerHooks.HideDrawLayers.Invoke(
+        hook(
+            (
+                Terraria.DataStructures.PlayerDrawSet drawInfo_captured
+            ) => base.HideDrawLayers(
+                drawInfo_captured
+            ),
             this,
             drawInfo
         );
     }
+}
+
+public sealed partial class ModPlayer_ModifyScreenPosition_Impl(ModPlayerHooks.ModifyScreenPosition.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyScreenPosition_Impl(hook);
+    }
 
     public override void ModifyScreenPosition()
     {
-        if (!ModPlayerHooks.ModifyScreenPosition.GetInvocationList().Any())
-        {
-            base.ModifyScreenPosition();
-            return;
-        }
-
-        ModPlayerHooks.ModifyScreenPosition.Invoke(
+        hook(
+            () => base.ModifyScreenPosition(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyZoom_Impl(ModPlayerHooks.ModifyZoom.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyZoom_Impl(hook);
     }
 
     public override void ModifyZoom(
         ref float zoom
     )
     {
-        if (!ModPlayerHooks.ModifyZoom.GetInvocationList().Any())
-        {
-            base.ModifyZoom(
-                ref zoom
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyZoom.Invoke(
+        hook(
+            (
+                ref float zoom_captured
+            ) => base.ModifyZoom(
+                ref zoom_captured
+            ),
             this,
             ref zoom
         );
     }
+}
+
+public sealed partial class ModPlayer_PlayerConnect_Impl(ModPlayerHooks.PlayerConnect.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PlayerConnect_Impl(hook);
+    }
 
     public override void PlayerConnect()
     {
-        if (!ModPlayerHooks.PlayerConnect.GetInvocationList().Any())
-        {
-            base.PlayerConnect();
-            return;
-        }
-
-        ModPlayerHooks.PlayerConnect.Invoke(
+        hook(
+            () => base.PlayerConnect(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_PlayerDisconnect_Impl(ModPlayerHooks.PlayerDisconnect.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PlayerDisconnect_Impl(hook);
     }
 
     public override void PlayerDisconnect()
     {
-        if (!ModPlayerHooks.PlayerDisconnect.GetInvocationList().Any())
-        {
-            base.PlayerDisconnect();
-            return;
-        }
-
-        ModPlayerHooks.PlayerDisconnect.Invoke(
+        hook(
+            () => base.PlayerDisconnect(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnEnterWorld_Impl(ModPlayerHooks.OnEnterWorld.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnEnterWorld_Impl(hook);
     }
 
     public override void OnEnterWorld()
     {
-        if (!ModPlayerHooks.OnEnterWorld.GetInvocationList().Any())
-        {
-            base.OnEnterWorld();
-            return;
-        }
-
-        ModPlayerHooks.OnEnterWorld.Invoke(
+        hook(
+            () => base.OnEnterWorld(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnRespawn_Impl(ModPlayerHooks.OnRespawn.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnRespawn_Impl(hook);
     }
 
     public override void OnRespawn()
     {
-        if (!ModPlayerHooks.OnRespawn.GetInvocationList().Any())
-        {
-            base.OnRespawn();
-            return;
-        }
-
-        ModPlayerHooks.OnRespawn.Invoke(
+        hook(
+            () => base.OnRespawn(),
             this
         );
+    }
+}
+
+public sealed partial class ModPlayer_ShiftClickSlot_Impl(ModPlayerHooks.ShiftClickSlot.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ShiftClickSlot_Impl(hook);
     }
 
     public override bool ShiftClickSlot(
@@ -5238,21 +5747,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int slot
     )
     {
-        if (!ModPlayerHooks.ShiftClickSlot.GetInvocationList().Any())
-        {
-            return base.ShiftClickSlot(
-                inventory,
-                context,
-                slot
-            );
-        }
-
-        return ModPlayerHooks.ShiftClickSlot.Invoke(
+        return hook(
+            (
+                Terraria.Item[] inventory_captured,
+                int context_captured,
+                int slot_captured
+            ) => base.ShiftClickSlot(
+                inventory_captured,
+                context_captured,
+                slot_captured
+            ),
             this,
             inventory,
             context,
             slot
         );
+    }
+}
+
+public sealed partial class ModPlayer_HoverSlot_Impl(ModPlayerHooks.HoverSlot.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_HoverSlot_Impl(hook);
     }
 
     public override bool HoverSlot(
@@ -5261,21 +5782,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int slot
     )
     {
-        if (!ModPlayerHooks.HoverSlot.GetInvocationList().Any())
-        {
-            return base.HoverSlot(
-                inventory,
-                context,
-                slot
-            );
-        }
-
-        return ModPlayerHooks.HoverSlot.Invoke(
+        return hook(
+            (
+                Terraria.Item[] inventory_captured,
+                int context_captured,
+                int slot_captured
+            ) => base.HoverSlot(
+                inventory_captured,
+                context_captured,
+                slot_captured
+            ),
             this,
             inventory,
             context,
             slot
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostSellItem_Impl(ModPlayerHooks.PostSellItem.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostSellItem_Impl(hook);
     }
 
     public override void PostSellItem(
@@ -5284,22 +5817,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Item item
     )
     {
-        if (!ModPlayerHooks.PostSellItem.GetInvocationList().Any())
-        {
-            base.PostSellItem(
-                vendor,
-                shopInventory,
-                item
-            );
-            return;
-        }
-
-        ModPlayerHooks.PostSellItem.Invoke(
+        hook(
+            (
+                Terraria.NPC vendor_captured,
+                Terraria.Item[] shopInventory_captured,
+                Terraria.Item item_captured
+            ) => base.PostSellItem(
+                vendor_captured,
+                shopInventory_captured,
+                item_captured
+            ),
             this,
             vendor,
             shopInventory,
             item
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanSellItem_Impl(ModPlayerHooks.CanSellItem.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanSellItem_Impl(hook);
     }
 
     public override bool CanSellItem(
@@ -5308,21 +5852,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Item item
     )
     {
-        if (!ModPlayerHooks.CanSellItem.GetInvocationList().Any())
-        {
-            return base.CanSellItem(
-                vendor,
-                shopInventory,
-                item
-            );
-        }
-
-        return ModPlayerHooks.CanSellItem.Invoke(
+        return hook(
+            (
+                Terraria.NPC vendor_captured,
+                Terraria.Item[] shopInventory_captured,
+                Terraria.Item item_captured
+            ) => base.CanSellItem(
+                vendor_captured,
+                shopInventory_captured,
+                item_captured
+            ),
             this,
             vendor,
             shopInventory,
             item
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostBuyItem_Impl(ModPlayerHooks.PostBuyItem.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostBuyItem_Impl(hook);
     }
 
     public override void PostBuyItem(
@@ -5331,22 +5887,33 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Item item
     )
     {
-        if (!ModPlayerHooks.PostBuyItem.GetInvocationList().Any())
-        {
-            base.PostBuyItem(
-                vendor,
-                shopInventory,
-                item
-            );
-            return;
-        }
-
-        ModPlayerHooks.PostBuyItem.Invoke(
+        hook(
+            (
+                Terraria.NPC vendor_captured,
+                Terraria.Item[] shopInventory_captured,
+                Terraria.Item item_captured
+            ) => base.PostBuyItem(
+                vendor_captured,
+                shopInventory_captured,
+                item_captured
+            ),
             this,
             vendor,
             shopInventory,
             item
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanBuyItem_Impl(ModPlayerHooks.CanBuyItem.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanBuyItem_Impl(hook);
     }
 
     public override bool CanBuyItem(
@@ -5355,38 +5922,87 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         Terraria.Item item
     )
     {
-        if (!ModPlayerHooks.CanBuyItem.GetInvocationList().Any())
-        {
-            return base.CanBuyItem(
-                vendor,
-                shopInventory,
-                item
-            );
-        }
-
-        return ModPlayerHooks.CanBuyItem.Invoke(
+        return hook(
+            (
+                Terraria.NPC vendor_captured,
+                Terraria.Item[] shopInventory_captured,
+                Terraria.Item item_captured
+            ) => base.CanBuyItem(
+                vendor_captured,
+                shopInventory_captured,
+                item_captured
+            ),
             this,
             vendor,
             shopInventory,
             item
         );
     }
+}
+
+public sealed partial class ModPlayer_CanUseItem_Impl(ModPlayerHooks.CanUseItem.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanUseItem_Impl(hook);
+    }
 
     public override bool CanUseItem(
         Terraria.Item item
     )
     {
-        if (!ModPlayerHooks.CanUseItem.GetInvocationList().Any())
-        {
-            return base.CanUseItem(
-                item
-            );
-        }
-
-        return ModPlayerHooks.CanUseItem.Invoke(
+        return hook(
+            (
+                Terraria.Item item_captured
+            ) => base.CanUseItem(
+                item_captured
+            ),
             this,
             item
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanAutoReuseItem_Impl(ModPlayerHooks.CanAutoReuseItem.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanAutoReuseItem_Impl(hook);
+    }
+
+    public override bool? CanAutoReuseItem(
+        Terraria.Item item
+    )
+    {
+        return hook(
+            (
+                Terraria.Item item_captured
+            ) => base.CanAutoReuseItem(
+                item_captured
+            ),
+            this,
+            item
+        );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyNurseHeal_Impl(ModPlayerHooks.ModifyNurseHeal.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyNurseHeal_Impl(hook);
     }
 
     public override bool ModifyNurseHeal(
@@ -5396,23 +6012,36 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref string chatText
     )
     {
-        if (!ModPlayerHooks.ModifyNurseHeal.GetInvocationList().Any())
-        {
-            return base.ModifyNurseHeal(
-                nurse,
-                ref health,
-                ref removeDebuffs,
-                ref chatText
-            );
-        }
-
-        return ModPlayerHooks.ModifyNurseHeal.Invoke(
+        return hook(
+            (
+                Terraria.NPC nurse_captured,
+                ref int health_captured,
+                ref bool removeDebuffs_captured,
+                ref string chatText_captured
+            ) => base.ModifyNurseHeal(
+                nurse_captured,
+                ref health_captured,
+                ref removeDebuffs_captured,
+                ref chatText_captured
+            ),
             this,
             nurse,
             ref health,
             ref removeDebuffs,
             ref chatText
         );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyNursePrice_Impl(ModPlayerHooks.ModifyNursePrice.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyNursePrice_Impl(hook);
     }
 
     public override void ModifyNursePrice(
@@ -5422,24 +6051,36 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         ref int price
     )
     {
-        if (!ModPlayerHooks.ModifyNursePrice.GetInvocationList().Any())
-        {
-            base.ModifyNursePrice(
-                nurse,
-                health,
-                removeDebuffs,
-                ref price
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyNursePrice.Invoke(
+        hook(
+            (
+                Terraria.NPC nurse_captured,
+                int health_captured,
+                bool removeDebuffs_captured,
+                ref int price_captured
+            ) => base.ModifyNursePrice(
+                nurse_captured,
+                health_captured,
+                removeDebuffs_captured,
+                ref price_captured
+            ),
             this,
             nurse,
             health,
             removeDebuffs,
             ref price
         );
+    }
+}
+
+public sealed partial class ModPlayer_PostNurseHeal_Impl(ModPlayerHooks.PostNurseHeal.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_PostNurseHeal_Impl(hook);
     }
 
     public override void PostNurseHeal(
@@ -5449,18 +6090,18 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int price
     )
     {
-        if (!ModPlayerHooks.PostNurseHeal.GetInvocationList().Any())
-        {
-            base.PostNurseHeal(
-                nurse,
-                health,
-                removeDebuffs,
-                price
-            );
-            return;
-        }
-
-        ModPlayerHooks.PostNurseHeal.Invoke(
+        hook(
+            (
+                Terraria.NPC nurse_captured,
+                int health_captured,
+                bool removeDebuffs_captured,
+                int price_captured
+            ) => base.PostNurseHeal(
+                nurse_captured,
+                health_captured,
+                removeDebuffs_captured,
+                price_captured
+            ),
             this,
             nurse,
             health,
@@ -5468,43 +6109,129 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
             price
         );
     }
+}
+
+public sealed partial class ModPlayer_AddStartingItems_Impl(ModPlayerHooks.AddStartingItems.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_AddStartingItems_Impl(hook);
+    }
+
+    public override System.Collections.Generic.IEnumerable<Terraria.Item> AddStartingItems(
+        bool mediumCoreDeath
+    )
+    {
+        return hook(
+            (
+                bool mediumCoreDeath_captured
+            ) => base.AddStartingItems(
+                mediumCoreDeath_captured
+            ),
+            this,
+            mediumCoreDeath
+        );
+    }
+}
+
+public sealed partial class ModPlayer_ModifyStartingInventory_Impl(ModPlayerHooks.ModifyStartingInventory.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_ModifyStartingInventory_Impl(hook);
+    }
 
     public override void ModifyStartingInventory(
         System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.List<Terraria.Item>> itemsByMod,
         bool mediumCoreDeath
     )
     {
-        if (!ModPlayerHooks.ModifyStartingInventory.GetInvocationList().Any())
-        {
-            base.ModifyStartingInventory(
-                itemsByMod,
-                mediumCoreDeath
-            );
-            return;
-        }
-
-        ModPlayerHooks.ModifyStartingInventory.Invoke(
+        hook(
+            (
+                System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.List<Terraria.Item>> itemsByMod_captured,
+                bool mediumCoreDeath_captured
+            ) => base.ModifyStartingInventory(
+                itemsByMod_captured,
+                mediumCoreDeath_captured
+            ),
             this,
             itemsByMod,
             mediumCoreDeath
         );
+    }
+}
+
+public sealed partial class ModPlayer_AddMaterialsForCrafting_Impl(ModPlayerHooks.AddMaterialsForCrafting.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_AddMaterialsForCrafting_Impl(hook);
+    }
+
+    public override System.Collections.Generic.IEnumerable<Terraria.Item> AddMaterialsForCrafting(
+        out Terraria.ModLoader.ModPlayer.ItemConsumedCallback itemConsumedCallback
+    )
+    {
+        return hook(
+            (
+                out Terraria.ModLoader.ModPlayer.ItemConsumedCallback itemConsumedCallback_captured
+            ) => base.AddMaterialsForCrafting(
+                out itemConsumedCallback_captured
+            ),
+            this,
+            out itemConsumedCallback
+        );
+    }
+}
+
+public sealed partial class ModPlayer_OnPickup_Impl(ModPlayerHooks.OnPickup.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnPickup_Impl(hook);
     }
 
     public override bool OnPickup(
         Terraria.Item item
     )
     {
-        if (!ModPlayerHooks.OnPickup.GetInvocationList().Any())
-        {
-            return base.OnPickup(
-                item
-            );
-        }
-
-        return ModPlayerHooks.OnPickup.Invoke(
+        return hook(
+            (
+                Terraria.Item item_captured
+            ) => base.OnPickup(
+                item_captured
+            ),
             this,
             item
         );
+    }
+}
+
+public sealed partial class ModPlayer_CanBeTeleportedTo_Impl(ModPlayerHooks.CanBeTeleportedTo.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_CanBeTeleportedTo_Impl(hook);
     }
 
     public override bool CanBeTeleportedTo(
@@ -5512,19 +6239,30 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         string context
     )
     {
-        if (!ModPlayerHooks.CanBeTeleportedTo.GetInvocationList().Any())
-        {
-            return base.CanBeTeleportedTo(
-                teleportPosition,
-                context
-            );
-        }
-
-        return ModPlayerHooks.CanBeTeleportedTo.Invoke(
+        return hook(
+            (
+                Microsoft.Xna.Framework.Vector2 teleportPosition_captured,
+                string context_captured
+            ) => base.CanBeTeleportedTo(
+                teleportPosition_captured,
+                context_captured
+            ),
             this,
             teleportPosition,
             context
         );
+    }
+}
+
+public sealed partial class ModPlayer_OnEquipmentLoadoutSwitched_Impl(ModPlayerHooks.OnEquipmentLoadoutSwitched.Definition hook) : Terraria.ModLoader.ModPlayer
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    {
+        return new ModPlayer_OnEquipmentLoadoutSwitched_Impl(hook);
     }
 
     public override void OnEquipmentLoadoutSwitched(
@@ -5532,16 +6270,14 @@ public sealed partial class ModPlayerImpl : Terraria.ModLoader.ModPlayer
         int loadoutIndex
     )
     {
-        if (!ModPlayerHooks.OnEquipmentLoadoutSwitched.GetInvocationList().Any())
-        {
-            base.OnEquipmentLoadoutSwitched(
-                oldLoadoutIndex,
-                loadoutIndex
-            );
-            return;
-        }
-
-        ModPlayerHooks.OnEquipmentLoadoutSwitched.Invoke(
+        hook(
+            (
+                int oldLoadoutIndex_captured,
+                int loadoutIndex_captured
+            ) => base.OnEquipmentLoadoutSwitched(
+                oldLoadoutIndex_captured,
+                loadoutIndex_captured
+            ),
             this,
             oldLoadoutIndex,
             loadoutIndex

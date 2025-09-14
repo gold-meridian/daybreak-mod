@@ -72,7 +72,7 @@ public interface ISpeciallyRenderedRarity
         IL_Main.MouseTextInner += RenderSpecialRaritiesInMouseText;
     }
 
-    private static bool RenderSpecialRaritiesInTooltips(GlobalItem self, Item item, DrawableTooltipLine line, ref int yOffset)
+    private static bool RenderSpecialRaritiesInTooltips(GlobalItemHooks.PreDrawTooltipLine.Original orig, GlobalItem self, Item item, DrawableTooltipLine line, ref int yOffset)
     {
         if (line is not { Mod: "Terraria", Name: "ItemName" })
         {

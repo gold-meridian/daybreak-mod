@@ -1,7 +1,5 @@
 namespace Daybreak.Common.Features.Hooks;
 
-using System.Linq;
-
 // ReSharper disable PartialTypeWithSinglePart
 // ReSharper disable UnusedType.Global
 // ReSharper disable InconsistentNaming
@@ -24,61 +22,63 @@ public static partial class GlobalBuffHooks
 {
     public sealed partial class Update_int_Player_int
     {
+        public delegate void Original(
+            int type,
+            Terraria.Player player,
+            ref int buffIndex
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             int type,
             Terraria.Player player,
             ref int buffIndex
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_Update_int_Player_int_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::Update_int_Player_int")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            int type,
-            Terraria.Player player,
-            ref int buffIndex
-        )
-        {
-            Event?.Invoke(self, type, player, ref buffIndex);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::Update_int_Player_int; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class Update_int_NPC_int
     {
+        public delegate void Original(
+            int type,
+            Terraria.NPC npc,
+            ref int buffIndex
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             int type,
             Terraria.NPC npc,
             ref int buffIndex
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_Update_int_NPC_int_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::Update_int_NPC_int")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            int type,
-            Terraria.NPC npc,
-            ref int buffIndex
-        )
-        {
-            Event?.Invoke(self, type, npc, ref buffIndex);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::Update_int_NPC_int; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ReApply_int_Player_int_int
     {
+        public delegate bool Original(
+            int type,
+            Terraria.Player player,
+            int time,
+            int buffIndex
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             int type,
             Terraria.Player player,
@@ -86,41 +86,25 @@ public static partial class GlobalBuffHooks
             int buffIndex
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_ReApply_int_Player_int_int_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::ReApply_int_Player_int_int")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            int type,
-            Terraria.Player player,
-            int time,
-            int buffIndex
-        )
-        {
-            if (Event == null)
-            {
-                return false;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (handler.Invoke(self, type, player, time, buffIndex))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::ReApply_int_Player_int_int; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ReApply_int_NPC_int_int
     {
+        public delegate bool Original(
+            int type,
+            Terraria.NPC npc,
+            int time,
+            int buffIndex
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             int type,
             Terraria.NPC npc,
@@ -128,41 +112,25 @@ public static partial class GlobalBuffHooks
             int buffIndex
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_ReApply_int_NPC_int_int_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::ReApply_int_NPC_int_int")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            int type,
-            Terraria.NPC npc,
-            int time,
-            int buffIndex
-        )
-        {
-            if (Event == null)
-            {
-                return false;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                if (handler.Invoke(self, type, npc, time, buffIndex))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::ReApply_int_NPC_int_int; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class ModifyBuffText
     {
+        public delegate void Original(
+            int type,
+            ref string buffName,
+            ref string tip,
+            ref int rare
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             int type,
             ref string buffName,
@@ -170,53 +138,47 @@ public static partial class GlobalBuffHooks
             ref int rare
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_ModifyBuffText_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::ModifyBuffText")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            int type,
-            ref string buffName,
-            ref string tip,
-            ref int rare
-        )
-        {
-            Event?.Invoke(self, type, ref buffName, ref tip, ref rare);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::ModifyBuffText; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class CustomBuffTipSize
     {
+        public delegate void Original(
+            string buffTip,
+            System.Collections.Generic.List<Microsoft.Xna.Framework.Vector2> sizes
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             string buffTip,
             System.Collections.Generic.List<Microsoft.Xna.Framework.Vector2> sizes
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_CustomBuffTipSize_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::CustomBuffTipSize")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            string buffTip,
-            System.Collections.Generic.List<Microsoft.Xna.Framework.Vector2> sizes
-        )
-        {
-            Event?.Invoke(self, buffTip, sizes);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::CustomBuffTipSize; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class DrawCustomBuffTip
     {
+        public delegate void Original(
+            string buffTip,
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            int originX,
+            int originY
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             string buffTip,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -224,28 +186,25 @@ public static partial class GlobalBuffHooks
             int originY
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_DrawCustomBuffTip_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::DrawCustomBuffTip")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            string buffTip,
-            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
-            int originX,
-            int originY
-        )
-        {
-            Event?.Invoke(self, buffTip, spriteBatch, originX, originY);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::DrawCustomBuffTip; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreDraw
     {
+        public delegate bool Original(
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            int type,
+            int buffIndex,
+            ref Terraria.DataStructures.BuffDrawParams drawParams
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             int type,
@@ -253,39 +212,25 @@ public static partial class GlobalBuffHooks
             ref Terraria.DataStructures.BuffDrawParams drawParams
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_PreDraw_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::PreDraw")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
-            int type,
-            int buffIndex,
-            ref Terraria.DataStructures.BuffDrawParams drawParams
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, spriteBatch, type, buffIndex, ref drawParams);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::PreDraw; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostDraw
     {
+        public delegate void Original(
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            int type,
+            int buffIndex,
+            Terraria.DataStructures.BuffDrawParams drawParams
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             int type,
@@ -293,87 +238,68 @@ public static partial class GlobalBuffHooks
             Terraria.DataStructures.BuffDrawParams drawParams
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_PostDraw_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::PostDraw")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
-            int type,
-            int buffIndex,
-            Terraria.DataStructures.BuffDrawParams drawParams
-        )
-        {
-            Event?.Invoke(self, spriteBatch, type, buffIndex, drawParams);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::PostDraw; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class RightClick
     {
+        public delegate bool Original(
+            int type,
+            int buffIndex
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.GlobalBuff self,
             int type,
             int buffIndex
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalBuff_RightClick_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalBuff::RightClick")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.GlobalBuff self,
-            int type,
-            int buffIndex
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, type, buffIndex);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::RightClick; use a flag to disable behavior.");
         }
     }
 }
 
-public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
+public sealed partial class GlobalBuff_Update_int_Player_int_Impl(GlobalBuffHooks.Update_int_Player_int.Definition hook) : Terraria.ModLoader.GlobalBuff
 {
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
     public override void Update(
         int type,
         Terraria.Player player,
         ref int buffIndex
     )
     {
-        if (!GlobalBuffHooks.Update_int_Player_int.GetInvocationList().Any())
-        {
-            base.Update(
-                type,
-                player,
-                ref buffIndex
-            );
-            return;
-        }
-
-        GlobalBuffHooks.Update_int_Player_int.Invoke(
+        hook(
+            (
+                int type_captured,
+                Terraria.Player player_captured,
+                ref int buffIndex_captured
+            ) => base.Update(
+                type_captured,
+                player_captured,
+                ref buffIndex_captured
+            ),
             this,
             type,
             player,
             ref buffIndex
         );
     }
+}
+
+public sealed partial class GlobalBuff_Update_int_NPC_int_Impl(GlobalBuffHooks.Update_int_NPC_int.Definition hook) : Terraria.ModLoader.GlobalBuff
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override void Update(
         int type,
@@ -381,23 +307,27 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
         ref int buffIndex
     )
     {
-        if (!GlobalBuffHooks.Update_int_NPC_int.GetInvocationList().Any())
-        {
-            base.Update(
-                type,
-                npc,
-                ref buffIndex
-            );
-            return;
-        }
-
-        GlobalBuffHooks.Update_int_NPC_int.Invoke(
+        hook(
+            (
+                int type_captured,
+                Terraria.NPC npc_captured,
+                ref int buffIndex_captured
+            ) => base.Update(
+                type_captured,
+                npc_captured,
+                ref buffIndex_captured
+            ),
             this,
             type,
             npc,
             ref buffIndex
         );
     }
+}
+
+public sealed partial class GlobalBuff_ReApply_int_Player_int_int_Impl(GlobalBuffHooks.ReApply_int_Player_int_int.Definition hook) : Terraria.ModLoader.GlobalBuff
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override bool ReApply(
         int type,
@@ -406,17 +336,18 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
         int buffIndex
     )
     {
-        if (!GlobalBuffHooks.ReApply_int_Player_int_int.GetInvocationList().Any())
-        {
-            return base.ReApply(
-                type,
-                player,
-                time,
-                buffIndex
-            );
-        }
-
-        return GlobalBuffHooks.ReApply_int_Player_int_int.Invoke(
+        return hook(
+            (
+                int type_captured,
+                Terraria.Player player_captured,
+                int time_captured,
+                int buffIndex_captured
+            ) => base.ReApply(
+                type_captured,
+                player_captured,
+                time_captured,
+                buffIndex_captured
+            ),
             this,
             type,
             player,
@@ -424,6 +355,11 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
             buffIndex
         );
     }
+}
+
+public sealed partial class GlobalBuff_ReApply_int_NPC_int_int_Impl(GlobalBuffHooks.ReApply_int_NPC_int_int.Definition hook) : Terraria.ModLoader.GlobalBuff
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override bool ReApply(
         int type,
@@ -432,17 +368,18 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
         int buffIndex
     )
     {
-        if (!GlobalBuffHooks.ReApply_int_NPC_int_int.GetInvocationList().Any())
-        {
-            return base.ReApply(
-                type,
-                npc,
-                time,
-                buffIndex
-            );
-        }
-
-        return GlobalBuffHooks.ReApply_int_NPC_int_int.Invoke(
+        return hook(
+            (
+                int type_captured,
+                Terraria.NPC npc_captured,
+                int time_captured,
+                int buffIndex_captured
+            ) => base.ReApply(
+                type_captured,
+                npc_captured,
+                time_captured,
+                buffIndex_captured
+            ),
             this,
             type,
             npc,
@@ -450,6 +387,11 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
             buffIndex
         );
     }
+}
+
+public sealed partial class GlobalBuff_ModifyBuffText_Impl(GlobalBuffHooks.ModifyBuffText.Definition hook) : Terraria.ModLoader.GlobalBuff
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override void ModifyBuffText(
         int type,
@@ -458,18 +400,18 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
         ref int rare
     )
     {
-        if (!GlobalBuffHooks.ModifyBuffText.GetInvocationList().Any())
-        {
-            base.ModifyBuffText(
-                type,
-                ref buffName,
-                ref tip,
-                ref rare
-            );
-            return;
-        }
-
-        GlobalBuffHooks.ModifyBuffText.Invoke(
+        hook(
+            (
+                int type_captured,
+                ref string buffName_captured,
+                ref string tip_captured,
+                ref int rare_captured
+            ) => base.ModifyBuffText(
+                type_captured,
+                ref buffName_captured,
+                ref tip_captured,
+                ref rare_captured
+            ),
             this,
             type,
             ref buffName,
@@ -477,27 +419,35 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
             ref rare
         );
     }
+}
+
+public sealed partial class GlobalBuff_CustomBuffTipSize_Impl(GlobalBuffHooks.CustomBuffTipSize.Definition hook) : Terraria.ModLoader.GlobalBuff
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override void CustomBuffTipSize(
         string buffTip,
         System.Collections.Generic.List<Microsoft.Xna.Framework.Vector2> sizes
     )
     {
-        if (!GlobalBuffHooks.CustomBuffTipSize.GetInvocationList().Any())
-        {
-            base.CustomBuffTipSize(
-                buffTip,
-                sizes
-            );
-            return;
-        }
-
-        GlobalBuffHooks.CustomBuffTipSize.Invoke(
+        hook(
+            (
+                string buffTip_captured,
+                System.Collections.Generic.List<Microsoft.Xna.Framework.Vector2> sizes_captured
+            ) => base.CustomBuffTipSize(
+                buffTip_captured,
+                sizes_captured
+            ),
             this,
             buffTip,
             sizes
         );
     }
+}
+
+public sealed partial class GlobalBuff_DrawCustomBuffTip_Impl(GlobalBuffHooks.DrawCustomBuffTip.Definition hook) : Terraria.ModLoader.GlobalBuff
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override void DrawCustomBuffTip(
         string buffTip,
@@ -506,18 +456,18 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
         int originY
     )
     {
-        if (!GlobalBuffHooks.DrawCustomBuffTip.GetInvocationList().Any())
-        {
-            base.DrawCustomBuffTip(
-                buffTip,
-                spriteBatch,
-                originX,
-                originY
-            );
-            return;
-        }
-
-        GlobalBuffHooks.DrawCustomBuffTip.Invoke(
+        hook(
+            (
+                string buffTip_captured,
+                Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
+                int originX_captured,
+                int originY_captured
+            ) => base.DrawCustomBuffTip(
+                buffTip_captured,
+                spriteBatch_captured,
+                originX_captured,
+                originY_captured
+            ),
             this,
             buffTip,
             spriteBatch,
@@ -525,6 +475,11 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
             originY
         );
     }
+}
+
+public sealed partial class GlobalBuff_PreDraw_Impl(GlobalBuffHooks.PreDraw.Definition hook) : Terraria.ModLoader.GlobalBuff
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override bool PreDraw(
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -533,17 +488,18 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
         ref Terraria.DataStructures.BuffDrawParams drawParams
     )
     {
-        if (!GlobalBuffHooks.PreDraw.GetInvocationList().Any())
-        {
-            return base.PreDraw(
-                spriteBatch,
-                type,
-                buffIndex,
-                ref drawParams
-            );
-        }
-
-        return GlobalBuffHooks.PreDraw.Invoke(
+        return hook(
+            (
+                Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
+                int type_captured,
+                int buffIndex_captured,
+                ref Terraria.DataStructures.BuffDrawParams drawParams_captured
+            ) => base.PreDraw(
+                spriteBatch_captured,
+                type_captured,
+                buffIndex_captured,
+                ref drawParams_captured
+            ),
             this,
             spriteBatch,
             type,
@@ -551,6 +507,11 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
             ref drawParams
         );
     }
+}
+
+public sealed partial class GlobalBuff_PostDraw_Impl(GlobalBuffHooks.PostDraw.Definition hook) : Terraria.ModLoader.GlobalBuff
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override void PostDraw(
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -559,18 +520,18 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
         Terraria.DataStructures.BuffDrawParams drawParams
     )
     {
-        if (!GlobalBuffHooks.PostDraw.GetInvocationList().Any())
-        {
-            base.PostDraw(
-                spriteBatch,
-                type,
-                buffIndex,
-                drawParams
-            );
-            return;
-        }
-
-        GlobalBuffHooks.PostDraw.Invoke(
+        hook(
+            (
+                Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
+                int type_captured,
+                int buffIndex_captured,
+                Terraria.DataStructures.BuffDrawParams drawParams_captured
+            ) => base.PostDraw(
+                spriteBatch_captured,
+                type_captured,
+                buffIndex_captured,
+                drawParams_captured
+            ),
             this,
             spriteBatch,
             type,
@@ -578,21 +539,25 @@ public sealed partial class GlobalBuffImpl : Terraria.ModLoader.GlobalBuff
             drawParams
         );
     }
+}
+
+public sealed partial class GlobalBuff_RightClick_Impl(GlobalBuffHooks.RightClick.Definition hook) : Terraria.ModLoader.GlobalBuff
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
 
     public override bool RightClick(
         int type,
         int buffIndex
     )
     {
-        if (!GlobalBuffHooks.RightClick.GetInvocationList().Any())
-        {
-            return base.RightClick(
-                type,
-                buffIndex
-            );
-        }
-
-        return GlobalBuffHooks.RightClick.Invoke(
+        return hook(
+            (
+                int type_captured,
+                int buffIndex_captured
+            ) => base.RightClick(
+                type_captured,
+                buffIndex_captured
+            ),
             this,
             type,
             buffIndex

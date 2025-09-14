@@ -187,7 +187,10 @@ internal sealed class AchievementImpl : ModSystem
         private static Achievement? hoveredCard;
 
         [SubscribesTo<ModSystemHooks.PostSetupContent>]
-        public static void InitializeAchievementAdvisorHooks(ModSystem self)
+        public static void InitializeAchievementAdvisorHooks(
+            ModSystemHooks.PostSetupContent.Original orig,
+            ModSystem self
+        )
         {
             if (!AchievementConfig.AreAchievementsEnabled())
             {

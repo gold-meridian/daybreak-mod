@@ -1,7 +1,5 @@
 namespace Daybreak.Common.Features.Hooks;
 
-using System.Linq;
-
 // ReSharper disable PartialTypeWithSinglePart
 // ReSharper disable UnusedType.Global
 // ReSharper disable InconsistentNaming
@@ -23,100 +21,80 @@ public static partial class GlobalEmoteBubbleHooks
 {
     public sealed partial class OnSpawn
     {
+        public delegate void Original(
+            Terraria.GameContent.UI.EmoteBubble emoteBubble
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalEmoteBubble_OnSpawn_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalEmoteBubble::OnSpawn")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalEmoteBubble self,
-            Terraria.GameContent.UI.EmoteBubble emoteBubble
-        )
-        {
-            Event?.Invoke(self, emoteBubble);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::OnSpawn; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateFrame
     {
+        public delegate bool Original(
+            Terraria.GameContent.UI.EmoteBubble emoteBubble
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalEmoteBubble_UpdateFrame_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalEmoteBubble::UpdateFrame")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.GlobalEmoteBubble self,
-            Terraria.GameContent.UI.EmoteBubble emoteBubble
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, emoteBubble);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::UpdateFrame; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class UpdateFrameInEmoteMenu
     {
+        public delegate bool Original(
+            int emoteType,
+            ref int frameCounter
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.GlobalEmoteBubble self,
             int emoteType,
             ref int frameCounter
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalEmoteBubble_UpdateFrameInEmoteMenu_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalEmoteBubble::UpdateFrameInEmoteMenu")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.GlobalEmoteBubble self,
-            int emoteType,
-            ref int frameCounter
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, emoteType, ref frameCounter);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::UpdateFrameInEmoteMenu; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreDraw
     {
+        public delegate bool Original(
+            Terraria.GameContent.UI.EmoteBubble emoteBubble,
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            Microsoft.Xna.Framework.Graphics.Texture2D texture,
+            Microsoft.Xna.Framework.Vector2 position,
+            Microsoft.Xna.Framework.Rectangle frame,
+            Microsoft.Xna.Framework.Vector2 origin,
+            Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -127,42 +105,28 @@ public static partial class GlobalEmoteBubbleHooks
             Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalEmoteBubble_PreDraw_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalEmoteBubble::PreDraw")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.GlobalEmoteBubble self,
-            Terraria.GameContent.UI.EmoteBubble emoteBubble,
-            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
-            Microsoft.Xna.Framework.Graphics.Texture2D texture,
-            Microsoft.Xna.Framework.Vector2 position,
-            Microsoft.Xna.Framework.Rectangle frame,
-            Microsoft.Xna.Framework.Vector2 origin,
-            Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, emoteBubble, spriteBatch, texture, position, frame, origin, spriteEffects);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::PreDraw; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostDraw
     {
+        public delegate void Original(
+            Terraria.GameContent.UI.EmoteBubble emoteBubble,
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            Microsoft.Xna.Framework.Graphics.Texture2D texture,
+            Microsoft.Xna.Framework.Vector2 position,
+            Microsoft.Xna.Framework.Rectangle frame,
+            Microsoft.Xna.Framework.Vector2 origin,
+            Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -173,31 +137,27 @@ public static partial class GlobalEmoteBubbleHooks
             Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalEmoteBubble_PostDraw_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalEmoteBubble::PostDraw")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalEmoteBubble self,
-            Terraria.GameContent.UI.EmoteBubble emoteBubble,
-            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
-            Microsoft.Xna.Framework.Graphics.Texture2D texture,
-            Microsoft.Xna.Framework.Vector2 position,
-            Microsoft.Xna.Framework.Rectangle frame,
-            Microsoft.Xna.Framework.Vector2 origin,
-            Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
-        )
-        {
-            Event?.Invoke(self, emoteBubble, spriteBatch, texture, position, frame, origin, spriteEffects);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::PostDraw; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PreDrawInEmoteMenu
     {
+        public delegate bool Original(
+            int emoteType,
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            Terraria.GameContent.UI.Elements.EmoteButton uiEmoteButton,
+            Microsoft.Xna.Framework.Vector2 position,
+            Microsoft.Xna.Framework.Rectangle frame,
+            Microsoft.Xna.Framework.Vector2 origin
+        );
+
         public delegate bool Definition(
+            Original orig,
             Terraria.ModLoader.GlobalEmoteBubble self,
             int emoteType,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -207,41 +167,27 @@ public static partial class GlobalEmoteBubbleHooks
             Microsoft.Xna.Framework.Vector2 origin
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalEmoteBubble_PreDrawInEmoteMenu_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalEmoteBubble::PreDrawInEmoteMenu")));
 
-        public static bool Invoke(
-            Terraria.ModLoader.GlobalEmoteBubble self,
-            int emoteType,
-            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
-            Terraria.GameContent.UI.Elements.EmoteButton uiEmoteButton,
-            Microsoft.Xna.Framework.Vector2 position,
-            Microsoft.Xna.Framework.Rectangle frame,
-            Microsoft.Xna.Framework.Vector2 origin
-        )
-        {
-            var result = true;
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                result &= handler.Invoke(self, emoteType, spriteBatch, uiEmoteButton, position, frame, origin);
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::PreDrawInEmoteMenu; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class PostDrawInEmoteMenu
     {
+        public delegate void Original(
+            int emoteType,
+            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
+            Terraria.GameContent.UI.Elements.EmoteButton uiEmoteButton,
+            Microsoft.Xna.Framework.Vector2 position,
+            Microsoft.Xna.Framework.Rectangle frame,
+            Microsoft.Xna.Framework.Vector2 origin
+        );
+
         public delegate void Definition(
+            Original orig,
             Terraria.ModLoader.GlobalEmoteBubble self,
             int emoteType,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -251,143 +197,128 @@ public static partial class GlobalEmoteBubbleHooks
             Microsoft.Xna.Framework.Vector2 origin
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalEmoteBubble_PostDrawInEmoteMenu_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalEmoteBubble::PostDrawInEmoteMenu")));
 
-        public static void Invoke(
-            Terraria.ModLoader.GlobalEmoteBubble self,
-            int emoteType,
-            Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
-            Terraria.GameContent.UI.Elements.EmoteButton uiEmoteButton,
-            Microsoft.Xna.Framework.Vector2 position,
-            Microsoft.Xna.Framework.Rectangle frame,
-            Microsoft.Xna.Framework.Vector2 origin
-        )
-        {
-            Event?.Invoke(self, emoteType, spriteBatch, uiEmoteButton, position, frame, origin);
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::PostDrawInEmoteMenu; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class GetFrame
     {
+        public delegate Microsoft.Xna.Framework.Rectangle? Original(
+            Terraria.GameContent.UI.EmoteBubble emoteBubble
+        );
+
         public delegate Microsoft.Xna.Framework.Rectangle? Definition(
+            Original orig,
             Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalEmoteBubble_GetFrame_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalEmoteBubble::GetFrame")));
 
-        public static Microsoft.Xna.Framework.Rectangle? Invoke(
-            Terraria.ModLoader.GlobalEmoteBubble self,
-            Terraria.GameContent.UI.EmoteBubble emoteBubble
-        )
-        {
-            var result = default(Microsoft.Xna.Framework.Rectangle?);
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                var newValue = handler.Invoke(self, emoteBubble);
-                if (newValue != null)
-                {
-                    result = newValue;
-                }
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::GetFrame; use a flag to disable behavior.");
         }
     }
 
     public sealed partial class GetFrameInEmoteMenu
     {
+        public delegate Microsoft.Xna.Framework.Rectangle? Original(
+            int emoteType,
+            int frame,
+            int frameCounter
+        );
+
         public delegate Microsoft.Xna.Framework.Rectangle? Definition(
+            Original orig,
             Terraria.ModLoader.GlobalEmoteBubble self,
             int emoteType,
             int frame,
             int frameCounter
         );
 
-        public static event Definition? Event;
-
-        internal static System.Collections.Generic.IEnumerable<Definition> GetInvocationList()
+        public static event Definition? Event
         {
-            return Event?.GetInvocationList().Select(x => (Definition)x) ?? [];
-        }
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalEmoteBubble_GetFrameInEmoteMenu_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalEmoteBubble::GetFrameInEmoteMenu")));
 
-        public static Microsoft.Xna.Framework.Rectangle? Invoke(
-            Terraria.ModLoader.GlobalEmoteBubble self,
-            int emoteType,
-            int frame,
-            int frameCounter
-        )
-        {
-            var result = default(Microsoft.Xna.Framework.Rectangle?);
-            if (Event == null)
-            {
-                return result;
-            }
-
-            foreach (var handler in GetInvocationList())
-            {
-                var newValue = handler.Invoke(self, emoteType, frame, frameCounter);
-                if (newValue != null)
-                {
-                    result = newValue;
-                }
-            }
-
-            return result;
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::GetFrameInEmoteMenu; use a flag to disable behavior.");
         }
     }
 }
 
-public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_OnSpawn_Impl(GlobalEmoteBubbleHooks.OnSpawn.Definition hook) : Terraria.ModLoader.GlobalEmoteBubble
 {
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.GlobalEmoteBubble Clone(Terraria.GameContent.UI.EmoteBubble? from, Terraria.GameContent.UI.EmoteBubble to)
+    {
+        return new GlobalEmoteBubble_OnSpawn_Impl(hook);
+    }
+
     public override void OnSpawn(
         Terraria.GameContent.UI.EmoteBubble emoteBubble
     )
     {
-        if (!GlobalEmoteBubbleHooks.OnSpawn.GetInvocationList().Any())
-        {
-            base.OnSpawn(
-                emoteBubble
-            );
-            return;
-        }
-
-        GlobalEmoteBubbleHooks.OnSpawn.Invoke(
+        hook(
+            (
+                Terraria.GameContent.UI.EmoteBubble emoteBubble_captured
+            ) => base.OnSpawn(
+                emoteBubble_captured
+            ),
             this,
             emoteBubble
         );
+    }
+}
+
+public sealed partial class GlobalEmoteBubble_UpdateFrame_Impl(GlobalEmoteBubbleHooks.UpdateFrame.Definition hook) : Terraria.ModLoader.GlobalEmoteBubble
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.GlobalEmoteBubble Clone(Terraria.GameContent.UI.EmoteBubble? from, Terraria.GameContent.UI.EmoteBubble to)
+    {
+        return new GlobalEmoteBubble_UpdateFrame_Impl(hook);
     }
 
     public override bool UpdateFrame(
         Terraria.GameContent.UI.EmoteBubble emoteBubble
     )
     {
-        if (!GlobalEmoteBubbleHooks.UpdateFrame.GetInvocationList().Any())
-        {
-            return base.UpdateFrame(
-                emoteBubble
-            );
-        }
-
-        return GlobalEmoteBubbleHooks.UpdateFrame.Invoke(
+        return hook(
+            (
+                Terraria.GameContent.UI.EmoteBubble emoteBubble_captured
+            ) => base.UpdateFrame(
+                emoteBubble_captured
+            ),
             this,
             emoteBubble
         );
+    }
+}
+
+public sealed partial class GlobalEmoteBubble_UpdateFrameInEmoteMenu_Impl(GlobalEmoteBubbleHooks.UpdateFrameInEmoteMenu.Definition hook) : Terraria.ModLoader.GlobalEmoteBubble
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.GlobalEmoteBubble Clone(Terraria.GameContent.UI.EmoteBubble? from, Terraria.GameContent.UI.EmoteBubble to)
+    {
+        return new GlobalEmoteBubble_UpdateFrameInEmoteMenu_Impl(hook);
     }
 
     public override bool UpdateFrameInEmoteMenu(
@@ -395,19 +326,32 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
         ref int frameCounter
     )
     {
-        if (!GlobalEmoteBubbleHooks.UpdateFrameInEmoteMenu.GetInvocationList().Any())
-        {
-            return base.UpdateFrameInEmoteMenu(
-                emoteType,
-                ref frameCounter
-            );
-        }
-
-        return GlobalEmoteBubbleHooks.UpdateFrameInEmoteMenu.Invoke(
+        return hook(
+            (
+                int emoteType_captured,
+                ref int frameCounter_captured
+            ) => base.UpdateFrameInEmoteMenu(
+                emoteType_captured,
+                ref frameCounter_captured
+            ),
             this,
             emoteType,
             ref frameCounter
         );
+    }
+}
+
+public sealed partial class GlobalEmoteBubble_PreDraw_Impl(GlobalEmoteBubbleHooks.PreDraw.Definition hook) : Terraria.ModLoader.GlobalEmoteBubble
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.GlobalEmoteBubble Clone(Terraria.GameContent.UI.EmoteBubble? from, Terraria.GameContent.UI.EmoteBubble to)
+    {
+        return new GlobalEmoteBubble_PreDraw_Impl(hook);
     }
 
     public override bool PreDraw(
@@ -420,20 +364,24 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
         Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
     )
     {
-        if (!GlobalEmoteBubbleHooks.PreDraw.GetInvocationList().Any())
-        {
-            return base.PreDraw(
-                emoteBubble,
-                spriteBatch,
-                texture,
-                position,
-                frame,
-                origin,
-                spriteEffects
-            );
-        }
-
-        return GlobalEmoteBubbleHooks.PreDraw.Invoke(
+        return hook(
+            (
+                Terraria.GameContent.UI.EmoteBubble emoteBubble_captured,
+                Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
+                Microsoft.Xna.Framework.Graphics.Texture2D texture_captured,
+                Microsoft.Xna.Framework.Vector2 position_captured,
+                Microsoft.Xna.Framework.Rectangle frame_captured,
+                Microsoft.Xna.Framework.Vector2 origin_captured,
+                Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects_captured
+            ) => base.PreDraw(
+                emoteBubble_captured,
+                spriteBatch_captured,
+                texture_captured,
+                position_captured,
+                frame_captured,
+                origin_captured,
+                spriteEffects_captured
+            ),
             this,
             emoteBubble,
             spriteBatch,
@@ -443,6 +391,20 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
             origin,
             spriteEffects
         );
+    }
+}
+
+public sealed partial class GlobalEmoteBubble_PostDraw_Impl(GlobalEmoteBubbleHooks.PostDraw.Definition hook) : Terraria.ModLoader.GlobalEmoteBubble
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.GlobalEmoteBubble Clone(Terraria.GameContent.UI.EmoteBubble? from, Terraria.GameContent.UI.EmoteBubble to)
+    {
+        return new GlobalEmoteBubble_PostDraw_Impl(hook);
     }
 
     public override void PostDraw(
@@ -455,21 +417,24 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
         Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
     )
     {
-        if (!GlobalEmoteBubbleHooks.PostDraw.GetInvocationList().Any())
-        {
-            base.PostDraw(
-                emoteBubble,
-                spriteBatch,
-                texture,
-                position,
-                frame,
-                origin,
-                spriteEffects
-            );
-            return;
-        }
-
-        GlobalEmoteBubbleHooks.PostDraw.Invoke(
+        hook(
+            (
+                Terraria.GameContent.UI.EmoteBubble emoteBubble_captured,
+                Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
+                Microsoft.Xna.Framework.Graphics.Texture2D texture_captured,
+                Microsoft.Xna.Framework.Vector2 position_captured,
+                Microsoft.Xna.Framework.Rectangle frame_captured,
+                Microsoft.Xna.Framework.Vector2 origin_captured,
+                Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects_captured
+            ) => base.PostDraw(
+                emoteBubble_captured,
+                spriteBatch_captured,
+                texture_captured,
+                position_captured,
+                frame_captured,
+                origin_captured,
+                spriteEffects_captured
+            ),
             this,
             emoteBubble,
             spriteBatch,
@@ -479,6 +444,20 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
             origin,
             spriteEffects
         );
+    }
+}
+
+public sealed partial class GlobalEmoteBubble_PreDrawInEmoteMenu_Impl(GlobalEmoteBubbleHooks.PreDrawInEmoteMenu.Definition hook) : Terraria.ModLoader.GlobalEmoteBubble
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.GlobalEmoteBubble Clone(Terraria.GameContent.UI.EmoteBubble? from, Terraria.GameContent.UI.EmoteBubble to)
+    {
+        return new GlobalEmoteBubble_PreDrawInEmoteMenu_Impl(hook);
     }
 
     public override bool PreDrawInEmoteMenu(
@@ -490,19 +469,22 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
         Microsoft.Xna.Framework.Vector2 origin
     )
     {
-        if (!GlobalEmoteBubbleHooks.PreDrawInEmoteMenu.GetInvocationList().Any())
-        {
-            return base.PreDrawInEmoteMenu(
-                emoteType,
-                spriteBatch,
-                uiEmoteButton,
-                position,
-                frame,
-                origin
-            );
-        }
-
-        return GlobalEmoteBubbleHooks.PreDrawInEmoteMenu.Invoke(
+        return hook(
+            (
+                int emoteType_captured,
+                Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
+                Terraria.GameContent.UI.Elements.EmoteButton uiEmoteButton_captured,
+                Microsoft.Xna.Framework.Vector2 position_captured,
+                Microsoft.Xna.Framework.Rectangle frame_captured,
+                Microsoft.Xna.Framework.Vector2 origin_captured
+            ) => base.PreDrawInEmoteMenu(
+                emoteType_captured,
+                spriteBatch_captured,
+                uiEmoteButton_captured,
+                position_captured,
+                frame_captured,
+                origin_captured
+            ),
             this,
             emoteType,
             spriteBatch,
@@ -511,6 +493,20 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
             frame,
             origin
         );
+    }
+}
+
+public sealed partial class GlobalEmoteBubble_PostDrawInEmoteMenu_Impl(GlobalEmoteBubbleHooks.PostDrawInEmoteMenu.Definition hook) : Terraria.ModLoader.GlobalEmoteBubble
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.GlobalEmoteBubble Clone(Terraria.GameContent.UI.EmoteBubble? from, Terraria.GameContent.UI.EmoteBubble to)
+    {
+        return new GlobalEmoteBubble_PostDrawInEmoteMenu_Impl(hook);
     }
 
     public override void PostDrawInEmoteMenu(
@@ -522,20 +518,22 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
         Microsoft.Xna.Framework.Vector2 origin
     )
     {
-        if (!GlobalEmoteBubbleHooks.PostDrawInEmoteMenu.GetInvocationList().Any())
-        {
-            base.PostDrawInEmoteMenu(
-                emoteType,
-                spriteBatch,
-                uiEmoteButton,
-                position,
-                frame,
-                origin
-            );
-            return;
-        }
-
-        GlobalEmoteBubbleHooks.PostDrawInEmoteMenu.Invoke(
+        hook(
+            (
+                int emoteType_captured,
+                Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
+                Terraria.GameContent.UI.Elements.EmoteButton uiEmoteButton_captured,
+                Microsoft.Xna.Framework.Vector2 position_captured,
+                Microsoft.Xna.Framework.Rectangle frame_captured,
+                Microsoft.Xna.Framework.Vector2 origin_captured
+            ) => base.PostDrawInEmoteMenu(
+                emoteType_captured,
+                spriteBatch_captured,
+                uiEmoteButton_captured,
+                position_captured,
+                frame_captured,
+                origin_captured
+            ),
             this,
             emoteType,
             spriteBatch,
@@ -545,22 +543,48 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
             origin
         );
     }
+}
+
+public sealed partial class GlobalEmoteBubble_GetFrame_Impl(GlobalEmoteBubbleHooks.GetFrame.Definition hook) : Terraria.ModLoader.GlobalEmoteBubble
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.GlobalEmoteBubble Clone(Terraria.GameContent.UI.EmoteBubble? from, Terraria.GameContent.UI.EmoteBubble to)
+    {
+        return new GlobalEmoteBubble_GetFrame_Impl(hook);
+    }
 
     public override Microsoft.Xna.Framework.Rectangle? GetFrame(
         Terraria.GameContent.UI.EmoteBubble emoteBubble
     )
     {
-        if (!GlobalEmoteBubbleHooks.GetFrame.GetInvocationList().Any())
-        {
-            return base.GetFrame(
-                emoteBubble
-            );
-        }
-
-        return GlobalEmoteBubbleHooks.GetFrame.Invoke(
+        return hook(
+            (
+                Terraria.GameContent.UI.EmoteBubble emoteBubble_captured
+            ) => base.GetFrame(
+                emoteBubble_captured
+            ),
             this,
             emoteBubble
         );
+    }
+}
+
+public sealed partial class GlobalEmoteBubble_GetFrameInEmoteMenu_Impl(GlobalEmoteBubbleHooks.GetFrameInEmoteMenu.Definition hook) : Terraria.ModLoader.GlobalEmoteBubble
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public override Terraria.ModLoader.GlobalEmoteBubble Clone(Terraria.GameContent.UI.EmoteBubble? from, Terraria.GameContent.UI.EmoteBubble to)
+    {
+        return new GlobalEmoteBubble_GetFrameInEmoteMenu_Impl(hook);
     }
 
     public override Microsoft.Xna.Framework.Rectangle? GetFrameInEmoteMenu(
@@ -569,16 +593,16 @@ public sealed partial class GlobalEmoteBubbleImpl : Terraria.ModLoader.GlobalEmo
         int frameCounter
     )
     {
-        if (!GlobalEmoteBubbleHooks.GetFrameInEmoteMenu.GetInvocationList().Any())
-        {
-            return base.GetFrameInEmoteMenu(
-                emoteType,
-                frame,
-                frameCounter
-            );
-        }
-
-        return GlobalEmoteBubbleHooks.GetFrameInEmoteMenu.Invoke(
+        return hook(
+            (
+                int emoteType_captured,
+                int frame_captured,
+                int frameCounter_captured
+            ) => base.GetFrameInEmoteMenu(
+                emoteType_captured,
+                frame_captured,
+                frameCounter_captured
+            ),
             this,
             emoteType,
             frame,

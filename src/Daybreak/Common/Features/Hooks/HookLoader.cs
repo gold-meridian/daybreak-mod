@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -10,6 +11,13 @@ namespace Daybreak.Common.Features.Hooks;
 
 internal static class HookLoader
 {
+    private static Mod? currentlyLoadingMod;
+
+    public static Mod GetModOrThrow()
+    {
+        return currentlyLoadingMod ?? throw new InvalidOperationException("Cannot continue with operation as no mod is currently applicable to load content through Mod::AddContent");
+    }
+
 #pragma warning disable CA2255
     [ModuleInitializer]
     public static void HookIntoContentLoadingRoutine()
@@ -30,6 +38,33 @@ internal static class HookLoader
         MonoModHooks.Add(
             typeof(MenuLoader).GetMethod(nameof(MenuLoader.Unload), BindingFlags.NonPublic | BindingFlags.Static)!,
             Unload_CallOnUnloads
+        );
+
+        // AutoloadConfig and EnsureResizeArraysAttributeStaticCtorsRun are the
+        // first and last methods called in the routine where Mod::loading is
+        // set to true.  We use these to know what mod is currently being
+        // loaded.
+        MonoModHooks.Add(
+            typeof(Mod).GetMethod(nameof(Mod.AutoloadConfig), BindingFlags.NonPublic | BindingFlags.Instance),
+            (Action<Mod> orig, Mod self) =>
+            {
+                Debug.Assert(currentlyLoadingMod is null);
+
+                currentlyLoadingMod = self;
+
+                orig(self);
+            }
+        );
+
+        MonoModHooks.Add(
+            typeof(SystemLoader).GetMethod(nameof(SystemLoader.EnsureResizeArraysAttributeStaticCtorsRun), BindingFlags.NonPublic | BindingFlags.Static),
+            (Action<Mod> orig, Mod mod) =>
+            {
+                Debug.Assert(currentlyLoadingMod == mod);
+
+                orig(mod);
+                currentlyLoadingMod = null;
+            }
         );
     }
 #pragma warning restore CA2255
