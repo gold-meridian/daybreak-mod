@@ -8,8 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameContent.Prefixes;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.Rendering;

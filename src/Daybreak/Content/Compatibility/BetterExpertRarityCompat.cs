@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Daybreak.Content.Compatibility;
@@ -24,9 +23,9 @@ namespace Daybreak.Content.Compatibility;
 [ExtendsFromMod("BetterExpertRarity")]
 internal sealed class BetterExpertRarityCompat : ModSystem
 {
-    private readonly struct BetterExpertRaritySpecialRarity(RarityModifier rarityMod) : ISpeciallyRenderedRarity
+    private readonly struct BetterExpertRaritySpecialRarity(RarityModifier rarityMod) : IRarityTextRenderer
     {
-        void ISpeciallyRenderedRarity.RenderRarityText(
+        void IRarityTextRenderer.RenderText(
             SpriteBatch sb,
             DynamicSpriteFont font,
             string text,
@@ -36,9 +35,9 @@ internal sealed class BetterExpertRarityCompat : ModSystem
             Vector2 origin,
             Vector2 scale,
             SpriteEffects effects,
+            RarityDrawContext drawContext,
             float maxWidth,
-            float spread,
-            bool ui
+            float spread
         )
         {
             rarityMod.Draw(

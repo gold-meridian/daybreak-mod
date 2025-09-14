@@ -1,7 +1,5 @@
 using Daybreak.Common.Features.Hooks;
 
-using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.Tiles;
