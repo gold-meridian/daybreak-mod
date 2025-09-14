@@ -1,0 +1,3 @@
+Experimental mod that partially rewrites some rendering routines to make liquids render nicely when touching tiles.
+
+This is testing a pull request we have also submitted directly to tModLoader; report any and all issues to us so we can fix them!
