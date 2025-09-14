@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+
+[assembly: InternalsVisibleTo("Nightshade")]
 
 namespace Daybreak.Common.Features.NPCs;
 
 /// <summary>
 ///     Manages "downed" flags for bosses or other NPCs.
 /// </summary>
-public static class DownedFlagHandler
+internal static class DownedFlagHandler
 {
     /// <summary>
     ///     A handle to a "downed" flag.
