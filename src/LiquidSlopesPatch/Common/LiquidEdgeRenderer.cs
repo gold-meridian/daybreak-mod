@@ -29,12 +29,12 @@ public sealed class LiquidEdgeRenderer : ModSystem
     /// Even if it's enabled, it will only apply if <see cref="Active"/>
     /// is <see langword="true"/>.
     /// </summary>
-    public static bool Enabled = true;
+    public static bool Enabled => ModContent.GetInstance<Config>().Enabled;
 
     /// <summary>
     /// Whether the new rendering is actually active for this frame.
     /// </summary>
-    public static bool Active => !Main.keyState.PressingShift() && Lighting.Mode is LightMode.Color or LightMode.White;
+    public static bool Active => Enabled && Lighting.Mode is LightMode.Color or LightMode.White;
 
     private static Asset<Texture2D>? maskTileAsset;
 

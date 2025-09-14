@@ -79,7 +79,7 @@ public partial class RewrittenLiquidRenderer
         public Rectangle SourceRectangle;
         public Vector2 LiquidOffset;
     }
-    
+
     private LiquidCache[] _cache = new LiquidCache[1];
 
     private LiquidDrawCache[] _drawCache = new LiquidDrawCache[1];
@@ -97,7 +97,7 @@ public partial class RewrittenLiquidRenderer
 
     // public event Action<Color[], Rectangle> WaveFilters;
 
-    private static RewrittenLiquidRenderer Instance => ModContent.GetInstance<RewrittenLiquidRenderer>();
+    // private static RewrittenLiquidRenderer Instance => ModContent.GetInstance<RewrittenLiquidRenderer>();
 
     /*public static void LoadContent()
     {
@@ -591,12 +591,14 @@ public partial class RewrittenLiquidRenderer
         ForceRaise(LiquidRenderer.Instance, nameof(LiquidRenderer.Instance.WaveFilters), _waveMask, GetCachedDrawArea());
 
         return;
-        
+
         static void ForceRaise(object target, string eventName, params object[] args)
         {
             var type = target.GetType();
-            var field = type.GetField(eventName, 
-                BindingFlags.Instance | BindingFlags.NonPublic);
+            var field = type.GetField(
+                eventName,
+                BindingFlags.Instance | BindingFlags.NonPublic
+            );
             if (field == null)
                 throw new InvalidOperationException($"Event {eventName} not found");
 
