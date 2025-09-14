@@ -13,6 +13,12 @@ internal static class HookLoader
 {
     private static Mod? currentlyLoadingMod;
 
+    /// <summary>
+    ///     Internally used to hook into the start of mod loading; useful for
+    ///     injecting content into other mods.
+    /// </summary>
+    public static event Action<Mod>? OnEarlyModLoad; 
+
     public static Mod GetModOrThrow()
     {
         return currentlyLoadingMod ?? throw new InvalidOperationException("Cannot continue with operation as no mod is currently applicable to load content through Mod::AddContent");
@@ -51,6 +57,8 @@ internal static class HookLoader
                 Debug.Assert(currentlyLoadingMod is null);
 
                 currentlyLoadingMod = self;
+                
+                OnEarlyModLoad?.Invoke(self);
 
                 orig(self);
             }

@@ -1,50 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace Daybreak.Common.Features.NPCs;
 
+public delegate bool DownedGetter();
+
+public delegate void DownedSetter(bool value);
+    
+internal readonly record struct DownedHandler(
+    DownedGetter Getter,
+    DownedSetter Setter
+);
+
+
 /// <summary>
-///     Manages "downed" flags for bosses or other NPCs.
+///     Manages &quot;downed&quot; flags, which are typically the status of the
+///     defeat of an NPC within a world (e.g. <see cref="NPC.downedBoss1"/>).
 /// </summary>
 public static class DownedFlagHandler
 {
-    /// <summary>
-    ///     A handle to a "downed" flag.
-    /// </summary>
-    public readonly struct Handle
-    {
-        /// <summary>
-        ///     The full name, a unique identifier for each handle.  Expected to
-        ///     be the mod name followed by the unique key
-        ///     (<c>ModName/NpcName</c>).
-        /// </summary>
-        public string FullName { get; }
-
-        /// <summary>
-        ///     Whether this handle maps to a registered handler.
-        /// </summary>
-        public bool IsRegistered => IsHandleRegistered(this);
-
-        /// <summary>
-        ///     The value of the associated "downed" flag.
-        /// </summary>
-        public bool Value
-        {
-            get => GetValue(this);
-            set => SetValue(this, value);
-        }
-
-        internal Handle(string fullName)
-        {
-            FullName = fullName;
-        }
-    }
-
     private sealed class DownedFlagSystem : ModSystem
     {
         internal static readonly Dictionary<string, bool> NAMED_DOWNS = [];
@@ -78,7 +57,7 @@ public static class DownedFlagHandler
         }
 
         // TODO: Reduce network bandwidth.  We need to sync names, but can maybe
-        // write all boolean values to a bit-array structure.
+        //       write all boolean values to a bit-array structure.
 
         public override void NetSend(BinaryWriter writer)
         {
@@ -100,7 +79,7 @@ public static class DownedFlagHandler
         public override void NetReceive(BinaryReader reader)
         {
             base.NetReceive(reader);
-            
+
             if (Mod.NetID < 0)
             {
                 return;
@@ -113,18 +92,16 @@ public static class DownedFlagHandler
             }
         }
     }
-
-    private readonly record struct DownedHandler(Func<bool> Getter, Action<bool> Setter);
-
+    
     private static readonly Dictionary<string, DownedHandler> handlers = [];
 
-    private static bool IsHandleRegistered(Handle handle)
+    internal static bool IsHandleRegistered(DownedFlagHandle handle)
     {
         return handlers.ContainsKey(handle.FullName);
     }
 
     /// <summary>
-    ///     Gets the handle of a "downed" flag handler.
+    ///     Gets the handle of a &quot;downed&quot; flag handler.
     /// </summary>
     /// <param name="mod">The mod.</param>
     /// <param name="name">The unique name, per-mod.</param>
@@ -132,11 +109,17 @@ public static class DownedFlagHandler
     /// <remarks>
     ///     Always returns a value, even if the handler is not registered.
     /// </remarks>
-    public static Handle GetHandle(Mod mod, string name)
+    public static DownedFlagHandle GetHandle(Mod mod, string name)
     {
-        return new Handle(GetId(mod, name));
+        return GetHandle(mod.Name, name);
     }
 
+    internal static DownedFlagHandle GetHandle(string modName, string name)
+    {
+        return new DownedFlagHandle(GetId(modName, name));
+        
+    }
+    
     /// <summary>
     ///     Registers a handler with default behavior (that is, handled by
     ///     DAYBREAK).
@@ -144,14 +127,9 @@ public static class DownedFlagHandler
     /// <param name="mod">The mod.</param>
     /// <param name="name">The unique name, per-mod.</param>
     /// <returns>The handle to this handler.</returns>
-    public static Handle RegisterDefaultHandle(Mod mod, string name)
+    public static DownedFlagHandle RegisterDefaultHandle(Mod mod, string name)
     {
-        if (!ModContent.GetInstance<ModImpl>().IsNetSynced)
-        {
-            throw new InvalidOperationException("Cannot register default handler; DAYBREAK is not present on both the client and server!");
-        }
-        
-        var id = GetId(mod, name);
+        var id = GetId(mod.Name, name);
         if (handlers.ContainsKey(id))
         {
             throw new InvalidOperationException($"Duplicate handle ID: {id}");
@@ -166,7 +144,7 @@ public static class DownedFlagHandler
                 val => DownedFlagSystem.NAMED_DOWNS[name] = val
             )
         );
-        return new Handle(id);
+        return new DownedFlagHandle(id);
     }
 
     /// <summary>
@@ -177,24 +155,29 @@ public static class DownedFlagHandler
     /// <param name="getter">The <c>get</c> handler.</param>
     /// <param name="setter">The <c>set</c> handler.</param>
     /// <returns>The handle to this handler.</returns>
-    public static Handle RegisterCustomHandle(Mod mod, string name, Func<bool> getter, Action<bool> setter)
+    public static DownedFlagHandle RegisterCustomHandle(Mod mod, string name, DownedGetter getter, DownedSetter setter)
     {
-        var id = GetId(mod, name);
+        return RegisterCustomHandle(mod.Name, name, getter, setter);
+    }
+    
+    internal static DownedFlagHandle RegisterCustomHandle(string modName, string name, DownedGetter getter, DownedSetter setter)
+    {
+        var id = GetId(modName, name);
         if (handlers.ContainsKey(id))
         {
             throw new InvalidOperationException($"Duplicate handle ID: {id}");
         }
 
         handlers.Add(id, new DownedHandler(getter, setter));
-        return new Handle(id);
+        return new DownedFlagHandle(id);
     }
 
-    private static bool GetValue(Handle handle)
+    internal static bool GetValue(DownedFlagHandle handle)
     {
         return handlers.TryGetValue(handle.FullName, out var value) && value.Getter();
     }
 
-    private static void SetValue(Handle handle, bool value)
+    internal static void SetValue(DownedFlagHandle handle, bool value)
     {
         if (handlers.TryGetValue(handle.FullName, out var handler))
         {
@@ -202,8 +185,8 @@ public static class DownedFlagHandler
         }
     }
 
-    private static string GetId(Mod mod, string name)
+    private static string GetId(string modName, string name)
     {
-        return mod.Name + '/' + name;
+        return modName + '/' + name;
     }
 }

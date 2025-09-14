@@ -2,6 +2,7 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=common_005Cfeatures_005Chooks_005Ctml/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=common_005Cfeatures_005Chooks_005C_005Ftml/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=common_005Cfeatures_005Chooks_005C_005Ftml_005C_005Fmodsystem/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=common_005Cfeatures_005Cnpcs_005Cdownedhandler/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=common_005Cfeatures_005Crarities_005Crarityeffectrendering/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=common_005Cfeatures_005Ctiles_005C_005Falchherbs/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=common_005Cfeatures_005Ctiles_005C_005Fgrass/@EntryIndexedValue">True</s:Boolean>
