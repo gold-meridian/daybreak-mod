@@ -3,3 +3,6 @@ author = Blockaroz, tomat
 version = 1.0.0
 homepage = https://discord.gg/6Fm4ZTHVub
 side = Client
+
+sortBefore = SpiritMod
+weakReferences = SpiritMod
