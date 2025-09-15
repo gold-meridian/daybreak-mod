@@ -15,7 +15,7 @@ using Terraria.Utilities;
 
 namespace LiquidSlopesPatch.Common;
 
-public partial class RewrittenLiquidRenderer
+public static partial class RewrittenLiquidRenderer
 {
     public struct LiquidCache
     {
@@ -80,16 +80,16 @@ public partial class RewrittenLiquidRenderer
         public Vector2 LiquidOffset;
     }
 
-    private LiquidCache[] _cache = new LiquidCache[1];
+    private static LiquidCache[] _cache = new LiquidCache[1];
 
-    private LiquidDrawCache[] _drawCache = new LiquidDrawCache[1];
+    private static LiquidDrawCache[] _drawCache = new LiquidDrawCache[1];
 
     // private SpecialLiquidDrawCache[] _drawCacheForShimmer = new SpecialLiquidDrawCache[1];
-    private int _animationFrame;
-    private Rectangle _drawArea = new Rectangle(0, 0, 1, 1);
-    private readonly UnifiedRandom _random = new UnifiedRandom();
-    private Color[] _waveMask = new Color[1];
-    private float _frameState;
+    private static int _animationFrame;
+    private static Rectangle _drawArea = new Rectangle(0, 0, 1, 1);
+    private static readonly UnifiedRandom _random = new UnifiedRandom();
+    private static Color[] _waveMask = new Color[1];
+    private static float _frameState;
 
     /*
     private static Tile[,] Tiles => Main.tile;
@@ -116,7 +116,7 @@ public partial class RewrittenLiquidRenderer
         }
     }*/
 
-    private unsafe void InternalPrepareDraw(Rectangle drawArea)
+    private static unsafe void InternalPrepareDraw(LiquidRenderer unusedArg0Filler, Rectangle drawArea)
     {
         LiquidEdgeRenderer.Edges.Clear();
 
@@ -479,10 +479,10 @@ public partial class RewrittenLiquidRenderer
                                 float num21 = Math.Max(0.25f, ptr2->VisibleRightWall);
                                 float num22 = Math.Min(0.75f, ptr2->VisibleTopWall);
                                 float num23 = Math.Max(0.25f, ptr2->VisibleBottomWall);
-                                
+
                                 if (!LiquidEdgeRenderer.Active)
-                                if (ptr2->IsHalfBrick && ptr2->IsSolid && num23 > 0.5f)
-                                    num23 = 0.5f;
+                                    if (ptr2->IsHalfBrick && ptr2->IsSolid && num23 > 0.5f)
+                                        num23 = 0.5f;
 
                                 ptr4->X = num18;
                                 ptr4->Y = num19;
@@ -590,7 +590,7 @@ public partial class RewrittenLiquidRenderer
 
         /*if (LiquidRenderer.Instance.WaveFilters != null)
             LiquidRenderer.Instance.WaveFilters(_waveMask, GetCachedDrawArea());*/
-        ForceRaise(LiquidRenderer.Instance, nameof(LiquidRenderer.Instance.WaveFilters), _waveMask, GetCachedDrawArea());
+        ForceRaise(LiquidRenderer.Instance, nameof(LiquidRenderer.Instance.WaveFilters), _waveMask, GetCachedDrawArea(unusedArg0Filler));
 
         return;
 
@@ -615,7 +615,7 @@ public partial class RewrittenLiquidRenderer
         }
     }
 
-    public unsafe void DrawNormalLiquids(SpriteBatch spriteBatch, Vector2 drawOffset, int waterStyle, float globalAlpha, bool isBackgroundDraw)
+    public static unsafe void DrawNormalLiquids(LiquidRenderer unusedArg0Filler, SpriteBatch spriteBatch, Vector2 drawOffset, int waterStyle, float globalAlpha, bool isBackgroundDraw)
     {
         Rectangle drawArea = _drawArea;
         Main.tileBatch.Begin();
@@ -677,7 +677,7 @@ public partial class RewrittenLiquidRenderer
         Main.tileBatch.End();
     }
 
-    public unsafe void DrawShimmer(SpriteBatch spriteBatch, Vector2 drawOffset, bool isBackgroundDraw)
+    public static unsafe void DrawShimmer(LiquidRenderer unusedArg0Filler, SpriteBatch spriteBatch, Vector2 drawOffset, bool isBackgroundDraw)
     {
         Rectangle drawArea = _drawArea;
         Main.tileBatch.Begin();
@@ -724,7 +724,7 @@ public partial class RewrittenLiquidRenderer
                 if (flag || (num3 + num4) % 2 == 0)
                 {
                     sourceRectangle.X += 48;
-                    sourceRectangle.Y += 80 * GetShimmerFrame(flag, num3, num4);
+                    sourceRectangle.Y += 80 * GetShimmerFrame(unusedArg0Filler, flag, num3, num4);
                     SetShimmerVertexColors_Sparkle(ref vertices, ptr2->Opacity, num3, num4, flag);
                     Main.tileBatch.Draw(LiquidRenderer.Instance._liquidTextures[num2].Value, new Vector2(num3 << 4, num4 << 4) + drawOffset + liquidOffset, sourceRectangle, vertices, Vector2.Zero, 1f, SpriteEffects.None);
                 }
@@ -791,7 +791,7 @@ public partial class RewrittenLiquidRenderer
         return (x << 16) + y;
     }
 
-    public int GetShimmerFrame(bool top, float worldPositionX, float worldPositionY)
+    public static int GetShimmerFrame(LiquidRenderer unusedArg0Filler, bool top, float worldPositionX, float worldPositionY)
     {
         worldPositionX += 0.5f;
         worldPositionY += 0.5f;
@@ -808,7 +808,7 @@ public partial class RewrittenLiquidRenderer
         return Vector4.Lerp(new Vector4(0.64705884f, 26f / 51f, 14f / 15f, 1f), new Vector4(41f / 51f, 41f / 51f, 1f, 1f), 0.1f + shimmerWave * 0.4f);
     }
 
-    public bool HasFullWater(int x, int y)
+    public static bool HasFullWater(LiquidRenderer unusedArg0Filler, int x, int y)
     {
         x -= _drawArea.X;
         y -= _drawArea.Y;
@@ -824,7 +824,7 @@ public partial class RewrittenLiquidRenderer
         return true;
     }
 
-    public float GetVisibleLiquid(int x, int y)
+    public static float GetVisibleLiquid(LiquidRenderer unusedArg0Filler, int x, int y)
     {
         x -= _drawArea.X;
         y -= _drawArea.Y;
@@ -838,7 +838,7 @@ public partial class RewrittenLiquidRenderer
         return _cache[num].VisibleLiquidLevel;
     }
 
-    public void Update(GameTime gameTime)
+    public static void Update(LiquidRenderer unusedArg0Filler, GameTime gameTime)
     {
         if (!Main.gamePaused && Main.hasFocus)
         {
@@ -853,12 +853,12 @@ public partial class RewrittenLiquidRenderer
         }
     }
 
-    public void PrepareDraw(Rectangle drawArea)
+    public static void PrepareDraw(LiquidRenderer unusedArg0Filler, Rectangle drawArea)
     {
-        InternalPrepareDraw(drawArea);
+        InternalPrepareDraw(unusedArg0Filler, drawArea);
     }
 
-    public void SetWaveMaskData(ref Texture2D texture)
+    public static void SetWaveMaskData(LiquidRenderer unusedArg0Filler, ref Texture2D texture)
     {
         try
         {
@@ -886,5 +886,5 @@ public partial class RewrittenLiquidRenderer
         }
     }
 
-    public Rectangle GetCachedDrawArea() => _drawArea;
+    public static Rectangle GetCachedDrawArea(LiquidRenderer unusedArg0Filler) => _drawArea;
 }
