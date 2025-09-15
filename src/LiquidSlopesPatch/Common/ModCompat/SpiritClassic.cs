@@ -22,9 +22,9 @@ internal sealed class SpiritClassic : ModSystem
 
         var swmType = typeof(SurfaceWaterModifications);
 
-        MonoModHooks.Add(swmType.GetMethod("LiquidRenderer_InternalDraw", BindingFlags.Static | BindingFlags.NonPublic), InternalDraw_UseOurLocals);
-        MonoModHooks.Add(swmType.GetMethod("HideSlopedBlack", BindingFlags.Static | BindingFlags.NonPublic), HideSlopedBlack_NoOp);
-        MonoModHooks.Add(swmType.GetMethod("On_TileDrawing_DrawPartialLiquid", BindingFlags.Static | BindingFlags.NonPublic), DrawPartialLiquid_NoOp);
+        MonoModHooks.Add(swmType.GetMethod(nameof(SurfaceWaterModifications.LiquidRenderer_InternalDraw), BindingFlags.Static | BindingFlags.NonPublic), InternalDraw_UseOurLocals);
+        MonoModHooks.Add(swmType.GetMethod(nameof(SurfaceWaterModifications.HideSlopedBlack), BindingFlags.Static | BindingFlags.NonPublic), HideSlopedBlack_NoOp);
+        MonoModHooks.Add(swmType.GetMethod(nameof(SurfaceWaterModifications.On_TileDrawing_DrawPartialLiquid), BindingFlags.Static | BindingFlags.NonPublic), DrawPartialLiquid_NoOp);
     }
 
     private static void InternalDraw_UseOurLocals(ILContext il)
