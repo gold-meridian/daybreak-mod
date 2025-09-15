@@ -13,6 +13,7 @@
     <ItemGroup>
         <Publicize Include="SpiritMod" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
         <Publicize Include="Spooky" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
+        <Publicize Include="CalamityMod" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
     </ItemGroup>
 
 </Project>
