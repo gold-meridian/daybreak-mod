@@ -277,7 +277,7 @@ public partial class RewrittenLiquidRenderer
                         float num10 = 0f;
                         float num11 = 1f;
                         float visibleLiquidLevel = ptr2->VisibleLiquidLevel;
-                        if (!liquidCache.HasVisibleLiquid)
+                        if (!liquidCache.HasVisibleLiquid || (liquidCache.EdgeData.HasValue && ptr2->LiquidLevel < 250 && !liquidCache.IsHalfBrick))
                             num10 += liquidCache2.VisibleLiquidLevel * (1f - visibleLiquidLevel);
 
                         if (!liquidCache2.HasVisibleLiquid && !liquidCache2.IsSolid && !liquidCache2.IsHalfBrick)
@@ -479,6 +479,8 @@ public partial class RewrittenLiquidRenderer
                                 float num21 = Math.Max(0.25f, ptr2->VisibleRightWall);
                                 float num22 = Math.Min(0.75f, ptr2->VisibleTopWall);
                                 float num23 = Math.Max(0.25f, ptr2->VisibleBottomWall);
+                                
+                                if (!LiquidEdgeRenderer.Active)
                                 if (ptr2->IsHalfBrick && ptr2->IsSolid && num23 > 0.5f)
                                     num23 = 0.5f;
 
