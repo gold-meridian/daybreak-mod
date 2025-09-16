@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 using Microsoft.Xna.Framework;
 
 using Terraria;
@@ -8,37 +6,8 @@ using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.PotLoot;
 
-public sealed class PotLootImpl : ModSystem
+internal sealed class PotLootImpl : ModSystem
 {
-    public static readonly PotBehavior POT_BEHAVIOR_VANILLA = new VanillaPotBehavior(echo: false);
-    public static readonly PotBehavior POT_BEHAVIOR_VANILLA_ECHO = new VanillaPotBehavior(echo: true);
-
-    public static bool TryGetPot(
-        int type,
-        [NotNullWhen(returnValue: true)] out PotBehavior? pot
-    )
-    {
-        switch (type)
-        {
-            case TileID.Pots:
-                pot = POT_BEHAVIOR_VANILLA;
-                return true;
-
-            case TileID.PotsEcho:
-                pot = POT_BEHAVIOR_VANILLA_ECHO;
-                return true;
-        }
-
-        if (TileLoader.GetTile(type) is IHasPotBehavior potTile)
-        {
-            pot = potTile.Behavior;
-            return true;
-        }
-
-        pot = null;
-        return false;
-    }
-
     public override void Load()
     {
         base.Load();
@@ -99,7 +68,7 @@ public sealed class PotLootImpl : ModSystem
 
         WorldGen.destroyObject = true;
 
-        if (!TryGetPot(type, out var pot))
+        if (!PotBehavior.TryGetPotBehavior(type, out var pot))
         {
             return;
         }

@@ -1,0 +1,10 @@
+Configs: {
+	Config: {
+		DisplayName: Config
+
+		Enabled: {
+			Label: Enabled
+			Tooltip: ""
+		}
+	}
+}
