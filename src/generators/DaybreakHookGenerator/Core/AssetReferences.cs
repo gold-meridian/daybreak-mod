@@ -3,7 +3,4 @@
 namespace DaybreakHookGenerator.Core;
 
 // ReSharper disable InconsistentNaming
-internal static class AssetReferences
-{
-
-}
+internal static class AssetReferences { }

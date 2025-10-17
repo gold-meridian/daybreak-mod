@@ -5,7 +5,7 @@ namespace Daybreak.Common.Features.NPCs;
 /// <summary>
 ///     A handle to the status of a &quot;downed&quot; flag, representing
 ///     generally the defeat of an NPC within a world (e.g.
-///     <see cref="NPC.downedBoss1"/>).
+///     <see cref="NPC.downedBoss1" />).
 /// </summary>
 public readonly struct DownedFlagHandle
 {

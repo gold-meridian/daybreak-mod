@@ -1,15 +1,13 @@
 using System;
-
 using JetBrains.Annotations;
-
 using Terraria.ModLoader;
 
 namespace Daybreak.Core.Hooks;
 
 /// <summary>
 ///     The basic implementation of the DAYBREAK initializer APIs.  Implements
-///     <see cref="ILoadable"/> and facilitates basic execution of the
-///     <see cref="ILoad"/> and <see cref="IUnload"/> hooks if present.
+///     <see cref="ILoadable" /> and facilitates basic execution of the
+///     <see cref="ILoad" /> and <see cref="IUnload" /> hooks if present.
 /// </summary>
 [PublicAPI]
 [UsedImplicitly(

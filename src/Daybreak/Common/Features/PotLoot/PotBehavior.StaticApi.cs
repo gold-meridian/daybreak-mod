@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -21,7 +20,7 @@ public abstract partial class PotBehavior
     public static PotBehavior VanillaEcho { get; } = new VanillaPotBehavior(echo: true);
 
     /// <summary>
-    ///     Attempts to get the <see cref="PotBehavior"/> of a tile, if present.
+    ///     Attempts to get the <see cref="PotBehavior" /> of a tile, if present.
     /// </summary>
     /// <param name="type">The tile type.</param>
     /// <param name="potBehavior">The associated pot behavior.</param>

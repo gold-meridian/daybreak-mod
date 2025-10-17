@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using ReLogic.Content;
-
 using Terraria;
 using Terraria.Graphics.Light;
 using Terraria.ID;
@@ -15,48 +12,48 @@ using Terraria.ModLoader;
 namespace LiquidSlopesPatch.Common;
 
 /// <summary>
-/// Responsible for special rendering of liquid edges/slopes for the rewritten
-/// liquid slope handling.
+///     Responsible for special rendering of liquid edges/slopes for the rewritten
+///     liquid slope handling.
 /// </summary>
 /// <remarks>
-/// See the related pull request:
-/// https://github.com/tModLoader/tModLoader/pull/4714
+///     See the related pull request:
+///     https://github.com/tModLoader/tModLoader/pull/4714
 /// </remarks>
 public sealed class LiquidEdgeRenderer : ModSystem
 {
-    /// <summary>
-    /// Whether the special edge rendering logic is enabled.
-    /// <br />
-    /// Even if it's enabled, it will only apply if <see cref="Active"/>
-    /// is <see langword="true"/>.
-    /// </summary>
-    public static bool Enabled => ModContent.GetInstance<Config>().Enabled;
-
-    /// <summary>
-    /// Whether the new rendering is actually active for this frame.
-    /// </summary>
-    public static bool Active => Enabled && Lighting.Mode is LightMode.Color or LightMode.White;
-
     private static Asset<Texture2D>? maskTileAsset;
 
     /// <summary>
-    /// Contains liquid mask textures for specific block types that have funny shapes but still need to hide water.
-    /// <br />
-    /// Only shows up when the tile is part of the <see cref="TileID.Sets.BlocksWaterDrawingBehindSelf"/> set.
+    ///     Contains liquid mask textures for specific block types that have funny shapes but still need to hide water.
+    ///     <br />
+    ///     Only shows up when the tile is part of the <see cref="TileID.Sets.BlocksWaterDrawingBehindSelf" /> set.
     /// </summary>
     public static Asset<Texture2D>?[] TileLiquidMasks = [];
 
-    public static readonly BlendState MaskingBlendState = new BlendState()
+    public static readonly BlendState MaskingBlendState = new()
     {
         ColorSourceBlend = Blend.Zero,
         AlphaSourceBlend = Blend.Zero,
         ColorDestinationBlend = Blend.InverseSourceAlpha,
-        AlphaDestinationBlend = Blend.InverseSourceAlpha
+        AlphaDestinationBlend = Blend.InverseSourceAlpha,
     };
 
     /// <summary>
-    /// Tiles which mask rendered liquid (tiles on the edge of bodies of
-    /// liquid).
+    ///     Whether the special edge rendering logic is enabled.
+    ///     <br />
+    ///     Even if it's enabled, it will only apply if <see cref="Active" />
+    ///     is <see langword="true" />.
+    /// </summary>
+    public static bool Enabled => ModContent.GetInstance<Config>().Enabled;
+
+    /// <summary>
+    ///     Whether the new rendering is actually active for this frame.
+    /// </summary>
+    public static bool Active => Enabled && Lighting.Mode is LightMode.Color or LightMode.White;
+
+    /// <summary>
+    ///     Tiles which mask rendered liquid (tiles on the edge of bodies of
+    ///     liquid).
     /// </summary>
     public static List<Point> Edges { get; } = [];
 
@@ -76,39 +73,40 @@ public sealed class LiquidEdgeRenderer : ModSystem
 
     public static void DrawSingleTileMask(SpriteBatch spriteBatch, int tileX, int tileY)
     {
-        Tile tileCache = Main.tile[tileX, tileY];
+        var tileCache = Main.tile[tileX, tileY];
 
-        Texture2D texture = Assets.Images.DefaultTileLiquidMask.Asset.Value;
+        var texture = Assets.Images.DefaultTileLiquidMask.Asset.Value;
 
         // Check if a custom mask is loaded for the tile and use it if so
         if (TileLiquidMasks.IndexInRange(tileCache.type) && (TileLiquidMasks[tileCache.type]?.IsLoaded ?? false))
         {
             texture = TileLiquidMasks[tileCache.type].Value;
         }
-        Vector2 position = new Vector2(tileX * 16, tileY * 16) + new Vector2(Main.drawToScreen ? 0 : Main.offScreenRange) - Main.screenPosition;
+
+        var position = new Vector2(tileX * 16, tileY * 16) + new Vector2(Main.drawToScreen ? 0 : Main.offScreenRange) - Main.screenPosition;
 
         if (tileCache.Slope != SlopeType.Solid && !TileID.Sets.HasSlopeFrames[tileCache.TileType])
         {
-            int slopeType = (int)tileCache.Slope;
-            for (int i = 0; i < 8; i++)
+            var slopeType = (int)tileCache.Slope;
+            for (var i = 0; i < 8; i++)
             {
-                int slopePosY = i * -2;
-                int slopeHeight = 16 - i * 2;
-                int slopeOffsetY = 16 - slopeHeight;
+                var slopePosY = i * -2;
+                var slopeHeight = 16 - (i * 2);
+                var slopeOffsetY = 16 - slopeHeight;
                 int slopePosX;
                 switch (slopeType)
                 {
                     case 1:
                         slopePosY = 0;
                         slopePosX = i * 2;
-                        slopeHeight = 14 - i * 2;
+                        slopeHeight = 14 - (i * 2);
                         slopeOffsetY = 0;
                         break;
 
                     case 2:
                         slopePosY = 0;
-                        slopePosX = 16 - i * 2 - 2;
-                        slopeHeight = 14 - i * 2;
+                        slopePosX = 16 - (i * 2) - 2;
+                        slopeHeight = 14 - (i * 2);
                         slopeOffsetY = 0;
                         break;
 
@@ -117,19 +115,19 @@ public sealed class LiquidEdgeRenderer : ModSystem
                         break;
 
                     default:
-                        slopePosX = 16 - i * 2 - 2;
+                        slopePosX = 16 - (i * 2) - 2;
                         break;
                 }
 
-                spriteBatch.Draw(texture, position + new Vector2(slopePosX, i * 2 + slopePosY), new Rectangle(tileCache.TileFrameX + slopePosX, tileCache.TileFrameY + slopeOffsetY, 2, slopeHeight), Color.White, 0f, Vector2.Zero, 1f, 0, 0f);
+                spriteBatch.Draw(texture, position + new Vector2(slopePosX, (i * 2) + slopePosY), new Rectangle(tileCache.TileFrameX + slopePosX, tileCache.TileFrameY + slopeOffsetY, 2, slopeHeight), Color.White, 0f, Vector2.Zero, 1f, 0, 0f);
             }
 
-            int slopeTopOrBottom = ((slopeType <= 2) ? 14 : 0);
+            var slopeTopOrBottom = slopeType <= 2 ? 14 : 0;
             spriteBatch.Draw(texture, position + new Vector2(0f, slopeTopOrBottom), new Rectangle(tileCache.TileFrameX, tileCache.TileFrameY + slopeTopOrBottom, 16, 2), Color.White, 0f, Vector2.Zero, 1f, 0, 0f);
         }
         else
         {
-            int fullTileHeight = 0;
+            var fullTileHeight = 0;
             if (tileCache.IsHalfBlock)
             {
                 fullTileHeight += 8;
@@ -144,26 +142,30 @@ public sealed class LiquidEdgeRenderer : ModSystem
         pCache->EdgeData = null;
 
         if (!Active)
+        {
             return;
+        }
 
-        Tile tileRightCache = Main.tile[tileX + 1, tileY];
-        Tile tileLeftCache = Main.tile[tileX - 1, tileY];
-        Tile tileUpCache = Main.tile[tileX, tileY - 1];
-        Tile tileDownCache = Main.tile[tileX, tileY + 1];
+        var tileRightCache = Main.tile[tileX + 1, tileY];
+        var tileLeftCache = Main.tile[tileX - 1, tileY];
+        var tileUpCache = Main.tile[tileX, tileY - 1];
+        var tileDownCache = Main.tile[tileX, tileY + 1];
 
         if (!tileCache.HasTile || tileCache.IsActuated || Main.tileSolidTop[tileCache.type] || (tileCache.IsHalfBlock && (tileLeftCache.liquid > 160 || tileRightCache.liquid > 160) && Main.instance.waterfallManager.CheckForWaterfall(tileX, tileY)))
+        {
             return;
+        }
 
-        int liquidType = 0;
+        var liquidType = 0;
 
-        int highLiquid = 0;
-        bool left = false;
-        bool right = false;
-        bool up = false;
-        bool down = false;
-        bool self = false;
-        SlopeType slope = tileCache.Slope;
-        BlockType blockType = tileCache.BlockType;
+        var highLiquid = 0;
+        var left = false;
+        var right = false;
+        var up = false;
+        var down = false;
+        var self = false;
+        var slope = tileCache.Slope;
+        var blockType = tileCache.BlockType;
 
         if (tileCache.type == TileID.Grate && tileCache.LiquidAmount > 0)
         {
@@ -229,30 +231,38 @@ public sealed class LiquidEdgeRenderer : ModSystem
         }
 
         if (!up && !down && !left && !right && !self)
+        {
             return;
+        }
 
         var exempt = tileCache.HasTile && (Main.tileSolidTop[tileCache.type] || !Main.tileSolid[tileCache.type]);
         if (exempt)
+        {
             return;
+        }
 
-        bool leftEmpty = !left && !(tileLeftCache.HasTile && Main.tileSolid[tileLeftCache.TileType] && tileLeftCache.BlockType == BlockType.Solid);
-        bool rightEmpty = !right && !(tileRightCache.HasTile && Main.tileSolid[tileRightCache.TileType] && tileRightCache.BlockType == BlockType.Solid);
+        var leftEmpty = !left && !(tileLeftCache.HasTile && Main.tileSolid[tileLeftCache.TileType] && tileLeftCache.BlockType == BlockType.Solid);
+        var rightEmpty = !right && !(tileRightCache.HasTile && Main.tileSolid[tileRightCache.TileType] && tileRightCache.BlockType == BlockType.Solid);
 
         if (slope == SlopeType.SlopeUpLeft && !left && rightEmpty)
+        {
             return;
+        }
 
         if (slope == SlopeType.SlopeUpRight && !right && leftEmpty)
+        {
             return;
+        }
 
-        Tile tileUpLeftCache = Main.tile[tileX - 1, tileY - 1];
-        Tile tileUpRightCache = Main.tile[tileX + 1, tileY - 1];
+        var tileUpLeftCache = Main.tile[tileX - 1, tileY - 1];
+        var tileUpRightCache = Main.tile[tileX + 1, tileY - 1];
 
-        bool upLeftEmpty = left && !(tileUpLeftCache.HasTile && Main.tileSolid[tileUpLeftCache.TileType]) && tileUpLeftCache.LiquidAmount <= 0;
-        bool upRightEmpty = right && !(tileUpRightCache.HasTile && Main.tileSolid[tileUpRightCache.TileType]) && tileUpRightCache.LiquidAmount <= 0;
-        bool isSurfaceLiquid = !up && (upLeftEmpty || upRightEmpty);
+        var upLeftEmpty = left && !(tileUpLeftCache.HasTile && Main.tileSolid[tileUpLeftCache.TileType]) && tileUpLeftCache.LiquidAmount <= 0;
+        var upRightEmpty = right && !(tileUpRightCache.HasTile && Main.tileSolid[tileUpRightCache.TileType]) && tileUpRightCache.LiquidAmount <= 0;
+        var isSurfaceLiquid = !up && (upLeftEmpty || upRightEmpty);
 
-        Rectangle size = new Rectangle(0, 0, 16, 16);
-        Vector2 offset = Vector2.Zero;
+        var size = new Rectangle(0, 0, 16, 16);
+        var offset = Vector2.Zero;
 
         if (up && (left || right))
         {
@@ -286,14 +296,16 @@ public sealed class LiquidEdgeRenderer : ModSystem
             size = new Rectangle(0, 10, 16, 6);
 
             if (tileDownCache.LiquidAmount > 250)
+            {
                 highLiquid = 255;
+            }
         }
         else
         {
             float depth = 256 - highLiquid;
             depth /= 32f;
 
-            int width = down && tileDownCache.LiquidAmount > 250 ? 16 : 6;
+            var width = down && tileDownCache.LiquidAmount > 250 ? 16 : 6;
 
             var depthPush = (int)(depth * 2);
             depthPush = Math.Min(12, depthPush);
@@ -306,7 +318,7 @@ public sealed class LiquidEdgeRenderer : ModSystem
                 if (left && right)
                 {
                     highLiquid = (tileLeftCache.liquid + tileRightCache.liquid) / 2;
-                    int avgDepth = (int)((256 - highLiquid) / 32f) * 2;
+                    var avgDepth = (int)((256 - highLiquid) / 32f) * 2;
                     offset = new Vector2(0, avgDepth);
                     size = new Rectangle(0, avgDepth, 16, 16 - avgDepth);
                 }
@@ -317,6 +329,7 @@ public sealed class LiquidEdgeRenderer : ModSystem
                         offset = new Vector2(0, depthPush);
                         size = new Rectangle(0, depthPush, 2, 16 - depthPush);
                     }
+
                     if (slope == SlopeType.SlopeDownRight || slope == SlopeType.SlopeUpRight)
                     {
                         offset = new Vector2(0, depthPush);
@@ -330,6 +343,7 @@ public sealed class LiquidEdgeRenderer : ModSystem
                         offset = new Vector2(2, depthPush);
                         size = new Rectangle(2, depthPush, 14, 16 - depthPush);
                     }
+
                     if (slope == SlopeType.SlopeDownRight || slope == SlopeType.SlopeUpRight)
                     {
                         offset = new Vector2(14, depthPush);
@@ -369,13 +383,15 @@ public sealed class LiquidEdgeRenderer : ModSystem
         if (tileCache.IsHalfBlock && !down)
         {
             if (leftEmpty || rightEmpty)
+            {
                 return;
+            }
         }
 
-        var newEdgeData = new RewrittenLiquidRenderer.LiquidEdgeData()
+        var newEdgeData = new RewrittenLiquidRenderer.LiquidEdgeData
         {
             LiquidOffset = offset,
-            SourceRectangle = size
+            SourceRectangle = size,
         };
 
         Edges.Add(new Point(tileX, tileY));
@@ -389,7 +405,6 @@ public sealed class LiquidEdgeRenderer : ModSystem
             }
 
             pCache->EdgeData = newEdgeData;
-            return;
         }
         else if (blockType is not BlockType.Solid)
         {

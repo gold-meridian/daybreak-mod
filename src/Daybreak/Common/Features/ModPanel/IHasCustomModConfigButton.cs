@@ -1,12 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
-
 using Daybreak.Common.Features.Hooks;
-
 using Mono.Cecil;
-
 using MonoMod.Cil;
-
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.UI;
@@ -14,13 +10,13 @@ using Terraria.ModLoader.UI;
 namespace Daybreak.Common.Features.ModPanel;
 
 /// <summary>
-///     When implemented by a <see cref="Mod"/>, allows the mod to modify their
+///     When implemented by a <see cref="Mod" />, allows the mod to modify their
 ///     Mod Configuration menu button.
 /// </summary>
 public interface IHasCustomModConfigButton
 {
     /// <summary>
-    ///     Creates the <see cref="UIButton{T}"/> for the mod entry.
+    ///     Creates the <see cref="UIButton{T}" /> for the mod entry.
     ///     <br />
     ///     This may be either the button for when mods are available, or for
     ///     when they aren't.
@@ -56,7 +52,8 @@ public interface IHasCustomModConfigButton
         {
             c.EmitLdloc(modLoc);
             c.EmitLdfld(ldMod);
-            c.EmitDelegate((UIButton<string> button, Mod mod) =>
+            c.EmitDelegate(
+                (UIButton<string> button, Mod mod) =>
                 {
                     if (mod is IHasCustomModConfigButton customButton)
                     {

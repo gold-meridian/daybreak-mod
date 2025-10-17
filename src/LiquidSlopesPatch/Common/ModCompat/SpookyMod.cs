@@ -1,10 +1,7 @@
 using System.Reflection;
-
 using MonoMod.Cil;
-
 using Spooky.Content.Biomes;
 using Spooky.Content.Tiles.Water;
-
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -37,11 +34,12 @@ internal sealed class SpookyMod : ModSystem
         c.EmitLdloc2();
         c.EmitLdfld(typeof(RewrittenLiquidRenderer.LiquidDrawCache).GetField("Type")); //we get ptr2.Opacity by parsing throgh both ptr2 and the Type field
         c.EmitLdarg(5);
-        c.EmitDelegate((ref float num, float ptr2Opacity, byte ptr2Type, bool isBackgroundDraw) =>
+        c.EmitDelegate(
+            (ref float num, float ptr2Opacity, byte ptr2Type, bool isBackgroundDraw) =>
             {
                 //Anything placed in this delegate is like calling a new method 
-                float LiquidOpacity = self.WaterOpacity; //ranges from 1f to 0f
-                bool opacityCondition = ptr2Type == LiquidID.Water && Main.waterStyle == ModContent.GetInstance<TarWaterStyle>().Slot;
+                var LiquidOpacity = self.WaterOpacity; //ranges from 1f to 0f
+                var opacityCondition = ptr2Type == LiquidID.Water && Main.waterStyle == ModContent.GetInstance<TarWaterStyle>().Slot;
                 //the condition for when our opacity should be applied
                 //This gets the liquid type water and gets the water style for our liquid, this can be changed to anything boolean related
                 //We set num (or the opacity of the draw liquid) to either the original value or our value depending on the condition above

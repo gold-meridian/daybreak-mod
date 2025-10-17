@@ -1,22 +1,18 @@
 using System.Diagnostics;
-
 using Daybreak.Common.Features.Hooks;
-
 using MonoMod.Cil;
-
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.Tiles;
 
 /// <summary>
-///     Implement on a <see cref="ModTile"/> to hook into
-///     <see cref="WorldGen.PlaceTile"/> and execute custom logic.
+///     Implement on a <see cref="ModTile" /> to hook into
+///     <see cref="WorldGen.PlaceTile" /> and execute custom logic.
 /// </summary>
 public interface IPlaceTileHook
 {
     /// <summary>
-    ///     
     /// </summary>
     /// <param name="i">The X coordinate.</param>
     /// <param name="j">The Y coordinate.</param>
@@ -27,7 +23,7 @@ public interface IPlaceTileHook
     /// <param name="plr">The player placing the tile, if applicable.</param>
     /// <param name="style">The provided style of the tile.</param>
     /// <remarks>
-    ///     <paramref name="plr"/> is often not provided and is used only in
+    ///     <paramref name="plr" /> is often not provided and is used only in
     ///     vanilla for placing bathtubs, which use the player to determine the
     ///     direction of the tile being placed.
     /// </remarks>
@@ -66,7 +62,8 @@ public interface IPlaceTileHook
         c.EmitLdarg(4); // bool forced
         c.EmitLdarg(5); // int  plr
         c.EmitLdarg(6); // int  style
-        c.EmitDelegate((int i, int j, int type, bool mute, bool forced, int plr, int style) =>
+        c.EmitDelegate(
+            (int i, int j, int type, bool mute, bool forced, int plr, int style) =>
             {
                 if (TileLoader.GetTile(type) is not IPlaceTileHook placeTile)
                 {

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-
 using Microsoft.Xna.Framework;
-
 using Terraria;
 using Terraria.ID;
 
@@ -261,34 +259,42 @@ public abstract partial class PotBehavior
             {
                 case 0:
                     yield return new PotItemDrop(292);
+
                     break;
 
                 case 1:
                     yield return new PotItemDrop(298);
+
                     break;
 
                 case 2:
                     yield return new PotItemDrop(299);
+
                     break;
 
                 case 3:
                     yield return new PotItemDrop(290);
+
                     break;
 
                 case 4:
                     yield return new PotItemDrop(2322);
+
                     break;
 
                 case 5:
                     yield return new PotItemDrop(2324);
+
                     break;
 
                 case 6:
                     yield return new PotItemDrop(2325);
+
                     break;
 
                 case >= 7:
                     yield return new PotItemDrop(2350, WorldGen.genRand.Next(1, 3));
+
                     break;
             }
         }
@@ -299,38 +305,47 @@ public abstract partial class PotBehavior
             {
                 case 0:
                     yield return new PotItemDrop(289);
+
                     break;
 
                 case 1:
                     yield return new PotItemDrop(298);
+
                     break;
 
                 case 2:
                     yield return new PotItemDrop(299);
+
                     break;
 
                 case 3:
                     yield return new PotItemDrop(290);
+
                     break;
 
                 case 4:
                     yield return new PotItemDrop(303);
+
                     break;
 
                 case 5:
                     yield return new PotItemDrop(291);
+
                     break;
 
                 case 6:
                     yield return new PotItemDrop(304);
+
                     break;
 
                 case 7:
                     yield return new PotItemDrop(2322);
+
                     break;
 
                 case 8:
                     yield return new PotItemDrop(2329);
+
                     break;
             }
 
@@ -346,58 +361,72 @@ public abstract partial class PotBehavior
             {
                 case 0:
                     yield return new PotItemDrop(296);
+
                     break;
 
                 case 1:
                     yield return new PotItemDrop(295);
+
                     break;
 
                 case 2:
                     yield return new PotItemDrop(299);
+
                     break;
 
                 case 3:
                     yield return new PotItemDrop(302);
+
                     break;
 
                 case 4:
                     yield return new PotItemDrop(303);
+
                     break;
 
                 case 5:
                     yield return new PotItemDrop(305);
+
                     break;
 
                 case 6:
                     yield return new PotItemDrop(301);
+
                     break;
 
                 case 7:
                     yield return new PotItemDrop(302);
+
                     break;
 
                 case 8:
                     yield return new PotItemDrop(297);
+
                     break;
 
                 case 9:
                     yield return new PotItemDrop(304);
+
                     break;
 
                 case 10:
                     yield return new PotItemDrop(2322);
+
                     break;
 
                 case 11:
                     yield return new PotItemDrop(2323);
+
                     break;
 
                 case 12:
                     yield return new PotItemDrop(2327);
+
                     break;
 
                 case 13:
                     yield return new PotItemDrop(2329);
+
                     break;
             }
 
@@ -413,58 +442,72 @@ public abstract partial class PotBehavior
             {
                 case 0:
                     yield return new PotItemDrop(296);
+
                     break;
 
                 case 1:
                     yield return new PotItemDrop(295);
+
                     break;
 
                 case 2:
                     yield return new PotItemDrop(293);
+
                     break;
 
                 case 3:
                     yield return new PotItemDrop(288);
+
                     break;
 
                 case 4:
                     yield return new PotItemDrop(294);
+
                     break;
 
                 case 5:
                     yield return new PotItemDrop(297);
+
                     break;
 
                 case 6:
                     yield return new PotItemDrop(304);
+
                     break;
 
                 case 7:
                     yield return new PotItemDrop(305);
+
                     break;
 
                 case 8:
                     yield return new PotItemDrop(301);
+
                     break;
 
                 case 9:
                     yield return new PotItemDrop(302);
+
                     break;
 
                 case 10:
                     yield return new PotItemDrop(288);
+
                     break;
 
                 case 11:
                     yield return new PotItemDrop(300);
+
                     break;
 
                 case 12:
                     yield return new PotItemDrop(2323);
+
                     break;
 
                 case 13:
                     yield return new PotItemDrop(2326);
+
                     break;
             }
 
@@ -702,7 +745,7 @@ public abstract partial class PotBehavior
     {
         var i = ctx.X;
         var j = ctx.Y;
-        
+
         var stack = Main.rand.Next(20, 41);
         Item.NewItem(WorldGen.GetItemSource_FromTileBreak(i, j), i * 16, j * 16, 16, 16, 965, stack);
     }

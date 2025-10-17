@@ -1,9 +1,7 @@
 using Daybreak.Common.CIL;
 using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.IDs;
-
 using MonoMod.Cil;
-
 using Terraria;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
@@ -17,7 +15,7 @@ namespace Daybreak.Common.Features.Tiles;
 public interface ILilyPad
 {
     /// <summary>
-    ///     Whether to use vanilla's <see cref="Main.DrawTileInWater"/> logic.
+    ///     Whether to use vanilla's <see cref="Main.DrawTileInWater" /> logic.
     /// </summary>
     /// <remarks>
     ///     If enabled, this also disables regular solid tile drawing.
@@ -36,6 +34,9 @@ public interface ILilyPad
 public abstract class LilyPadTile : ModTile, ILilyPad
 {
     bool ILilyPad.VanillaDrawTileInWater => true;
+
+    /// <inheritdoc />
+    public abstract void CheckLilyPad(int x, int y);
 
     /// <inheritdoc />
     public override void SetStaticDefaults()
@@ -57,9 +58,6 @@ public abstract class LilyPadTile : ModTile, ILilyPad
         CheckLilyPad(i, j);
         return false;
     }
-
-    /// <inheritdoc />
-    public abstract void CheckLilyPad(int x, int y);
 }
 
 internal static partial class WaterFoliageHandler

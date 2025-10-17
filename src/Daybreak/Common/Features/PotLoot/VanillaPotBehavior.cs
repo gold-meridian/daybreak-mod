@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -115,6 +114,7 @@ internal sealed class VanillaPotBehavior(bool echo) : PotBehavior
                             {
                                 Gore.NewGore(new Vector2(i * 16, j * 16), default(Vector2), 698 + WorldGen.genRand.Next(6));
                             }
+
                             break;
                         }
 
@@ -125,6 +125,7 @@ internal sealed class VanillaPotBehavior(bool echo) : PotBehavior
                             break;
                     }
                 }
+
                 break;
         }
     }
@@ -183,6 +184,7 @@ internal sealed class VanillaPotBehavior(bool echo) : PotBehavior
                         {
                             multiplier = 4f;
                         }
+
                         break;
                     }
 
@@ -194,6 +196,7 @@ internal sealed class VanillaPotBehavior(bool echo) : PotBehavior
                         multiplier = 1.25f;
                         break;
                 }
+
                 break;
 
             case 0:

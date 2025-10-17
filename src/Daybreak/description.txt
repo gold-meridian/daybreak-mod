@@ -1,8 +1,18 @@
-DAYBREAK is a library mod, it's most relevant to other mod developers.
+DAYBREAK is a library mod. It does nothing on its own! Only use this if a mod depends on it.
 
-This library is being developed for use in the currently-unreleased mod NIGHTSHADE (feel free to join the Discord in the homepage for more information) as well as a future release of Wrath of the Gods.
-
-It has convenient things like some utilities for IL editing, transient asset replacement, a whole API for transforming your mod's panel in the Mods List (animated mod icons, shaders applied to panels, etc.), and a lot more.
+Current features:
+- transient asset replacement,
+- IL editing tools,
+- rendering utilities,
+- redone tML hook system and Load- and Unload-attribute hooks,
+- customizable Mod Panel rendering,
+- unified system for NPC downed flags,
+- shimmer routine handling for NPCs,
+- custom pot loot system with overridable vanilla behavior,
+- advanced rarity rendering support, including on hover, in the world, and in the inventory,
+- system for pre-rendering animated item textures that will render their animations in all contexts,
+- tile placement hooks,
+- custom lily pad and cattail support.
 
 For more information:
 - https://github.com/gold-meridian/daybreak-mod

@@ -1,19 +1,12 @@
 using System;
-using System.Diagnostics;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-
 using MonoMod.Cil;
-
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
 using Terraria.GameContent.Liquid;
-using Terraria.Graphics.Light;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -46,7 +39,7 @@ internal sealed class MiscHooks : ModSystem
 
             Main.spriteBatch.Draw(self.tileTarget, Main.sceneTilePos - Main.screenPosition + new Vector2(Main.drawToScreen ? 0 : Main.offScreenRange), Color.White);
 
-            foreach (Point edge in LiquidEdgeRenderer.Edges)
+            foreach (var edge in LiquidEdgeRenderer.Edges)
             {
                 int tileType = Main.tile[edge.X, edge.Y].TileType;
                 if (TileID.Sets.BlocksWaterDrawingBehindSelf[tileType])
@@ -94,7 +87,8 @@ internal sealed class MiscHooks : ModSystem
         c.EmitLdloc(jLoc);
         c.EmitLdloc(num8Loc);
         c.EmitLdloc(tileLoc);
-        c.EmitDelegate((
+        c.EmitDelegate(
+            (
                 bool liquidSlopeFix,
                 int i,
                 int j,

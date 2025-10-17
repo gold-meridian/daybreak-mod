@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
@@ -17,7 +16,7 @@ internal static class HookLoader
     ///     Internally used to hook into the start of mod loading; useful for
     ///     injecting content into other mods.
     /// </summary>
-    public static event Action<Mod>? OnEarlyModLoad; 
+    public static event Action<Mod>? OnEarlyModLoad;
 
     public static Mod GetModOrThrow()
     {
@@ -57,7 +56,7 @@ internal static class HookLoader
                 Debug.Assert(currentlyLoadingMod is null);
 
                 currentlyLoadingMod = self;
-                
+
                 OnEarlyModLoad?.Invoke(self);
 
                 orig(self);

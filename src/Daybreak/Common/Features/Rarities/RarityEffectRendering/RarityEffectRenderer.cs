@@ -1,17 +1,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-
 using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.IDs;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using MonoMod.Cil;
-
 using ReLogic.Graphics;
-
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -21,46 +16,6 @@ namespace Daybreak.Common.Features.Rarities;
 
 internal sealed class RarityEffectRenderer : ModSystem
 {
-#region TryGetSpecialRarity
-    public static bool TryGetSpecialRarity(
-        Item item,
-        [NotNullWhen(returnValue: true)] out IRarityTextRenderer? specialRarity
-    )
-    {
-        var rarity = item.master ? ItemRarityID.Master : item.expert ? ItemRarityID.Expert : item.rare;
-        return TryGetSpecialRarity(rarity, out specialRarity);
-    }
-
-    public static bool TryGetSpecialRarity(
-        PopupText popupText,
-        [NotNullWhen(returnValue: true)] out IRarityTextRenderer? specialRarity
-    )
-    {
-        var rarity = popupText.master ? ItemRarityID.Master : popupText.expert ? ItemRarityID.Expert : popupText.rarity;
-        return TryGetSpecialRarity(rarity, out specialRarity);
-    }
-
-    public static bool TryGetSpecialRarity(
-        int rarity,
-        [NotNullWhen(returnValue: true)] out IRarityTextRenderer? specialRarity
-    )
-    {
-        if (RarityLoader.GetRarity(rarity) is IRarityTextRenderer sr)
-        {
-            specialRarity = sr;
-            return true;
-        }
-
-        if (DaybreakRaritySets.SpecialRarity.TryGetValue(rarity, out specialRarity))
-        {
-            return true;
-        }
-
-        specialRarity = null;
-        return false;
-    }
-#endregion
-
     public override void Load()
     {
         base.Load();
@@ -118,7 +73,7 @@ internal sealed class RarityEffectRenderer : ModSystem
         c.Next = null;
 
         ILLabel? secondLoopBegin = null;
-        c.GotoPrev(x => x.MatchBlt(out _)); // Skip outer loop.
+        c.GotoPrev(x => x.MatchBlt(out _));               // Skip outer loop.
         c.GotoPrev(x => x.MatchBlt(out secondLoopBegin)); // Find inner loop.
         if (secondLoopBegin is null)
         {
@@ -144,7 +99,8 @@ internal sealed class RarityEffectRenderer : ModSystem
         c.GotoPrev(MoveType.Before, x => x.MatchCall(typeof(DynamicSpriteFontExtensionMethods), nameof(DynamicSpriteFontExtensionMethods.DrawString)));
         c.Remove();
         c.EmitLdloc(popupTextLoc); // So we can check the rarity.
-        c.EmitDelegate((SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth, PopupText popupText) =>
+        c.EmitDelegate(
+            (SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth, PopupText popupText) =>
             {
                 if (!TryGetSpecialRarity(popupText, out var rarity))
                 {
@@ -177,7 +133,8 @@ internal sealed class RarityEffectRenderer : ModSystem
 
         c.EmitLdarg1(); // info
         c.EmitLdfld(typeof(Main.MouseTextCache).GetField(nameof(Main.MouseTextCache.rare), BindingFlags.Public | BindingFlags.Instance)!);
-        c.EmitDelegate((
+        c.EmitDelegate(
+            (
                 SpriteBatch spriteBatch,
                 DynamicSpriteFont font,
                 string text,
@@ -215,4 +172,44 @@ internal sealed class RarityEffectRenderer : ModSystem
             }
         );
     }
+
+#region TryGetSpecialRarity
+    public static bool TryGetSpecialRarity(
+        Item item,
+        [NotNullWhen(returnValue: true)] out IRarityTextRenderer? specialRarity
+    )
+    {
+        var rarity = item.master ? ItemRarityID.Master : item.expert ? ItemRarityID.Expert : item.rare;
+        return TryGetSpecialRarity(rarity, out specialRarity);
+    }
+
+    public static bool TryGetSpecialRarity(
+        PopupText popupText,
+        [NotNullWhen(returnValue: true)] out IRarityTextRenderer? specialRarity
+    )
+    {
+        var rarity = popupText.master ? ItemRarityID.Master : popupText.expert ? ItemRarityID.Expert : popupText.rarity;
+        return TryGetSpecialRarity(rarity, out specialRarity);
+    }
+
+    public static bool TryGetSpecialRarity(
+        int rarity,
+        [NotNullWhen(returnValue: true)] out IRarityTextRenderer? specialRarity
+    )
+    {
+        if (RarityLoader.GetRarity(rarity) is IRarityTextRenderer sr)
+        {
+            specialRarity = sr;
+            return true;
+        }
+
+        if (DaybreakRaritySets.SpecialRarity.TryGetValue(rarity, out specialRarity))
+        {
+            return true;
+        }
+
+        specialRarity = null;
+        return false;
+    }
+#endregion
 }

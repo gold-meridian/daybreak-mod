@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using Terraria;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
@@ -63,7 +62,7 @@ public sealed class DaybreakTileSets : ModSystem
         {
             typeCache = (ushort)copyType.Value;
         }
-        
+
         orig(
             self,
             x,

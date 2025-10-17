@@ -1,9 +1,7 @@
 using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.IDs;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using Terraria;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
@@ -37,54 +35,6 @@ public interface ICattail
 /// </summary>
 public abstract class CattailTile : ModTile, ICattail
 {
-    /// <inheritdoc />
-    public override void SetStaticDefaults()
-    {
-        base.SetStaticDefaults();
-
-        TileID.Sets.TileCutIgnore.Regrowth[Type] = true;
-
-        Main.tileCut[Type] = true;
-        Main.tileFrameImportant[Type] = true;
-        Main.tileLighted[Type] = true;
-        Main.tileNoFail[Type] = true;
-
-        DaybreakTileSets.OtherTileDrawDataToCopy[Type] = TileID.Cattail;
-    }
-
-    /// <inheritdoc />
-    public override void RandomUpdate(int i, int j)
-    {
-        base.RandomUpdate(i, j);
-
-        CheckCattail(i, j);
-        if (!Main.tile[i, j].HasTile || !WorldGen.genRand.NextBool(8))
-        {
-            return;
-        }
-
-        GrowCattail(i, j);
-        CheckCattail(i, j);
-    }
-
-    /// <inheritdoc />
-    public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
-    {
-        CheckCattail(i, j);
-        return false;
-    }
-
-    /// <inheritdoc />
-    public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
-    {
-        if (Main.tile[i, j].frameX / 18 <= 4)
-        {
-            Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileGrass);
-        }
-
-        return false;
-    }
-
     /// <inheritdoc />
     public virtual void GrowCattail(int x, int y)
     {
@@ -228,6 +178,54 @@ public abstract class CattailTile : ModTile, ICattail
 
     /// <inheritdoc />
     public abstract void CheckCattail(int x, int y);
+
+    /// <inheritdoc />
+    public override void SetStaticDefaults()
+    {
+        base.SetStaticDefaults();
+
+        TileID.Sets.TileCutIgnore.Regrowth[Type] = true;
+
+        Main.tileCut[Type] = true;
+        Main.tileFrameImportant[Type] = true;
+        Main.tileLighted[Type] = true;
+        Main.tileNoFail[Type] = true;
+
+        DaybreakTileSets.OtherTileDrawDataToCopy[Type] = TileID.Cattail;
+    }
+
+    /// <inheritdoc />
+    public override void RandomUpdate(int i, int j)
+    {
+        base.RandomUpdate(i, j);
+
+        CheckCattail(i, j);
+        if (!Main.tile[i, j].HasTile || !WorldGen.genRand.NextBool(8))
+        {
+            return;
+        }
+
+        GrowCattail(i, j);
+        CheckCattail(i, j);
+    }
+
+    /// <inheritdoc />
+    public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+    {
+        CheckCattail(i, j);
+        return false;
+    }
+
+    /// <inheritdoc />
+    public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+    {
+        if (Main.tile[i, j].frameX / 18 <= 4)
+        {
+            Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileGrass);
+        }
+
+        return false;
+    }
 }
 
 internal static partial class WaterFoliageHandler

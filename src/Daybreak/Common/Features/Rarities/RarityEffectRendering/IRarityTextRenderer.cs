@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using ReLogic.Graphics;
 
 namespace Daybreak.Common.Features.Rarities;
@@ -17,7 +16,7 @@ public interface IRarityTextRenderer
     ///     which rarity text is rendered: popup text, item tooltips, and mouse
     ///     hovers.
     /// </summary>
-    /// <param name="sb">The <see cref="SpriteBatch"/> used to render.</param>
+    /// <param name="sb">The <see cref="SpriteBatch" /> used to render.</param>
     /// <param name="font">The font to use.</param>
     /// <param name="text">The text to render.</param>
     /// <param name="position">The position to draw to.</param>

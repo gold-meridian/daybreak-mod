@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
-
 using MonoMod.Utils;
 
 namespace DaybreakHookGenerator;
@@ -59,6 +57,7 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         {
             sb.AppendLine($"//     {hook}");
         }
+
         sb.AppendLine($"public static partial class {typeName}");
         sb.AppendLine("{");
         var ranOnce = false;
@@ -68,10 +67,12 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
             {
                 sb.AppendLine();
             }
+
             ranOnce = true;
 
             sb.Append(BuildHook(hook, hasOverloads: type.GetMethods().Count(x => x.Name == hook.Name) > 1));
         }
+
         sb.AppendLine("}");
 
         foreach (var hook in hooks)
@@ -317,14 +318,15 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
     private static MethodDefinition[] ResolveHooksFromType(TypeDefinition typeDef, List<string> excludedHooks)
     {
-        var methods = typeDef.GetMethods().Where(x => x is
-                                                      {
-                                                          IsPublic: true, // Is accessible (ignore protected, too)
-                                                          IsVirtual: true, // Is overridable
-                                                          IsFinal: false, // Is not sealed
-                                                      }
-                                                   && !excludedHooks.Contains(x.Name)
-                                                   && x.GetCustomAttribute(typeof(ObsoleteAttribute).FullName!) is null
+        var methods = typeDef.GetMethods().Where(
+            x => x is
+                 {
+                     IsPublic: true,  // Is accessible (ignore protected, too)
+                     IsVirtual: true, // Is overridable
+                     IsFinal: false,  // Is not sealed
+                 }
+              && !excludedHooks.Contains(x.Name)
+              && x.GetCustomAttribute(typeof(ObsoleteAttribute).FullName!) is null
         );
 
         return methods.ToArray();

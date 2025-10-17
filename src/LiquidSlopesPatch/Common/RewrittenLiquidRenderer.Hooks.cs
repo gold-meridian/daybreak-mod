@@ -1,12 +1,9 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-
 using Mono.Cecil.Cil;
-
 using MonoMod.Cil;
 using MonoMod.Utils;
-
 using Terraria.GameContent.Liquid;
 using Terraria.ModLoader;
 
@@ -119,7 +116,8 @@ public static partial class RewrittenLiquidRenderer
         }
 
         c.Body.ExceptionHandlers.AddRange(
-            body.ExceptionHandlers.Select(x => new ExceptionHandler(x.HandlerType)
+            body.ExceptionHandlers.Select(
+                x => new ExceptionHandler(x.HandlerType)
                 {
                     TryStart = x.TryStart is null ? null : c.Body.Instructions[body.Instructions.IndexOf(x.TryStart)],
                     TryEnd = x.TryEnd is null ? null : c.Body.Instructions[body.Instructions.IndexOf(x.TryEnd)],
@@ -134,7 +132,8 @@ public static partial class RewrittenLiquidRenderer
         c.Body.Variables.AddRange(body.Variables.Select(x => new VariableDefinition(x.VariableType)));
 
         c.Method.CustomDebugInformations.AddRange(
-            body.Method.CustomDebugInformations.Select(x =>
+            body.Method.CustomDebugInformations.Select(
+                x =>
                 {
                     switch (x)
                     {
@@ -169,7 +168,8 @@ public static partial class RewrittenLiquidRenderer
         );
 
         c.Method.DebugInformation.SequencePoints.AddRange(
-            body.Method.DebugInformation.SequencePoints.Select(x => new SequencePoint(resolveInstrOff(x.Offset), x.Document)
+            body.Method.DebugInformation.SequencePoints.Select(
+                x => new SequencePoint(resolveInstrOff(x.Offset), x.Document)
                 {
                     StartLine = x.StartLine,
                     StartColumn = x.StartColumn,

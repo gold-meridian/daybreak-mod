@@ -1,7 +1,5 @@
 using JetBrains.Annotations;
-
 using MonoMod.Cil;
-
 using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.ID;

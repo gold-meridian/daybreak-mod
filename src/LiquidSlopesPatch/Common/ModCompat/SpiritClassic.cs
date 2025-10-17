@@ -1,11 +1,7 @@
 using System.Reflection;
-
 using Microsoft.Xna.Framework;
-
 using MonoMod.Cil;
-
 using SpiritMod.Effects.SurfaceWaterModifications;
-
 using Terraria;
 using Terraria.GameContent.Drawing;
 using Terraria.Graphics;
@@ -30,7 +26,7 @@ internal sealed class SpiritClassic : ModSystem
     private static void InternalDraw_UseOurLocals(ILContext il)
     {
         // no-op
-        
+
         /*ILCursor c = new ILCursor(il);
 
         if (!c.TryGotoNext(MoveType.After, x => x.MatchCall<Main>(nameof(Main.DrawTileInWater))))

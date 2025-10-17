@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
 using Daybreak.Common.IDs;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -32,7 +29,8 @@ internal sealed class ItemPreRenderer : ModSystem
     {
         base.Load();
 
-        Main.RunOnMainThread(() =>
+        Main.RunOnMainThread(
+            () =>
             {
                 On_Main.DoDraw += UpdateItemRenders;
             }
@@ -44,7 +42,8 @@ internal sealed class ItemPreRenderer : ModSystem
     {
         base.Unload();
 
-        Main.RunOnMainThread(() =>
+        Main.RunOnMainThread(
+            () =>
             {
                 foreach (var (itemType, texture) in original_textures)
                 {
@@ -81,7 +80,8 @@ internal sealed class ItemPreRenderer : ModSystem
             original_textures[i] = TextureAssets.Item[i].Value;
         }
 
-        Main.RunOnMainThread(() =>
+        Main.RunOnMainThread(
+            () =>
             {
                 foreach (var (itemType, _) in pre_rendered_items)
                 {

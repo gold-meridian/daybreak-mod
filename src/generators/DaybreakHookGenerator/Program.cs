@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
 using Terraria.ModLoader;
-
 using ModuleDefinition = Mono.Cecil.ModuleDefinition;
 
 namespace DaybreakHookGenerator;
