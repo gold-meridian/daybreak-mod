@@ -1,13 +1,22 @@
 # DAYBREAK
 
-Accuracy-focused library mod for tModLoader focusing mostly on reimplementing vanilla features with as much accuracy as possible, along with additional utilities on top.
+---
 
-Current features include:
+**DAYBREAK** is a library mod purpose-build for NIGHTSHADE and Wrath of the Gods. It mostly features APIs for advanced vanilla integration (focusing on perfectly replicating vanilla features or concepts) and utilities for obscure tasks, including rendering and IL editing.
 
-- modded achievements,
-- a brand-new hooking system which you can use to avoid OOP boilerplate,
-- completely customizable mod list UI panels,
-- various functional sets for NPCs and tiles,
-- a rewritten system for determining pot loot that may be hooked into arbitrarily,
-- better support for rarity rendering that lets developers apply shaders or other effects in *all* contexts,
-- support for lily pad and cattail tiles.
+Current features:
+- transient asset replacement,
+- IL editing tools,
+- rendering utilities,
+- redone tML hook system and Load- and Unload-attribute hooks,
+- customizable Mod Panel rendering,
+- unified system for NPC downed flags,
+- shimmer routine handling for NPCs,
+- custom pot loot system with overridable vanilla behavior,
+- advanced rarity rendering support, including on hover, in the world, and in the inventory,
+- system for pre-rendering animated item textures that will render their animations in all contexts,
+- tile placement hooks,
+- custom lily pad and cattail support.
+
+For more information:
+- https://discord.gg/6Fm4ZTHVub
