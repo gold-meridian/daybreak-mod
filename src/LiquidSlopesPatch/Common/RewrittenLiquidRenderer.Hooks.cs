@@ -11,9 +11,16 @@ namespace LiquidSlopesPatch.Common;
 
 public static partial class RewrittenLiquidRenderer
 {
+    public static bool IsUpdatedAndDoesNotNeedToApplyAnythingBecauseItsInTerrariaNow => typeof(ModLoader).Assembly.GetType("Terraria.GameContent.Liquid.LiquidEdgeRenderer") is not null;
+
     [ModuleInitializer]
     internal static void EarlyHook()
     {
+        if (IsUpdatedAndDoesNotNeedToApplyAnythingBecauseItsInTerrariaNow)
+        {
+            return;
+        }
+
         ReplaceMethodBody(LiquidRenderer.Instance.DrawNormalLiquids, DrawNormalLiquids);
         ReplaceMethodBody(LiquidRenderer.Instance.DrawShimmer, DrawShimmer);
         ReplaceMethodBody(LiquidRenderer.Instance.GetCachedDrawArea, GetCachedDrawArea);

@@ -47,6 +47,11 @@ public sealed class LiquidEdgeRenderer : ModSystem
     {
         base.PostSetupContent();
 
+        if (RewrittenLiquidRenderer.IsUpdatedAndDoesNotNeedToApplyAnythingBecauseItsInTerrariaNow)
+        {
+            return;
+        }
+
         TileID.Sets.BlocksWaterDrawingBehindSelf[TileID.SnowFallBlock] = true;
     }
 

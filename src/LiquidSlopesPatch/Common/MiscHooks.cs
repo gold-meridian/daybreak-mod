@@ -17,6 +17,11 @@ internal sealed class MiscHooks : ModSystem
     {
         base.Load();
 
+        if (RewrittenLiquidRenderer.IsUpdatedAndDoesNotNeedToApplyAnythingBecauseItsInTerrariaNow)
+        {
+            return;
+        }
+
         On_Main.DrawWaters += DrawWaters;
         IL_Main.DrawLiquid += DrawLiquid;
 
