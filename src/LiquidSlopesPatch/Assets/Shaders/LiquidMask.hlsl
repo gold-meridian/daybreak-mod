@@ -12,6 +12,7 @@ technique Technique1
     pass MaskShader
     {
         PixelShader = compile ps_3_0 main();
+    
     }
 }
 #endif

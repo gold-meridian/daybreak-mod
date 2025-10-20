@@ -50,7 +50,8 @@ public static partial class RewrittenLiquidRenderer
 
     private static unsafe void InternalPrepareDraw(LiquidRenderer unusedArg0Filler, Rectangle drawArea)
     {
-        LiquidEdgeRenderer.Edges.Clear();
+        LiquidEdgeRenderer.Clear();
+        var edgeData = LiquidEdgeRenderer.Active;
 
         var rectangle = new Rectangle(drawArea.X - 2, drawArea.Y - 2, drawArea.Width + 4, drawArea.Height + 4);
         _drawArea = drawArea;
@@ -103,7 +104,11 @@ public static partial class RewrittenLiquidRenderer
                         ptr2->Type = ptr2[-1].Type;
                     }
 
-                    LiquidEdgeRenderer.CollectEdgeData(ptr2, tile, i, j);
+                    ptr2->EdgeData = null;
+                    if (edgeData)
+                    {
+                        LiquidEdgeRenderer.CollectEdgeData(ptr2, tile, i, j);
+                    }
 
                     ptr2++;
                 }
@@ -123,6 +128,7 @@ public static partial class RewrittenLiquidRenderer
                     }
                     else if (!ptr2->HasLiquid && !ptr2->EdgeData.HasValue)
                     {
+                        // edge tiles don't have liquid, but shouldn't participate in gap filling
                         var liquidCache = ptr2[-1];
                         var liquidCache2 = ptr2[1];
                         var liquidCache3 = ptr2[-rectangle.Height];
@@ -159,29 +165,30 @@ public static partial class RewrittenLiquidRenderer
             {
                 for (var n = 0; n < rectangle.Height - 10; n++)
                 {
-                    if (ptr2->HasVisibleLiquid && (!ptr2->IsSolid || ptr2->IsHalfBrick || ptr2->EdgeData.HasValue))
+                    if (ptr2->HasVisibleLiquid && (!ptr2->IsSolid || ptr2->IsHalfBrick))
                     {
                         ptr2->Opacity = 1f;
                         ptr2->VisibleType = ptr2->Type;
                         var num3 = 1f / (LiquidRenderer.WATERFALL_LENGTH[ptr2->Type] + 1);
                         var num4 = 1f;
-                        // TML(liquid-slopes): Duplicate original validity check without edge
-                        // data to avoid waterfalls appearing beneath solid tiles.
-                        if (!ptr2->IsSolid || ptr2->IsHalfBrick)
+                        for (var num5 = 1; num5 <= LiquidRenderer.WATERFALL_LENGTH[ptr2->Type]; num5++)
                         {
-                            for (var num5 = 1; num5 <= LiquidRenderer.WATERFALL_LENGTH[ptr2->Type]; num5++)
+                            num4 -= num3;
+                            if (ptr2[num5].IsSolid)
                             {
-                                num4 -= num3;
-                                if (ptr2[num5].IsSolid)
-                                {
-                                    break;
-                                }
-
-                                ptr2[num5].VisibleLiquidLevel = Math.Max(ptr2[num5].VisibleLiquidLevel, ptr2->VisibleLiquidLevel * num4);
-                                ptr2[num5].Opacity = num4;
-                                ptr2[num5].VisibleType = ptr2->Type;
+                                break;
                             }
+
+                            ptr2[num5].VisibleLiquidLevel = Math.Max(ptr2[num5].VisibleLiquidLevel, ptr2->VisibleLiquidLevel * num4);
+                            ptr2[num5].Opacity = num4;
+                            ptr2[num5].VisibleType = ptr2->Type;
                         }
+                    }
+                    else if (ptr2->HasVisibleLiquid && ptr2->EdgeData.HasValue)
+                    {
+                        // edge water needs opacity and visibility set
+                        ptr2->Opacity = 1f;
+                        ptr2->VisibleType = ptr2->Type;
                     }
 
                     if (ptr2->IsSolid && !ptr2->IsHalfBrick && !ptr2->EdgeData.HasValue)
@@ -224,9 +231,9 @@ public static partial class RewrittenLiquidRenderer
                         var num10 = 0f;
                         var num11 = 1f;
                         var visibleLiquidLevel = ptr2->VisibleLiquidLevel;
-                        if (!liquidCache.HasVisibleLiquid || (liquidCache.EdgeData.HasValue && ptr2->LiquidLevel < 250 && !liquidCache.IsHalfBrick))
+                        if (!liquidCache.HasVisibleLiquid || (liquidCache.EdgeData.HasValue && !liquidCache.IsHalfBrick)) // half bricks are meant to leak water below them creating waterfalls and providing 'surface tension' through the bottom
                         {
-                            num10 += liquidCache2.VisibleLiquidLevel * (1f - visibleLiquidLevel);
+                            num10 += (liquidCache2.EdgeData.HasValue ? 1f : liquidCache2.VisibleLiquidLevel) * (1f - visibleLiquidLevel); // this is just creating the same effect as if the tile above didn't have any edgedata, (empty tiles have VisibleLiquidLevel = 1)
                         }
 
                         if (!liquidCache2.HasVisibleLiquid && !liquidCache2.IsSolid && !liquidCache2.IsHalfBrick)
@@ -329,7 +336,9 @@ public static partial class RewrittenLiquidRenderer
                             }
                         }
 
-                        if (liquidCache3.HasVisibleLiquid && liquidCache4.HasVisibleLiquid)
+                        // Ignore edges when smoothing liquids
+                        var smoothCondition = edgeData ? liquidCache3.HasVisibleLiquid && !liquidCache3.IsSolid && liquidCache4.HasVisibleLiquid && !liquidCache4.IsSolid : liquidCache3.HasVisibleLiquid && liquidCache4.HasVisibleLiquid;
+                        if (smoothCondition)
                         {
                             if (ptr2->HasTopEdge)
                             {
@@ -454,13 +463,9 @@ public static partial class RewrittenLiquidRenderer
                                 var num21 = Math.Max(0.25f, ptr2->VisibleRightWall);
                                 var num22 = Math.Min(0.75f, ptr2->VisibleTopWall);
                                 var num23 = Math.Max(0.25f, ptr2->VisibleBottomWall);
-
-                                if (!LiquidEdgeRenderer.Active)
+                                if (ptr2->IsHalfBrick && ptr2->IsSolid && num23 > 0.5f)
                                 {
-                                    if (ptr2->IsHalfBrick && ptr2->IsSolid && num23 > 0.5f)
-                                    {
-                                        num23 = 0.5f;
-                                    }
+                                    num23 = 0.5f;
                                 }
 
                                 ptr4->X = num18;
@@ -485,6 +490,7 @@ public static partial class RewrittenLiquidRenderer
 
                                 if (ptr2->EdgeData.HasValue)
                                 {
+                                    // ignore previous instructions and use custom framing from LiquidEdgeRenderer
                                     ptr4->LiquidOffset = ptr2->EdgeData.Value.LiquidOffset;
                                     ptr4->SourceRectangle = ptr2->EdgeData.Value.SourceRectangle;
                                 }
@@ -762,12 +768,12 @@ public static partial class RewrittenLiquidRenderer
 
     public static float GetShimmerWave(ref float worldPositionX, ref float worldPositionY)
     {
-        return (float)Math.Sin(((worldPositionX + (worldPositionY / 6f)) / 10f - (Main.timeForVisualEffects / 360.0)) * 6.2831854820251465);
+        return (float)Math.Sin((((worldPositionX + worldPositionY / 6f) / 10f) - Main.timeForVisualEffects / 360.0) * 6.2831854820251465);
     }
 
     public static Color GetShimmerGlitterColor(bool top, float worldPositionX, float worldPositionY)
     {
-        var color = Main.hslToRgb((float)((worldPositionX + (worldPositionY / 6f) + (Main.timeForVisualEffects / 30.0)) / 6.0) % 1f, 1f, 0.5f);
+        var color = Main.hslToRgb((float)((worldPositionX + worldPositionY / 6f + Main.timeForVisualEffects / 30.0) / 6.0) % 1f, 1f, 0.5f);
         color.A = 0;
         return new Color(color.ToVector4() * GetShimmerGlitterOpacity(top, worldPositionX, worldPositionY));
     }
@@ -779,15 +785,15 @@ public static partial class RewrittenLiquidRenderer
             return 0.5f;
         }
 
-        var num = Utils.Remap((float)Math.Sin(((worldPositionX + (worldPositionY / 6f)) / 10f - (Main.timeForVisualEffects / 360.0)) * 6.2831854820251465), -0.5f, 1f, 0f, 0.35f);
-        var num2 = (float)Math.Sin(SimpleWhiteNoise((uint)worldPositionX, (uint)worldPositionY) / 10f + (Main.timeForVisualEffects / 180.0));
+        var num = Utils.Remap((float)Math.Sin((((worldPositionX + worldPositionY / 6f) / 10f) - Main.timeForVisualEffects / 360.0) * 6.2831854820251465), -0.5f, 1f, 0f, 0.35f);
+        var num2 = (float)Math.Sin((SimpleWhiteNoise((uint)worldPositionX, (uint)worldPositionY) / 10f) + Main.timeForVisualEffects / 180.0);
         return Utils.Remap(num * num2, 0f, 0.5f, 0f, 1f);
     }
 
     private static uint SimpleWhiteNoise(uint x, uint y)
     {
-        x = (36469 * (x & 0xFFFF)) + (x >> 16);
-        y = (18012 * (y & 0xFFFF)) + (y >> 16);
+        x = 36469 * (x & 0xFFFF) + (x >> 16);
+        y = 18012 * (y & 0xFFFF) + (y >> 16);
         return (x << 16) + y;
     }
 
@@ -795,26 +801,26 @@ public static partial class RewrittenLiquidRenderer
     {
         worldPositionX += 0.5f;
         worldPositionY += 0.5f;
-        var num = (worldPositionX + (worldPositionY / 6f)) / 10f - (Main.timeForVisualEffects / 360.0);
+        var num = ((worldPositionX + worldPositionY / 6f) / 10f) - Main.timeForVisualEffects / 360.0;
         if (!top)
         {
             num += worldPositionX + worldPositionY;
         }
 
-        return (((int)num % 16) + 16) % 16;
+        return ((int)num % 16 + 16) % 16;
     }
 
     public static Vector4 GetShimmerBaseColor(float worldPositionX, float worldPositionY)
     {
         var shimmerWave = GetShimmerWave(ref worldPositionX, ref worldPositionY);
-        return Vector4.Lerp(new Vector4(0.64705884f, 26f / 51f, 14f / 15f, 1f), new Vector4(41f / 51f, 41f / 51f, 1f, 1f), 0.1f + (shimmerWave * 0.4f));
+        return Vector4.Lerp(new Vector4(0.64705884f, 26f / 51f, 14f / 15f, 1f), new Vector4(41f / 51f, 41f / 51f, 1f, 1f), 0.1f + shimmerWave * 0.4f);
     }
 
     public static bool HasFullWater(LiquidRenderer unusedArg0Filler, int x, int y)
     {
         x -= _drawArea.X;
         y -= _drawArea.Y;
-        var num = (x * _drawArea.Height) + y;
+        var num = x * _drawArea.Height + y;
         if (num >= 0 && num < _drawCache.Length)
         {
             if (_drawCache[num].IsVisible)
@@ -837,7 +843,7 @@ public static partial class RewrittenLiquidRenderer
             return 0f;
         }
 
-        var num = ((x + 2) * (_drawArea.Height + 4)) + y + 2;
+        var num = (x + 2) * (_drawArea.Height + 4) + y + 2;
         if (!_cache[num].HasVisibleLiquid)
         {
             return 0f;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.Graphics.Light;
 using Terraria.ID;
@@ -21,15 +20,6 @@ namespace LiquidSlopesPatch.Common;
 /// </remarks>
 public sealed class LiquidEdgeRenderer : ModSystem
 {
-    private static Asset<Texture2D>? maskTileAsset;
-
-    /// <summary>
-    ///     Contains liquid mask textures for specific block types that have funny shapes but still need to hide water.
-    ///     <br />
-    ///     Only shows up when the tile is part of the <see cref="TileID.Sets.BlocksWaterDrawingBehindSelf" /> set.
-    /// </summary>
-    public static Asset<Texture2D>?[] TileLiquidMasks = [];
-
     public static readonly BlendState MaskingBlendState = new()
     {
         ColorSourceBlend = Blend.Zero,
@@ -51,11 +41,7 @@ public sealed class LiquidEdgeRenderer : ModSystem
     /// </summary>
     public static bool Active => Enabled && Lighting.Mode is LightMode.Color or LightMode.White;
 
-    /// <summary>
-    ///     Tiles which mask rendered liquid (tiles on the edge of bodies of
-    ///     liquid).
-    /// </summary>
-    public static List<Point> Edges { get; } = [];
+    private static List<Point> BlockWaterBehindLocations { get; } = [];
 
     public override void PostSetupContent()
     {
@@ -64,26 +50,33 @@ public sealed class LiquidEdgeRenderer : ModSystem
         TileID.Sets.BlocksWaterDrawingBehindSelf[TileID.SnowFallBlock] = true;
     }
 
-    public override void ResizeArrays()
+    public static void Clear()
     {
-        base.ResizeArrays();
-
-        TileLiquidMasks = TileID.Sets.Factory.CreateNamedSet(nameof(TileLiquidMasks)).RegisterCustomSet(default(Asset<Texture2D>));
+        BlockWaterBehindLocations.Clear();
     }
 
-    public static void DrawSingleTileMask(SpriteBatch spriteBatch, int tileX, int tileY)
+    public static void DrawTileMask(SpriteBatch spriteBatch, RenderTarget2D tileTarget, Vector2 tileTargetOffset)
     {
-        var tileCache = Main.tile[tileX, tileY];
-
-        var texture = Assets.Images.DefaultTileLiquidMask.Asset.Value;
-
-        // Check if a custom mask is loaded for the tile and use it if so
-        if (TileLiquidMasks.IndexInRange(tileCache.type) && (TileLiquidMasks[tileCache.type]?.IsLoaded ?? false))
+        var shader = Assets.Shaders.LiquidMask.Asset;
         {
-            texture = TileLiquidMasks[tileCache.type].Value;
+            shader.Wait();
         }
 
+        spriteBatch.End();
+        spriteBatch.Begin(SpriteSortMode.Deferred, MaskingBlendState, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shader.Value);
+
+        spriteBatch.Draw(tileTarget, tileTargetOffset, Color.White);
+        foreach (var pt in BlockWaterBehindLocations)
+        {
+            DrawSingleTileMask(spriteBatch, pt.X, pt.Y);
+        }
+    }
+
+    private static void DrawSingleTileMask(SpriteBatch spriteBatch, int tileX, int tileY)
+    {
+        var tileCache = Main.tile[tileX, tileY];
         var position = new Vector2(tileX * 16, tileY * 16) + new Vector2(Main.drawToScreen ? 0 : Main.offScreenRange) - Main.screenPosition;
+        var texture = Assets.Images.DefaultTileLiquidMask.Asset.Value;
 
         if (tileCache.Slope != SlopeType.Solid && !TileID.Sets.HasSlopeFrames[tileCache.TileType])
         {
@@ -139,22 +132,20 @@ public sealed class LiquidEdgeRenderer : ModSystem
 
     public static unsafe void CollectEdgeData(RewrittenLiquidRenderer.LiquidCache* pCache, Tile tileCache, int tileX, int tileY)
     {
-        pCache->EdgeData = null;
-
-        if (!Active)
+        if (!tileCache.HasTile || tileCache.IsActuated || Main.tileSolidTop[tileCache.type] || !Main.tileSolid[tileCache.type])
         {
             return;
         }
 
         var tileRightCache = Main.tile[tileX + 1, tileY];
         var tileLeftCache = Main.tile[tileX - 1, tileY];
-        var tileUpCache = Main.tile[tileX, tileY - 1];
-        var tileDownCache = Main.tile[tileX, tileY + 1];
-
-        if (!tileCache.HasTile || tileCache.IsActuated || Main.tileSolidTop[tileCache.type] || (tileCache.IsHalfBlock && (tileLeftCache.liquid > 160 || tileRightCache.liquid > 160) && Main.instance.waterfallManager.CheckForWaterfall(tileX, tileY)))
+        if (tileCache.IsHalfBlock && (tileLeftCache.liquid > 160 || tileRightCache.liquid > 160) && Main.instance.waterfallManager.CheckForWaterfall(tileX, tileY))
         {
             return;
         }
+
+        var tileUpCache = Main.tile[tileX, tileY - 1];
+        var tileDownCache = Main.tile[tileX, tileY + 1];
 
         var liquidType = 0;
 
@@ -163,13 +154,11 @@ public sealed class LiquidEdgeRenderer : ModSystem
         var right = false;
         var up = false;
         var down = false;
-        var self = false;
         var slope = tileCache.Slope;
         var blockType = tileCache.BlockType;
 
         if (tileCache.type == TileID.Grate && tileCache.LiquidAmount > 0)
         {
-            self = true;
             down = true;
             left = true;
             right = true;
@@ -180,8 +169,6 @@ public sealed class LiquidEdgeRenderer : ModSystem
         {
             if (tileCache.LiquidAmount > 0 && blockType != BlockType.Solid && (blockType != BlockType.HalfBlock || tileCache.liquid > 160))
             {
-                //self = true;
-
                 if (tileCache.LiquidAmount >= highLiquid)
                 {
                     highLiquid = tileCache.LiquidAmount;
@@ -211,7 +198,7 @@ public sealed class LiquidEdgeRenderer : ModSystem
                 }
             }
 
-            if (tileUpCache.LiquidAmount > 0 && slope != SlopeType.SlopeUpLeft && slope != SlopeType.SlopeUpRight)
+            if (tileUpCache.LiquidAmount > 0)
             {
                 up = true;
 
@@ -220,7 +207,7 @@ public sealed class LiquidEdgeRenderer : ModSystem
                 liquidType = tileUpCache.LiquidType;
             }
 
-            if (tileDownCache.LiquidAmount > 250 && slope != SlopeType.SlopeDownLeft && slope != SlopeType.SlopeDownRight)
+            if (tileDownCache.LiquidAmount > 252)
             {
                 if (tileDownCache.LiquidType == liquidType || !up)
                 {
@@ -228,21 +215,21 @@ public sealed class LiquidEdgeRenderer : ModSystem
                     liquidType = tileDownCache.LiquidType;
                 }
             }
+
+            if (!up && !down && !left && !right)
+            {
+                return;
+            }
         }
 
-        if (!up && !down && !left && !right && !self)
-        {
-            return;
-        }
+        var tileUpLeftCache = Main.tile[tileX - 1, tileY - 1];
+        var tileUpRightCache = Main.tile[tileX + 1, tileY - 1];
 
-        var exempt = tileCache.HasTile && (Main.tileSolidTop[tileCache.type] || !Main.tileSolid[tileCache.type]);
-        if (exempt)
-        {
-            return;
-        }
+        var leftEmpty = !left && !WorldGen.SolidTile(tileLeftCache)
+                              && !(tileLeftCache.BlockType is not BlockType.Solid && tileUpLeftCache.LiquidAmount > 0);
 
-        var leftEmpty = !left && !(tileLeftCache.HasTile && Main.tileSolid[tileLeftCache.TileType] && tileLeftCache.BlockType == BlockType.Solid);
-        var rightEmpty = !right && !(tileRightCache.HasTile && Main.tileSolid[tileRightCache.TileType] && tileRightCache.BlockType == BlockType.Solid);
+        var rightEmpty = !right && !WorldGen.SolidTile(tileRightCache)
+                                && !(tileRightCache.BlockType is not BlockType.Solid && tileUpRightCache.LiquidAmount > 0);
 
         if (slope == SlopeType.SlopeUpLeft && !left && rightEmpty)
         {
@@ -254,113 +241,139 @@ public sealed class LiquidEdgeRenderer : ModSystem
             return;
         }
 
-        var tileUpLeftCache = Main.tile[tileX - 1, tileY - 1];
-        var tileUpRightCache = Main.tile[tileX + 1, tileY - 1];
+        // If on both sides, make sure liquids are close in level
+        var similarHeights = !left || !right || slope != SlopeType.Solid || Math.Abs(tileLeftCache.LiquidAmount - tileRightCache.LiquidAmount) < 100;
 
-        var upLeftEmpty = left && !(tileUpLeftCache.HasTile && Main.tileSolid[tileUpLeftCache.TileType]) && tileUpLeftCache.LiquidAmount <= 0;
-        var upRightEmpty = right && !(tileUpRightCache.HasTile && Main.tileSolid[tileUpRightCache.TileType]) && tileUpRightCache.LiquidAmount <= 0;
-        var isSurfaceLiquid = !up && (upLeftEmpty || upRightEmpty);
+        var noLiquidInDiagonals = slope switch
+        {
+            SlopeType.SlopeUpLeft or SlopeType.SlopeDownLeft => tileUpRightCache.LiquidAmount <= 0,
+            SlopeType.SlopeUpRight or SlopeType.SlopeDownRight => tileUpLeftCache.LiquidAmount <= 0,
+            _ => tileUpLeftCache.LiquidAmount <= 0 && tileUpRightCache.LiquidAmount <= 0,
+        };
 
-        var size = new Rectangle(0, 0, 16, 16);
+        // If air or a top slope is above itself, like half bricks next to covered full liquids
+        var airAbove = !WorldGen.SolidOrSlopedTile(tileUpCache) || tileUpCache.Slope is SlopeType.SlopeUpLeft or SlopeType.SlopeUpRight;
+        // See if either side has a surface via not being full or not having a tile above
+        var surfaceOnSide = (left && (tileLeftCache.LiquidAmount < 250 || !WorldGen.SolidOrSlopedTile(tileUpLeftCache)))
+                         || (right && (tileRightCache.LiquidAmount < 250 || !WorldGen.SolidOrSlopedTile(tileUpRightCache)));
+
+        var isSurfaceLiquid = !up && similarHeights && noLiquidInDiagonals && (surfaceOnSide || airAbove);
+
+        (int Width, int Height) size = (16, 16);
         var offset = Vector2.Zero;
 
-        if (up && (left || right))
+        if (up)
         {
-            size = new Rectangle(0, 6, 16, 16);
-            if (!tileCache.IsHalfBlock && !down && !(tileDownCache.HasTile && Main.tileSolid[tileDownCache.TileType]))
+            if (left || right)
             {
-                size.Height = 12;
-            }
-        }
-        else if (down && up)
-        {
-            size = new Rectangle(0, 0, 16, 16);
-        }
-        else if (up)
-        {
-            size = new Rectangle(0, 6, 16, 10);
-
-            if (tileCache.IsHalfBlock || tileCache.Slope != SlopeType.Solid)
-            {
-                size = new Rectangle(0, 4, 16, 12);
-
-                if (!tileDownCache.HasTile)
+                if (!tileCache.IsHalfBlock && !down && !WorldGen.SolidOrSlopedTile(tileDownCache))
                 {
-                    size = new Rectangle(0, 4, 16, 16);
+                    size = (16, 12);
                 }
+                else
+                {
+                    size = (16, 16);
+                }
+            }
+            else if (down)
+            {
+                size = (16, 16);
+            }
+            else if (tileCache.IsHalfBlock || slope != SlopeType.Solid)
+            {
+                size = slope switch
+                {
+                    SlopeType.SlopeUpLeft or SlopeType.SlopeUpRight => (16, 2),
+                    SlopeType.SlopeDownLeft or SlopeType.SlopeDownRight => (16, 12),
+                    _ => (16, 16),
+                };
+            }
+            else
+            {
+                size = (16, 10);
             }
         }
         else if (down && !left && !right)
         {
-            offset = new Vector2(0, 10);
-            size = new Rectangle(0, 10, 16, 6);
-
-            if (tileDownCache.LiquidAmount > 250)
-            {
-                highLiquid = 255;
-            }
+            offset = new Vector2(0, 12);
+            size = (16, 4);
+            highLiquid = 255;
+            isSurfaceLiquid = false;
         }
         else
         {
-            float depth = 256 - highLiquid;
-            depth /= 32f;
-
-            var width = down && tileDownCache.LiquidAmount > 250 ? 16 : 6;
-
-            var depthPush = (int)(depth * 2);
-            depthPush = Math.Min(12, depthPush);
+            var width = down && tileDownCache.LiquidAmount > 250 ? 16 : 4;
+            var depthPush = Math.Min((256 - highLiquid) / 16, 12);
 
             if (slope != SlopeType.Solid)
             {
                 offset = new Vector2(0, depthPush);
-                size = new Rectangle(0, depthPush, 16, 16 - depthPush);
+                size = (16, 16 - depthPush);
 
                 if (left && right)
                 {
-                    highLiquid = (tileLeftCache.liquid + tileRightCache.liquid) / 2;
-                    var avgDepth = (int)((256 - highLiquid) / 32f) * 2;
-                    offset = new Vector2(0, avgDepth);
-                    size = new Rectangle(0, avgDepth, 16, 16 - avgDepth);
+                    if (slope is SlopeType.SlopeUpLeft or SlopeType.SlopeDownLeft)
+                    {
+                        highLiquid = tileRightCache.LiquidAmount;
+                    }
+                    else if (slope is SlopeType.SlopeUpRight or SlopeType.SlopeDownRight)
+                    {
+                        highLiquid = tileLeftCache.LiquidAmount;
+                    }
+
+                    depthPush = (256 - highLiquid) / 16;
+                    offset = new Vector2(0, depthPush);
+                    size = (16, 16 - depthPush);
                 }
                 else if (left)
                 {
-                    if (slope == SlopeType.SlopeDownLeft || slope == SlopeType.SlopeUpLeft)
+                    if (slope is SlopeType.SlopeDownLeft or SlopeType.SlopeUpLeft)
                     {
                         offset = new Vector2(0, depthPush);
-                        size = new Rectangle(0, depthPush, 2, 16 - depthPush);
+                        size = (2, 16 - depthPush);
                     }
 
-                    if (slope == SlopeType.SlopeDownRight || slope == SlopeType.SlopeUpRight)
+                    if (slope is SlopeType.SlopeDownRight or SlopeType.SlopeUpRight)
                     {
                         offset = new Vector2(0, depthPush);
-                        size = new Rectangle(14, depthPush, 14, 16 - depthPush);
+                        size = (14, 16 - depthPush);
                     }
                 }
                 else if (right)
                 {
-                    if (slope == SlopeType.SlopeDownLeft || slope == SlopeType.SlopeUpLeft)
+                    if (slope is SlopeType.SlopeDownLeft or SlopeType.SlopeUpLeft)
                     {
                         offset = new Vector2(2, depthPush);
-                        size = new Rectangle(2, depthPush, 14, 16 - depthPush);
+                        size = (14, 16 - depthPush);
                     }
 
-                    if (slope == SlopeType.SlopeDownRight || slope == SlopeType.SlopeUpRight)
+                    if (slope is SlopeType.SlopeDownRight or SlopeType.SlopeUpRight)
                     {
                         offset = new Vector2(14, depthPush);
-                        size = new Rectangle(14, depthPush, 2, 16 - depthPush);
+                        size = (2, 16 - depthPush);
                     }
                 }
             }
             else if ((left && right) || tileCache.IsHalfBlock)
             {
+                if (left && right && highLiquid < 255)
+                {
+                    highLiquid = (tileLeftCache.LiquidAmount + tileRightCache.LiquidAmount) / 2;
+                }
+
+                if (!tileCache.IsHalfBlock)
+                {
+                    depthPush = Math.Min((256 - highLiquid) / 16, 12);
+                }
+
                 offset = new Vector2(0, depthPush);
-                size = new Rectangle(0, 4, 16, 16 - depthPush);
+                size = (16, 16 - depthPush);
             }
             else if (left)
             {
                 offset = new Vector2(0, depthPush);
-                size = new Rectangle(0, 4, width, 16 - depthPush);
-                if (rightEmpty)
+                size = (width, 16 - depthPush);
+                if (rightEmpty && down)
                 {
                     size.Width -= 4;
                 }
@@ -368,8 +381,8 @@ public sealed class LiquidEdgeRenderer : ModSystem
             else if (right)
             {
                 offset = new Vector2(16 - width, depthPush);
-                size = new Rectangle(16 - width, 4, width, 16 - depthPush);
-                if (leftEmpty)
+                size = (width, 16 - depthPush);
+                if (leftEmpty && down)
                 {
                     offset.X += 4;
                     size.Width -= 4;
@@ -377,24 +390,16 @@ public sealed class LiquidEdgeRenderer : ModSystem
             }
         }
 
-        size.X = 16;
-        size.Y = isSurfaceLiquid ? 0 : 64;
-
-        if (tileCache.IsHalfBlock && !down)
-        {
-            if (leftEmpty || rightEmpty)
-            {
-                return;
-            }
-        }
-
-        var newEdgeData = new RewrittenLiquidRenderer.LiquidEdgeData
+        pCache->EdgeData = new RewrittenLiquidRenderer.LiquidEdgeData
         {
             LiquidOffset = offset,
-            SourceRectangle = size,
+            SourceRectangle = new Rectangle(16, isSurfaceLiquid ? 0 : 64, size.Width, size.Height),
         };
 
-        Edges.Add(new Point(tileX, tileY));
+        if (TileID.Sets.BlocksWaterDrawingBehindSelf[tileCache.type])
+        {
+            BlockWaterBehindLocations.Add(new Point(tileX, tileY));
+        }
 
         if (blockType is BlockType.HalfBlock)
         {
@@ -403,8 +408,6 @@ public sealed class LiquidEdgeRenderer : ModSystem
                 pCache->LiquidLevel = highLiquid / 255f;
                 pCache->Type = (byte)liquidType;
             }
-
-            pCache->EdgeData = newEdgeData;
         }
         else if (blockType is not BlockType.Solid)
         {
@@ -412,7 +415,6 @@ public sealed class LiquidEdgeRenderer : ModSystem
 
             pCache->LiquidLevel = highLiquid / 255f;
             pCache->Type = (byte)liquidType;
-            pCache->EdgeData = newEdgeData;
         }
         else
         {
@@ -420,7 +422,6 @@ public sealed class LiquidEdgeRenderer : ModSystem
 
             pCache->LiquidLevel = highLiquid / 255f;
             pCache->Type = (byte)liquidType;
-            pCache->EdgeData = newEdgeData;
         }
     }
 }

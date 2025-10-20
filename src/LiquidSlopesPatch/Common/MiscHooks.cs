@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -31,22 +30,9 @@ internal sealed class MiscHooks : ModSystem
     {
         orig(self, isBackground);
 
-        if (LiquidEdgeRenderer.Active)
+        if (LiquidEdgeRenderer.Active && !Main.drawToScreen)
         {
-            Main.spriteBatch.End();
-
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, LiquidEdgeRenderer.MaskingBlendState, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, Assets.Shaders.LiquidMask.Asset.Value);
-
-            Main.spriteBatch.Draw(self.tileTarget, Main.sceneTilePos - Main.screenPosition + new Vector2(Main.drawToScreen ? 0 : Main.offScreenRange), Color.White);
-
-            foreach (var edge in LiquidEdgeRenderer.Edges)
-            {
-                int tileType = Main.tile[edge.X, edge.Y].TileType;
-                if (TileID.Sets.BlocksWaterDrawingBehindSelf[tileType])
-                {
-                    LiquidEdgeRenderer.DrawSingleTileMask(Main.spriteBatch, edge.X, edge.Y);
-                }
-            }
+            LiquidEdgeRenderer.DrawTileMask(Main.spriteBatch, Main.instance.tileTarget, Main.sceneTilePos - Main.screenPosition + new Vector2(Main.drawToScreen ? 0 : Main.offScreenRange));
         }
     }
 
