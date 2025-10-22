@@ -1,4 +1,4 @@
-﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk/1.0.1">
+﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
 
     <PropertyGroup>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
