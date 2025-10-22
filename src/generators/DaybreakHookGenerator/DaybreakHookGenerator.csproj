@@ -1,14 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <Import Project="$(BrokenWingsRoot)src\Mod.targets"/>
+﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk/1.0.1">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
 
-    <Target Name="BuildMod"/>
+        <TmlBuildUseShaderCompile>false</TmlBuildUseShaderCompile>
+        <TmlBuildUseLocalizationCompiler>false</TmlBuildUseLocalizationCompiler>
+        <TmlBuildPackageMod>false</TmlBuildPackageMod>
+        <TmlBuildIncludeSourceGenerators>false</TmlBuildIncludeSourceGenerators>
+        <TmlBuildGenerateLaunchSettings>false</TmlBuildGenerateLaunchSettings>
+        <TmlBuildUseDefaultModImpl>false</TmlBuildUseDefaultModImpl>
+    </PropertyGroup>
 
 </Project>

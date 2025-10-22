@@ -1,13 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <Import Project="$(BrokenWingsRoot)src\Mod.targets"/>
+﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk/1.0.1">
 
     <PropertyGroup>
-        <AssemblyName>LiquidSlopesPatch</AssemblyName>
-        <RootNamespace>LiquidSlopesPatch</RootNamespace>
-
-        <Version>1.0.0</Version>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <TmlBuildUseDefaultModImpl>true</TmlBuildUseDefaultModImpl>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,16 +1,16 @@
 {
   "profiles": {
-    "Terraria": {
+    "Terraria Client": {
       "commandName": "Executable",
       "executablePath": "$(DotNetName)",
-      "commandLineArgs": "$(tMLPath)",
-      "workingDirectory": "$(tMLSteamPath)"
+      "commandLineArgs": "Tomat.TML.ClientBootstrap.dll --working-directory \"$(tMLSteamPath).\" --binary \"$(tMLPath)\" --mode client --mod $(AssemblyName) --features $(TmlBuildBootstrapFeatures)",
+      "workingDirectory": "$(TmlBuildBootstrapRoot)"
     },
-    "TerrariaServer": {
+    "Terraria Server": {
       "commandName": "Executable",
       "executablePath": "$(DotNetName)",
-      "commandLineArgs": "$(tMLServerPath)",
-      "workingDirectory": "$(tMLSteamPath)"
+      "commandLineArgs": "Tomat.TML.ClientBootstrap.dll --working-directory \"$(tMLSteamPath).\" --binary \"$(tMLServerPath)\" --mode server --mod $(AssemblyName) --features $(TmlBuildBootstrapFeatures)",
+      "workingDirectory": "$(TmlBuildBootstrapRoot)"
     }
   }
 }
