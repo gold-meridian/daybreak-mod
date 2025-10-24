@@ -1,4 +1,5 @@
 #include "../pixelation.h"
+#include "../tmlbuild.h"
 
 sampler uImage0 : register(s0);
 
@@ -13,7 +14,7 @@ sampler tex0 = sampler_state
     AddressV = wrap;
 };
 
-float uTime;
+float uTime GLOBAL_TIME;
 float4 uSource;
 float uHoverIntensity;
 float uPixel;

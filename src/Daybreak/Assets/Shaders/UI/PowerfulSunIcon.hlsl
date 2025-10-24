@@ -1,8 +1,9 @@
 #include "../pixelation.h"
+#include "../tmlbuild.h"
 
 sampler uImage0 : register(s0);
 
-float uTime;
+float uTime GLOBAL_TIME;
 float uHoverIntensity;
 float uPixel;
 float uColorResolution;

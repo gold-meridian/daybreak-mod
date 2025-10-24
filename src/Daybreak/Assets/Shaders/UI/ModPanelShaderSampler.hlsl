@@ -1,9 +1,10 @@
 #include "../pixelation.h"
+#include "../tmlbuild.h"
 
 sampler uImage0 : register(s0);
 sampler uImage1 : register(s1);
 
-float uTime;
+float uTime GLOBAL_TIME;
 float4 uSource;
 
 float4 main(float2 coords : SV_POSITION, float2 tex_coords : TEXCOORD0) : COLOR0
