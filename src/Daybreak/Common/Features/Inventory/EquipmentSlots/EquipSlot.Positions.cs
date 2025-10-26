@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Daybreak.Common.Features.Inventory;
 
 partial class EquipSlot
