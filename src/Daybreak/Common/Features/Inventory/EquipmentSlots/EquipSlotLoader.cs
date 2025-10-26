@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using Terraria;
@@ -50,13 +51,13 @@ public sealed class EquipSlotLoader : ModSystem
         Hook,
     ];
 
-    private static List<EquipSlot> orderedSlots = [];
-    
+    private static EquipSlot[] orderedSlots = [];
+
     internal static void Register(EquipSlot slot)
     {
         slots.Add(slot);
     }
-    
+
     /// <inheritdoc />
     public override void Load()
     {
@@ -69,13 +70,16 @@ public sealed class EquipSlotLoader : ModSystem
     public override void ResizeArrays()
     {
         base.ResizeArrays();
-        
-        orderedSlots.Clear();
 
-        foreach (var slot in slots)
-        {
-            slot.OrderPosition.AddSorted(slot, orderedSlots);
-        }
+        // var positions = slots.ToDictionary(x => x, x => x.OrderPosition);
+
+        var sort = new TopoSort<EquipSlot>(
+            slots,
+            x => x.OrderPosition is EquipSlot.After after ? [after.AfterSlot] : [],
+            x => x.OrderPosition is EquipSlot.Before before ? [before.BeforeSlot] : []
+        );
+
+        orderedSlots = sort.Sort().ToArray();
     }
 
     private static void DrawInventory_ReplaceVanillaMiscSlotDrawing(ILContext il)
@@ -126,9 +130,9 @@ public sealed class EquipSlotLoader : ModSystem
 
             backPanelSize.X = xPos + (i * -47);
 
-            for (var slot = 0; slot < slots.Count; slot++)
+            for (var slot = 0; slot < orderedSlots.Length; slot++)
             {
-                var equipSlot = slots[slot];
+                var equipSlot = orderedSlots[slot];
                 var context = equipSlot.GetContext(slotKind);
                 var canBeToggled = equipSlot.CanBeToggled(slotKind);
 
@@ -168,7 +172,7 @@ public sealed class EquipSlotLoader : ModSystem
             }
         }
 
-        yPos += (47 * slots.Count) + 12;
+        yPos += (47 * orderedSlots.Length) + 12;
         xPos += 8;
 
         var buffsDrawn = 0;
