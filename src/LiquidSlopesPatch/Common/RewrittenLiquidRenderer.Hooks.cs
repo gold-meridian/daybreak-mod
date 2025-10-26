@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.Utils;
+using Terraria;
 using Terraria.GameContent.Liquid;
 using Terraria.ModLoader;
 
@@ -16,7 +17,7 @@ public static partial class RewrittenLiquidRenderer
     [ModuleInitializer]
     internal static void EarlyHook()
     {
-        if (IsUpdatedAndDoesNotNeedToApplyAnythingBecauseItsInTerrariaNow)
+        if (Main.dedServ || IsUpdatedAndDoesNotNeedToApplyAnythingBecauseItsInTerrariaNow)
         {
             return;
         }

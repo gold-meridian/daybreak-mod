@@ -1,8 +1,8 @@
 displayName = Liquid Slopes Patch
 author = Blockaroz, tomat
-version = 1.2.0
+version = 1.2.1
 homepage = https://discord.gg/6Fm4ZTHVub
-side = Client
+side = NoSync
 
 sortBefore = SpiritMod, Spooky, CalamityMod
 weakReferences = SpiritMod, Spooky, CalamityMod

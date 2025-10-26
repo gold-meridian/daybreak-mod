@@ -11,6 +11,7 @@ using Terraria.ModLoader;
 
 namespace LiquidSlopesPatch.Common;
 
+[Autoload(Side = ModSide.Client)]
 internal sealed class MiscHooks : ModSystem
 {
     public override void Load()

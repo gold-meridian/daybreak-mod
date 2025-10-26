@@ -11,6 +11,7 @@ using Terraria.ModLoader;
 
 namespace LiquidSlopesPatch.Common.ModCompat;
 
+[Autoload(Side = ModSide.Client)]
 [ExtendsFromMod("CalamityMod")]
 internal sealed class CalamityMod : ModSystem
 {

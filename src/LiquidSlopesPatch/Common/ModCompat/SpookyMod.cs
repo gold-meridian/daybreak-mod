@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 
 namespace LiquidSlopesPatch.Common.ModCompat;
 
+[Autoload(Side = ModSide.Client)]
 [ExtendsFromMod("Spooky")]
 internal sealed class SpookyMod : ModSystem
 {

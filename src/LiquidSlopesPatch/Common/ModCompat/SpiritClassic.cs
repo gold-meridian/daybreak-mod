@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 
 namespace LiquidSlopesPatch.Common.ModCompat;
 
+[Autoload(Side = ModSide.Client)]
 [ExtendsFromMod("SpiritMod")]
 internal sealed class SpiritClassic : ModSystem
 {

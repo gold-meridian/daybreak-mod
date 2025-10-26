@@ -18,6 +18,7 @@ namespace LiquidSlopesPatch.Common;
 ///     See the related pull request:
 ///     https://github.com/tModLoader/tModLoader/pull/4714
 /// </remarks>
+[Autoload(Side = ModSide.Client)]
 public sealed class LiquidEdgeRenderer : ModSystem
 {
     public static readonly BlendState MaskingBlendState = new()
