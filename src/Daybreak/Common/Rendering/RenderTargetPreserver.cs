@@ -1,6 +1,7 @@
 ﻿using Daybreak.Common.Features.Hooks;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Daybreak.Common.Rendering;
 
@@ -42,7 +43,7 @@ public static class RenderTargetPreserver
         return bindings;
     }
 
-    [OnLoad]
+    [OnLoad(Side = ModSide.Client)]
     private static void Load()
     {
         Main.RunOnMainThread(
