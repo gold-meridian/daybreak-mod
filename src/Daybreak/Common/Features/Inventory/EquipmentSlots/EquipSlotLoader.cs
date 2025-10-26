@@ -16,15 +16,6 @@ namespace Daybreak.Common.Features.Inventory;
 /// </summary>
 public sealed class EquipSlotLoader : ModSystem
 {
-    private static readonly List<EquipSlot> slots =
-    [
-        Pet,
-        LightPet,
-        Minecart,
-        Mount,
-        Hook,
-    ];
-
     /// <summary>
     ///     The Pet slot.
     /// </summary>
@@ -50,6 +41,17 @@ public sealed class EquipSlotLoader : ModSystem
     /// </summary>
     public static EquipSlot Hook { get; } = new HookSlot();
 
+    private static readonly List<EquipSlot> slots =
+    [
+        Pet,
+        LightPet,
+        Minecart,
+        Mount,
+        Hook,
+    ];
+
+    private static List<EquipSlot> orderedSlots = [];
+    
     internal static void Register(EquipSlot slot)
     {
         slots.Add(slot);
@@ -61,6 +63,19 @@ public sealed class EquipSlotLoader : ModSystem
         base.Load();
 
         IL_Main.DrawInventory += DrawInventory_ReplaceVanillaMiscSlotDrawing;
+    }
+
+    /// <inheritdoc />
+    public override void ResizeArrays()
+    {
+        base.ResizeArrays();
+        
+        orderedSlots.Clear();
+
+        foreach (var slot in slots)
+        {
+            slot.OrderPosition.AddSorted(slot, orderedSlots);
+        }
     }
 
     private static void DrawInventory_ReplaceVanillaMiscSlotDrawing(ILContext il)

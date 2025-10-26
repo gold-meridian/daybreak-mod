@@ -14,8 +14,14 @@ namespace Daybreak.Common.Features.Inventory;
     ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature,
     ImplicitUseTargetFlags.WithInheritors
 )]
-public abstract class EquipSlot : ModType
+public abstract partial class EquipSlot : ModType
 {
+    /// <summary>
+    ///     Controls how this equip slot is ordered relative to other slots.
+    /// </summary>
+    public virtual Position OrderPosition { get; private set; } = new Default();
+
+#region Sealed ModType boilerplate
     /// <inheritdoc />
     protected sealed override void Register()
     {
@@ -36,6 +42,7 @@ public abstract class EquipSlot : ModType
 
         SetStaticDefaults();
     }
+#endregion
 
     /// <summary>
     ///     Gets a reference to the item within this slot.

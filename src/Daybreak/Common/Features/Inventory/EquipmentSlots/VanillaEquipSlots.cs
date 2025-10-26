@@ -118,6 +118,8 @@ internal sealed class PetSlot : VanillaEquipSlot
 
 internal sealed class LightPetSlot : VanillaEquipSlot
 {
+    public override Position OrderPosition => new After(EquipSlotLoader.Pet);
+
     protected override bool IsEffectHidden => Main.LocalPlayer.hideMisc[1];
 
     public override int GetContext(EquipSlotKind kind)
@@ -160,6 +162,8 @@ internal sealed class LightPetSlot : VanillaEquipSlot
 
 internal sealed class MinecartSlot : VanillaEquipSlot
 {
+    public override Position OrderPosition => new After(EquipSlotLoader.LightPet);
+
     public override int GetContext(EquipSlotKind kind)
     {
         return kind switch
@@ -248,6 +252,8 @@ internal sealed class MinecartSlot : VanillaEquipSlot
 
 internal sealed class MountSlot : VanillaEquipSlot
 {
+    public override Position OrderPosition => new After(EquipSlotLoader.Minecart);
+
     public override int GetContext(EquipSlotKind kind)
     {
         return kind switch
@@ -276,6 +282,8 @@ internal sealed class MountSlot : VanillaEquipSlot
 
 internal sealed class HookSlot : VanillaEquipSlot
 {
+    public override Position OrderPosition => new After(EquipSlotLoader.Mount);
+
     public override int GetContext(EquipSlotKind kind)
     {
         return kind switch
