@@ -10,4 +10,8 @@
         <Publicize Include="ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Common\Features\Inventory\" />
+    </ItemGroup>
+
 </Project>

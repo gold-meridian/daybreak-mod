@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Daybreak.Common.Features;
+namespace Daybreak.Common.Features.ItemSlots;
 
 /// <summary>
 ///     Base definition for a modded <see cref="ItemSlot"/> context with custom
@@ -23,6 +23,7 @@ public abstract class ItemSlotContext : ModType
     protected sealed override void Register()
     {
         ItemSlotLoader.Register(this);
+        ModTypeLookup<ItemSlotContext>.Register(this);
     }
 
     /// <inheritdoc />

@@ -9,7 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Daybreak.Common.Features;
+namespace Daybreak.Common.Features.ItemSlots;
 
 /// <summary>
 ///     Loads <see cref="ItemSlotContext"/>s and manages their implementation.
