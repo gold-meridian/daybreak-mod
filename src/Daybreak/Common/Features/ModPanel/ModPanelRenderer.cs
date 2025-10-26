@@ -21,6 +21,149 @@ namespace Daybreak.Common.Features.ModPanel;
 
 internal sealed class ModPanelRenderer
 {
+    // TODO : 
+    // UIModItem:
+    // Swap UIImage for Config/More info buttons (delayed)
+    // swap all modifytext methods for one that uses an enum (if tomat says theres too many methods)
+    // add ModPanelStyleExt methods
+
+    // This exists instead of a regular IL edit/detour because, for some reason,
+    // it would seem that some part of the drawing routine may get inlined such
+    // that our changes are not properly reflected.  This, of course, only
+    // happens if you start the game with DAYBREAK disabled, entire the Mods
+    // List, and then enable DAYBREAK (since the JIT would have JITed the
+    // UI-related code).  I cannot, for the life of me, figure out how or why
+    // this is happening to non-concrete, virtual symbols.
+    private sealed class ModItemWithCustomDrawing(LocalMod mod) : UIModItem(mod)
+    {
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            if (!ModLoader.TryGetMod(_mod.Name, out var mod) || !TryGetPanelStyle(mod, out var style))
+            {
+                base.Draw(spriteBatch);
+                return;
+            }
+
+            using (style.OverrideTextures())
+            {
+                currentMod = mod;
+
+                if (style.PreDraw(this, spriteBatch))
+                {
+                    base.Draw(spriteBatch);
+                }
+
+                style.PostDraw(this, spriteBatch);
+
+                currentMod = null;
+            }
+        }
+
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            var ptr = typeof(UIPanel).GetMethod("DrawSelf", BindingFlags.NonPublic | BindingFlags.Instance)!.MethodHandle.GetFunctionPointer();
+            var baseDrawSelf = (Action<SpriteBatch>)Activator.CreateInstance(typeof(Action<SpriteBatch>), this, ptr)!;
+            var drawPanelDivider = true;
+            if (!TryGetPanelStyle(currentMod, out var style))
+            {
+                baseDrawSelf(spriteBatch);
+            }
+            else
+            {
+                if (style.PreDrawPanel(this, spriteBatch, ref drawPanelDivider))
+                {
+                    baseDrawSelf(spriteBatch);
+                }
+
+                style.PostDrawPanel(this, spriteBatch);
+            }
+
+            var innerDimensions = GetInnerDimensions();
+            var drawPos = new Vector2(innerDimensions.X + 5f + _modIconAdjust, innerDimensions.Y + 30f);
+            if (drawPanelDivider)
+            {
+                spriteBatch.Draw(UICommon.DividerTexture.Value, drawPos, null, Color.White, 0f, Vector2.Zero, new Vector2((innerDimensions.Width - 10f - _modIconAdjust) / 8f, 1f), SpriteEffects.None, 0f);
+            }
+
+            drawPos = new Vector2(innerDimensions.X + 10f + _modIconAdjust, innerDimensions.Y + 45f);
+
+            // TODO: These should just be UITexts
+            if (_mod.properties.side != ModSide.Server && (_mod.Enabled != _loaded || _configChangesRequireReload))
+            {
+                drawPos += new Vector2(_uiModStateText.Width.Pixels + left2ndLine, 0f);
+
+                var reloadText = _configChangesRequireReload ? Language.GetTextValue("tModLoader.ModReloadForced") : Language.GetTextValue("tModLoader.ModReloadRequired");
+                if (style is not null)
+                {
+                    reloadText = style.ModifyReloadRequiredText(this, reloadText);
+                    if (style.PreDrawReloadRequiredText(this))
+                    {
+                        Utils.DrawBorderString(spriteBatch, reloadText, drawPos, Color.White);
+                    }
+
+                    style.PostDrawReloadRequiredText(this);
+                }
+                else
+                {
+                    Utils.DrawBorderString(spriteBatch, reloadText, drawPos, Color.White);
+                }
+            }
+
+            if (_mod.properties.side == ModSide.Server)
+            {
+                drawPos += new Vector2(90f, -2f);
+                spriteBatch.Draw(UICommon.ModBrowserIconsTexture.Value, drawPos, new Rectangle(5 * 34, 3 * 34, 32, 32), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                if (new Rectangle((int)drawPos.X, (int)drawPos.Y, 32, 32).Contains(Main.MouseScreen.ToPoint()))
+                {
+                    UICommon.DrawHoverStringInBounds(spriteBatch, Language.GetTextValue("tModLoader.ModIsServerSide"));
+                }
+            }
+
+            if (_moreInfoButton?.IsMouseHovering == true)
+            {
+                _tooltip = Language.GetTextValue("tModLoader.ModsMoreInfo");
+            }
+            else if (_deleteModButton?.IsMouseHovering == true)
+            {
+                _tooltip = Language.GetTextValue("UI.Delete");
+            }
+            else if (_modName?.IsMouseHovering == true && _mod?.properties.author.Length > 0)
+            {
+                _tooltip = Language.GetTextValue("tModLoader.ModsByline", _mod.properties.author);
+            }
+            else if (_uiModStateText?.IsMouseHovering == true)
+            {
+                _tooltip = ToggleModStateText;
+            }
+            else if (_configButton?.IsMouseHovering == true)
+            {
+                _tooltip = Language.GetTextValue("tModLoader.ModsOpenConfig");
+            }
+            else if (updatedModDot?.IsMouseHovering == true)
+            {
+                _tooltip = previousVersionHint == null ? Language.GetTextValue("tModLoader.ModAddedSinceLastLaunchMessage") : Language.GetTextValue("tModLoader.ModUpdatedSinceLastLaunchMessage", previousVersionHint);
+            }
+            else if (tMLUpdateRequired?.IsMouseHovering == true)
+            {
+                _tooltip = Language.GetTextValue("tModLoader.SwitchVersionInfoButton");
+            }
+            else if (_modReferenceIcon?.IsMouseHovering == true)
+            {
+                _tooltip = _modRequiresTooltip;
+            }
+            else if (_translationModIcon?.IsMouseHovering == true)
+            {
+                var refs = string.Join(", ", _mod!.properties.RefNames(true)); // Translation mods can be strong or weak references.
+                _tooltip = Language.GetTextValue("tModLoader.TranslationModTooltip", refs);
+            }
+
+            if (style is not null)
+            {
+                _tooltip = style.ModifyHoverTooltip(this, _tooltip);
+            }
+        }
+    }
+
     // The current mod whose panel style to use.
     private static Mod? currentMod;
 
@@ -500,147 +643,5 @@ internal sealed class ModPanelRenderer
         );
 
         c.EmitRet();
-    }
-    // TODO : 
-    // UIModItem:
-    // Swap UIImage for Config/More info buttons (delayed)
-    // swap all modifytext methods for one that uses an enum (if tomat says theres too many methods)
-    // add ModPanelStyleExt methods
-
-    // This exists instead of a regular IL edit/detour because, for some reason,
-    // it would seem that some part of the drawing routine may get inlined such
-    // that our changes are not properly reflected.  This, of course, only
-    // happens if you start the game with DAYBREAK disabled, entire the Mods
-    // List, and then enable DAYBREAK (since the JIT would have JITed the
-    // UI-related code).  I cannot, for the life of me, figure out how or why
-    // this is happening to non-concrete, virtual symbols.
-    private sealed class ModItemWithCustomDrawing(LocalMod mod) : UIModItem(mod)
-    {
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            if (!ModLoader.TryGetMod(_mod.Name, out var mod) || !TryGetPanelStyle(mod, out var style))
-            {
-                base.Draw(spriteBatch);
-                return;
-            }
-
-            using (style.OverrideTextures())
-            {
-                currentMod = mod;
-
-                if (style.PreDraw(this, spriteBatch))
-                {
-                    base.Draw(spriteBatch);
-                }
-
-                style.PostDraw(this, spriteBatch);
-
-                currentMod = null;
-            }
-        }
-
-        protected override void DrawSelf(SpriteBatch spriteBatch)
-        {
-            var ptr = typeof(UIPanel).GetMethod("DrawSelf", BindingFlags.NonPublic | BindingFlags.Instance)!.MethodHandle.GetFunctionPointer();
-            var baseDrawSelf = (Action<SpriteBatch>)Activator.CreateInstance(typeof(Action<SpriteBatch>), this, ptr)!;
-            var drawPanelDivider = true;
-            if (!TryGetPanelStyle(currentMod, out var style))
-            {
-                baseDrawSelf(spriteBatch);
-            }
-            else
-            {
-                if (style.PreDrawPanel(this, spriteBatch, ref drawPanelDivider))
-                {
-                    baseDrawSelf(spriteBatch);
-                }
-
-                style.PostDrawPanel(this, spriteBatch);
-            }
-
-            var innerDimensions = GetInnerDimensions();
-            var drawPos = new Vector2(innerDimensions.X + 5f + _modIconAdjust, innerDimensions.Y + 30f);
-            if (drawPanelDivider)
-            {
-                spriteBatch.Draw(UICommon.DividerTexture.Value, drawPos, null, Color.White, 0f, Vector2.Zero, new Vector2((innerDimensions.Width - 10f - _modIconAdjust) / 8f, 1f), SpriteEffects.None, 0f);
-            }
-
-            drawPos = new Vector2(innerDimensions.X + 10f + _modIconAdjust, innerDimensions.Y + 45f);
-
-            // TODO: These should just be UITexts
-            if (_mod.properties.side != ModSide.Server && (_mod.Enabled != _loaded || _configChangesRequireReload))
-            {
-                drawPos += new Vector2(_uiModStateText.Width.Pixels + left2ndLine, 0f);
-
-                var reloadText = _configChangesRequireReload ? Language.GetTextValue("tModLoader.ModReloadForced") : Language.GetTextValue("tModLoader.ModReloadRequired");
-                if (style is not null)
-                {
-                    reloadText = style.ModifyReloadRequiredText(this, reloadText);
-                    if (style.PreDrawReloadRequiredText(this))
-                    {
-                        Utils.DrawBorderString(spriteBatch, reloadText, drawPos, Color.White);
-                    }
-
-                    style.PostDrawReloadRequiredText(this);
-                }
-                else
-                {
-                    Utils.DrawBorderString(spriteBatch, reloadText, drawPos, Color.White);
-                }
-            }
-
-            if (_mod.properties.side == ModSide.Server)
-            {
-                drawPos += new Vector2(90f, -2f);
-                spriteBatch.Draw(UICommon.ModBrowserIconsTexture.Value, drawPos, new Rectangle(5 * 34, 3 * 34, 32, 32), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                if (new Rectangle((int)drawPos.X, (int)drawPos.Y, 32, 32).Contains(Main.MouseScreen.ToPoint()))
-                {
-                    UICommon.DrawHoverStringInBounds(spriteBatch, Language.GetTextValue("tModLoader.ModIsServerSide"));
-                }
-            }
-
-            if (_moreInfoButton?.IsMouseHovering == true)
-            {
-                _tooltip = Language.GetTextValue("tModLoader.ModsMoreInfo");
-            }
-            else if (_deleteModButton?.IsMouseHovering == true)
-            {
-                _tooltip = Language.GetTextValue("UI.Delete");
-            }
-            else if (_modName?.IsMouseHovering == true && _mod?.properties.author.Length > 0)
-            {
-                _tooltip = Language.GetTextValue("tModLoader.ModsByline", _mod.properties.author);
-            }
-            else if (_uiModStateText?.IsMouseHovering == true)
-            {
-                _tooltip = ToggleModStateText;
-            }
-            else if (_configButton?.IsMouseHovering == true)
-            {
-                _tooltip = Language.GetTextValue("tModLoader.ModsOpenConfig");
-            }
-            else if (updatedModDot?.IsMouseHovering == true)
-            {
-                _tooltip = previousVersionHint == null ? Language.GetTextValue("tModLoader.ModAddedSinceLastLaunchMessage") : Language.GetTextValue("tModLoader.ModUpdatedSinceLastLaunchMessage", previousVersionHint);
-            }
-            else if (tMLUpdateRequired?.IsMouseHovering == true)
-            {
-                _tooltip = Language.GetTextValue("tModLoader.SwitchVersionInfoButton");
-            }
-            else if (_modReferenceIcon?.IsMouseHovering == true)
-            {
-                _tooltip = _modRequiresTooltip;
-            }
-            else if (_translationModIcon?.IsMouseHovering == true)
-            {
-                var refs = string.Join(", ", _mod!.properties.RefNames(true)); // Translation mods can be strong or weak references.
-                _tooltip = Language.GetTextValue("tModLoader.TranslationModTooltip", refs);
-            }
-
-            if (style is not null)
-            {
-                _tooltip = style.ModifyHoverTooltip(this, _tooltip);
-            }
-        }
     }
 }

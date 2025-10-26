@@ -24,6 +24,51 @@ namespace Daybreak.Content.Compatibility;
 [ExtendsFromMod("PrettyRarities")]
 internal sealed class PrettyRaritiesCompat : ModSystem
 {
+    private readonly struct PrettyRaritiesSpecialRarity(
+        Action<RarityDrawData, PrettyRarities.Core.RarityDrawContext> drawFunc
+    ) : IRarityTextRenderer
+    {
+        void IRarityTextRenderer.RenderText(
+            SpriteBatch sb,
+            DynamicSpriteFont font,
+            string text,
+            Vector2 position,
+            Color color,
+            float rotation,
+            Vector2 origin,
+            Vector2 scale,
+            SpriteEffects effects,
+            RarityDrawContext drawContext,
+            float maxWidth,
+            float spread
+        )
+        {
+            drawFunc(
+                new RarityDrawData(
+                    text,
+                    position.X,
+                    position.Y,
+                    font,
+                    rotation,
+                    origin,
+                    scale
+                ),
+                ToCompatContext(drawContext)
+            );
+        }
+
+        private static PrettyRarities.Core.RarityDrawContext ToCompatContext(RarityDrawContext ctx)
+        {
+            return ctx.DrawKind switch
+            {
+                RarityDrawContext.Kind.ItemTooltip => PrettyRarities.Core.RarityDrawContext.Tooltip,
+                RarityDrawContext.Kind.MouseText => PrettyRarities.Core.RarityDrawContext.MouseHover,
+                RarityDrawContext.Kind.PopupText => PrettyRarities.Core.RarityDrawContext.PopupText,
+                _ => PrettyRarities.Core.RarityDrawContext.Tooltip,
+            };
+        }
+    }
+
     public override void Load()
     {
         base.Load();
@@ -95,50 +140,5 @@ internal sealed class PrettyRaritiesCompat : ModSystem
     private static bool RarityModifierGlobalItem_PreDrawTooltipLine_Disable(GlobalItem self, Item item, DrawableTooltipLine line, ref int yOffset)
     {
         return true;
-    }
-
-    private readonly struct PrettyRaritiesSpecialRarity(
-        Action<RarityDrawData, PrettyRarities.Core.RarityDrawContext> drawFunc
-    ) : IRarityTextRenderer
-    {
-        void IRarityTextRenderer.RenderText(
-            SpriteBatch sb,
-            DynamicSpriteFont font,
-            string text,
-            Vector2 position,
-            Color color,
-            float rotation,
-            Vector2 origin,
-            Vector2 scale,
-            SpriteEffects effects,
-            RarityDrawContext drawContext,
-            float maxWidth,
-            float spread
-        )
-        {
-            drawFunc(
-                new RarityDrawData(
-                    text,
-                    position.X,
-                    position.Y,
-                    font,
-                    rotation,
-                    origin,
-                    scale
-                ),
-                ToCompatContext(drawContext)
-            );
-        }
-
-        private static PrettyRarities.Core.RarityDrawContext ToCompatContext(RarityDrawContext ctx)
-        {
-            return ctx.DrawKind switch
-            {
-                RarityDrawContext.Kind.ItemTooltip => PrettyRarities.Core.RarityDrawContext.Tooltip,
-                RarityDrawContext.Kind.MouseText => PrettyRarities.Core.RarityDrawContext.MouseHover,
-                RarityDrawContext.Kind.PopupText => PrettyRarities.Core.RarityDrawContext.PopupText,
-                _ => PrettyRarities.Core.RarityDrawContext.Tooltip,
-            };
-        }
     }
 }

@@ -23,6 +23,71 @@ internal readonly record struct DownedHandler(
 /// </summary>
 public static class DownedFlagHandler
 {
+    [Autoload(false)]
+    private sealed class DownedFlagSystem : ModSystem
+    {
+        public Dictionary<string, bool> NamedDowns { get; } = [];
+
+        public override void SaveWorldData(TagCompound tag)
+        {
+            base.SaveWorldData(tag);
+
+            foreach (var (name, val) in NamedDowns)
+            {
+                tag.Add(name, val);
+            }
+        }
+
+        public override void LoadWorldData(TagCompound tag)
+        {
+            base.LoadWorldData(tag);
+
+            foreach (var name in NamedDowns.Keys)
+            {
+                if (tag.TryGet<bool>(name, out var val))
+                {
+                    NamedDowns[name] = val;
+                }
+            }
+        }
+
+        // TODO: Reduce network bandwidth.  We need to sync names, but can maybe
+        //       write all boolean values to a bit-array structure.
+
+        public override void NetSend(BinaryWriter writer)
+        {
+            base.NetSend(writer);
+
+            if (Mod.NetID < 0)
+            {
+                return;
+            }
+
+            writer.Write(NamedDowns.Count);
+            foreach (var (name, val) in NamedDowns)
+            {
+                writer.Write(name);
+                writer.Write(val);
+            }
+        }
+
+        public override void NetReceive(BinaryReader reader)
+        {
+            base.NetReceive(reader);
+
+            if (Mod.NetID < 0)
+            {
+                return;
+            }
+
+            var amt = reader.ReadInt32();
+            for (var i = 0; i < amt; i++)
+            {
+                NamedDowns[reader.ReadString()] = reader.ReadBoolean();
+            }
+        }
+    }
+
     private static readonly Dictionary<Mod, DownedFlagSystem> systems = [];
     private static readonly Dictionary<string, DownedHandler> handlers = [];
 
@@ -154,70 +219,5 @@ public static class DownedFlagHandler
     private static string GetId(string modName, string name)
     {
         return modName + '/' + name;
-    }
-
-    [Autoload(false)]
-    private sealed class DownedFlagSystem : ModSystem
-    {
-        public Dictionary<string, bool> NamedDowns { get; } = [];
-
-        public override void SaveWorldData(TagCompound tag)
-        {
-            base.SaveWorldData(tag);
-
-            foreach (var (name, val) in NamedDowns)
-            {
-                tag.Add(name, val);
-            }
-        }
-
-        public override void LoadWorldData(TagCompound tag)
-        {
-            base.LoadWorldData(tag);
-
-            foreach (var name in NamedDowns.Keys)
-            {
-                if (tag.TryGet<bool>(name, out var val))
-                {
-                    NamedDowns[name] = val;
-                }
-            }
-        }
-
-        // TODO: Reduce network bandwidth.  We need to sync names, but can maybe
-        //       write all boolean values to a bit-array structure.
-
-        public override void NetSend(BinaryWriter writer)
-        {
-            base.NetSend(writer);
-
-            if (Mod.NetID < 0)
-            {
-                return;
-            }
-
-            writer.Write(NamedDowns.Count);
-            foreach (var (name, val) in NamedDowns)
-            {
-                writer.Write(name);
-                writer.Write(val);
-            }
-        }
-
-        public override void NetReceive(BinaryReader reader)
-        {
-            base.NetReceive(reader);
-
-            if (Mod.NetID < 0)
-            {
-                return;
-            }
-
-            var amt = reader.ReadInt32();
-            for (var i = 0; i < amt; i++)
-            {
-                NamedDowns[reader.ReadString()] = reader.ReadBoolean();
-            }
-        }
     }
 }

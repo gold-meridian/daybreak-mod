@@ -32,6 +32,94 @@ namespace Daybreak.Common.Features.ModPanel;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
 public abstract class ModPanelStyle : ModType
 {
+    private readonly struct TextureOverrider : IDisposable
+    {
+        private readonly Dictionary<TextureKind, Asset<Texture2D>> originals = [];
+
+        public TextureOverrider(Dictionary<TextureKind, Asset<Texture2D>> overrides)
+        {
+            foreach (var (kind, @override) in overrides)
+            {
+                originals[kind] = Get(kind);
+                Set(kind, @override);
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var (kind, original) in originals)
+            {
+                Set(kind, original);
+            }
+        }
+
+        private static Asset<Texture2D> Get(TextureKind kind)
+        {
+            switch (kind)
+            {
+                case TextureKind.ModInfo:
+                    return UICommon.ButtonModInfoTexture;
+
+                case TextureKind.ModConfig:
+                    return UICommon.ButtonModConfigTexture;
+
+                case TextureKind.Deps:
+                    return UICommon.ButtonDepsTexture;
+
+                case TextureKind.TranslationMod:
+                    return UICommon.ButtonTranslationModTexture;
+
+                case TextureKind.Error:
+                    return UICommon.ButtonErrorTexture;
+
+                case TextureKind.InnerPanel:
+                    return UICommon.InnerPanelTexture;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(kind), kind, null);
+            }
+        }
+
+        private static void Set(TextureKind kind, Asset<Texture2D> asset)
+        {
+            switch (kind)
+            {
+                case TextureKind.ModInfo:
+                    UICommon.ButtonModInfoTexture = asset;
+                    break;
+
+                case TextureKind.ModConfig:
+                    UICommon.ButtonModConfigTexture = asset;
+                    break;
+
+                case TextureKind.Deps:
+                    UICommon.ButtonDepsTexture = asset;
+                    break;
+
+                case TextureKind.TranslationMod:
+                    UICommon.ButtonTranslationModTexture = asset;
+                    break;
+
+                case TextureKind.Error:
+                    UICommon.ButtonErrorTexture = asset;
+                    break;
+
+                case TextureKind.InnerPanel:
+                    UICommon.InnerPanelTexture = asset;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(kind), kind, null);
+            }
+        }
+    }
+
+    /// <summary>
+    ///     An "information" item for the panel, such as the amount of items the
+    ///     mod adds.
+    /// </summary>
+    public readonly record struct PanelInfo(UIHoverImage InfoImage);
+
     /// <summary>
     ///     The 'texture kind', denoting known textures that can be overridden.
     /// </summary>
@@ -317,92 +405,4 @@ public abstract class ModPanelStyle : ModType
             );
         }
     }
-
-    private readonly struct TextureOverrider : IDisposable
-    {
-        private readonly Dictionary<TextureKind, Asset<Texture2D>> originals = [];
-
-        public TextureOverrider(Dictionary<TextureKind, Asset<Texture2D>> overrides)
-        {
-            foreach (var (kind, @override) in overrides)
-            {
-                originals[kind] = Get(kind);
-                Set(kind, @override);
-            }
-        }
-
-        public void Dispose()
-        {
-            foreach (var (kind, original) in originals)
-            {
-                Set(kind, original);
-            }
-        }
-
-        private static Asset<Texture2D> Get(TextureKind kind)
-        {
-            switch (kind)
-            {
-                case TextureKind.ModInfo:
-                    return UICommon.ButtonModInfoTexture;
-
-                case TextureKind.ModConfig:
-                    return UICommon.ButtonModConfigTexture;
-
-                case TextureKind.Deps:
-                    return UICommon.ButtonDepsTexture;
-
-                case TextureKind.TranslationMod:
-                    return UICommon.ButtonTranslationModTexture;
-
-                case TextureKind.Error:
-                    return UICommon.ButtonErrorTexture;
-
-                case TextureKind.InnerPanel:
-                    return UICommon.InnerPanelTexture;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(kind), kind, null);
-            }
-        }
-
-        private static void Set(TextureKind kind, Asset<Texture2D> asset)
-        {
-            switch (kind)
-            {
-                case TextureKind.ModInfo:
-                    UICommon.ButtonModInfoTexture = asset;
-                    break;
-
-                case TextureKind.ModConfig:
-                    UICommon.ButtonModConfigTexture = asset;
-                    break;
-
-                case TextureKind.Deps:
-                    UICommon.ButtonDepsTexture = asset;
-                    break;
-
-                case TextureKind.TranslationMod:
-                    UICommon.ButtonTranslationModTexture = asset;
-                    break;
-
-                case TextureKind.Error:
-                    UICommon.ButtonErrorTexture = asset;
-                    break;
-
-                case TextureKind.InnerPanel:
-                    UICommon.InnerPanelTexture = asset;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(kind), kind, null);
-            }
-        }
-    }
-
-    /// <summary>
-    ///     An "information" item for the panel, such as the amount of items the
-    ///     mod adds.
-    /// </summary>
-    public readonly record struct PanelInfo(UIHoverImage InfoImage);
 }

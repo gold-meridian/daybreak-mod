@@ -59,8 +59,8 @@ public abstract partial class PotBehavior
         {
             Projectile.NewProjectile(
                 WorldGen.GetProjectileSource_TileBreak(i, j),
-                i * 16 + 16,
-                j * 16 + 16,
+                (i * 16) + 16,
+                (j * 16) + 16,
                 0f,
                 -12f,
                 ProjectileID.CoinPortal,
@@ -103,8 +103,8 @@ public abstract partial class PotBehavior
 
         Projectile.NewProjectile(
             WorldGen.GetProjectileSource_TileBreak(i, j),
-            i * 16 + 16,
-            j * 16 + 8,
+            (i * 16) + 16,
+            (j * 16) + 8,
             Main.rand.Next(-100, 101) * 0.002f,
             0f,
             ProjectileID.Bomb,
@@ -147,8 +147,8 @@ public abstract partial class PotBehavior
         {
             var slime = NPC.NewNPC(
                 NPC.GetSpawnSourceForNaturalSpawn(),
-                x2 * 16 + 16,
-                y2 * 16 + 32,
+                (x2 * 16) + 16,
+                (y2 * 16) + 32,
                 NPCID.JungleSlime
             );
 
@@ -174,8 +174,8 @@ public abstract partial class PotBehavior
 
             var slime = NPC.NewNPC(
                 NPC.GetSpawnSourceForNaturalSpawn(),
-                x2 * 16 + 16,
-                y2 * 16 + 32,
+                (x2 * 16) + 16,
+                (y2 * 16) + 32,
                 slimeType
             );
 
@@ -191,8 +191,8 @@ public abstract partial class PotBehavior
         {
             var slime = NPC.NewNPC(
                 NPC.GetSpawnSourceForNaturalSpawn(),
-                x2 * 16 + 16,
-                y2 * 16 + 32,
+                (x2 * 16) + 16,
+                (y2 * 16) + 32,
                 NPCID.BlackSlime
             );
 

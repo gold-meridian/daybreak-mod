@@ -18,38 +18,6 @@ namespace Daybreak.Content.Compatibility;
 [ExtendsFromMod("BetterExpertRarity")]
 internal sealed class BetterExpertRarityCompat : ModSystem
 {
-    public override void Load()
-    {
-        base.Load();
-
-        MonoModHooks.Add(
-            typeof(RarityModifierGlobalItem).GetMethod(nameof(Load), BindingFlags.Public | BindingFlags.Instance),
-            RarityModifierGlobalItem_Load_Disable
-        );
-
-        MonoModHooks.Add(
-            typeof(RarityModifierGlobalItem).GetMethod(nameof(GlobalItem.PreDrawTooltipLine), BindingFlags.Public | BindingFlags.Instance),
-            RarityModifierGlobalItem_PreDrawTooltipLine_Disable
-        );
-    }
-
-    public override void PostSetupContent()
-    {
-        base.PostSetupContent();
-
-        foreach (var rarityMod in RarityModifierSystem.Modifiers)
-        {
-            DaybreakRaritySets.SpecialRarity[rarityMod.RarityType] = new BetterExpertRaritySpecialRarity(rarityMod);
-        }
-    }
-
-    private static void RarityModifierGlobalItem_Load_Disable(GlobalItem self) { }
-
-    private static bool RarityModifierGlobalItem_PreDrawTooltipLine_Disable(GlobalItem self, Item item, DrawableTooltipLine line, ref int yOffset)
-    {
-        return true;
-    }
-
     private readonly struct BetterExpertRaritySpecialRarity(RarityModifier rarityMod) : IRarityTextRenderer
     {
         void IRarityTextRenderer.RenderText(
@@ -81,5 +49,37 @@ internal sealed class BetterExpertRarityCompat : ModSystem
                 }
             );
         }
+    }
+
+    public override void Load()
+    {
+        base.Load();
+
+        MonoModHooks.Add(
+            typeof(RarityModifierGlobalItem).GetMethod(nameof(Load), BindingFlags.Public | BindingFlags.Instance),
+            RarityModifierGlobalItem_Load_Disable
+        );
+
+        MonoModHooks.Add(
+            typeof(RarityModifierGlobalItem).GetMethod(nameof(GlobalItem.PreDrawTooltipLine), BindingFlags.Public | BindingFlags.Instance),
+            RarityModifierGlobalItem_PreDrawTooltipLine_Disable
+        );
+    }
+
+    public override void PostSetupContent()
+    {
+        base.PostSetupContent();
+
+        foreach (var rarityMod in RarityModifierSystem.Modifiers)
+        {
+            DaybreakRaritySets.SpecialRarity[rarityMod.RarityType] = new BetterExpertRaritySpecialRarity(rarityMod);
+        }
+    }
+
+    private static void RarityModifierGlobalItem_Load_Disable(GlobalItem self) { }
+
+    private static bool RarityModifierGlobalItem_PreDrawTooltipLine_Disable(GlobalItem self, Item item, DrawableTooltipLine line, ref int yOffset)
+    {
+        return true;
     }
 }

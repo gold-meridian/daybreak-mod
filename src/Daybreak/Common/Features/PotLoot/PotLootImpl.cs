@@ -48,7 +48,7 @@ internal sealed class PotLootImpl : ModSystem
                 int frameXOffset;
                 for (frameXOffset = Main.tile[x, y].frameX / 18; frameXOffset > 1; frameXOffset -= 2) { }
 
-                if (!Main.tile[x, y].active() || Main.tile[x, y].type != type || frameXOffset != x - startX || Main.tile[x, y].frameY != (y - startY) * 18 + style * 36)
+                if (!Main.tile[x, y].active() || Main.tile[x, y].type != type || frameXOffset != x - startX || Main.tile[x, y].frameY != ((y - startY) * 18) + (style * 36))
                 {
                     dontHandleBreak = true;
                 }
@@ -128,7 +128,7 @@ internal sealed class PotLootImpl : ModSystem
 
         var coinMult = potBehavior.GetInitialCoinMult(ctx);
         {
-            coinMult = (coinMult * 2f + 1f) / 3f;
+            coinMult = ((coinMult * 2f) + 1f) / 3f;
         }
 
         var ctxWithCoinValue = new PotLootContextWithCoinMult(
@@ -268,31 +268,31 @@ internal sealed class PotLootImpl : ModSystem
             coinAmount *= 1.25f;
         }
 
-        coinAmount *= 1f + Main.rand.Next(-20, 21) * 0.01f;
+        coinAmount *= 1f + (Main.rand.Next(-20, 21) * 0.01f);
 
         if (Main.rand.NextBool(4))
         {
-            coinAmount *= 1f + Main.rand.Next(5, 11) * 0.01f;
+            coinAmount *= 1f + (Main.rand.Next(5, 11) * 0.01f);
         }
 
         if (Main.rand.NextBool(8))
         {
-            coinAmount *= 1f + Main.rand.Next(10, 21) * 0.01f;
+            coinAmount *= 1f + (Main.rand.Next(10, 21) * 0.01f);
         }
 
         if (Main.rand.NextBool(12))
         {
-            coinAmount *= 1f + Main.rand.Next(20, 41) * 0.01f;
+            coinAmount *= 1f + (Main.rand.Next(20, 41) * 0.01f);
         }
 
         if (Main.rand.NextBool(16))
         {
-            coinAmount *= 1f + Main.rand.Next(40, 81) * 0.01f;
+            coinAmount *= 1f + (Main.rand.Next(40, 81) * 0.01f);
         }
 
         if (Main.rand.NextBool(20))
         {
-            coinAmount *= 1f + Main.rand.Next(50, 101) * 0.01f;
+            coinAmount *= 1f + (Main.rand.Next(50, 101) * 0.01f);
         }
 
         if (Main.expertMode)

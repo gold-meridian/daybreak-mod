@@ -114,7 +114,7 @@ internal static class HookLoader
             var loadableTypes = AssemblyManager.GetLoadableTypes(mod.Code)
                                                .OrderBy(x => x.FullName, StringComparer.InvariantCulture)
                                                .ToArray();
-            LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), CallOnUnloads);
+            LoaderUtils.ForEachAndAggregateExceptions(loadableTypes.Reverse(), CallOnUnloads);
 
             foreach (var loadable in mod.GetContent().Reverse())
             {
@@ -128,7 +128,7 @@ internal static class HookLoader
     private static void CallOnUnloads(ILoadable instance)
     {
         var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-        foreach (var method in Enumerable.Reverse(methods))
+        foreach (var method in methods.Reverse())
         {
             var attribute = method.GetCustomAttribute<OnUnloadAttribute>(inherit: false);
             if (attribute is null)
@@ -163,7 +163,7 @@ internal static class HookLoader
     private static void CallOnUnloads(Type type)
     {
         var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-        foreach (var method in Enumerable.Reverse(methods))
+        foreach (var method in methods.Reverse())
         {
             var attribute = method.GetCustomAttribute<OnUnloadAttribute>(inherit: false);
             if (attribute is null)

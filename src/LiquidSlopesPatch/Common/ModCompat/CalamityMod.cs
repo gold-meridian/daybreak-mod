@@ -14,31 +14,6 @@ namespace LiquidSlopesPatch.Common.ModCompat;
 [ExtendsFromMod("CalamityMod")]
 internal sealed class CalamityMod : ModSystem
 {
-    /*[NoJIT]
-    private static class CalamityModPostSso
-    {
-        public static void Load()
-        {
-            var ilc = typeof(ILChanges);
-
-            // MonoModHooks.Add(ilc.GetMethod(LavaBubbleReplacer, BindingFlags.NonPublic | BindingFlags.Static), LavaBubbleReplacer);
-        }
-    }*/
-
-    public override void Load()
-    {
-        base.Load();
-
-        if (ModLoader.GetMod("CalamityMod").Version >= new Version(2, 1))
-        {
-            // CalamityModPostSso.Load();
-        }
-        else
-        {
-            CalamityModPreSso.Load();
-        }
-    }
-
     [NoJIT]
     private static class CalamityModPreSso
     {
@@ -121,6 +96,30 @@ internal sealed class CalamityMod : ModSystem
                     return initialColor;
                 }
             );
+        }
+    }
+    /*[NoJIT]
+    private static class CalamityModPostSso
+    {
+        public static void Load()
+        {
+            var ilc = typeof(ILChanges);
+
+            // MonoModHooks.Add(ilc.GetMethod(LavaBubbleReplacer, BindingFlags.NonPublic | BindingFlags.Static), LavaBubbleReplacer);
+        }
+    }*/
+
+    public override void Load()
+    {
+        base.Load();
+
+        if (ModLoader.GetMod("CalamityMod").Version >= new Version(2, 1))
+        {
+            // CalamityModPostSso.Load();
+        }
+        else
+        {
+            CalamityModPreSso.Load();
         }
     }
 }

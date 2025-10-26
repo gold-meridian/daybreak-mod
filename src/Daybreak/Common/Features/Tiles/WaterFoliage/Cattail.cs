@@ -118,10 +118,10 @@ public abstract class CattailTile : ModTile, ICattail
                 else
                 {
                     var num2 = WorldGen.genRand.Next(3);
-                    Main.tile[x, num].frameX = (short)(126 + num2 * 18);
+                    Main.tile[x, num].frameX = (short)(126 + (num2 * 18));
                     Main.tile[x, num - 1].active(active: true);
                     Main.tile[x, num - 1].type = Type;
-                    Main.tile[x, num - 1].frameX = (short)(180 + num2 * 18);
+                    Main.tile[x, num - 1].frameX = (short)(180 + (num2 * 18));
                     Main.tile[x, num - 1].frameY = Main.tile[x, num].frameY;
                     Main.tile[x, num - 1].halfBrick(halfBrick: false);
                     Main.tile[x, num - 1].slope(0);

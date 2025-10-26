@@ -10,6 +10,8 @@ namespace Daybreak.Common.Features.NPCs;
 /// </summary>
 public static class VanillaDownedFlags
 {
+    private delegate ref bool GetValue();
+
     public static DownedFlagHandle KingSlime { get; } = Vanilla(NPCID.KingSlime, () => ref NPC.downedSlimeKing);
 
     public static DownedFlagHandle EyeOfCthulhu { get; } = Vanilla(NPCID.EyeofCthulhu, () => ref NPC.downedBoss1);
@@ -102,6 +104,4 @@ public static class VanillaDownedFlags
     {
         return DownedFlagHandler.RegisterCustomHandle("Terraria", name, () => valueProvider(), v => valueProvider() = v);
     }
-
-    private delegate ref bool GetValue();
 }

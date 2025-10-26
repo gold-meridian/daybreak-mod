@@ -32,19 +32,6 @@ namespace Daybreak.Common.Assets;
 [PublicAPI]
 public static class AssetReplacer
 {
-    /// <summary>
-    ///     Replaces the given asset with the new value.
-    /// </summary>
-    /// <param name="oldAsset">The asset to replace.</param>
-    /// <param name="newAsset">The new asset.</param>
-    /// <typeparam name="T">The asset type.</typeparam>
-    /// <returns>A handle to the asset replacement.</returns>
-    public static Handle<T> Replace<T>(Asset<T> oldAsset, T newAsset)
-        where T : class
-    {
-        return new Handle<T>(new ReLogicMutableAssetProvider<T>(oldAsset), newAsset);
-    }
-
     // Implementation detail for curious developers: the actual logic is indeed
     // performed in the handle, but this is not a contractual obligation of the
     // API.  All replacements should go through AssetReplacer::Replace<T>.
@@ -74,6 +61,19 @@ public static class AssetReplacer
         {
             source.Asset = original;
         }
+    }
+
+    /// <summary>
+    ///     Replaces the given asset with the new value.
+    /// </summary>
+    /// <param name="oldAsset">The asset to replace.</param>
+    /// <param name="newAsset">The new asset.</param>
+    /// <typeparam name="T">The asset type.</typeparam>
+    /// <returns>A handle to the asset replacement.</returns>
+    public static Handle<T> Replace<T>(Asset<T> oldAsset, T newAsset)
+        where T : class
+    {
+        return new Handle<T>(new ReLogicMutableAssetProvider<T>(oldAsset), newAsset);
     }
 
     // TODO: Add more of these APIs as they become relevant.  Users can fill

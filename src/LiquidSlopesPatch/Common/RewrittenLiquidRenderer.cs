@@ -12,6 +12,69 @@ namespace LiquidSlopesPatch.Common;
 
 public static partial class RewrittenLiquidRenderer
 {
+    public struct LiquidCache
+    {
+        public float LiquidLevel;
+        public float VisibleLiquidLevel;
+        public float Opacity;
+        public bool IsSolid;
+        public bool IsHalfBrick;
+        public bool HasLiquid;
+        public bool HasVisibleLiquid;
+        public bool HasWall;
+        public Point FrameOffset;
+        public bool HasLeftEdge;
+        public bool HasRightEdge;
+        public bool HasTopEdge;
+        public bool HasBottomEdge;
+        public float LeftWall;
+        public float RightWall;
+        public float BottomWall;
+        public float TopWall;
+        public float VisibleLeftWall;
+        public float VisibleRightWall;
+        public float VisibleBottomWall;
+        public float VisibleTopWall;
+        public byte Type;
+        public byte VisibleType;
+        public LiquidEdgeData? EdgeData;
+    }
+
+    public struct LiquidDrawCache
+    {
+        public int X;
+        public int Y;
+        public Rectangle SourceRectangle;
+        public Vector2 LiquidOffset;
+        public bool IsVisible;
+        public float Opacity;
+        public byte Type;
+        public bool IsSurfaceLiquid;
+        public bool HasWall;
+        public LiquidEdgeData? EdgeData;
+    }
+
+    /*
+    private struct SpecialLiquidDrawCache
+    {
+        public int X;
+        public int Y;
+        public Rectangle SourceRectangle;
+        public Vector2 LiquidOffset;
+        public bool IsVisible;
+        public float Opacity;
+        public byte Type;
+        public bool IsSurfaceLiquid;
+        public bool HasWall;
+    }
+    */
+
+    public struct LiquidEdgeData
+    {
+        public Rectangle SourceRectangle;
+        public Vector2 LiquidOffset;
+    }
+
     private static LiquidCache[] _cache = new LiquidCache[1];
 
     private static LiquidDrawCache[] _drawCache = new LiquidDrawCache[1];
@@ -768,12 +831,12 @@ public static partial class RewrittenLiquidRenderer
 
     public static float GetShimmerWave(ref float worldPositionX, ref float worldPositionY)
     {
-        return (float)Math.Sin((((worldPositionX + worldPositionY / 6f) / 10f) - Main.timeForVisualEffects / 360.0) * 6.2831854820251465);
+        return (float)Math.Sin((((worldPositionX + (worldPositionY / 6f)) / 10f) - (Main.timeForVisualEffects / 360.0)) * 6.2831854820251465);
     }
 
     public static Color GetShimmerGlitterColor(bool top, float worldPositionX, float worldPositionY)
     {
-        var color = Main.hslToRgb((float)((worldPositionX + worldPositionY / 6f + Main.timeForVisualEffects / 30.0) / 6.0) % 1f, 1f, 0.5f);
+        var color = Main.hslToRgb((float)((worldPositionX + (worldPositionY / 6f) + (Main.timeForVisualEffects / 30.0)) / 6.0) % 1f, 1f, 0.5f);
         color.A = 0;
         return new Color(color.ToVector4() * GetShimmerGlitterOpacity(top, worldPositionX, worldPositionY));
     }
@@ -785,15 +848,15 @@ public static partial class RewrittenLiquidRenderer
             return 0.5f;
         }
 
-        var num = Utils.Remap((float)Math.Sin((((worldPositionX + worldPositionY / 6f) / 10f) - Main.timeForVisualEffects / 360.0) * 6.2831854820251465), -0.5f, 1f, 0f, 0.35f);
-        var num2 = (float)Math.Sin((SimpleWhiteNoise((uint)worldPositionX, (uint)worldPositionY) / 10f) + Main.timeForVisualEffects / 180.0);
+        var num = Utils.Remap((float)Math.Sin((((worldPositionX + (worldPositionY / 6f)) / 10f) - (Main.timeForVisualEffects / 360.0)) * 6.2831854820251465), -0.5f, 1f, 0f, 0.35f);
+        var num2 = (float)Math.Sin((SimpleWhiteNoise((uint)worldPositionX, (uint)worldPositionY) / 10f) + (Main.timeForVisualEffects / 180.0));
         return Utils.Remap(num * num2, 0f, 0.5f, 0f, 1f);
     }
 
     private static uint SimpleWhiteNoise(uint x, uint y)
     {
-        x = 36469 * (x & 0xFFFF) + (x >> 16);
-        y = 18012 * (y & 0xFFFF) + (y >> 16);
+        x = (36469 * (x & 0xFFFF)) + (x >> 16);
+        y = (18012 * (y & 0xFFFF)) + (y >> 16);
         return (x << 16) + y;
     }
 
@@ -801,26 +864,26 @@ public static partial class RewrittenLiquidRenderer
     {
         worldPositionX += 0.5f;
         worldPositionY += 0.5f;
-        var num = ((worldPositionX + worldPositionY / 6f) / 10f) - Main.timeForVisualEffects / 360.0;
+        var num = ((worldPositionX + (worldPositionY / 6f)) / 10f) - (Main.timeForVisualEffects / 360.0);
         if (!top)
         {
             num += worldPositionX + worldPositionY;
         }
 
-        return ((int)num % 16 + 16) % 16;
+        return (((int)num % 16) + 16) % 16;
     }
 
     public static Vector4 GetShimmerBaseColor(float worldPositionX, float worldPositionY)
     {
         var shimmerWave = GetShimmerWave(ref worldPositionX, ref worldPositionY);
-        return Vector4.Lerp(new Vector4(0.64705884f, 26f / 51f, 14f / 15f, 1f), new Vector4(41f / 51f, 41f / 51f, 1f, 1f), 0.1f + shimmerWave * 0.4f);
+        return Vector4.Lerp(new Vector4(0.64705884f, 26f / 51f, 14f / 15f, 1f), new Vector4(41f / 51f, 41f / 51f, 1f, 1f), 0.1f + (shimmerWave * 0.4f));
     }
 
     public static bool HasFullWater(LiquidRenderer unusedArg0Filler, int x, int y)
     {
         x -= _drawArea.X;
         y -= _drawArea.Y;
-        var num = x * _drawArea.Height + y;
+        var num = (x * _drawArea.Height) + y;
         if (num >= 0 && num < _drawCache.Length)
         {
             if (_drawCache[num].IsVisible)
@@ -843,7 +906,7 @@ public static partial class RewrittenLiquidRenderer
             return 0f;
         }
 
-        var num = (x + 2) * (_drawArea.Height + 4) + y + 2;
+        var num = ((x + 2) * (_drawArea.Height + 4)) + y + 2;
         if (!_cache[num].HasVisibleLiquid)
         {
             return 0f;
@@ -905,68 +968,5 @@ public static partial class RewrittenLiquidRenderer
     public static Rectangle GetCachedDrawArea(LiquidRenderer unusedArg0Filler)
     {
         return _drawArea;
-    }
-
-    public struct LiquidCache
-    {
-        public float LiquidLevel;
-        public float VisibleLiquidLevel;
-        public float Opacity;
-        public bool IsSolid;
-        public bool IsHalfBrick;
-        public bool HasLiquid;
-        public bool HasVisibleLiquid;
-        public bool HasWall;
-        public Point FrameOffset;
-        public bool HasLeftEdge;
-        public bool HasRightEdge;
-        public bool HasTopEdge;
-        public bool HasBottomEdge;
-        public float LeftWall;
-        public float RightWall;
-        public float BottomWall;
-        public float TopWall;
-        public float VisibleLeftWall;
-        public float VisibleRightWall;
-        public float VisibleBottomWall;
-        public float VisibleTopWall;
-        public byte Type;
-        public byte VisibleType;
-        public LiquidEdgeData? EdgeData;
-    }
-
-    public struct LiquidDrawCache
-    {
-        public int X;
-        public int Y;
-        public Rectangle SourceRectangle;
-        public Vector2 LiquidOffset;
-        public bool IsVisible;
-        public float Opacity;
-        public byte Type;
-        public bool IsSurfaceLiquid;
-        public bool HasWall;
-        public LiquidEdgeData? EdgeData;
-    }
-
-    /*
-    private struct SpecialLiquidDrawCache
-    {
-        public int X;
-        public int Y;
-        public Rectangle SourceRectangle;
-        public Vector2 LiquidOffset;
-        public bool IsVisible;
-        public float Opacity;
-        public byte Type;
-        public bool IsSurfaceLiquid;
-        public bool HasWall;
-    }
-    */
-
-    public struct LiquidEdgeData
-    {
-        public Rectangle SourceRectangle;
-        public Vector2 LiquidOffset;
     }
 }
