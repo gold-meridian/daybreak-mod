@@ -41,6 +41,7 @@ internal sealed class ModPanelRenderer
             if (!ModLoader.TryGetMod(_mod.Name, out var mod) || !TryGetPanelStyle(mod, out var style))
             {
                 base.Draw(spriteBatch);
+                OverrideAuthorTooltip(mod, _tooltip, _mod.properties.author);
                 return;
             }
 
@@ -53,6 +54,7 @@ internal sealed class ModPanelRenderer
                     base.Draw(spriteBatch);
                 }
 
+                OverrideAuthorTooltip(mod, _tooltip, _mod.properties.author);
                 style.PostDraw(this, spriteBatch);
 
                 currentMod = null;
@@ -558,6 +560,7 @@ internal sealed class ModPanelRenderer
         if (!ModLoader.TryGetMod(self._mod.Name, out var mod) || !TryGetPanelStyle(mod, out var style))
         {
             orig(self, spriteBatch);
+            OverrideAuthorTooltip(mod, self._tooltip, self._mod.properties.author);
             return;
         }
 
@@ -572,7 +575,23 @@ internal sealed class ModPanelRenderer
 
             style.PostDraw(self, spriteBatch);
 
+            OverrideAuthorTooltip(mod, self._tooltip, self._mod.properties.author);
+
             currentMod = null;
+        }
+    }
+
+    private static void OverrideAuthorTooltip(Mod mod, string tooltip, string author)
+    {
+        // Override the author tooltip with a mod-provided one.
+        if (mod is not IHasCustomAuthorMessage authorMessageProvider)
+        {
+            return;
+        }
+
+        if (tooltip == Language.GetTextValue("tModLoader.ModsByline", author))
+        {
+            UICommon.TooltipMouseText(authorMessageProvider.GetAuthorText());
         }
     }
 

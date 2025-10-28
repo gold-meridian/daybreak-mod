@@ -1,3 +1,4 @@
+using Daybreak.Common.Features.Authorship;
 using Daybreak.Common.Features.ModPanel;
 using Daybreak.Content.UI;
 using Terraria;
@@ -9,7 +10,7 @@ namespace Daybreak;
 /// <summary>
 ///     The <see cref="Mod" /> implementation for DAYBREAK.
 /// </summary>
-partial class ModImpl : IHasCustomModConfigButton
+partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
 {
     /// <inheritdoc />
     public ModImpl()
@@ -28,5 +29,10 @@ partial class ModImpl : IHasCustomModConfigButton
         };
 
         return button;
+    }
+
+    string IHasCustomAuthorMessage.GetAuthorText()
+    {
+        return AuthorText.GetAuthorTooltip(this, headerText: null);
     }
 }
