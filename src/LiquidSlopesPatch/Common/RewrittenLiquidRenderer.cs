@@ -118,14 +118,14 @@ public static partial class RewrittenLiquidRenderer
 
         var rectangle = new Rectangle(drawArea.X - 2, drawArea.Y - 2, drawArea.Width + 4, drawArea.Height + 4);
         _drawArea = drawArea;
-        if (_cache.Length < (rectangle.Width * rectangle.Height) + 1)
+        if (_cache.Length < rectangle.Width * rectangle.Height + 1)
         {
-            _cache = new LiquidCache[(rectangle.Width * rectangle.Height) + 1];
+            _cache = new LiquidCache[rectangle.Width * rectangle.Height + 1];
         }
 
-        if (_drawCache.Length < (drawArea.Width * drawArea.Height) + 1)
+        if (_drawCache.Length < drawArea.Width * drawArea.Height + 1)
         {
-            _drawCache = new LiquidDrawCache[(drawArea.Width * drawArea.Height) + 1];
+            _drawCache = new LiquidDrawCache[drawArea.Width * drawArea.Height + 1];
         }
 
         // TML: Liquid draw caches merged, initialization redundant
@@ -143,7 +143,7 @@ public static partial class RewrittenLiquidRenderer
         fixed (LiquidCache* ptr = &_cache[1])
         {
             var ptr2 = ptr;
-            var num = (rectangle.Height * 2) + 2;
+            var num = rectangle.Height * 2 + 2;
             ptr2 = ptr;
             for (var i = rectangle.X; i < rectangle.X + rectangle.Width; i++)
             {
@@ -390,12 +390,12 @@ public static partial class RewrittenLiquidRenderer
                         {
                             if (ptr2->HasLeftEdge)
                             {
-                                ptr2->VisibleLeftWall = ((ptr2->LeftWall * 2f) + liquidCache.LeftWall + liquidCache2.LeftWall) * 0.25f;
+                                ptr2->VisibleLeftWall = (ptr2->LeftWall * 2f + liquidCache.LeftWall + liquidCache2.LeftWall) * 0.25f;
                             }
 
                             if (ptr2->HasRightEdge)
                             {
-                                ptr2->VisibleRightWall = ((ptr2->RightWall * 2f) + liquidCache.RightWall + liquidCache2.RightWall) * 0.25f;
+                                ptr2->VisibleRightWall = (ptr2->RightWall * 2f + liquidCache.RightWall + liquidCache2.RightWall) * 0.25f;
                             }
                         }
 
@@ -405,12 +405,12 @@ public static partial class RewrittenLiquidRenderer
                         {
                             if (ptr2->HasTopEdge)
                             {
-                                ptr2->VisibleTopWall = ((ptr2->TopWall * 2f) + liquidCache3.TopWall + liquidCache4.TopWall) * 0.25f;
+                                ptr2->VisibleTopWall = (ptr2->TopWall * 2f + liquidCache3.TopWall + liquidCache4.TopWall) * 0.25f;
                             }
 
                             if (ptr2->HasBottomEdge)
                             {
-                                ptr2->VisibleBottomWall = ((ptr2->BottomWall * 2f) + liquidCache3.BottomWall + liquidCache4.BottomWall) * 0.25f;
+                                ptr2->VisibleBottomWall = (ptr2->BottomWall * 2f + liquidCache3.BottomWall + liquidCache4.BottomWall) * 0.25f;
                             }
                         }
                     }
@@ -483,8 +483,8 @@ public static partial class RewrittenLiquidRenderer
                         {
                             if (liquidCache3.HasTopEdge && liquidCache.HasLeftEdge)
                             {
-                                ptr2->FrameOffset.X = Math.Max(4, (int)(16f - (liquidCache.VisibleLeftWall * 16f))) - 4;
-                                ptr2->FrameOffset.Y = 48 + Math.Max(4, (int)(16f - (liquidCache3.VisibleTopWall * 16f))) - 4;
+                                ptr2->FrameOffset.X = Math.Max(4, (int)(16f - liquidCache.VisibleLeftWall * 16f)) - 4;
+                                ptr2->FrameOffset.Y = 48 + Math.Max(4, (int)(16f - liquidCache3.VisibleTopWall * 16f)) - 4;
                                 ptr2->VisibleLeftWall = 0f;
                                 ptr2->VisibleTopWall = 0f;
                                 ptr2->VisibleRightWall = 1f;
@@ -493,7 +493,7 @@ public static partial class RewrittenLiquidRenderer
                             else if (liquidCache4.HasTopEdge && liquidCache.HasRightEdge)
                             {
                                 ptr2->FrameOffset.X = 32 - Math.Min(16, (int)(liquidCache.VisibleRightWall * 16f) - 4);
-                                ptr2->FrameOffset.Y = 48 + Math.Max(4, (int)(16f - (liquidCache4.VisibleTopWall * 16f))) - 4;
+                                ptr2->FrameOffset.Y = 48 + Math.Max(4, (int)(16f - liquidCache4.VisibleTopWall * 16f)) - 4;
                                 ptr2->VisibleLeftWall = 0f;
                                 ptr2->VisibleTopWall = 0f;
                                 ptr2->VisibleRightWall = 1f;
@@ -534,7 +534,7 @@ public static partial class RewrittenLiquidRenderer
                                 ptr4->X = num18;
                                 ptr4->Y = num19;
                                 ptr4->IsVisible = ptr2->HasWall || !ptr2->IsHalfBrick || !ptr2->HasLiquid || !(ptr2->LiquidLevel < 1f) || ptr2->EdgeData.HasValue;
-                                ptr4->SourceRectangle = new Rectangle((int)(16f - (num21 * 16f)) + ptr2->FrameOffset.X, (int)(16f - (num23 * 16f)) + ptr2->FrameOffset.Y, (int)Math.Ceiling((num21 - num20) * 16f), (int)Math.Ceiling((num23 - num22) * 16f));
+                                ptr4->SourceRectangle = new Rectangle((int)(16f - num21 * 16f) + ptr2->FrameOffset.X, (int)(16f - num23 * 16f) + ptr2->FrameOffset.Y, (int)Math.Ceiling((num21 - num20) * 16f), (int)Math.Ceiling((num23 - num22) * 16f));
                                 ptr4->IsSurfaceLiquid = ptr2->FrameOffset.X == 16 && ptr2->FrameOffset.Y == 0 && num19 + rectangle.Y > Main.worldSurface - 40.0;
                                 ptr4->Opacity = ptr2->Opacity;
                                 ptr4->LiquidOffset = new Vector2((float)Math.Floor(num20 * 16f), (float)Math.Floor(num22 * 16f));
@@ -831,12 +831,12 @@ public static partial class RewrittenLiquidRenderer
 
     public static float GetShimmerWave(ref float worldPositionX, ref float worldPositionY)
     {
-        return (float)Math.Sin((((worldPositionX + (worldPositionY / 6f)) / 10f) - (Main.timeForVisualEffects / 360.0)) * 6.2831854820251465);
+        return (float)Math.Sin(((worldPositionX + worldPositionY / 6f) / 10f - Main.timeForVisualEffects / 360.0) * 6.2831854820251465);
     }
 
     public static Color GetShimmerGlitterColor(bool top, float worldPositionX, float worldPositionY)
     {
-        var color = Main.hslToRgb((float)((worldPositionX + (worldPositionY / 6f) + (Main.timeForVisualEffects / 30.0)) / 6.0) % 1f, 1f, 0.5f);
+        var color = Main.hslToRgb((float)((worldPositionX + worldPositionY / 6f + Main.timeForVisualEffects / 30.0) / 6.0) % 1f, 1f, 0.5f);
         color.A = 0;
         return new Color(color.ToVector4() * GetShimmerGlitterOpacity(top, worldPositionX, worldPositionY));
     }
@@ -848,15 +848,15 @@ public static partial class RewrittenLiquidRenderer
             return 0.5f;
         }
 
-        var num = Utils.Remap((float)Math.Sin((((worldPositionX + (worldPositionY / 6f)) / 10f) - (Main.timeForVisualEffects / 360.0)) * 6.2831854820251465), -0.5f, 1f, 0f, 0.35f);
-        var num2 = (float)Math.Sin((SimpleWhiteNoise((uint)worldPositionX, (uint)worldPositionY) / 10f) + (Main.timeForVisualEffects / 180.0));
+        var num = Utils.Remap((float)Math.Sin(((worldPositionX + worldPositionY / 6f) / 10f - Main.timeForVisualEffects / 360.0) * 6.2831854820251465), -0.5f, 1f, 0f, 0.35f);
+        var num2 = (float)Math.Sin(SimpleWhiteNoise((uint)worldPositionX, (uint)worldPositionY) / 10f + Main.timeForVisualEffects / 180.0);
         return Utils.Remap(num * num2, 0f, 0.5f, 0f, 1f);
     }
 
     private static uint SimpleWhiteNoise(uint x, uint y)
     {
-        x = (36469 * (x & 0xFFFF)) + (x >> 16);
-        y = (18012 * (y & 0xFFFF)) + (y >> 16);
+        x = 36469 * (x & 0xFFFF) + (x >> 16);
+        y = 18012 * (y & 0xFFFF) + (y >> 16);
         return (x << 16) + y;
     }
 
@@ -864,26 +864,26 @@ public static partial class RewrittenLiquidRenderer
     {
         worldPositionX += 0.5f;
         worldPositionY += 0.5f;
-        var num = ((worldPositionX + (worldPositionY / 6f)) / 10f) - (Main.timeForVisualEffects / 360.0);
+        var num = (worldPositionX + worldPositionY / 6f) / 10f - Main.timeForVisualEffects / 360.0;
         if (!top)
         {
             num += worldPositionX + worldPositionY;
         }
 
-        return (((int)num % 16) + 16) % 16;
+        return ((int)num % 16 + 16) % 16;
     }
 
     public static Vector4 GetShimmerBaseColor(float worldPositionX, float worldPositionY)
     {
         var shimmerWave = GetShimmerWave(ref worldPositionX, ref worldPositionY);
-        return Vector4.Lerp(new Vector4(0.64705884f, 26f / 51f, 14f / 15f, 1f), new Vector4(41f / 51f, 41f / 51f, 1f, 1f), 0.1f + (shimmerWave * 0.4f));
+        return Vector4.Lerp(new Vector4(0.64705884f, 26f / 51f, 14f / 15f, 1f), new Vector4(41f / 51f, 41f / 51f, 1f, 1f), 0.1f + shimmerWave * 0.4f);
     }
 
     public static bool HasFullWater(LiquidRenderer unusedArg0Filler, int x, int y)
     {
         x -= _drawArea.X;
         y -= _drawArea.Y;
-        var num = (x * _drawArea.Height) + y;
+        var num = x * _drawArea.Height + y;
         if (num >= 0 && num < _drawCache.Length)
         {
             if (_drawCache[num].IsVisible)
@@ -906,7 +906,7 @@ public static partial class RewrittenLiquidRenderer
             return 0f;
         }
 
-        var num = ((x + 2) * (_drawArea.Height + 4)) + y + 2;
+        var num = (x + 2) * (_drawArea.Height + 4) + y + 2;
         if (!_cache[num].HasVisibleLiquid)
         {
             return 0f;

@@ -12,7 +12,7 @@ using Terraria.UI;
 namespace Daybreak.Common.Features.ItemSlots;
 
 /// <summary>
-///     Loads <see cref="ItemSlotContext"/>s and manages their implementation.
+///     Loads <see cref="ItemSlotContext" />s and manages their implementation.
 /// </summary>
 public sealed class ItemSlotLoader : ModSystem
 {
@@ -20,13 +20,13 @@ public sealed class ItemSlotLoader : ModSystem
     ///     Loaded item slots by index.
     /// </summary>
     private static readonly List<ItemSlotContext> item_slots = [];
-    
+
     /// <summary>
     ///     The original context at a given instance.
     /// </summary>
     [ThreadStatic]
     private static int? originalContext;
-    
+
     /// <summary>
     ///     The total number of loaded item slot contexts, including both
     ///     vanilla and modded.

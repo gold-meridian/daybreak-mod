@@ -7,16 +7,50 @@ using Terraria.UI;
 namespace Daybreak.Common.Features.ItemSlots;
 
 /// <summary>
-///     Base definition for a modded <see cref="ItemSlot"/> context with custom
+///     Base definition for a modded <see cref="ItemSlot" /> context with custom
 ///     logic.
 /// </summary>
 public abstract class ItemSlotContext : ModType
 {
     /// <summary>
     ///     The numeric ID of your item slot, continued at
-    ///     <see cref="ItemSlot.Context.Count"/>.
+    ///     <see cref="ItemSlot.Context.Count" />.
     /// </summary>
     public int Type { get; internal set; }
+
+    // Hooks which are ran in situations where an ItemSlot context is not
+    // directly applied, such as when iterating over all contexts to make a
+    // decision.
+
+#region Context-independent hooks
+    public virtual bool TryHandleSwap(ref Item item, int incomingContext, Player player)
+    {
+        return false;
+    }
+#endregion
+
+    // Hooks which are ran in situations where an ItemSlot context is directly
+    // applied, meaning the caller intends to run the behavior for a known
+    // ItemSlot context.  These hooks are specifically for injecting within
+    // defined behavior and running additional code or tweaking inputs without
+    // assuming completely new behavior.
+
+#region Context-dependent modification hooks
+    public virtual bool ModifyIcon(
+        SpriteBatch spriteBatch,
+        ref Texture2D texture,
+        ref Vector2 position,
+        ref Rectangle? sourceRectangle,
+        ref Color color,
+        ref float rotation,
+        ref Vector2 origin,
+        ref float scale,
+        ref SpriteEffects effects
+    )
+    {
+        return true;
+    }
+#endregion
 
 #region Sealed ModType boilerplate
     /// <inheritdoc />
@@ -41,20 +75,11 @@ public abstract class ItemSlotContext : ModType
     }
 #endregion
 
-    // Hooks which are ran in situations where an ItemSlot context is not
-    // directly applied, such as when iterating over all contexts to make a
-    // decision.
-#region Context-independent hooks
-    public virtual bool TryHandleSwap(ref Item item, int incomingContext, Player player)
-    {
-        return false;
-    }
-#endregion
-    
     // Hooks which are ran in situations where an ItemSlot context is directly
     // applied, meaning the caller intends to run the behavior for a known
     // ItemSlot context.  These hooks are specifically for implementing behavior
     // around known ItemSlot events.
+
 #region Context-dependent implementation hooks
     public virtual bool PreLeftClick(Item item, ref int context)
     {
@@ -118,27 +143,5 @@ public abstract class ItemSlotContext : ModType
     }
 
     public virtual void PostOverrideHover(Item item, int context) { }
-#endregion
-
-    // Hooks which are ran in situations where an ItemSlot context is directly
-    // applied, meaning the caller intends to run the behavior for a known
-    // ItemSlot context.  These hooks are specifically for injecting within
-    // defined behavior and running additional code or tweaking inputs without
-    // assuming completely new behavior.
-#region Context-dependent modification hooks
-    public virtual bool ModifyIcon(
-        SpriteBatch spriteBatch,
-        ref Texture2D texture,
-        ref Vector2 position,
-        ref Rectangle? sourceRectangle,
-        ref Color color,
-        ref float rotation,
-        ref Vector2 origin,
-        ref float scale,
-        ref SpriteEffects effects
-    )
-    {
-        return true;
-    }
 #endregion
 }

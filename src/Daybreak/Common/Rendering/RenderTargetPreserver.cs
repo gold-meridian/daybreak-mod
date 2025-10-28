@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace Daybreak.Common.Rendering;
 
 /// <summary>
-///     Handles preserving the contents of <see cref="RenderTarget2D"/>s.
+///     Handles preserving the contents of <see cref="RenderTarget2D" />s.
 /// </summary>
 public static class RenderTargetPreserver
 {

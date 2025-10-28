@@ -12,10 +12,13 @@ using Terraria.UI.Gamepad;
 namespace Daybreak.Common.Features.Inventory;
 
 /// <summary>
-///     Loads miscellaneuous equip slots.
+///     Loads miscellaneous equip slots.
 /// </summary>
 public sealed class EquipSlotLoader : ModSystem
 {
+    private static readonly List<EquipSlot> slots;
+    private static EquipSlot[] orderedSlots = [];
+
     /// <summary>
     ///     The Pet slot.
     /// </summary>
@@ -41,16 +44,17 @@ public sealed class EquipSlotLoader : ModSystem
     /// </summary>
     public static EquipSlot Hook { get; } = new HookSlot();
 
-    private static readonly List<EquipSlot> slots =
-    [
-        Pet,
-        LightPet,
-        Minecart,
-        Mount,
-        Hook,
-    ];
-
-    private static EquipSlot[] orderedSlots = [];
+    static EquipSlotLoader()
+    {
+        slots =
+        [
+            Pet,
+            LightPet,
+            Minecart,
+            Mount,
+            Hook,
+        ];
+    }
 
     internal static void Register(EquipSlot slot)
     {
@@ -127,7 +131,7 @@ public sealed class EquipSlotLoader : ModSystem
         {
             var slotKind = (EquipSlotKind)i;
 
-            backPanelSize.X = xPos + (i * -47);
+            backPanelSize.X = xPos + i * -47;
 
             for (var slot = 0; slot < orderedSlots.Length; slot++)
             {
@@ -144,7 +148,7 @@ public sealed class EquipSlotLoader : ModSystem
                     canBeToggled = false;
                 }*/
 
-                backPanelSize.Y = yPos + (slot * 47);
+                backPanelSize.Y = yPos + slot * 47;
                 var toggleButton = TextureAssets.InventoryTickOn.Value;
                 var toggleRect = new Rectangle(backPanelSize.Left + 34, backPanelSize.Top - 2, toggleButton.Width, toggleButton.Height);
                 var toggleHovered = false;
@@ -171,7 +175,7 @@ public sealed class EquipSlotLoader : ModSystem
             }
         }
 
-        yPos += (47 * orderedSlots.Length) + 12;
+        yPos += 47 * orderedSlots.Length + 12;
         xPos += 8;
 
         var buffsDrawn = 0;
@@ -179,17 +183,17 @@ public sealed class EquipSlotLoader : ModSystem
 
         const int offset_or_smth = 260;
 
-        if (Main.screenHeight > 630 + (offset_or_smth * (Main.mapStyle == 1).ToInt()))
+        if (Main.screenHeight > 630 + offset_or_smth * (Main.mapStyle == 1).ToInt())
         {
             buffsPerColumn++;
         }
 
-        if (Main.screenHeight > 680 + (offset_or_smth * (Main.mapStyle == 1).ToInt()))
+        if (Main.screenHeight > 680 + offset_or_smth * (Main.mapStyle == 1).ToInt())
         {
             buffsPerColumn++;
         }
 
-        if (Main.screenHeight > 730 + (offset_or_smth * (Main.mapStyle == 1).ToInt()))
+        if (Main.screenHeight > 730 + offset_or_smth * (Main.mapStyle == 1).ToInt())
         {
             buffsPerColumn++;
         }
@@ -206,7 +210,7 @@ public sealed class EquipSlotLoader : ModSystem
 
             var xOff = buffsDrawn / buffsPerColumn;
             var yOff = buffsDrawn % buffsPerColumn;
-            var buffDrawPos = new Point(xPos + (xOff * -buff_size), yPos + (yOff * buff_size));
+            var buffDrawPos = new Point(xPos + xOff * -buff_size, yPos + yOff * buff_size);
             hoveredBuff = Main.DrawBuffIcon(hoveredBuff, i, buffDrawPos.X, buffDrawPos.Y);
             UILinkPointNavigator.SetPosition(9000 + buffsDrawn, new Vector2(buffDrawPos.X + 30, buffDrawPos.Y + 30));
             buffsDrawn++;

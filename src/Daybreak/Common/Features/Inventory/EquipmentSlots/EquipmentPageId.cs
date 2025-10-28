@@ -1,7 +1,7 @@
 namespace Daybreak.Common.Features.Inventory;
 
 // TODO: Finish this?  Unimportant...
- 
+
 /// <summary>
 ///     Well-known equipment page IDs.
 /// </summary>

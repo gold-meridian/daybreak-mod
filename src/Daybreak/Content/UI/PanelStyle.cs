@@ -53,7 +53,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
             var sb = new StringBuilder(character_length * text.Length);
             for (var i = 0; i < text.Length; i++)
             {
-                var wave = MathF.Sin(time * speed + i * offset);
+                var wave = MathF.Sin((time * speed) + (i * offset));
 
                 // Factor normalized 0-1.
                 var color = Color.Lerp(lightOrange, darkOrange, (wave + 1f) / 2f);
@@ -76,7 +76,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
             var texture = aprilFools ? TextureAssets.Sun2.Value : Assets.Images.DaybreakSun.Asset.Value;
             var pulseTexture = Assets.Images.DaybreakSunPulse.Asset.Value;
 
-            var scale = 1f + hoverIntensity * 0.1f + MathF.Sin(Main.GlobalTimeWrappedHourly / 4f) * 0.1f;
+            var scale = 1f + (hoverIntensity * 0.1f) + (MathF.Sin(Main.GlobalTimeWrappedHourly / 4f) * 0.1f);
             var center = dims.Center() + new Vector2(0, MathF.Sin(Main.GlobalTimeWrappedHourly) * 2);
             var rotation = MathF.Sin(Main.GlobalTimeWrappedHourly / 2) * 0.15f;
 
@@ -105,7 +105,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
             );
 
             var pulseTime = Main.GlobalTimeWrappedHourly / 3f % 1f;
-            var upScale = scale * (0.2f + pulseTime * 0.8f);
+            var upScale = scale * (0.2f + (pulseTime * 0.8f));
             var colorFade = 0.8f * MathF.Sin(pulseTime * MathHelper.Pi);
             spriteBatch.Draw(
                 pulseTexture,

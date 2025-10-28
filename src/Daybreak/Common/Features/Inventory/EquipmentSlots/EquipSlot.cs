@@ -8,7 +8,6 @@ using Terraria.ModLoader;
 namespace Daybreak.Common.Features.Inventory;
 
 /// <summary>
-///     
 /// </summary>
 [UsedImplicitly(
     ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature,
@@ -21,29 +20,6 @@ public abstract partial class EquipSlot : ModType
     /// </summary>
     public virtual Position OrderPosition { get; private set; } = new Default();
 
-#region Sealed ModType boilerplate
-    /// <inheritdoc />
-    protected sealed override void Register()
-    {
-        EquipSlotLoader.Register(this);
-        ModTypeLookup<EquipSlot>.Register(this);
-    }
-
-    /// <inheritdoc />
-    protected sealed override void InitTemplateInstance()
-    {
-        base.InitTemplateInstance();
-    }
-
-    /// <inheritdoc />
-    public sealed override void SetupContent()
-    {
-        base.SetupContent();
-
-        SetStaticDefaults();
-    }
-#endregion
-
     /// <summary>
     ///     Gets a reference to the item within this slot.
     /// </summary>
@@ -51,7 +27,7 @@ public abstract partial class EquipSlot : ModType
     public abstract ref Item GetItem(EquipSlotKind kind);
 
     /// <summary>
-    ///     The <see cref="ItemSlotContext"/>.
+    ///     The <see cref="ItemSlotContext" />.
     /// </summary>
     /// <param name="kind">The slot kind.</param>
     public abstract int GetContext(EquipSlotKind kind);
@@ -96,4 +72,27 @@ public abstract partial class EquipSlot : ModType
         Rectangle toggleRect,
         EquipSlotKind kind
     ) { }
+
+#region Sealed ModType boilerplate
+    /// <inheritdoc />
+    protected sealed override void Register()
+    {
+        EquipSlotLoader.Register(this);
+        ModTypeLookup<EquipSlot>.Register(this);
+    }
+
+    /// <inheritdoc />
+    protected sealed override void InitTemplateInstance()
+    {
+        base.InitTemplateInstance();
+    }
+
+    /// <inheritdoc />
+    public sealed override void SetupContent()
+    {
+        base.SetupContent();
+
+        SetStaticDefaults();
+    }
+#endregion
 }

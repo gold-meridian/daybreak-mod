@@ -90,7 +90,7 @@ public sealed class LiquidEdgeRenderer : ModSystem
             for (var i = 0; i < 8; i++)
             {
                 var slopePosY = i * -2;
-                var slopeHeight = 16 - i * 2;
+                var slopeHeight = 16 - (i * 2);
                 var slopeOffsetY = 16 - slopeHeight;
                 int slopePosX;
                 switch (slopeType)
@@ -98,14 +98,14 @@ public sealed class LiquidEdgeRenderer : ModSystem
                     case 1:
                         slopePosY = 0;
                         slopePosX = i * 2;
-                        slopeHeight = 14 - i * 2;
+                        slopeHeight = 14 - (i * 2);
                         slopeOffsetY = 0;
                         break;
 
                     case 2:
                         slopePosY = 0;
-                        slopePosX = 16 - i * 2 - 2;
-                        slopeHeight = 14 - i * 2;
+                        slopePosX = 16 - (i * 2) - 2;
+                        slopeHeight = 14 - (i * 2);
                         slopeOffsetY = 0;
                         break;
 
@@ -114,11 +114,11 @@ public sealed class LiquidEdgeRenderer : ModSystem
                         break;
 
                     default:
-                        slopePosX = 16 - i * 2 - 2;
+                        slopePosX = 16 - (i * 2) - 2;
                         break;
                 }
 
-                spriteBatch.Draw(texture, position + new Vector2(slopePosX, i * 2 + slopePosY), new Rectangle(tileCache.TileFrameX + slopePosX, tileCache.TileFrameY + slopeOffsetY, 2, slopeHeight), Color.White, 0f, Vector2.Zero, 1f, 0, 0f);
+                spriteBatch.Draw(texture, position + new Vector2(slopePosX, (i * 2) + slopePosY), new Rectangle(tileCache.TileFrameX + slopePosX, tileCache.TileFrameY + slopeOffsetY, 2, slopeHeight), Color.White, 0f, Vector2.Zero, 1f, 0, 0f);
             }
 
             var slopeTopOrBottom = slopeType <= 2 ? 14 : 0;

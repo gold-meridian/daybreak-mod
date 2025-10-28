@@ -207,7 +207,7 @@ internal sealed class MinecartSlot : VanillaEquipSlot
             toggleButton = TextureAssets.Extra[ExtrasID.SuperCartDisabled].Value;
         }
 
-        toggleRect = new Rectangle(toggleRect.X + (toggleRect.Width / 2), toggleRect.Y + (toggleRect.Height / 2), toggleRect.Width, toggleRect.Height);
+        toggleRect = new Rectangle(toggleRect.X + toggleRect.Width / 2, toggleRect.Y + toggleRect.Height / 2, toggleRect.Width, toggleRect.Height);
         toggleRect.Offset(-toggleRect.Width / 2, -toggleRect.Height / 2);
         if (!toggleRect.Contains(mouseLoc) || PlayerInput.IgnoreMouseInterface)
         {
