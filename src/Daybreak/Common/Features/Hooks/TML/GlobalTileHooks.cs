@@ -36,6 +36,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalTile::FloorVisuals(System.Int32,Terraria.Player)
 //     System.Void Terraria.ModLoader.GlobalTile::ChangeWaterfallStyle(System.Int32,System.Int32&)
 //     System.Boolean Terraria.ModLoader.GlobalTile::CanReplace(System.Int32,System.Int32,System.Int32,System.Int32)
+//     System.Void Terraria.ModLoader.GlobalTile::ReplaceTile(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
 //     System.Void Terraria.ModLoader.GlobalTile::PostSetupTileMerge()
 //     System.Void Terraria.ModLoader.GlobalTile::PreShakeTree(System.Int32,System.Int32,Terraria.Enums.TreeTypes)
 //     System.Boolean Terraria.ModLoader.GlobalTile::ShakeTree(System.Int32,System.Int32,Terraria.Enums.TreeTypes)
@@ -775,6 +776,34 @@ public static partial class GlobalTileHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalTile_CanReplace_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalTile::CanReplace")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::CanReplace; use a flag to disable behavior.");
+        }
+    }
+
+    public sealed partial class ReplaceTile
+    {
+        public delegate void Original(
+            int i,
+            int j,
+            int type,
+            int targetType,
+            int targetStyle
+        );
+
+        public delegate void Definition(
+            Original orig,
+            Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int type,
+            int targetType,
+            int targetStyle
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalTile_ReplaceTile_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalTile::ReplaceTile")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::ReplaceTile; use a flag to disable behavior.");
         }
     }
 
@@ -1993,6 +2022,42 @@ public sealed partial class GlobalTile_CanReplace_Impl(GlobalTileHooks.CanReplac
             j,
             type,
             tileTypeBeingPlaced
+        );
+    }
+}
+
+public sealed partial class GlobalTile_ReplaceTile_Impl(GlobalTileHooks.ReplaceTile.Definition hook) : Terraria.ModLoader.GlobalTile
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override void ReplaceTile(
+        int i,
+        int j,
+        int type,
+        int targetType,
+        int targetStyle
+    )
+    {
+        hook(
+            (
+                int i_captured,
+                int j_captured,
+                int type_captured,
+                int targetType_captured,
+                int targetStyle_captured
+            ) => base.ReplaceTile(
+                i_captured,
+                j_captured,
+                type_captured,
+                targetType_captured,
+                targetStyle_captured
+            ),
+            this,
+            i,
+            j,
+            type,
+            targetType,
+            targetStyle
         );
     }
 }

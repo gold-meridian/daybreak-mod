@@ -18,6 +18,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.ModSystem::PostSetupRecipes()
 //     System.Void Terraria.ModLoader.ModSystem::AddRecipeGroups()
 //     System.Void Terraria.ModLoader.ModSystem::OnWorldLoad()
+//     System.Void Terraria.ModLoader.ModSystem::PostWorldLoad()
 //     System.Void Terraria.ModLoader.ModSystem::OnWorldUnload()
 //     System.Void Terraria.ModLoader.ModSystem::ClearWorld()
 //     System.Void Terraria.ModLoader.ModSystem::ModifyScreenPosition()
@@ -234,6 +235,23 @@ public static partial class ModSystemHooks
             add => HookLoader.GetModOrThrow().AddContent(new ModSystem_OnWorldLoad_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModSystem::OnWorldLoad")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModSystem::OnWorldLoad; use a flag to disable behavior.");
+        }
+    }
+
+    public sealed partial class PostWorldLoad
+    {
+        public delegate void Original();
+
+        public delegate void Definition(
+            Original orig,
+            Terraria.ModLoader.ModSystem self
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new ModSystem_PostWorldLoad_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModSystem::PostWorldLoad")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModSystem::PostWorldLoad; use a flag to disable behavior.");
         }
     }
 
@@ -1253,6 +1271,19 @@ public sealed partial class ModSystem_OnWorldLoad_Impl(ModSystemHooks.OnWorldLoa
     {
         hook(
             () => base.OnWorldLoad(),
+            this
+        );
+    }
+}
+
+public sealed partial class ModSystem_PostWorldLoad_Impl(ModSystemHooks.PostWorldLoad.Definition hook) : Terraria.ModLoader.ModSystem
+{
+    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+
+    public override void PostWorldLoad()
+    {
+        hook(
+            () => base.PostWorldLoad(),
             this
         );
     }
