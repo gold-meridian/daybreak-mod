@@ -56,6 +56,8 @@ public abstract class AuthorTag : ModTexturedType, ILocalizedModType
     {
         base.SetupContent();
 
+        _ = DisplayName;
+
         SetStaticDefaults();
     }
 #endregion
