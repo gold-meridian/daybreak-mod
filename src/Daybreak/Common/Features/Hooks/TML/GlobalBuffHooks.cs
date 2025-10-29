@@ -269,9 +269,22 @@ public static partial class GlobalBuffHooks
     }
 }
 
-public sealed partial class GlobalBuff_Update_int_Player_int_Impl(GlobalBuffHooks.Update_int_Player_int.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_Update_int_Player_int_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.Update_int_Player_int.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_Update_int_Player_int_Impl(GlobalBuffHooks.Update_int_Player_int.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void Update(
         int type,
@@ -297,9 +310,22 @@ public sealed partial class GlobalBuff_Update_int_Player_int_Impl(GlobalBuffHook
     }
 }
 
-public sealed partial class GlobalBuff_Update_int_NPC_int_Impl(GlobalBuffHooks.Update_int_NPC_int.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_Update_int_NPC_int_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.Update_int_NPC_int.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_Update_int_NPC_int_Impl(GlobalBuffHooks.Update_int_NPC_int.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void Update(
         int type,
@@ -325,9 +351,22 @@ public sealed partial class GlobalBuff_Update_int_NPC_int_Impl(GlobalBuffHooks.U
     }
 }
 
-public sealed partial class GlobalBuff_ReApply_int_Player_int_int_Impl(GlobalBuffHooks.ReApply_int_Player_int_int.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_ReApply_int_Player_int_int_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.ReApply_int_Player_int_int.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_ReApply_int_Player_int_int_Impl(GlobalBuffHooks.ReApply_int_Player_int_int.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override bool ReApply(
         int type,
@@ -357,9 +396,22 @@ public sealed partial class GlobalBuff_ReApply_int_Player_int_int_Impl(GlobalBuf
     }
 }
 
-public sealed partial class GlobalBuff_ReApply_int_NPC_int_int_Impl(GlobalBuffHooks.ReApply_int_NPC_int_int.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_ReApply_int_NPC_int_int_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.ReApply_int_NPC_int_int.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_ReApply_int_NPC_int_int_Impl(GlobalBuffHooks.ReApply_int_NPC_int_int.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override bool ReApply(
         int type,
@@ -389,9 +441,22 @@ public sealed partial class GlobalBuff_ReApply_int_NPC_int_int_Impl(GlobalBuffHo
     }
 }
 
-public sealed partial class GlobalBuff_ModifyBuffText_Impl(GlobalBuffHooks.ModifyBuffText.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_ModifyBuffText_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.ModifyBuffText.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_ModifyBuffText_Impl(GlobalBuffHooks.ModifyBuffText.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyBuffText(
         int type,
@@ -421,9 +486,22 @@ public sealed partial class GlobalBuff_ModifyBuffText_Impl(GlobalBuffHooks.Modif
     }
 }
 
-public sealed partial class GlobalBuff_CustomBuffTipSize_Impl(GlobalBuffHooks.CustomBuffTipSize.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_CustomBuffTipSize_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.CustomBuffTipSize.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_CustomBuffTipSize_Impl(GlobalBuffHooks.CustomBuffTipSize.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void CustomBuffTipSize(
         string buffTip,
@@ -445,9 +523,22 @@ public sealed partial class GlobalBuff_CustomBuffTipSize_Impl(GlobalBuffHooks.Cu
     }
 }
 
-public sealed partial class GlobalBuff_DrawCustomBuffTip_Impl(GlobalBuffHooks.DrawCustomBuffTip.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_DrawCustomBuffTip_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.DrawCustomBuffTip.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_DrawCustomBuffTip_Impl(GlobalBuffHooks.DrawCustomBuffTip.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void DrawCustomBuffTip(
         string buffTip,
@@ -477,9 +568,22 @@ public sealed partial class GlobalBuff_DrawCustomBuffTip_Impl(GlobalBuffHooks.Dr
     }
 }
 
-public sealed partial class GlobalBuff_PreDraw_Impl(GlobalBuffHooks.PreDraw.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_PreDraw_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.PreDraw.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_PreDraw_Impl(GlobalBuffHooks.PreDraw.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override bool PreDraw(
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -509,9 +613,22 @@ public sealed partial class GlobalBuff_PreDraw_Impl(GlobalBuffHooks.PreDraw.Defi
     }
 }
 
-public sealed partial class GlobalBuff_PostDraw_Impl(GlobalBuffHooks.PostDraw.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_PostDraw_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.PostDraw.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_PostDraw_Impl(GlobalBuffHooks.PostDraw.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostDraw(
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -541,9 +658,22 @@ public sealed partial class GlobalBuff_PostDraw_Impl(GlobalBuffHooks.PostDraw.De
     }
 }
 
-public sealed partial class GlobalBuff_RightClick_Impl(GlobalBuffHooks.RightClick.Definition hook) : Terraria.ModLoader.GlobalBuff
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBuff_RightClick_Impl() : Terraria.ModLoader.GlobalBuff
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBuffHooks.RightClick.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBuff_RightClick_Impl(GlobalBuffHooks.RightClick.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override bool RightClick(
         int type,

@@ -61,9 +61,22 @@ public static partial class GlobalBossBarHooks
     }
 }
 
-public sealed partial class GlobalBossBar_PreDraw_Impl(GlobalBossBarHooks.PreDraw.Definition hook) : Terraria.ModLoader.GlobalBossBar
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBossBar_PreDraw_Impl() : Terraria.ModLoader.GlobalBossBar
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBossBarHooks.PreDraw.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBossBar_PreDraw_Impl(GlobalBossBarHooks.PreDraw.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override bool PreDraw(
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
@@ -89,9 +102,22 @@ public sealed partial class GlobalBossBar_PreDraw_Impl(GlobalBossBarHooks.PreDra
     }
 }
 
-public sealed partial class GlobalBossBar_PostDraw_Impl(GlobalBossBarHooks.PostDraw.Definition hook) : Terraria.ModLoader.GlobalBossBar
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalBossBar_PostDraw_Impl() : Terraria.ModLoader.GlobalBossBar
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalBossBarHooks.PostDraw.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalBossBar_PostDraw_Impl(GlobalBossBarHooks.PostDraw.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostDraw(
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,

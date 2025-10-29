@@ -1146,9 +1146,22 @@ public static partial class ModSystemHooks
     }
 }
 
-public sealed partial class ModSystem_SetupContent_Impl(ModSystemHooks.SetupContent.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_SetupContent_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.SetupContent.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_SetupContent_Impl(ModSystemHooks.SetupContent.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void SetupContent()
     {
@@ -1159,9 +1172,22 @@ public sealed partial class ModSystem_SetupContent_Impl(ModSystemHooks.SetupCont
     }
 }
 
-public sealed partial class ModSystem_OnModLoad_Impl(ModSystemHooks.OnModLoad.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_OnModLoad_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.OnModLoad.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_OnModLoad_Impl(ModSystemHooks.OnModLoad.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void OnModLoad()
     {
@@ -1172,9 +1198,22 @@ public sealed partial class ModSystem_OnModLoad_Impl(ModSystemHooks.OnModLoad.De
     }
 }
 
-public sealed partial class ModSystem_OnModUnload_Impl(ModSystemHooks.OnModUnload.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_OnModUnload_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.OnModUnload.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_OnModUnload_Impl(ModSystemHooks.OnModUnload.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void OnModUnload()
     {
@@ -1185,9 +1224,22 @@ public sealed partial class ModSystem_OnModUnload_Impl(ModSystemHooks.OnModUnloa
     }
 }
 
-public sealed partial class ModSystem_PostSetupContent_Impl(ModSystemHooks.PostSetupContent.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostSetupContent_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostSetupContent.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostSetupContent_Impl(ModSystemHooks.PostSetupContent.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostSetupContent()
     {
@@ -1198,9 +1250,22 @@ public sealed partial class ModSystem_PostSetupContent_Impl(ModSystemHooks.PostS
     }
 }
 
-public sealed partial class ModSystem_OnLocalizationsLoaded_Impl(ModSystemHooks.OnLocalizationsLoaded.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_OnLocalizationsLoaded_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.OnLocalizationsLoaded.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_OnLocalizationsLoaded_Impl(ModSystemHooks.OnLocalizationsLoaded.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void OnLocalizationsLoaded()
     {
@@ -1211,9 +1276,22 @@ public sealed partial class ModSystem_OnLocalizationsLoaded_Impl(ModSystemHooks.
     }
 }
 
-public sealed partial class ModSystem_AddRecipes_Impl(ModSystemHooks.AddRecipes.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_AddRecipes_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.AddRecipes.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_AddRecipes_Impl(ModSystemHooks.AddRecipes.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void AddRecipes()
     {
@@ -1224,9 +1302,22 @@ public sealed partial class ModSystem_AddRecipes_Impl(ModSystemHooks.AddRecipes.
     }
 }
 
-public sealed partial class ModSystem_PostAddRecipes_Impl(ModSystemHooks.PostAddRecipes.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostAddRecipes_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostAddRecipes.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostAddRecipes_Impl(ModSystemHooks.PostAddRecipes.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostAddRecipes()
     {
@@ -1237,9 +1328,22 @@ public sealed partial class ModSystem_PostAddRecipes_Impl(ModSystemHooks.PostAdd
     }
 }
 
-public sealed partial class ModSystem_PostSetupRecipes_Impl(ModSystemHooks.PostSetupRecipes.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostSetupRecipes_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostSetupRecipes.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostSetupRecipes_Impl(ModSystemHooks.PostSetupRecipes.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostSetupRecipes()
     {
@@ -1250,9 +1354,22 @@ public sealed partial class ModSystem_PostSetupRecipes_Impl(ModSystemHooks.PostS
     }
 }
 
-public sealed partial class ModSystem_AddRecipeGroups_Impl(ModSystemHooks.AddRecipeGroups.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_AddRecipeGroups_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.AddRecipeGroups.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_AddRecipeGroups_Impl(ModSystemHooks.AddRecipeGroups.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void AddRecipeGroups()
     {
@@ -1263,9 +1380,22 @@ public sealed partial class ModSystem_AddRecipeGroups_Impl(ModSystemHooks.AddRec
     }
 }
 
-public sealed partial class ModSystem_OnWorldLoad_Impl(ModSystemHooks.OnWorldLoad.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_OnWorldLoad_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.OnWorldLoad.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_OnWorldLoad_Impl(ModSystemHooks.OnWorldLoad.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void OnWorldLoad()
     {
@@ -1276,9 +1406,22 @@ public sealed partial class ModSystem_OnWorldLoad_Impl(ModSystemHooks.OnWorldLoa
     }
 }
 
-public sealed partial class ModSystem_PostWorldLoad_Impl(ModSystemHooks.PostWorldLoad.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostWorldLoad_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostWorldLoad.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostWorldLoad_Impl(ModSystemHooks.PostWorldLoad.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostWorldLoad()
     {
@@ -1289,9 +1432,22 @@ public sealed partial class ModSystem_PostWorldLoad_Impl(ModSystemHooks.PostWorl
     }
 }
 
-public sealed partial class ModSystem_OnWorldUnload_Impl(ModSystemHooks.OnWorldUnload.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_OnWorldUnload_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.OnWorldUnload.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_OnWorldUnload_Impl(ModSystemHooks.OnWorldUnload.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void OnWorldUnload()
     {
@@ -1302,9 +1458,22 @@ public sealed partial class ModSystem_OnWorldUnload_Impl(ModSystemHooks.OnWorldU
     }
 }
 
-public sealed partial class ModSystem_ClearWorld_Impl(ModSystemHooks.ClearWorld.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ClearWorld_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ClearWorld.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ClearWorld_Impl(ModSystemHooks.ClearWorld.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ClearWorld()
     {
@@ -1315,9 +1484,22 @@ public sealed partial class ModSystem_ClearWorld_Impl(ModSystemHooks.ClearWorld.
     }
 }
 
-public sealed partial class ModSystem_ModifyScreenPosition_Impl(ModSystemHooks.ModifyScreenPosition.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ModifyScreenPosition_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ModifyScreenPosition.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ModifyScreenPosition_Impl(ModSystemHooks.ModifyScreenPosition.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyScreenPosition()
     {
@@ -1328,9 +1510,22 @@ public sealed partial class ModSystem_ModifyScreenPosition_Impl(ModSystemHooks.M
     }
 }
 
-public sealed partial class ModSystem_ModifyTransformMatrix_Impl(ModSystemHooks.ModifyTransformMatrix.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ModifyTransformMatrix_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ModifyTransformMatrix.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ModifyTransformMatrix_Impl(ModSystemHooks.ModifyTransformMatrix.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyTransformMatrix(
         ref Terraria.Graphics.SpriteViewMatrix Transform
@@ -1348,9 +1543,22 @@ public sealed partial class ModSystem_ModifyTransformMatrix_Impl(ModSystemHooks.
     }
 }
 
-public sealed partial class ModSystem_UpdateUI_Impl(ModSystemHooks.UpdateUI.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_UpdateUI_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.UpdateUI.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_UpdateUI_Impl(ModSystemHooks.UpdateUI.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void UpdateUI(
         Microsoft.Xna.Framework.GameTime gameTime
@@ -1368,9 +1576,22 @@ public sealed partial class ModSystem_UpdateUI_Impl(ModSystemHooks.UpdateUI.Defi
     }
 }
 
-public sealed partial class ModSystem_PreUpdateEntities_Impl(ModSystemHooks.PreUpdateEntities.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdateEntities_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdateEntities.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdateEntities_Impl(ModSystemHooks.PreUpdateEntities.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdateEntities()
     {
@@ -1381,9 +1602,22 @@ public sealed partial class ModSystem_PreUpdateEntities_Impl(ModSystemHooks.PreU
     }
 }
 
-public sealed partial class ModSystem_PreUpdatePlayers_Impl(ModSystemHooks.PreUpdatePlayers.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdatePlayers_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdatePlayers.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdatePlayers_Impl(ModSystemHooks.PreUpdatePlayers.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdatePlayers()
     {
@@ -1394,9 +1628,22 @@ public sealed partial class ModSystem_PreUpdatePlayers_Impl(ModSystemHooks.PreUp
     }
 }
 
-public sealed partial class ModSystem_PostUpdatePlayers_Impl(ModSystemHooks.PostUpdatePlayers.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdatePlayers_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdatePlayers.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdatePlayers_Impl(ModSystemHooks.PostUpdatePlayers.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdatePlayers()
     {
@@ -1407,9 +1654,22 @@ public sealed partial class ModSystem_PostUpdatePlayers_Impl(ModSystemHooks.Post
     }
 }
 
-public sealed partial class ModSystem_PreUpdateNPCs_Impl(ModSystemHooks.PreUpdateNPCs.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdateNPCs_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdateNPCs.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdateNPCs_Impl(ModSystemHooks.PreUpdateNPCs.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdateNPCs()
     {
@@ -1420,9 +1680,22 @@ public sealed partial class ModSystem_PreUpdateNPCs_Impl(ModSystemHooks.PreUpdat
     }
 }
 
-public sealed partial class ModSystem_PostUpdateNPCs_Impl(ModSystemHooks.PostUpdateNPCs.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateNPCs_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateNPCs.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateNPCs_Impl(ModSystemHooks.PostUpdateNPCs.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateNPCs()
     {
@@ -1433,9 +1706,22 @@ public sealed partial class ModSystem_PostUpdateNPCs_Impl(ModSystemHooks.PostUpd
     }
 }
 
-public sealed partial class ModSystem_PreUpdateGores_Impl(ModSystemHooks.PreUpdateGores.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdateGores_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdateGores.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdateGores_Impl(ModSystemHooks.PreUpdateGores.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdateGores()
     {
@@ -1446,9 +1732,22 @@ public sealed partial class ModSystem_PreUpdateGores_Impl(ModSystemHooks.PreUpda
     }
 }
 
-public sealed partial class ModSystem_PostUpdateGores_Impl(ModSystemHooks.PostUpdateGores.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateGores_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateGores.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateGores_Impl(ModSystemHooks.PostUpdateGores.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateGores()
     {
@@ -1459,9 +1758,22 @@ public sealed partial class ModSystem_PostUpdateGores_Impl(ModSystemHooks.PostUp
     }
 }
 
-public sealed partial class ModSystem_PreUpdateProjectiles_Impl(ModSystemHooks.PreUpdateProjectiles.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdateProjectiles_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdateProjectiles.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdateProjectiles_Impl(ModSystemHooks.PreUpdateProjectiles.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdateProjectiles()
     {
@@ -1472,9 +1784,22 @@ public sealed partial class ModSystem_PreUpdateProjectiles_Impl(ModSystemHooks.P
     }
 }
 
-public sealed partial class ModSystem_PostUpdateProjectiles_Impl(ModSystemHooks.PostUpdateProjectiles.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateProjectiles_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateProjectiles.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateProjectiles_Impl(ModSystemHooks.PostUpdateProjectiles.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateProjectiles()
     {
@@ -1485,9 +1810,22 @@ public sealed partial class ModSystem_PostUpdateProjectiles_Impl(ModSystemHooks.
     }
 }
 
-public sealed partial class ModSystem_PreUpdateItems_Impl(ModSystemHooks.PreUpdateItems.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdateItems_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdateItems.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdateItems_Impl(ModSystemHooks.PreUpdateItems.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdateItems()
     {
@@ -1498,9 +1836,22 @@ public sealed partial class ModSystem_PreUpdateItems_Impl(ModSystemHooks.PreUpda
     }
 }
 
-public sealed partial class ModSystem_PostUpdateItems_Impl(ModSystemHooks.PostUpdateItems.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateItems_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateItems.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateItems_Impl(ModSystemHooks.PostUpdateItems.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateItems()
     {
@@ -1511,9 +1862,22 @@ public sealed partial class ModSystem_PostUpdateItems_Impl(ModSystemHooks.PostUp
     }
 }
 
-public sealed partial class ModSystem_PreUpdateDusts_Impl(ModSystemHooks.PreUpdateDusts.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdateDusts_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdateDusts.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdateDusts_Impl(ModSystemHooks.PreUpdateDusts.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdateDusts()
     {
@@ -1524,9 +1888,22 @@ public sealed partial class ModSystem_PreUpdateDusts_Impl(ModSystemHooks.PreUpda
     }
 }
 
-public sealed partial class ModSystem_PostUpdateDusts_Impl(ModSystemHooks.PostUpdateDusts.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateDusts_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateDusts.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateDusts_Impl(ModSystemHooks.PostUpdateDusts.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateDusts()
     {
@@ -1537,9 +1914,22 @@ public sealed partial class ModSystem_PostUpdateDusts_Impl(ModSystemHooks.PostUp
     }
 }
 
-public sealed partial class ModSystem_PreUpdateTime_Impl(ModSystemHooks.PreUpdateTime.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdateTime_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdateTime.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdateTime_Impl(ModSystemHooks.PreUpdateTime.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdateTime()
     {
@@ -1550,9 +1940,22 @@ public sealed partial class ModSystem_PreUpdateTime_Impl(ModSystemHooks.PreUpdat
     }
 }
 
-public sealed partial class ModSystem_PostUpdateTime_Impl(ModSystemHooks.PostUpdateTime.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateTime_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateTime.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateTime_Impl(ModSystemHooks.PostUpdateTime.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateTime()
     {
@@ -1563,9 +1966,22 @@ public sealed partial class ModSystem_PostUpdateTime_Impl(ModSystemHooks.PostUpd
     }
 }
 
-public sealed partial class ModSystem_PreUpdateWorld_Impl(ModSystemHooks.PreUpdateWorld.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdateWorld_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdateWorld.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdateWorld_Impl(ModSystemHooks.PreUpdateWorld.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdateWorld()
     {
@@ -1576,9 +1992,22 @@ public sealed partial class ModSystem_PreUpdateWorld_Impl(ModSystemHooks.PreUpda
     }
 }
 
-public sealed partial class ModSystem_PostUpdateWorld_Impl(ModSystemHooks.PostUpdateWorld.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateWorld_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateWorld.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateWorld_Impl(ModSystemHooks.PostUpdateWorld.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateWorld()
     {
@@ -1589,9 +2018,22 @@ public sealed partial class ModSystem_PostUpdateWorld_Impl(ModSystemHooks.PostUp
     }
 }
 
-public sealed partial class ModSystem_PreUpdateInvasions_Impl(ModSystemHooks.PreUpdateInvasions.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreUpdateInvasions_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreUpdateInvasions.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreUpdateInvasions_Impl(ModSystemHooks.PreUpdateInvasions.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreUpdateInvasions()
     {
@@ -1602,9 +2044,22 @@ public sealed partial class ModSystem_PreUpdateInvasions_Impl(ModSystemHooks.Pre
     }
 }
 
-public sealed partial class ModSystem_PostUpdateInvasions_Impl(ModSystemHooks.PostUpdateInvasions.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateInvasions_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateInvasions.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateInvasions_Impl(ModSystemHooks.PostUpdateInvasions.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateInvasions()
     {
@@ -1615,9 +2070,22 @@ public sealed partial class ModSystem_PostUpdateInvasions_Impl(ModSystemHooks.Po
     }
 }
 
-public sealed partial class ModSystem_PostUpdateEverything_Impl(ModSystemHooks.PostUpdateEverything.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateEverything_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateEverything.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateEverything_Impl(ModSystemHooks.PostUpdateEverything.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateEverything()
     {
@@ -1628,9 +2096,22 @@ public sealed partial class ModSystem_PostUpdateEverything_Impl(ModSystemHooks.P
     }
 }
 
-public sealed partial class ModSystem_ModifyInterfaceLayers_Impl(ModSystemHooks.ModifyInterfaceLayers.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ModifyInterfaceLayers_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ModifyInterfaceLayers.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ModifyInterfaceLayers_Impl(ModSystemHooks.ModifyInterfaceLayers.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyInterfaceLayers(
         System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers
@@ -1648,9 +2129,22 @@ public sealed partial class ModSystem_ModifyInterfaceLayers_Impl(ModSystemHooks.
     }
 }
 
-public sealed partial class ModSystem_ModifyGameTipVisibility_Impl(ModSystemHooks.ModifyGameTipVisibility.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ModifyGameTipVisibility_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ModifyGameTipVisibility.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ModifyGameTipVisibility_Impl(ModSystemHooks.ModifyGameTipVisibility.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyGameTipVisibility(
         System.Collections.Generic.IReadOnlyList<Terraria.ModLoader.GameTipData> gameTips
@@ -1668,9 +2162,22 @@ public sealed partial class ModSystem_ModifyGameTipVisibility_Impl(ModSystemHook
     }
 }
 
-public sealed partial class ModSystem_PostDrawInterface_Impl(ModSystemHooks.PostDrawInterface.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostDrawInterface_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostDrawInterface.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostDrawInterface_Impl(ModSystemHooks.PostDrawInterface.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostDrawInterface(
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch
@@ -1688,9 +2195,22 @@ public sealed partial class ModSystem_PostDrawInterface_Impl(ModSystemHooks.Post
     }
 }
 
-public sealed partial class ModSystem_PreDrawMapIconOverlay_Impl(ModSystemHooks.PreDrawMapIconOverlay.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreDrawMapIconOverlay_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreDrawMapIconOverlay.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreDrawMapIconOverlay_Impl(ModSystemHooks.PreDrawMapIconOverlay.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreDrawMapIconOverlay(
         System.Collections.Generic.IReadOnlyList<Terraria.Map.IMapLayer> layers,
@@ -1712,9 +2232,22 @@ public sealed partial class ModSystem_PreDrawMapIconOverlay_Impl(ModSystemHooks.
     }
 }
 
-public sealed partial class ModSystem_PostDrawFullscreenMap_Impl(ModSystemHooks.PostDrawFullscreenMap.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostDrawFullscreenMap_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostDrawFullscreenMap.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostDrawFullscreenMap_Impl(ModSystemHooks.PostDrawFullscreenMap.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostDrawFullscreenMap(
         ref string mouseText
@@ -1732,9 +2265,22 @@ public sealed partial class ModSystem_PostDrawFullscreenMap_Impl(ModSystemHooks.
     }
 }
 
-public sealed partial class ModSystem_PostUpdateInput_Impl(ModSystemHooks.PostUpdateInput.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostUpdateInput_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostUpdateInput.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostUpdateInput_Impl(ModSystemHooks.PostUpdateInput.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostUpdateInput()
     {
@@ -1745,9 +2291,22 @@ public sealed partial class ModSystem_PostUpdateInput_Impl(ModSystemHooks.PostUp
     }
 }
 
-public sealed partial class ModSystem_PreSaveAndQuit_Impl(ModSystemHooks.PreSaveAndQuit.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreSaveAndQuit_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreSaveAndQuit.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreSaveAndQuit_Impl(ModSystemHooks.PreSaveAndQuit.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreSaveAndQuit()
     {
@@ -1758,9 +2317,22 @@ public sealed partial class ModSystem_PreSaveAndQuit_Impl(ModSystemHooks.PreSave
     }
 }
 
-public sealed partial class ModSystem_PostDrawTiles_Impl(ModSystemHooks.PostDrawTiles.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostDrawTiles_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostDrawTiles.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostDrawTiles_Impl(ModSystemHooks.PostDrawTiles.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostDrawTiles()
     {
@@ -1771,9 +2343,22 @@ public sealed partial class ModSystem_PostDrawTiles_Impl(ModSystemHooks.PostDraw
     }
 }
 
-public sealed partial class ModSystem_ModifyTimeRate_Impl(ModSystemHooks.ModifyTimeRate.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ModifyTimeRate_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ModifyTimeRate.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ModifyTimeRate_Impl(ModSystemHooks.ModifyTimeRate.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyTimeRate(
         ref double timeRate,
@@ -1799,9 +2384,22 @@ public sealed partial class ModSystem_ModifyTimeRate_Impl(ModSystemHooks.ModifyT
     }
 }
 
-public sealed partial class ModSystem_CanWorldBePlayed_Impl(ModSystemHooks.CanWorldBePlayed.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_CanWorldBePlayed_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.CanWorldBePlayed.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_CanWorldBePlayed_Impl(ModSystemHooks.CanWorldBePlayed.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override bool CanWorldBePlayed(
         Terraria.IO.PlayerFileData playerData,
@@ -1823,9 +2421,22 @@ public sealed partial class ModSystem_CanWorldBePlayed_Impl(ModSystemHooks.CanWo
     }
 }
 
-public sealed partial class ModSystem_WorldCanBePlayedRejectionMessage_Impl(ModSystemHooks.WorldCanBePlayedRejectionMessage.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_WorldCanBePlayedRejectionMessage_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.WorldCanBePlayedRejectionMessage.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_WorldCanBePlayedRejectionMessage_Impl(ModSystemHooks.WorldCanBePlayedRejectionMessage.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override string WorldCanBePlayedRejectionMessage(
         Terraria.IO.PlayerFileData playerData,
@@ -1847,9 +2458,22 @@ public sealed partial class ModSystem_WorldCanBePlayedRejectionMessage_Impl(ModS
     }
 }
 
-public sealed partial class ModSystem_HijackGetData_Impl(ModSystemHooks.HijackGetData.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_HijackGetData_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.HijackGetData.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_HijackGetData_Impl(ModSystemHooks.HijackGetData.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override bool HijackGetData(
         ref byte messageType,
@@ -1875,9 +2499,22 @@ public sealed partial class ModSystem_HijackGetData_Impl(ModSystemHooks.HijackGe
     }
 }
 
-public sealed partial class ModSystem_HijackSendData_Impl(ModSystemHooks.HijackSendData.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_HijackSendData_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.HijackSendData.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_HijackSendData_Impl(ModSystemHooks.HijackSendData.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override bool HijackSendData(
         int whoAmI,
@@ -1939,9 +2576,22 @@ public sealed partial class ModSystem_HijackSendData_Impl(ModSystemHooks.HijackS
     }
 }
 
-public sealed partial class ModSystem_PreWorldGen_Impl(ModSystemHooks.PreWorldGen.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PreWorldGen_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PreWorldGen.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PreWorldGen_Impl(ModSystemHooks.PreWorldGen.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PreWorldGen()
     {
@@ -1952,9 +2602,22 @@ public sealed partial class ModSystem_PreWorldGen_Impl(ModSystemHooks.PreWorldGe
     }
 }
 
-public sealed partial class ModSystem_ModifyWorldGenTasks_Impl(ModSystemHooks.ModifyWorldGenTasks.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ModifyWorldGenTasks_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ModifyWorldGenTasks.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ModifyWorldGenTasks_Impl(ModSystemHooks.ModifyWorldGenTasks.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyWorldGenTasks(
         System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks,
@@ -1976,9 +2639,22 @@ public sealed partial class ModSystem_ModifyWorldGenTasks_Impl(ModSystemHooks.Mo
     }
 }
 
-public sealed partial class ModSystem_PostWorldGen_Impl(ModSystemHooks.PostWorldGen.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_PostWorldGen_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.PostWorldGen.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_PostWorldGen_Impl(ModSystemHooks.PostWorldGen.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void PostWorldGen()
     {
@@ -1989,9 +2665,22 @@ public sealed partial class ModSystem_PostWorldGen_Impl(ModSystemHooks.PostWorld
     }
 }
 
-public sealed partial class ModSystem_ResetNearbyTileEffects_Impl(ModSystemHooks.ResetNearbyTileEffects.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ResetNearbyTileEffects_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ResetNearbyTileEffects.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ResetNearbyTileEffects_Impl(ModSystemHooks.ResetNearbyTileEffects.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ResetNearbyTileEffects()
     {
@@ -2002,9 +2691,22 @@ public sealed partial class ModSystem_ResetNearbyTileEffects_Impl(ModSystemHooks
     }
 }
 
-public sealed partial class ModSystem_ModifyHardmodeTasks_Impl(ModSystemHooks.ModifyHardmodeTasks.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ModifyHardmodeTasks_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ModifyHardmodeTasks.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ModifyHardmodeTasks_Impl(ModSystemHooks.ModifyHardmodeTasks.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyHardmodeTasks(
         System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> list
@@ -2022,9 +2724,22 @@ public sealed partial class ModSystem_ModifyHardmodeTasks_Impl(ModSystemHooks.Mo
     }
 }
 
-public sealed partial class ModSystem_ModifySunLightColor_Impl(ModSystemHooks.ModifySunLightColor.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ModifySunLightColor_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ModifySunLightColor.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ModifySunLightColor_Impl(ModSystemHooks.ModifySunLightColor.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifySunLightColor(
         ref Microsoft.Xna.Framework.Color tileColor,
@@ -2046,9 +2761,22 @@ public sealed partial class ModSystem_ModifySunLightColor_Impl(ModSystemHooks.Mo
     }
 }
 
-public sealed partial class ModSystem_ModifyLightingBrightness_Impl(ModSystemHooks.ModifyLightingBrightness.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ModifyLightingBrightness_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ModifyLightingBrightness.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ModifyLightingBrightness_Impl(ModSystemHooks.ModifyLightingBrightness.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyLightingBrightness(
         ref float scale
@@ -2066,9 +2794,22 @@ public sealed partial class ModSystem_ModifyLightingBrightness_Impl(ModSystemHoo
     }
 }
 
-public sealed partial class ModSystem_TileCountsAvailable_Impl(ModSystemHooks.TileCountsAvailable.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_TileCountsAvailable_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.TileCountsAvailable.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_TileCountsAvailable_Impl(ModSystemHooks.TileCountsAvailable.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void TileCountsAvailable(
         System.ReadOnlySpan<int> tileCounts
@@ -2086,9 +2827,22 @@ public sealed partial class ModSystem_TileCountsAvailable_Impl(ModSystemHooks.Ti
     }
 }
 
-public sealed partial class ModSystem_ResizeArrays_Impl(ModSystemHooks.ResizeArrays.Definition hook) : Terraria.ModLoader.ModSystem
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModSystem_ResizeArrays_Impl() : Terraria.ModLoader.ModSystem
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModSystemHooks.ResizeArrays.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public ModSystem_ResizeArrays_Impl(ModSystemHooks.ResizeArrays.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ResizeArrays()
     {

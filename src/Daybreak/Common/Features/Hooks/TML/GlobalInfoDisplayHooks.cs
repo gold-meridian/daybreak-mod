@@ -61,9 +61,22 @@ public static partial class GlobalInfoDisplayHooks
     }
 }
 
-public sealed partial class GlobalInfoDisplay_Active_Impl(GlobalInfoDisplayHooks.Active.Definition hook) : Terraria.ModLoader.GlobalInfoDisplay
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalInfoDisplay_Active_Impl() : Terraria.ModLoader.GlobalInfoDisplay
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalInfoDisplayHooks.Active.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalInfoDisplay_Active_Impl(GlobalInfoDisplayHooks.Active.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override bool? Active(
         Terraria.ModLoader.InfoDisplay currentDisplay
@@ -81,9 +94,22 @@ public sealed partial class GlobalInfoDisplay_Active_Impl(GlobalInfoDisplayHooks
     }
 }
 
-public sealed partial class GlobalInfoDisplay_ModifyDisplayParameters_Impl(GlobalInfoDisplayHooks.ModifyDisplayParameters.Definition hook) : Terraria.ModLoader.GlobalInfoDisplay
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalInfoDisplay_ModifyDisplayParameters_Impl() : Terraria.ModLoader.GlobalInfoDisplay
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalInfoDisplayHooks.ModifyDisplayParameters.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public GlobalInfoDisplay_ModifyDisplayParameters_Impl(GlobalInfoDisplayHooks.ModifyDisplayParameters.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
 
     public override void ModifyDisplayParameters(
         Terraria.ModLoader.InfoDisplay currentDisplay,

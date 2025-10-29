@@ -92,10 +92,19 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         var hookName = GetNameWithoutOverloadCollision(method, hasOverloads);
 
         var implName = $"{type.Name}_{hookName}_Impl";
-        sb.AppendLine($"public sealed partial class {implName}({hooksName}.{hookName}.Definition hook) : {type.FullName}");
+        sb.AppendLine("[Terraria.ModLoader.Autoload(false)]");
+        sb.AppendLine($"public sealed partial class {implName}() : {type.FullName}");
         sb.AppendLine("{");
 
-        sb.AppendLine("    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));");
+        sb.AppendLine("    [Terraria.ModLoader.CloneByReference]");
+        sb.AppendLine("    private string namePrefix = string.Empty;");
+        sb.AppendLine();
+
+        sb.AppendLine("    [field: Terraria.ModLoader.CloneByReference]");
+        sb.AppendLine($"    private {hooksName}.{hookName}.Definition hook;");
+        sb.AppendLine();
+
+        sb.AppendLine("    public override string Name => base.Name + '_' + namePrefix;");
         sb.AppendLine();
 
         if (HasProperty(type, "InstancePerEntity"))
@@ -110,6 +119,14 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
             sb.AppendLine();
         }
 
+        sb.AppendLine($"    public {implName}({hooksName}.{hookName}.Definition hook) : this()");
+        sb.AppendLine("    {");
+        sb.AppendLine("        this.hook = hook;");
+        sb.AppendLine("        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));");
+        sb.AppendLine("    }");
+        sb.AppendLine();
+
+        /*
         if (GetGenericTypeOfName(type, "Terraria.ModLoader.GlobalType`2") is { } gGlobalType)
         {
             var tEntity = gGlobalType.GenericArguments[0].FullName;
@@ -130,6 +147,7 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
             sb.AppendLine("    }");
             sb.AppendLine();
         }
+        */
 
         sb.Append($"    public override {GetFullTypeNameOrCSharpKeyword(method.ReturnType, includeRefPrefix: true)} {name}(");
         if (method.Parameters.Count > 0)

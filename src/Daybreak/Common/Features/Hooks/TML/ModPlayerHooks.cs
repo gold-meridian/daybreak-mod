@@ -2733,15 +2733,23 @@ public static partial class ModPlayerHooks
     }
 }
 
-public sealed partial class ModPlayer_Initialize_Impl(ModPlayerHooks.Initialize.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_Initialize_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.Initialize.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_Initialize_Impl(ModPlayerHooks.Initialize.Definition hook) : this()
     {
-        return new ModPlayer_Initialize_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void Initialize()
@@ -2753,15 +2761,23 @@ public sealed partial class ModPlayer_Initialize_Impl(ModPlayerHooks.Initialize.
     }
 }
 
-public sealed partial class ModPlayer_ResetEffects_Impl(ModPlayerHooks.ResetEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ResetEffects_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ResetEffects.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ResetEffects_Impl(ModPlayerHooks.ResetEffects.Definition hook) : this()
     {
-        return new ModPlayer_ResetEffects_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ResetEffects()
@@ -2773,15 +2789,23 @@ public sealed partial class ModPlayer_ResetEffects_Impl(ModPlayerHooks.ResetEffe
     }
 }
 
-public sealed partial class ModPlayer_ResetInfoAccessories_Impl(ModPlayerHooks.ResetInfoAccessories.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ResetInfoAccessories_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ResetInfoAccessories.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ResetInfoAccessories_Impl(ModPlayerHooks.ResetInfoAccessories.Definition hook) : this()
     {
-        return new ModPlayer_ResetInfoAccessories_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ResetInfoAccessories()
@@ -2793,15 +2817,23 @@ public sealed partial class ModPlayer_ResetInfoAccessories_Impl(ModPlayerHooks.R
     }
 }
 
-public sealed partial class ModPlayer_RefreshInfoAccessoriesFromTeamPlayers_Impl(ModPlayerHooks.RefreshInfoAccessoriesFromTeamPlayers.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_RefreshInfoAccessoriesFromTeamPlayers_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.RefreshInfoAccessoriesFromTeamPlayers.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_RefreshInfoAccessoriesFromTeamPlayers_Impl(ModPlayerHooks.RefreshInfoAccessoriesFromTeamPlayers.Definition hook) : this()
     {
-        return new ModPlayer_RefreshInfoAccessoriesFromTeamPlayers_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void RefreshInfoAccessoriesFromTeamPlayers(
@@ -2820,15 +2852,23 @@ public sealed partial class ModPlayer_RefreshInfoAccessoriesFromTeamPlayers_Impl
     }
 }
 
-public sealed partial class ModPlayer_ModifyMaxStats_Impl(ModPlayerHooks.ModifyMaxStats.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyMaxStats_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyMaxStats.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyMaxStats_Impl(ModPlayerHooks.ModifyMaxStats.Definition hook) : this()
     {
-        return new ModPlayer_ModifyMaxStats_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyMaxStats(
@@ -2851,15 +2891,23 @@ public sealed partial class ModPlayer_ModifyMaxStats_Impl(ModPlayerHooks.ModifyM
     }
 }
 
-public sealed partial class ModPlayer_UpdateDead_Impl(ModPlayerHooks.UpdateDead.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UpdateDead_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UpdateDead.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UpdateDead_Impl(ModPlayerHooks.UpdateDead.Definition hook) : this()
     {
-        return new ModPlayer_UpdateDead_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateDead()
@@ -2871,15 +2919,23 @@ public sealed partial class ModPlayer_UpdateDead_Impl(ModPlayerHooks.UpdateDead.
     }
 }
 
-public sealed partial class ModPlayer_PreSaveCustomData_Impl(ModPlayerHooks.PreSaveCustomData.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PreSaveCustomData_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PreSaveCustomData.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PreSaveCustomData_Impl(ModPlayerHooks.PreSaveCustomData.Definition hook) : this()
     {
-        return new ModPlayer_PreSaveCustomData_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PreSaveCustomData()
@@ -2891,15 +2947,23 @@ public sealed partial class ModPlayer_PreSaveCustomData_Impl(ModPlayerHooks.PreS
     }
 }
 
-public sealed partial class ModPlayer_PreSavePlayer_Impl(ModPlayerHooks.PreSavePlayer.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PreSavePlayer_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PreSavePlayer.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PreSavePlayer_Impl(ModPlayerHooks.PreSavePlayer.Definition hook) : this()
     {
-        return new ModPlayer_PreSavePlayer_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PreSavePlayer()
@@ -2911,15 +2975,23 @@ public sealed partial class ModPlayer_PreSavePlayer_Impl(ModPlayerHooks.PreSaveP
     }
 }
 
-public sealed partial class ModPlayer_PostSavePlayer_Impl(ModPlayerHooks.PostSavePlayer.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostSavePlayer_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostSavePlayer.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostSavePlayer_Impl(ModPlayerHooks.PostSavePlayer.Definition hook) : this()
     {
-        return new ModPlayer_PostSavePlayer_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostSavePlayer()
@@ -2931,15 +3003,23 @@ public sealed partial class ModPlayer_PostSavePlayer_Impl(ModPlayerHooks.PostSav
     }
 }
 
-public sealed partial class ModPlayer_UpdateBadLifeRegen_Impl(ModPlayerHooks.UpdateBadLifeRegen.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UpdateBadLifeRegen_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UpdateBadLifeRegen.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UpdateBadLifeRegen_Impl(ModPlayerHooks.UpdateBadLifeRegen.Definition hook) : this()
     {
-        return new ModPlayer_UpdateBadLifeRegen_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateBadLifeRegen()
@@ -2951,15 +3031,23 @@ public sealed partial class ModPlayer_UpdateBadLifeRegen_Impl(ModPlayerHooks.Upd
     }
 }
 
-public sealed partial class ModPlayer_UpdateLifeRegen_Impl(ModPlayerHooks.UpdateLifeRegen.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UpdateLifeRegen_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UpdateLifeRegen.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UpdateLifeRegen_Impl(ModPlayerHooks.UpdateLifeRegen.Definition hook) : this()
     {
-        return new ModPlayer_UpdateLifeRegen_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateLifeRegen()
@@ -2971,15 +3059,23 @@ public sealed partial class ModPlayer_UpdateLifeRegen_Impl(ModPlayerHooks.Update
     }
 }
 
-public sealed partial class ModPlayer_NaturalLifeRegen_Impl(ModPlayerHooks.NaturalLifeRegen.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_NaturalLifeRegen_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.NaturalLifeRegen.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_NaturalLifeRegen_Impl(ModPlayerHooks.NaturalLifeRegen.Definition hook) : this()
     {
-        return new ModPlayer_NaturalLifeRegen_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void NaturalLifeRegen(
@@ -2998,15 +3094,23 @@ public sealed partial class ModPlayer_NaturalLifeRegen_Impl(ModPlayerHooks.Natur
     }
 }
 
-public sealed partial class ModPlayer_UpdateAutopause_Impl(ModPlayerHooks.UpdateAutopause.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UpdateAutopause_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UpdateAutopause.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UpdateAutopause_Impl(ModPlayerHooks.UpdateAutopause.Definition hook) : this()
     {
-        return new ModPlayer_UpdateAutopause_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateAutopause()
@@ -3018,15 +3122,23 @@ public sealed partial class ModPlayer_UpdateAutopause_Impl(ModPlayerHooks.Update
     }
 }
 
-public sealed partial class ModPlayer_PreUpdate_Impl(ModPlayerHooks.PreUpdate.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PreUpdate_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PreUpdate.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PreUpdate_Impl(ModPlayerHooks.PreUpdate.Definition hook) : this()
     {
-        return new ModPlayer_PreUpdate_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PreUpdate()
@@ -3038,15 +3150,23 @@ public sealed partial class ModPlayer_PreUpdate_Impl(ModPlayerHooks.PreUpdate.De
     }
 }
 
-public sealed partial class ModPlayer_ProcessTriggers_Impl(ModPlayerHooks.ProcessTriggers.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ProcessTriggers_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ProcessTriggers.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ProcessTriggers_Impl(ModPlayerHooks.ProcessTriggers.Definition hook) : this()
     {
-        return new ModPlayer_ProcessTriggers_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ProcessTriggers(
@@ -3065,15 +3185,23 @@ public sealed partial class ModPlayer_ProcessTriggers_Impl(ModPlayerHooks.Proces
     }
 }
 
-public sealed partial class ModPlayer_ArmorSetBonusActivated_Impl(ModPlayerHooks.ArmorSetBonusActivated.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ArmorSetBonusActivated_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ArmorSetBonusActivated.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ArmorSetBonusActivated_Impl(ModPlayerHooks.ArmorSetBonusActivated.Definition hook) : this()
     {
-        return new ModPlayer_ArmorSetBonusActivated_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ArmorSetBonusActivated()
@@ -3085,15 +3213,23 @@ public sealed partial class ModPlayer_ArmorSetBonusActivated_Impl(ModPlayerHooks
     }
 }
 
-public sealed partial class ModPlayer_ArmorSetBonusHeld_Impl(ModPlayerHooks.ArmorSetBonusHeld.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ArmorSetBonusHeld_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ArmorSetBonusHeld.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ArmorSetBonusHeld_Impl(ModPlayerHooks.ArmorSetBonusHeld.Definition hook) : this()
     {
-        return new ModPlayer_ArmorSetBonusHeld_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ArmorSetBonusHeld(
@@ -3112,15 +3248,23 @@ public sealed partial class ModPlayer_ArmorSetBonusHeld_Impl(ModPlayerHooks.Armo
     }
 }
 
-public sealed partial class ModPlayer_SetControls_Impl(ModPlayerHooks.SetControls.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_SetControls_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.SetControls.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_SetControls_Impl(ModPlayerHooks.SetControls.Definition hook) : this()
     {
-        return new ModPlayer_SetControls_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void SetControls()
@@ -3132,15 +3276,23 @@ public sealed partial class ModPlayer_SetControls_Impl(ModPlayerHooks.SetControl
     }
 }
 
-public sealed partial class ModPlayer_PreUpdateBuffs_Impl(ModPlayerHooks.PreUpdateBuffs.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PreUpdateBuffs_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PreUpdateBuffs.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PreUpdateBuffs_Impl(ModPlayerHooks.PreUpdateBuffs.Definition hook) : this()
     {
-        return new ModPlayer_PreUpdateBuffs_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PreUpdateBuffs()
@@ -3152,15 +3304,23 @@ public sealed partial class ModPlayer_PreUpdateBuffs_Impl(ModPlayerHooks.PreUpda
     }
 }
 
-public sealed partial class ModPlayer_PostUpdateBuffs_Impl(ModPlayerHooks.PostUpdateBuffs.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostUpdateBuffs_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostUpdateBuffs.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostUpdateBuffs_Impl(ModPlayerHooks.PostUpdateBuffs.Definition hook) : this()
     {
-        return new ModPlayer_PostUpdateBuffs_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostUpdateBuffs()
@@ -3172,15 +3332,23 @@ public sealed partial class ModPlayer_PostUpdateBuffs_Impl(ModPlayerHooks.PostUp
     }
 }
 
-public sealed partial class ModPlayer_UpdateEquips_Impl(ModPlayerHooks.UpdateEquips.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UpdateEquips_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UpdateEquips.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UpdateEquips_Impl(ModPlayerHooks.UpdateEquips.Definition hook) : this()
     {
-        return new ModPlayer_UpdateEquips_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateEquips()
@@ -3192,15 +3360,23 @@ public sealed partial class ModPlayer_UpdateEquips_Impl(ModPlayerHooks.UpdateEqu
     }
 }
 
-public sealed partial class ModPlayer_PostUpdateEquips_Impl(ModPlayerHooks.PostUpdateEquips.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostUpdateEquips_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostUpdateEquips.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostUpdateEquips_Impl(ModPlayerHooks.PostUpdateEquips.Definition hook) : this()
     {
-        return new ModPlayer_PostUpdateEquips_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostUpdateEquips()
@@ -3212,15 +3388,23 @@ public sealed partial class ModPlayer_PostUpdateEquips_Impl(ModPlayerHooks.PostU
     }
 }
 
-public sealed partial class ModPlayer_UpdateVisibleAccessories_Impl(ModPlayerHooks.UpdateVisibleAccessories.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UpdateVisibleAccessories_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UpdateVisibleAccessories.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UpdateVisibleAccessories_Impl(ModPlayerHooks.UpdateVisibleAccessories.Definition hook) : this()
     {
-        return new ModPlayer_UpdateVisibleAccessories_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateVisibleAccessories()
@@ -3232,15 +3416,23 @@ public sealed partial class ModPlayer_UpdateVisibleAccessories_Impl(ModPlayerHoo
     }
 }
 
-public sealed partial class ModPlayer_UpdateVisibleVanityAccessories_Impl(ModPlayerHooks.UpdateVisibleVanityAccessories.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UpdateVisibleVanityAccessories_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UpdateVisibleVanityAccessories.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UpdateVisibleVanityAccessories_Impl(ModPlayerHooks.UpdateVisibleVanityAccessories.Definition hook) : this()
     {
-        return new ModPlayer_UpdateVisibleVanityAccessories_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateVisibleVanityAccessories()
@@ -3252,15 +3444,23 @@ public sealed partial class ModPlayer_UpdateVisibleVanityAccessories_Impl(ModPla
     }
 }
 
-public sealed partial class ModPlayer_UpdateDyes_Impl(ModPlayerHooks.UpdateDyes.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UpdateDyes_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UpdateDyes.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UpdateDyes_Impl(ModPlayerHooks.UpdateDyes.Definition hook) : this()
     {
-        return new ModPlayer_UpdateDyes_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateDyes()
@@ -3272,15 +3472,23 @@ public sealed partial class ModPlayer_UpdateDyes_Impl(ModPlayerHooks.UpdateDyes.
     }
 }
 
-public sealed partial class ModPlayer_PostUpdateMiscEffects_Impl(ModPlayerHooks.PostUpdateMiscEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostUpdateMiscEffects_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostUpdateMiscEffects.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostUpdateMiscEffects_Impl(ModPlayerHooks.PostUpdateMiscEffects.Definition hook) : this()
     {
-        return new ModPlayer_PostUpdateMiscEffects_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostUpdateMiscEffects()
@@ -3292,15 +3500,23 @@ public sealed partial class ModPlayer_PostUpdateMiscEffects_Impl(ModPlayerHooks.
     }
 }
 
-public sealed partial class ModPlayer_PostUpdateRunSpeeds_Impl(ModPlayerHooks.PostUpdateRunSpeeds.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostUpdateRunSpeeds_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostUpdateRunSpeeds.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostUpdateRunSpeeds_Impl(ModPlayerHooks.PostUpdateRunSpeeds.Definition hook) : this()
     {
-        return new ModPlayer_PostUpdateRunSpeeds_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostUpdateRunSpeeds()
@@ -3312,15 +3528,23 @@ public sealed partial class ModPlayer_PostUpdateRunSpeeds_Impl(ModPlayerHooks.Po
     }
 }
 
-public sealed partial class ModPlayer_PreUpdateMovement_Impl(ModPlayerHooks.PreUpdateMovement.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PreUpdateMovement_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PreUpdateMovement.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PreUpdateMovement_Impl(ModPlayerHooks.PreUpdateMovement.Definition hook) : this()
     {
-        return new ModPlayer_PreUpdateMovement_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PreUpdateMovement()
@@ -3332,15 +3556,23 @@ public sealed partial class ModPlayer_PreUpdateMovement_Impl(ModPlayerHooks.PreU
     }
 }
 
-public sealed partial class ModPlayer_PostUpdate_Impl(ModPlayerHooks.PostUpdate.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostUpdate_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostUpdate.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostUpdate_Impl(ModPlayerHooks.PostUpdate.Definition hook) : this()
     {
-        return new ModPlayer_PostUpdate_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostUpdate()
@@ -3352,15 +3584,23 @@ public sealed partial class ModPlayer_PostUpdate_Impl(ModPlayerHooks.PostUpdate.
     }
 }
 
-public sealed partial class ModPlayer_ModifyExtraJumpDurationMultiplier_Impl(ModPlayerHooks.ModifyExtraJumpDurationMultiplier.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyExtraJumpDurationMultiplier_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyExtraJumpDurationMultiplier.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyExtraJumpDurationMultiplier_Impl(ModPlayerHooks.ModifyExtraJumpDurationMultiplier.Definition hook) : this()
     {
-        return new ModPlayer_ModifyExtraJumpDurationMultiplier_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyExtraJumpDurationMultiplier(
@@ -3383,15 +3623,23 @@ public sealed partial class ModPlayer_ModifyExtraJumpDurationMultiplier_Impl(Mod
     }
 }
 
-public sealed partial class ModPlayer_CanStartExtraJump_Impl(ModPlayerHooks.CanStartExtraJump.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanStartExtraJump_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanStartExtraJump.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanStartExtraJump_Impl(ModPlayerHooks.CanStartExtraJump.Definition hook) : this()
     {
-        return new ModPlayer_CanStartExtraJump_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanStartExtraJump(
@@ -3410,15 +3658,23 @@ public sealed partial class ModPlayer_CanStartExtraJump_Impl(ModPlayerHooks.CanS
     }
 }
 
-public sealed partial class ModPlayer_OnExtraJumpStarted_Impl(ModPlayerHooks.OnExtraJumpStarted.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnExtraJumpStarted_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnExtraJumpStarted.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnExtraJumpStarted_Impl(ModPlayerHooks.OnExtraJumpStarted.Definition hook) : this()
     {
-        return new ModPlayer_OnExtraJumpStarted_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnExtraJumpStarted(
@@ -3441,15 +3697,23 @@ public sealed partial class ModPlayer_OnExtraJumpStarted_Impl(ModPlayerHooks.OnE
     }
 }
 
-public sealed partial class ModPlayer_OnExtraJumpEnded_Impl(ModPlayerHooks.OnExtraJumpEnded.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnExtraJumpEnded_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnExtraJumpEnded.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnExtraJumpEnded_Impl(ModPlayerHooks.OnExtraJumpEnded.Definition hook) : this()
     {
-        return new ModPlayer_OnExtraJumpEnded_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnExtraJumpEnded(
@@ -3468,15 +3732,23 @@ public sealed partial class ModPlayer_OnExtraJumpEnded_Impl(ModPlayerHooks.OnExt
     }
 }
 
-public sealed partial class ModPlayer_OnExtraJumpRefreshed_Impl(ModPlayerHooks.OnExtraJumpRefreshed.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnExtraJumpRefreshed_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnExtraJumpRefreshed.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnExtraJumpRefreshed_Impl(ModPlayerHooks.OnExtraJumpRefreshed.Definition hook) : this()
     {
-        return new ModPlayer_OnExtraJumpRefreshed_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnExtraJumpRefreshed(
@@ -3495,15 +3767,23 @@ public sealed partial class ModPlayer_OnExtraJumpRefreshed_Impl(ModPlayerHooks.O
     }
 }
 
-public sealed partial class ModPlayer_ExtraJumpVisuals_Impl(ModPlayerHooks.ExtraJumpVisuals.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ExtraJumpVisuals_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ExtraJumpVisuals.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ExtraJumpVisuals_Impl(ModPlayerHooks.ExtraJumpVisuals.Definition hook) : this()
     {
-        return new ModPlayer_ExtraJumpVisuals_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ExtraJumpVisuals(
@@ -3522,15 +3802,23 @@ public sealed partial class ModPlayer_ExtraJumpVisuals_Impl(ModPlayerHooks.Extra
     }
 }
 
-public sealed partial class ModPlayer_CanShowExtraJumpVisuals_Impl(ModPlayerHooks.CanShowExtraJumpVisuals.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanShowExtraJumpVisuals_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanShowExtraJumpVisuals.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanShowExtraJumpVisuals_Impl(ModPlayerHooks.CanShowExtraJumpVisuals.Definition hook) : this()
     {
-        return new ModPlayer_CanShowExtraJumpVisuals_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanShowExtraJumpVisuals(
@@ -3549,15 +3837,23 @@ public sealed partial class ModPlayer_CanShowExtraJumpVisuals_Impl(ModPlayerHook
     }
 }
 
-public sealed partial class ModPlayer_OnExtraJumpCleared_Impl(ModPlayerHooks.OnExtraJumpCleared.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnExtraJumpCleared_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnExtraJumpCleared.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnExtraJumpCleared_Impl(ModPlayerHooks.OnExtraJumpCleared.Definition hook) : this()
     {
-        return new ModPlayer_OnExtraJumpCleared_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnExtraJumpCleared(
@@ -3576,15 +3872,23 @@ public sealed partial class ModPlayer_OnExtraJumpCleared_Impl(ModPlayerHooks.OnE
     }
 }
 
-public sealed partial class ModPlayer_FrameEffects_Impl(ModPlayerHooks.FrameEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_FrameEffects_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.FrameEffects.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_FrameEffects_Impl(ModPlayerHooks.FrameEffects.Definition hook) : this()
     {
-        return new ModPlayer_FrameEffects_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void FrameEffects()
@@ -3596,15 +3900,23 @@ public sealed partial class ModPlayer_FrameEffects_Impl(ModPlayerHooks.FrameEffe
     }
 }
 
-public sealed partial class ModPlayer_ImmuneTo_Impl(ModPlayerHooks.ImmuneTo.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ImmuneTo_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ImmuneTo.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ImmuneTo_Impl(ModPlayerHooks.ImmuneTo.Definition hook) : this()
     {
-        return new ModPlayer_ImmuneTo_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ImmuneTo(
@@ -3631,15 +3943,23 @@ public sealed partial class ModPlayer_ImmuneTo_Impl(ModPlayerHooks.ImmuneTo.Defi
     }
 }
 
-public sealed partial class ModPlayer_FreeDodge_Impl(ModPlayerHooks.FreeDodge.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_FreeDodge_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.FreeDodge.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_FreeDodge_Impl(ModPlayerHooks.FreeDodge.Definition hook) : this()
     {
-        return new ModPlayer_FreeDodge_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool FreeDodge(
@@ -3658,15 +3978,23 @@ public sealed partial class ModPlayer_FreeDodge_Impl(ModPlayerHooks.FreeDodge.De
     }
 }
 
-public sealed partial class ModPlayer_ConsumableDodge_Impl(ModPlayerHooks.ConsumableDodge.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ConsumableDodge_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ConsumableDodge.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ConsumableDodge_Impl(ModPlayerHooks.ConsumableDodge.Definition hook) : this()
     {
-        return new ModPlayer_ConsumableDodge_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ConsumableDodge(
@@ -3685,15 +4013,23 @@ public sealed partial class ModPlayer_ConsumableDodge_Impl(ModPlayerHooks.Consum
     }
 }
 
-public sealed partial class ModPlayer_ModifyHurt_Impl(ModPlayerHooks.ModifyHurt.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyHurt_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyHurt.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyHurt_Impl(ModPlayerHooks.ModifyHurt.Definition hook) : this()
     {
-        return new ModPlayer_ModifyHurt_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHurt(
@@ -3712,15 +4048,23 @@ public sealed partial class ModPlayer_ModifyHurt_Impl(ModPlayerHooks.ModifyHurt.
     }
 }
 
-public sealed partial class ModPlayer_OnHurt_Impl(ModPlayerHooks.OnHurt.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnHurt_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnHurt.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnHurt_Impl(ModPlayerHooks.OnHurt.Definition hook) : this()
     {
-        return new ModPlayer_OnHurt_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHurt(
@@ -3739,15 +4083,23 @@ public sealed partial class ModPlayer_OnHurt_Impl(ModPlayerHooks.OnHurt.Definiti
     }
 }
 
-public sealed partial class ModPlayer_PostHurt_Impl(ModPlayerHooks.PostHurt.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostHurt_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostHurt.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostHurt_Impl(ModPlayerHooks.PostHurt.Definition hook) : this()
     {
-        return new ModPlayer_PostHurt_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostHurt(
@@ -3766,15 +4118,23 @@ public sealed partial class ModPlayer_PostHurt_Impl(ModPlayerHooks.PostHurt.Defi
     }
 }
 
-public sealed partial class ModPlayer_PreKill_Impl(ModPlayerHooks.PreKill.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PreKill_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PreKill.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PreKill_Impl(ModPlayerHooks.PreKill.Definition hook) : this()
     {
-        return new ModPlayer_PreKill_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreKill(
@@ -3813,15 +4173,23 @@ public sealed partial class ModPlayer_PreKill_Impl(ModPlayerHooks.PreKill.Defini
     }
 }
 
-public sealed partial class ModPlayer_Kill_Impl(ModPlayerHooks.Kill.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_Kill_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.Kill.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_Kill_Impl(ModPlayerHooks.Kill.Definition hook) : this()
     {
-        return new ModPlayer_Kill_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void Kill(
@@ -3852,15 +4220,23 @@ public sealed partial class ModPlayer_Kill_Impl(ModPlayerHooks.Kill.Definition h
     }
 }
 
-public sealed partial class ModPlayer_PreModifyLuck_Impl(ModPlayerHooks.PreModifyLuck.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PreModifyLuck_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PreModifyLuck.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PreModifyLuck_Impl(ModPlayerHooks.PreModifyLuck.Definition hook) : this()
     {
-        return new ModPlayer_PreModifyLuck_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreModifyLuck(
@@ -3879,15 +4255,23 @@ public sealed partial class ModPlayer_PreModifyLuck_Impl(ModPlayerHooks.PreModif
     }
 }
 
-public sealed partial class ModPlayer_ModifyLuck_Impl(ModPlayerHooks.ModifyLuck.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyLuck_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyLuck.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyLuck_Impl(ModPlayerHooks.ModifyLuck.Definition hook) : this()
     {
-        return new ModPlayer_ModifyLuck_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyLuck(
@@ -3906,15 +4290,23 @@ public sealed partial class ModPlayer_ModifyLuck_Impl(ModPlayerHooks.ModifyLuck.
     }
 }
 
-public sealed partial class ModPlayer_PreItemCheck_Impl(ModPlayerHooks.PreItemCheck.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PreItemCheck_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PreItemCheck.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PreItemCheck_Impl(ModPlayerHooks.PreItemCheck.Definition hook) : this()
     {
-        return new ModPlayer_PreItemCheck_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreItemCheck()
@@ -3926,15 +4318,23 @@ public sealed partial class ModPlayer_PreItemCheck_Impl(ModPlayerHooks.PreItemCh
     }
 }
 
-public sealed partial class ModPlayer_PostItemCheck_Impl(ModPlayerHooks.PostItemCheck.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostItemCheck_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostItemCheck.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostItemCheck_Impl(ModPlayerHooks.PostItemCheck.Definition hook) : this()
     {
-        return new ModPlayer_PostItemCheck_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostItemCheck()
@@ -3946,15 +4346,23 @@ public sealed partial class ModPlayer_PostItemCheck_Impl(ModPlayerHooks.PostItem
     }
 }
 
-public sealed partial class ModPlayer_UseTimeMultiplier_Impl(ModPlayerHooks.UseTimeMultiplier.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UseTimeMultiplier_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UseTimeMultiplier.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UseTimeMultiplier_Impl(ModPlayerHooks.UseTimeMultiplier.Definition hook) : this()
     {
-        return new ModPlayer_UseTimeMultiplier_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override float UseTimeMultiplier(
@@ -3973,15 +4381,23 @@ public sealed partial class ModPlayer_UseTimeMultiplier_Impl(ModPlayerHooks.UseT
     }
 }
 
-public sealed partial class ModPlayer_UseAnimationMultiplier_Impl(ModPlayerHooks.UseAnimationMultiplier.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UseAnimationMultiplier_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UseAnimationMultiplier.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UseAnimationMultiplier_Impl(ModPlayerHooks.UseAnimationMultiplier.Definition hook) : this()
     {
-        return new ModPlayer_UseAnimationMultiplier_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override float UseAnimationMultiplier(
@@ -4000,15 +4416,23 @@ public sealed partial class ModPlayer_UseAnimationMultiplier_Impl(ModPlayerHooks
     }
 }
 
-public sealed partial class ModPlayer_UseSpeedMultiplier_Impl(ModPlayerHooks.UseSpeedMultiplier.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_UseSpeedMultiplier_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.UseSpeedMultiplier.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_UseSpeedMultiplier_Impl(ModPlayerHooks.UseSpeedMultiplier.Definition hook) : this()
     {
-        return new ModPlayer_UseSpeedMultiplier_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override float UseSpeedMultiplier(
@@ -4027,15 +4451,23 @@ public sealed partial class ModPlayer_UseSpeedMultiplier_Impl(ModPlayerHooks.Use
     }
 }
 
-public sealed partial class ModPlayer_GetHealLife_Impl(ModPlayerHooks.GetHealLife.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_GetHealLife_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.GetHealLife.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_GetHealLife_Impl(ModPlayerHooks.GetHealLife.Definition hook) : this()
     {
-        return new ModPlayer_GetHealLife_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GetHealLife(
@@ -4062,15 +4494,23 @@ public sealed partial class ModPlayer_GetHealLife_Impl(ModPlayerHooks.GetHealLif
     }
 }
 
-public sealed partial class ModPlayer_GetHealMana_Impl(ModPlayerHooks.GetHealMana.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_GetHealMana_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.GetHealMana.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_GetHealMana_Impl(ModPlayerHooks.GetHealMana.Definition hook) : this()
     {
-        return new ModPlayer_GetHealMana_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GetHealMana(
@@ -4097,15 +4537,23 @@ public sealed partial class ModPlayer_GetHealMana_Impl(ModPlayerHooks.GetHealMan
     }
 }
 
-public sealed partial class ModPlayer_ModifyManaCost_Impl(ModPlayerHooks.ModifyManaCost.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyManaCost_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyManaCost.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyManaCost_Impl(ModPlayerHooks.ModifyManaCost.Definition hook) : this()
     {
-        return new ModPlayer_ModifyManaCost_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyManaCost(
@@ -4132,15 +4580,23 @@ public sealed partial class ModPlayer_ModifyManaCost_Impl(ModPlayerHooks.ModifyM
     }
 }
 
-public sealed partial class ModPlayer_OnMissingMana_Impl(ModPlayerHooks.OnMissingMana.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnMissingMana_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnMissingMana.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnMissingMana_Impl(ModPlayerHooks.OnMissingMana.Definition hook) : this()
     {
-        return new ModPlayer_OnMissingMana_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnMissingMana(
@@ -4163,15 +4619,23 @@ public sealed partial class ModPlayer_OnMissingMana_Impl(ModPlayerHooks.OnMissin
     }
 }
 
-public sealed partial class ModPlayer_OnConsumeMana_Impl(ModPlayerHooks.OnConsumeMana.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnConsumeMana_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnConsumeMana.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnConsumeMana_Impl(ModPlayerHooks.OnConsumeMana.Definition hook) : this()
     {
-        return new ModPlayer_OnConsumeMana_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnConsumeMana(
@@ -4194,15 +4658,23 @@ public sealed partial class ModPlayer_OnConsumeMana_Impl(ModPlayerHooks.OnConsum
     }
 }
 
-public sealed partial class ModPlayer_ModifyWeaponDamage_Impl(ModPlayerHooks.ModifyWeaponDamage.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyWeaponDamage_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyWeaponDamage.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyWeaponDamage_Impl(ModPlayerHooks.ModifyWeaponDamage.Definition hook) : this()
     {
-        return new ModPlayer_ModifyWeaponDamage_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyWeaponDamage(
@@ -4225,15 +4697,23 @@ public sealed partial class ModPlayer_ModifyWeaponDamage_Impl(ModPlayerHooks.Mod
     }
 }
 
-public sealed partial class ModPlayer_ModifyWeaponKnockback_Impl(ModPlayerHooks.ModifyWeaponKnockback.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyWeaponKnockback_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyWeaponKnockback.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyWeaponKnockback_Impl(ModPlayerHooks.ModifyWeaponKnockback.Definition hook) : this()
     {
-        return new ModPlayer_ModifyWeaponKnockback_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyWeaponKnockback(
@@ -4256,15 +4736,23 @@ public sealed partial class ModPlayer_ModifyWeaponKnockback_Impl(ModPlayerHooks.
     }
 }
 
-public sealed partial class ModPlayer_ModifyWeaponCrit_Impl(ModPlayerHooks.ModifyWeaponCrit.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyWeaponCrit_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyWeaponCrit.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyWeaponCrit_Impl(ModPlayerHooks.ModifyWeaponCrit.Definition hook) : this()
     {
-        return new ModPlayer_ModifyWeaponCrit_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyWeaponCrit(
@@ -4287,15 +4775,23 @@ public sealed partial class ModPlayer_ModifyWeaponCrit_Impl(ModPlayerHooks.Modif
     }
 }
 
-public sealed partial class ModPlayer_CanConsumeAmmo_Impl(ModPlayerHooks.CanConsumeAmmo.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanConsumeAmmo_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanConsumeAmmo.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanConsumeAmmo_Impl(ModPlayerHooks.CanConsumeAmmo.Definition hook) : this()
     {
-        return new ModPlayer_CanConsumeAmmo_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanConsumeAmmo(
@@ -4318,15 +4814,23 @@ public sealed partial class ModPlayer_CanConsumeAmmo_Impl(ModPlayerHooks.CanCons
     }
 }
 
-public sealed partial class ModPlayer_OnConsumeAmmo_Impl(ModPlayerHooks.OnConsumeAmmo.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnConsumeAmmo_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnConsumeAmmo.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnConsumeAmmo_Impl(ModPlayerHooks.OnConsumeAmmo.Definition hook) : this()
     {
-        return new ModPlayer_OnConsumeAmmo_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnConsumeAmmo(
@@ -4349,15 +4853,23 @@ public sealed partial class ModPlayer_OnConsumeAmmo_Impl(ModPlayerHooks.OnConsum
     }
 }
 
-public sealed partial class ModPlayer_CanShoot_Impl(ModPlayerHooks.CanShoot.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanShoot_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanShoot.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanShoot_Impl(ModPlayerHooks.CanShoot.Definition hook) : this()
     {
-        return new ModPlayer_CanShoot_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanShoot(
@@ -4376,15 +4888,23 @@ public sealed partial class ModPlayer_CanShoot_Impl(ModPlayerHooks.CanShoot.Defi
     }
 }
 
-public sealed partial class ModPlayer_ModifyShootStats_Impl(ModPlayerHooks.ModifyShootStats.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyShootStats_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyShootStats.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyShootStats_Impl(ModPlayerHooks.ModifyShootStats.Definition hook) : this()
     {
-        return new ModPlayer_ModifyShootStats_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyShootStats(
@@ -4423,15 +4943,23 @@ public sealed partial class ModPlayer_ModifyShootStats_Impl(ModPlayerHooks.Modif
     }
 }
 
-public sealed partial class ModPlayer_Shoot_Impl(ModPlayerHooks.Shoot.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_Shoot_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.Shoot.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_Shoot_Impl(ModPlayerHooks.Shoot.Definition hook) : this()
     {
-        return new ModPlayer_Shoot_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool Shoot(
@@ -4474,15 +5002,23 @@ public sealed partial class ModPlayer_Shoot_Impl(ModPlayerHooks.Shoot.Definition
     }
 }
 
-public sealed partial class ModPlayer_MeleeEffects_Impl(ModPlayerHooks.MeleeEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_MeleeEffects_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.MeleeEffects.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_MeleeEffects_Impl(ModPlayerHooks.MeleeEffects.Definition hook) : this()
     {
-        return new ModPlayer_MeleeEffects_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void MeleeEffects(
@@ -4505,15 +5041,23 @@ public sealed partial class ModPlayer_MeleeEffects_Impl(ModPlayerHooks.MeleeEffe
     }
 }
 
-public sealed partial class ModPlayer_EmitEnchantmentVisualsAt_Impl(ModPlayerHooks.EmitEnchantmentVisualsAt.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_EmitEnchantmentVisualsAt_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.EmitEnchantmentVisualsAt.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_EmitEnchantmentVisualsAt_Impl(ModPlayerHooks.EmitEnchantmentVisualsAt.Definition hook) : this()
     {
-        return new ModPlayer_EmitEnchantmentVisualsAt_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void EmitEnchantmentVisualsAt(
@@ -4544,15 +5088,23 @@ public sealed partial class ModPlayer_EmitEnchantmentVisualsAt_Impl(ModPlayerHoo
     }
 }
 
-public sealed partial class ModPlayer_CanCatchNPC_Impl(ModPlayerHooks.CanCatchNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanCatchNPC_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanCatchNPC.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanCatchNPC_Impl(ModPlayerHooks.CanCatchNPC.Definition hook) : this()
     {
-        return new ModPlayer_CanCatchNPC_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanCatchNPC(
@@ -4575,15 +5127,23 @@ public sealed partial class ModPlayer_CanCatchNPC_Impl(ModPlayerHooks.CanCatchNP
     }
 }
 
-public sealed partial class ModPlayer_OnCatchNPC_Impl(ModPlayerHooks.OnCatchNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnCatchNPC_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnCatchNPC.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnCatchNPC_Impl(ModPlayerHooks.OnCatchNPC.Definition hook) : this()
     {
-        return new ModPlayer_OnCatchNPC_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnCatchNPC(
@@ -4610,15 +5170,23 @@ public sealed partial class ModPlayer_OnCatchNPC_Impl(ModPlayerHooks.OnCatchNPC.
     }
 }
 
-public sealed partial class ModPlayer_ModifyItemScale_Impl(ModPlayerHooks.ModifyItemScale.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyItemScale_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyItemScale.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyItemScale_Impl(ModPlayerHooks.ModifyItemScale.Definition hook) : this()
     {
-        return new ModPlayer_ModifyItemScale_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyItemScale(
@@ -4641,15 +5209,23 @@ public sealed partial class ModPlayer_ModifyItemScale_Impl(ModPlayerHooks.Modify
     }
 }
 
-public sealed partial class ModPlayer_OnHitAnything_Impl(ModPlayerHooks.OnHitAnything.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnHitAnything_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnHitAnything.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnHitAnything_Impl(ModPlayerHooks.OnHitAnything.Definition hook) : this()
     {
-        return new ModPlayer_OnHitAnything_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitAnything(
@@ -4676,15 +5252,23 @@ public sealed partial class ModPlayer_OnHitAnything_Impl(ModPlayerHooks.OnHitAny
     }
 }
 
-public sealed partial class ModPlayer_CanHitNPC_Impl(ModPlayerHooks.CanHitNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanHitNPC_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanHitNPC.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanHitNPC_Impl(ModPlayerHooks.CanHitNPC.Definition hook) : this()
     {
-        return new ModPlayer_CanHitNPC_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanHitNPC(
@@ -4703,15 +5287,23 @@ public sealed partial class ModPlayer_CanHitNPC_Impl(ModPlayerHooks.CanHitNPC.De
     }
 }
 
-public sealed partial class ModPlayer_CanMeleeAttackCollideWithNPC_Impl(ModPlayerHooks.CanMeleeAttackCollideWithNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanMeleeAttackCollideWithNPC_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanMeleeAttackCollideWithNPC.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanMeleeAttackCollideWithNPC_Impl(ModPlayerHooks.CanMeleeAttackCollideWithNPC.Definition hook) : this()
     {
-        return new ModPlayer_CanMeleeAttackCollideWithNPC_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanMeleeAttackCollideWithNPC(
@@ -4738,15 +5330,23 @@ public sealed partial class ModPlayer_CanMeleeAttackCollideWithNPC_Impl(ModPlaye
     }
 }
 
-public sealed partial class ModPlayer_ModifyHitNPC_Impl(ModPlayerHooks.ModifyHitNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyHitNPC_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyHitNPC.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyHitNPC_Impl(ModPlayerHooks.ModifyHitNPC.Definition hook) : this()
     {
-        return new ModPlayer_ModifyHitNPC_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitNPC(
@@ -4769,15 +5369,23 @@ public sealed partial class ModPlayer_ModifyHitNPC_Impl(ModPlayerHooks.ModifyHit
     }
 }
 
-public sealed partial class ModPlayer_OnHitNPC_Impl(ModPlayerHooks.OnHitNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnHitNPC_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnHitNPC.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnHitNPC_Impl(ModPlayerHooks.OnHitNPC.Definition hook) : this()
     {
-        return new ModPlayer_OnHitNPC_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitNPC(
@@ -4804,15 +5412,23 @@ public sealed partial class ModPlayer_OnHitNPC_Impl(ModPlayerHooks.OnHitNPC.Defi
     }
 }
 
-public sealed partial class ModPlayer_CanHitNPCWithItem_Impl(ModPlayerHooks.CanHitNPCWithItem.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanHitNPCWithItem_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanHitNPCWithItem.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanHitNPCWithItem_Impl(ModPlayerHooks.CanHitNPCWithItem.Definition hook) : this()
     {
-        return new ModPlayer_CanHitNPCWithItem_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanHitNPCWithItem(
@@ -4835,15 +5451,23 @@ public sealed partial class ModPlayer_CanHitNPCWithItem_Impl(ModPlayerHooks.CanH
     }
 }
 
-public sealed partial class ModPlayer_ModifyHitNPCWithItem_Impl(ModPlayerHooks.ModifyHitNPCWithItem.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyHitNPCWithItem_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyHitNPCWithItem.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyHitNPCWithItem_Impl(ModPlayerHooks.ModifyHitNPCWithItem.Definition hook) : this()
     {
-        return new ModPlayer_ModifyHitNPCWithItem_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitNPCWithItem(
@@ -4870,15 +5494,23 @@ public sealed partial class ModPlayer_ModifyHitNPCWithItem_Impl(ModPlayerHooks.M
     }
 }
 
-public sealed partial class ModPlayer_OnHitNPCWithItem_Impl(ModPlayerHooks.OnHitNPCWithItem.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnHitNPCWithItem_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnHitNPCWithItem.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnHitNPCWithItem_Impl(ModPlayerHooks.OnHitNPCWithItem.Definition hook) : this()
     {
-        return new ModPlayer_OnHitNPCWithItem_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitNPCWithItem(
@@ -4909,15 +5541,23 @@ public sealed partial class ModPlayer_OnHitNPCWithItem_Impl(ModPlayerHooks.OnHit
     }
 }
 
-public sealed partial class ModPlayer_CanHitNPCWithProj_Impl(ModPlayerHooks.CanHitNPCWithProj.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanHitNPCWithProj_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanHitNPCWithProj.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanHitNPCWithProj_Impl(ModPlayerHooks.CanHitNPCWithProj.Definition hook) : this()
     {
-        return new ModPlayer_CanHitNPCWithProj_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanHitNPCWithProj(
@@ -4940,15 +5580,23 @@ public sealed partial class ModPlayer_CanHitNPCWithProj_Impl(ModPlayerHooks.CanH
     }
 }
 
-public sealed partial class ModPlayer_ModifyHitNPCWithProj_Impl(ModPlayerHooks.ModifyHitNPCWithProj.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyHitNPCWithProj_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyHitNPCWithProj.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyHitNPCWithProj_Impl(ModPlayerHooks.ModifyHitNPCWithProj.Definition hook) : this()
     {
-        return new ModPlayer_ModifyHitNPCWithProj_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitNPCWithProj(
@@ -4975,15 +5623,23 @@ public sealed partial class ModPlayer_ModifyHitNPCWithProj_Impl(ModPlayerHooks.M
     }
 }
 
-public sealed partial class ModPlayer_OnHitNPCWithProj_Impl(ModPlayerHooks.OnHitNPCWithProj.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnHitNPCWithProj_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnHitNPCWithProj.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnHitNPCWithProj_Impl(ModPlayerHooks.OnHitNPCWithProj.Definition hook) : this()
     {
-        return new ModPlayer_OnHitNPCWithProj_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitNPCWithProj(
@@ -5014,15 +5670,23 @@ public sealed partial class ModPlayer_OnHitNPCWithProj_Impl(ModPlayerHooks.OnHit
     }
 }
 
-public sealed partial class ModPlayer_CanHitPvp_Impl(ModPlayerHooks.CanHitPvp.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanHitPvp_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanHitPvp.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanHitPvp_Impl(ModPlayerHooks.CanHitPvp.Definition hook) : this()
     {
-        return new ModPlayer_CanHitPvp_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanHitPvp(
@@ -5045,15 +5709,23 @@ public sealed partial class ModPlayer_CanHitPvp_Impl(ModPlayerHooks.CanHitPvp.De
     }
 }
 
-public sealed partial class ModPlayer_CanHitPvpWithProj_Impl(ModPlayerHooks.CanHitPvpWithProj.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanHitPvpWithProj_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanHitPvpWithProj.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanHitPvpWithProj_Impl(ModPlayerHooks.CanHitPvpWithProj.Definition hook) : this()
     {
-        return new ModPlayer_CanHitPvpWithProj_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanHitPvpWithProj(
@@ -5076,15 +5748,23 @@ public sealed partial class ModPlayer_CanHitPvpWithProj_Impl(ModPlayerHooks.CanH
     }
 }
 
-public sealed partial class ModPlayer_CanBeHitByNPC_Impl(ModPlayerHooks.CanBeHitByNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanBeHitByNPC_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanBeHitByNPC.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanBeHitByNPC_Impl(ModPlayerHooks.CanBeHitByNPC.Definition hook) : this()
     {
-        return new ModPlayer_CanBeHitByNPC_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanBeHitByNPC(
@@ -5107,15 +5787,23 @@ public sealed partial class ModPlayer_CanBeHitByNPC_Impl(ModPlayerHooks.CanBeHit
     }
 }
 
-public sealed partial class ModPlayer_ModifyHitByNPC_Impl(ModPlayerHooks.ModifyHitByNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyHitByNPC_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyHitByNPC.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyHitByNPC_Impl(ModPlayerHooks.ModifyHitByNPC.Definition hook) : this()
     {
-        return new ModPlayer_ModifyHitByNPC_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitByNPC(
@@ -5138,15 +5826,23 @@ public sealed partial class ModPlayer_ModifyHitByNPC_Impl(ModPlayerHooks.ModifyH
     }
 }
 
-public sealed partial class ModPlayer_OnHitByNPC_Impl(ModPlayerHooks.OnHitByNPC.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnHitByNPC_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnHitByNPC.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnHitByNPC_Impl(ModPlayerHooks.OnHitByNPC.Definition hook) : this()
     {
-        return new ModPlayer_OnHitByNPC_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitByNPC(
@@ -5169,15 +5865,23 @@ public sealed partial class ModPlayer_OnHitByNPC_Impl(ModPlayerHooks.OnHitByNPC.
     }
 }
 
-public sealed partial class ModPlayer_CanBeHitByProjectile_Impl(ModPlayerHooks.CanBeHitByProjectile.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanBeHitByProjectile_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanBeHitByProjectile.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanBeHitByProjectile_Impl(ModPlayerHooks.CanBeHitByProjectile.Definition hook) : this()
     {
-        return new ModPlayer_CanBeHitByProjectile_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanBeHitByProjectile(
@@ -5196,15 +5900,23 @@ public sealed partial class ModPlayer_CanBeHitByProjectile_Impl(ModPlayerHooks.C
     }
 }
 
-public sealed partial class ModPlayer_ModifyHitByProjectile_Impl(ModPlayerHooks.ModifyHitByProjectile.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyHitByProjectile_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyHitByProjectile.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyHitByProjectile_Impl(ModPlayerHooks.ModifyHitByProjectile.Definition hook) : this()
     {
-        return new ModPlayer_ModifyHitByProjectile_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitByProjectile(
@@ -5227,15 +5939,23 @@ public sealed partial class ModPlayer_ModifyHitByProjectile_Impl(ModPlayerHooks.
     }
 }
 
-public sealed partial class ModPlayer_OnHitByProjectile_Impl(ModPlayerHooks.OnHitByProjectile.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnHitByProjectile_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnHitByProjectile.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnHitByProjectile_Impl(ModPlayerHooks.OnHitByProjectile.Definition hook) : this()
     {
-        return new ModPlayer_OnHitByProjectile_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitByProjectile(
@@ -5258,15 +5978,23 @@ public sealed partial class ModPlayer_OnHitByProjectile_Impl(ModPlayerHooks.OnHi
     }
 }
 
-public sealed partial class ModPlayer_ModifyFishingAttempt_Impl(ModPlayerHooks.ModifyFishingAttempt.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyFishingAttempt_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyFishingAttempt.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyFishingAttempt_Impl(ModPlayerHooks.ModifyFishingAttempt.Definition hook) : this()
     {
-        return new ModPlayer_ModifyFishingAttempt_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyFishingAttempt(
@@ -5285,15 +6013,23 @@ public sealed partial class ModPlayer_ModifyFishingAttempt_Impl(ModPlayerHooks.M
     }
 }
 
-public sealed partial class ModPlayer_CatchFish_Impl(ModPlayerHooks.CatchFish.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CatchFish_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CatchFish.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CatchFish_Impl(ModPlayerHooks.CatchFish.Definition hook) : this()
     {
-        return new ModPlayer_CatchFish_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void CatchFish(
@@ -5328,15 +6064,23 @@ public sealed partial class ModPlayer_CatchFish_Impl(ModPlayerHooks.CatchFish.De
     }
 }
 
-public sealed partial class ModPlayer_ModifyCaughtFish_Impl(ModPlayerHooks.ModifyCaughtFish.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyCaughtFish_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyCaughtFish.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyCaughtFish_Impl(ModPlayerHooks.ModifyCaughtFish.Definition hook) : this()
     {
-        return new ModPlayer_ModifyCaughtFish_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyCaughtFish(
@@ -5355,15 +6099,23 @@ public sealed partial class ModPlayer_ModifyCaughtFish_Impl(ModPlayerHooks.Modif
     }
 }
 
-public sealed partial class ModPlayer_CanConsumeBait_Impl(ModPlayerHooks.CanConsumeBait.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanConsumeBait_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanConsumeBait.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanConsumeBait_Impl(ModPlayerHooks.CanConsumeBait.Definition hook) : this()
     {
-        return new ModPlayer_CanConsumeBait_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanConsumeBait(
@@ -5382,15 +6134,23 @@ public sealed partial class ModPlayer_CanConsumeBait_Impl(ModPlayerHooks.CanCons
     }
 }
 
-public sealed partial class ModPlayer_GetFishingLevel_Impl(ModPlayerHooks.GetFishingLevel.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_GetFishingLevel_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.GetFishingLevel.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_GetFishingLevel_Impl(ModPlayerHooks.GetFishingLevel.Definition hook) : this()
     {
-        return new ModPlayer_GetFishingLevel_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GetFishingLevel(
@@ -5417,15 +6177,23 @@ public sealed partial class ModPlayer_GetFishingLevel_Impl(ModPlayerHooks.GetFis
     }
 }
 
-public sealed partial class ModPlayer_AnglerQuestReward_Impl(ModPlayerHooks.AnglerQuestReward.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_AnglerQuestReward_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.AnglerQuestReward.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_AnglerQuestReward_Impl(ModPlayerHooks.AnglerQuestReward.Definition hook) : this()
     {
-        return new ModPlayer_AnglerQuestReward_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void AnglerQuestReward(
@@ -5448,15 +6216,23 @@ public sealed partial class ModPlayer_AnglerQuestReward_Impl(ModPlayerHooks.Angl
     }
 }
 
-public sealed partial class ModPlayer_GetDyeTraderReward_Impl(ModPlayerHooks.GetDyeTraderReward.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_GetDyeTraderReward_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.GetDyeTraderReward.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_GetDyeTraderReward_Impl(ModPlayerHooks.GetDyeTraderReward.Definition hook) : this()
     {
-        return new ModPlayer_GetDyeTraderReward_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GetDyeTraderReward(
@@ -5475,15 +6251,23 @@ public sealed partial class ModPlayer_GetDyeTraderReward_Impl(ModPlayerHooks.Get
     }
 }
 
-public sealed partial class ModPlayer_DrawEffects_Impl(ModPlayerHooks.DrawEffects.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_DrawEffects_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.DrawEffects.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_DrawEffects_Impl(ModPlayerHooks.DrawEffects.Definition hook) : this()
     {
-        return new ModPlayer_DrawEffects_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void DrawEffects(
@@ -5522,15 +6306,23 @@ public sealed partial class ModPlayer_DrawEffects_Impl(ModPlayerHooks.DrawEffect
     }
 }
 
-public sealed partial class ModPlayer_ModifyDrawInfo_Impl(ModPlayerHooks.ModifyDrawInfo.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyDrawInfo_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyDrawInfo.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyDrawInfo_Impl(ModPlayerHooks.ModifyDrawInfo.Definition hook) : this()
     {
-        return new ModPlayer_ModifyDrawInfo_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyDrawInfo(
@@ -5549,15 +6341,23 @@ public sealed partial class ModPlayer_ModifyDrawInfo_Impl(ModPlayerHooks.ModifyD
     }
 }
 
-public sealed partial class ModPlayer_ModifyDrawLayerOrdering_Impl(ModPlayerHooks.ModifyDrawLayerOrdering.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyDrawLayerOrdering_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyDrawLayerOrdering.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyDrawLayerOrdering_Impl(ModPlayerHooks.ModifyDrawLayerOrdering.Definition hook) : this()
     {
-        return new ModPlayer_ModifyDrawLayerOrdering_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyDrawLayerOrdering(
@@ -5576,15 +6376,23 @@ public sealed partial class ModPlayer_ModifyDrawLayerOrdering_Impl(ModPlayerHook
     }
 }
 
-public sealed partial class ModPlayer_HideDrawLayers_Impl(ModPlayerHooks.HideDrawLayers.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_HideDrawLayers_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.HideDrawLayers.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_HideDrawLayers_Impl(ModPlayerHooks.HideDrawLayers.Definition hook) : this()
     {
-        return new ModPlayer_HideDrawLayers_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void HideDrawLayers(
@@ -5603,15 +6411,23 @@ public sealed partial class ModPlayer_HideDrawLayers_Impl(ModPlayerHooks.HideDra
     }
 }
 
-public sealed partial class ModPlayer_ModifyScreenPosition_Impl(ModPlayerHooks.ModifyScreenPosition.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyScreenPosition_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyScreenPosition.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyScreenPosition_Impl(ModPlayerHooks.ModifyScreenPosition.Definition hook) : this()
     {
-        return new ModPlayer_ModifyScreenPosition_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyScreenPosition()
@@ -5623,15 +6439,23 @@ public sealed partial class ModPlayer_ModifyScreenPosition_Impl(ModPlayerHooks.M
     }
 }
 
-public sealed partial class ModPlayer_ModifyZoom_Impl(ModPlayerHooks.ModifyZoom.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyZoom_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyZoom.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyZoom_Impl(ModPlayerHooks.ModifyZoom.Definition hook) : this()
     {
-        return new ModPlayer_ModifyZoom_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyZoom(
@@ -5650,15 +6474,23 @@ public sealed partial class ModPlayer_ModifyZoom_Impl(ModPlayerHooks.ModifyZoom.
     }
 }
 
-public sealed partial class ModPlayer_PlayerConnect_Impl(ModPlayerHooks.PlayerConnect.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PlayerConnect_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PlayerConnect.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PlayerConnect_Impl(ModPlayerHooks.PlayerConnect.Definition hook) : this()
     {
-        return new ModPlayer_PlayerConnect_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PlayerConnect()
@@ -5670,15 +6502,23 @@ public sealed partial class ModPlayer_PlayerConnect_Impl(ModPlayerHooks.PlayerCo
     }
 }
 
-public sealed partial class ModPlayer_PlayerDisconnect_Impl(ModPlayerHooks.PlayerDisconnect.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PlayerDisconnect_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PlayerDisconnect.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PlayerDisconnect_Impl(ModPlayerHooks.PlayerDisconnect.Definition hook) : this()
     {
-        return new ModPlayer_PlayerDisconnect_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PlayerDisconnect()
@@ -5690,15 +6530,23 @@ public sealed partial class ModPlayer_PlayerDisconnect_Impl(ModPlayerHooks.Playe
     }
 }
 
-public sealed partial class ModPlayer_OnEnterWorld_Impl(ModPlayerHooks.OnEnterWorld.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnEnterWorld_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnEnterWorld.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnEnterWorld_Impl(ModPlayerHooks.OnEnterWorld.Definition hook) : this()
     {
-        return new ModPlayer_OnEnterWorld_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnEnterWorld()
@@ -5710,15 +6558,23 @@ public sealed partial class ModPlayer_OnEnterWorld_Impl(ModPlayerHooks.OnEnterWo
     }
 }
 
-public sealed partial class ModPlayer_OnRespawn_Impl(ModPlayerHooks.OnRespawn.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnRespawn_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnRespawn.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnRespawn_Impl(ModPlayerHooks.OnRespawn.Definition hook) : this()
     {
-        return new ModPlayer_OnRespawn_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnRespawn()
@@ -5730,15 +6586,23 @@ public sealed partial class ModPlayer_OnRespawn_Impl(ModPlayerHooks.OnRespawn.De
     }
 }
 
-public sealed partial class ModPlayer_ShiftClickSlot_Impl(ModPlayerHooks.ShiftClickSlot.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ShiftClickSlot_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ShiftClickSlot.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ShiftClickSlot_Impl(ModPlayerHooks.ShiftClickSlot.Definition hook) : this()
     {
-        return new ModPlayer_ShiftClickSlot_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ShiftClickSlot(
@@ -5765,15 +6629,23 @@ public sealed partial class ModPlayer_ShiftClickSlot_Impl(ModPlayerHooks.ShiftCl
     }
 }
 
-public sealed partial class ModPlayer_HoverSlot_Impl(ModPlayerHooks.HoverSlot.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_HoverSlot_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.HoverSlot.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_HoverSlot_Impl(ModPlayerHooks.HoverSlot.Definition hook) : this()
     {
-        return new ModPlayer_HoverSlot_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool HoverSlot(
@@ -5800,15 +6672,23 @@ public sealed partial class ModPlayer_HoverSlot_Impl(ModPlayerHooks.HoverSlot.De
     }
 }
 
-public sealed partial class ModPlayer_PostSellItem_Impl(ModPlayerHooks.PostSellItem.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostSellItem_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostSellItem.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostSellItem_Impl(ModPlayerHooks.PostSellItem.Definition hook) : this()
     {
-        return new ModPlayer_PostSellItem_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostSellItem(
@@ -5835,15 +6715,23 @@ public sealed partial class ModPlayer_PostSellItem_Impl(ModPlayerHooks.PostSellI
     }
 }
 
-public sealed partial class ModPlayer_CanSellItem_Impl(ModPlayerHooks.CanSellItem.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanSellItem_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanSellItem.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanSellItem_Impl(ModPlayerHooks.CanSellItem.Definition hook) : this()
     {
-        return new ModPlayer_CanSellItem_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanSellItem(
@@ -5870,15 +6758,23 @@ public sealed partial class ModPlayer_CanSellItem_Impl(ModPlayerHooks.CanSellIte
     }
 }
 
-public sealed partial class ModPlayer_PostBuyItem_Impl(ModPlayerHooks.PostBuyItem.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostBuyItem_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostBuyItem.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostBuyItem_Impl(ModPlayerHooks.PostBuyItem.Definition hook) : this()
     {
-        return new ModPlayer_PostBuyItem_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostBuyItem(
@@ -5905,15 +6801,23 @@ public sealed partial class ModPlayer_PostBuyItem_Impl(ModPlayerHooks.PostBuyIte
     }
 }
 
-public sealed partial class ModPlayer_CanBuyItem_Impl(ModPlayerHooks.CanBuyItem.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanBuyItem_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanBuyItem.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanBuyItem_Impl(ModPlayerHooks.CanBuyItem.Definition hook) : this()
     {
-        return new ModPlayer_CanBuyItem_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanBuyItem(
@@ -5940,15 +6844,23 @@ public sealed partial class ModPlayer_CanBuyItem_Impl(ModPlayerHooks.CanBuyItem.
     }
 }
 
-public sealed partial class ModPlayer_CanUseItem_Impl(ModPlayerHooks.CanUseItem.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanUseItem_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanUseItem.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanUseItem_Impl(ModPlayerHooks.CanUseItem.Definition hook) : this()
     {
-        return new ModPlayer_CanUseItem_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanUseItem(
@@ -5967,15 +6879,23 @@ public sealed partial class ModPlayer_CanUseItem_Impl(ModPlayerHooks.CanUseItem.
     }
 }
 
-public sealed partial class ModPlayer_CanAutoReuseItem_Impl(ModPlayerHooks.CanAutoReuseItem.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanAutoReuseItem_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanAutoReuseItem.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanAutoReuseItem_Impl(ModPlayerHooks.CanAutoReuseItem.Definition hook) : this()
     {
-        return new ModPlayer_CanAutoReuseItem_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanAutoReuseItem(
@@ -5994,15 +6914,23 @@ public sealed partial class ModPlayer_CanAutoReuseItem_Impl(ModPlayerHooks.CanAu
     }
 }
 
-public sealed partial class ModPlayer_ModifyNurseHeal_Impl(ModPlayerHooks.ModifyNurseHeal.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyNurseHeal_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyNurseHeal.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyNurseHeal_Impl(ModPlayerHooks.ModifyNurseHeal.Definition hook) : this()
     {
-        return new ModPlayer_ModifyNurseHeal_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ModifyNurseHeal(
@@ -6033,15 +6961,23 @@ public sealed partial class ModPlayer_ModifyNurseHeal_Impl(ModPlayerHooks.Modify
     }
 }
 
-public sealed partial class ModPlayer_ModifyNursePrice_Impl(ModPlayerHooks.ModifyNursePrice.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyNursePrice_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyNursePrice.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyNursePrice_Impl(ModPlayerHooks.ModifyNursePrice.Definition hook) : this()
     {
-        return new ModPlayer_ModifyNursePrice_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyNursePrice(
@@ -6072,15 +7008,23 @@ public sealed partial class ModPlayer_ModifyNursePrice_Impl(ModPlayerHooks.Modif
     }
 }
 
-public sealed partial class ModPlayer_PostNurseHeal_Impl(ModPlayerHooks.PostNurseHeal.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_PostNurseHeal_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.PostNurseHeal.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_PostNurseHeal_Impl(ModPlayerHooks.PostNurseHeal.Definition hook) : this()
     {
-        return new ModPlayer_PostNurseHeal_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostNurseHeal(
@@ -6111,15 +7055,23 @@ public sealed partial class ModPlayer_PostNurseHeal_Impl(ModPlayerHooks.PostNurs
     }
 }
 
-public sealed partial class ModPlayer_AddStartingItems_Impl(ModPlayerHooks.AddStartingItems.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_AddStartingItems_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.AddStartingItems.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_AddStartingItems_Impl(ModPlayerHooks.AddStartingItems.Definition hook) : this()
     {
-        return new ModPlayer_AddStartingItems_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override System.Collections.Generic.IEnumerable<Terraria.Item> AddStartingItems(
@@ -6138,15 +7090,23 @@ public sealed partial class ModPlayer_AddStartingItems_Impl(ModPlayerHooks.AddSt
     }
 }
 
-public sealed partial class ModPlayer_ModifyStartingInventory_Impl(ModPlayerHooks.ModifyStartingInventory.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ModifyStartingInventory_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ModifyStartingInventory.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_ModifyStartingInventory_Impl(ModPlayerHooks.ModifyStartingInventory.Definition hook) : this()
     {
-        return new ModPlayer_ModifyStartingInventory_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyStartingInventory(
@@ -6169,15 +7129,23 @@ public sealed partial class ModPlayer_ModifyStartingInventory_Impl(ModPlayerHook
     }
 }
 
-public sealed partial class ModPlayer_AddMaterialsForCrafting_Impl(ModPlayerHooks.AddMaterialsForCrafting.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_AddMaterialsForCrafting_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.AddMaterialsForCrafting.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_AddMaterialsForCrafting_Impl(ModPlayerHooks.AddMaterialsForCrafting.Definition hook) : this()
     {
-        return new ModPlayer_AddMaterialsForCrafting_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override System.Collections.Generic.IEnumerable<Terraria.Item> AddMaterialsForCrafting(
@@ -6196,15 +7164,23 @@ public sealed partial class ModPlayer_AddMaterialsForCrafting_Impl(ModPlayerHook
     }
 }
 
-public sealed partial class ModPlayer_OnPickup_Impl(ModPlayerHooks.OnPickup.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnPickup_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnPickup.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnPickup_Impl(ModPlayerHooks.OnPickup.Definition hook) : this()
     {
-        return new ModPlayer_OnPickup_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool OnPickup(
@@ -6223,15 +7199,23 @@ public sealed partial class ModPlayer_OnPickup_Impl(ModPlayerHooks.OnPickup.Defi
     }
 }
 
-public sealed partial class ModPlayer_CanBeTeleportedTo_Impl(ModPlayerHooks.CanBeTeleportedTo.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_CanBeTeleportedTo_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.CanBeTeleportedTo.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_CanBeTeleportedTo_Impl(ModPlayerHooks.CanBeTeleportedTo.Definition hook) : this()
     {
-        return new ModPlayer_CanBeTeleportedTo_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanBeTeleportedTo(
@@ -6254,15 +7238,23 @@ public sealed partial class ModPlayer_CanBeTeleportedTo_Impl(ModPlayerHooks.CanB
     }
 }
 
-public sealed partial class ModPlayer_OnEquipmentLoadoutSwitched_Impl(ModPlayerHooks.OnEquipmentLoadoutSwitched.Definition hook) : Terraria.ModLoader.ModPlayer
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_OnEquipmentLoadoutSwitched_Impl() : Terraria.ModLoader.ModPlayer
 {
-    public override string Name => base.Name + '_' + System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.OnEquipmentLoadoutSwitched.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
 
     protected override bool CloneNewInstances => true;
 
-    public override Terraria.ModLoader.ModPlayer Clone(Terraria.Player newEntity)
+    public ModPlayer_OnEquipmentLoadoutSwitched_Impl(ModPlayerHooks.OnEquipmentLoadoutSwitched.Definition hook) : this()
     {
-        return new ModPlayer_OnEquipmentLoadoutSwitched_Impl(hook);
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnEquipmentLoadoutSwitched(
