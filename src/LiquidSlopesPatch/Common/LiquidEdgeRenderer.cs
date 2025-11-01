@@ -35,26 +35,14 @@ public sealed class LiquidEdgeRenderer : ModSystem
     ///     Even if it's enabled, it will only apply if <see cref="Active" />
     ///     is <see langword="true" />.
     /// </summary>
-    public static bool Enabled => ModContent.GetInstance<Config>().Enabled;
+    public static bool Enabled => false;
 
     /// <summary>
     ///     Whether the new rendering is actually active for this frame.
     /// </summary>
-    public static bool Active => Enabled && Lighting.Mode is LightMode.Color or LightMode.White;
+    public static bool Active => false;
 
     private static List<Point> BlockWaterBehindLocations { get; } = [];
-
-    public override void PostSetupContent()
-    {
-        base.PostSetupContent();
-
-        if (RewrittenLiquidRenderer.IsUpdatedAndDoesNotNeedToApplyAnythingBecauseItsInTerrariaNow)
-        {
-            return;
-        }
-
-        TileID.Sets.BlocksWaterDrawingBehindSelf[TileID.SnowFallBlock] = true;
-    }
 
     public static void Clear()
     {
