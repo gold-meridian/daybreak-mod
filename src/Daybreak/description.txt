@@ -12,7 +12,12 @@ Current features:
 - advanced rarity rendering support, including on hover, in the world, and in the inventory,
 - system for pre-rendering animated item textures that will render their animations in all contexts,
 - tile placement hooks,
-- custom lily pad and cattail support.
+- custom lily pad and cattail support,
+- support for custom ItemSlot contexts,
+- support for adding new slots to the Miscellaneous equipment page,
+- solutions for preserving RenderTarget contents on-swap,
+- API for autoloading chat tags (with de-registration),
+- author name tags and convenient API for custom author text in mod panels.
 
 For more information:
 - https://github.com/gold-meridian/daybreak-mod
