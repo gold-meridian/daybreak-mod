@@ -1,0 +1,4 @@
+displayName = tModLoader GH-3878 Test
+author = tomat
+version = 1.0.0
+homepage = https://discord.gg/6Fm4ZTHVub
