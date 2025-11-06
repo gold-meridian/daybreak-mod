@@ -76,7 +76,7 @@ public struct SpriteBatchParameters
     ///     Default values to populate <see langword="null"/>s with.
     /// </param>
     /// <returns>The new snapshot.</returns>
-    public SpriteBatchSnapshot ToSnapshot(SpriteBatchSnapshot defaultValues)
+    public readonly SpriteBatchSnapshot ToSnapshot(SpriteBatchSnapshot defaultValues)
     {
         return new SpriteBatchSnapshot(
             SortMode ?? defaultValues.SortMode,

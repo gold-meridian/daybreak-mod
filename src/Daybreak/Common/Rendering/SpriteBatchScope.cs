@@ -47,11 +47,28 @@ public readonly struct SpriteBatchScope : IDisposable
     /// </summary>
     public void Dispose()
     {
-        spriteBatch.End();
+        if (spriteBatch.beginCalled)
+        {
+            spriteBatch.End();
+        }
 
         if (oldState.HasValue)
         {
             spriteBatch.Begin(oldState.Value);
         }
+    }
+}
+
+/// <summary>
+///     Extensions to types for <see cref="SpriteBatch"/> scopes.
+/// </summary>
+public static class SpriteBatchScopeExtensions
+{
+    /// <summary>
+    ///     See <see cref="SpriteBatchScope"/>.
+    /// </summary>
+    public static SpriteBatchScope CreateScope(this SpriteBatch @this)
+    {
+        return new SpriteBatchScope(@this);
     }
 }

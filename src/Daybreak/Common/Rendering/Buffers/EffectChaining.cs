@@ -157,10 +157,11 @@ public sealed class DrawWithEffectsScope : IDisposable
 
         Lease = pool.Rent(graphicsDevice, width, height, renderDesc);
 
-        sbScope = new SpriteBatchScope(spriteBatch);
-
-        rtScope = new RenderTargetScope(graphicsDevice, Lease.Target, preserveContents, clear, clearColor);
-        sbScope.Begin(parameters.ToSnapshot(default_target_snapshot));
+        sbScope = spriteBatch.CreateScope();
+        {
+            rtScope = new RenderTargetScope(graphicsDevice, Lease.Target, preserveContents, clear, clearColor);
+            sbScope.Begin(parameters.ToSnapshot(default_target_snapshot));
+        }
     }
 
     /// <summary>
@@ -180,12 +181,12 @@ public sealed class DrawWithEffectsScope : IDisposable
             {
                 spriteBatch.Begin(effect.Parameters.ToSnapshot(effect_target_snapshot));
                 effect.Effect.Apply();
-                
+
                 spriteBatch.Draw(Lease.Target, Vector2.Zero, Color.White);
-                
+
                 spriteBatch.End();
             }
-            
+
             Lease.Dispose();
             Lease = nextLease;
         }

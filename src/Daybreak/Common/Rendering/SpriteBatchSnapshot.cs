@@ -101,7 +101,7 @@ public struct SpriteBatchSnapshot
     /// <summary>
     ///     Initializes a set of parameters from this snapshot.
     /// </summary>
-    public SpriteBatchParameters ToParameters()
+    public readonly SpriteBatchParameters ToParameters()
     {
         return new SpriteBatchParameters(
             SortMode,
