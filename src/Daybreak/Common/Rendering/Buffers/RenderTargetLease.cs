@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Daybreak.Common.Rendering;
 
 /* Credit to Verminoid Creature for the original implementation, based on:
- * <https://github.com/JasperDawg/Cataphract/blob/ba401cf5ca519e26fb8043cdf81ccefce57d2f3d/Common/Buffers.cs>.
+ * <https://github.com/JasperDawg/Cataphract/blob/f33541642d1f2aec575b2a4f580afe13a2de2cfa/Common/Buffers.cs>.
  *
  * Generously leased to us under AGPL v3.0.
  */
