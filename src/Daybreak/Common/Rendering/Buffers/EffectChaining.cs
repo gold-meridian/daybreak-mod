@@ -85,8 +85,8 @@ public sealed class DrawWithEffectsScope : IDisposable
     private readonly RenderTargetDescriptor renderDesc;
     private readonly int width;
     private readonly int height;
-    private readonly SpriteBatchSnapshot? originalState;
-    private readonly RenderTargetScope scope;
+    private readonly SpriteBatchScope sbScope;
+    private readonly RenderTargetScope rtScope;
 
     /// <summary>
     ///     The final lease containing the rendered data as the result of all
@@ -157,14 +157,10 @@ public sealed class DrawWithEffectsScope : IDisposable
 
         Lease = pool.Rent(graphicsDevice, width, height, renderDesc);
 
-        if (spriteBatch.beginCalled)
-        {
-            spriteBatch.End(out var original);
-            originalState = original;
-        }
+        sbScope = new SpriteBatchScope(spriteBatch);
 
-        scope = new RenderTargetScope(graphicsDevice, Lease.Target, preserveContents, clear, clearColor);
-        spriteBatch.Begin(parameters.ToSnapshot(default_target_snapshot));
+        rtScope = new RenderTargetScope(graphicsDevice, Lease.Target, preserveContents, clear, clearColor);
+        sbScope.Begin(parameters.ToSnapshot(default_target_snapshot));
     }
 
     /// <summary>
@@ -175,7 +171,7 @@ public sealed class DrawWithEffectsScope : IDisposable
     public void Dispose()
     {
         spriteBatch.End();
-        scope.Dispose();
+        rtScope.Dispose();
 
         foreach (var effect in effects)
         {
@@ -194,10 +190,7 @@ public sealed class DrawWithEffectsScope : IDisposable
             Lease = nextLease;
         }
 
-        if (originalState.HasValue)
-        {
-            spriteBatch.Begin(originalState.Value);
-        }
+        sbScope.Dispose();
     }
 }
 

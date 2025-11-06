@@ -11,7 +11,7 @@ namespace Daybreak.Common.Rendering;
  */
 
 /// <summary>
-///     Managed the scope of a render target to be rendered to, swapping out the
+///     Manages the scope of a render target to be rendered to, swapping out the
 ///     currently-used targets of a device on creation and replacing it with the
 ///     given target.  Switches back to the old targets upon disposal.
 /// </summary>
