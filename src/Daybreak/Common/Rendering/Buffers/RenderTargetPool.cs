@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -43,16 +44,6 @@ public abstract class RenderTargetPool : IDisposable
     public static RenderTargetPool Shared => shared;
 
     /// <summary>
-    ///     Creates a new <see cref="RenderTargetPool"/> instance using default
-    ///     configurable options.
-    /// </summary>
-    /// <returns>A new <see cref="RenderTargetPool"/> instance.</returns>
-    public static RenderTargetPool Create()
-    {
-        return new ConfigurableRenderTargetPool();
-    }
-
-    /// <summary>
     ///     Retrieves a buffer that is of the exact specified dimensions
     ///     <paramref name="width"/> and <paramref name="height"/> with the
     ///     given render target <paramref name="descriptor"/>.
@@ -62,8 +53,8 @@ public abstract class RenderTargetPool : IDisposable
     /// <param name="height">The height of the target.</param>
     /// <param name="descriptor">The initialization parameters.</param>
     /// <returns>
-    ///     A leased target which should be disposed upon use, generally
-    ///     returning it to the pool automatically.
+    ///     A leased target which should be disposed upon use, automatically
+    ///     returning the target to the pool.
     /// </returns>
     /// <remarks>
     ///     This buffer is loaned to the caller and should be returned to the
@@ -101,6 +92,10 @@ public abstract class RenderTargetPool : IDisposable
     ///     buffer, the target's contents are left unchanged.
     /// </param>
     /// <remarks>
+    ///     This is automatically called by
+    ///     <see cref="RenderTargetLease.Dispose"/> and generally should not be
+    ///     called manually without being explicitly told to do so.
+    ///     <br />
     ///     Once a buffer has been returned to the pool, the caller gives up all
     ///     ownership of the buffer and must not use it.  The reference returned
     ///     from a given call to <see cref="Rent"/> must only be returned via
@@ -110,6 +105,17 @@ public abstract class RenderTargetPool : IDisposable
     ///     determined that the pool already has enough buffers stored.
     /// </remarks>
     public abstract void Return(RenderTarget2D target, bool clearTarget = false);
+
+    /// <summary>
+    ///     Disposes of the pool and releases any owned render targets,
+    ///     including ones still potentially leased.
+    ///     <remarks />
+    ///     Generally, disposal should only be performed when either the
+    ///     consumer has ownership over the pool and knows when all buffers have
+    ///     been returned, or at the very end of execution and disposal must
+    ///     occur (such as during mod unloading).
+    /// </summary>
+    public abstract void Dispose();
 }
 
 /// <summary>
@@ -120,7 +126,7 @@ public static class RenderTargetPoolExtensions
 {
     // TODO: Vector2 scale extensions and individual float width/height
     //       extensions.
-    
+
     /// <summary>
     ///     Retrieves a buffer of size <paramref name="baseSize"/> scaled by
     ///     <paramref name="scale"/> rounded up to the nearest integer value and
@@ -132,8 +138,8 @@ public static class RenderTargetPoolExtensions
     /// <param name="scale">The scale factor of the target.</param>
     /// <param name="descriptor">The initialization parameters.</param>
     /// <returns>
-    ///     A leased target which should be disposed upon use, generally
-    ///     returning it to the pool automatically.
+    ///     A leased target which should be disposed upon use, automatically
+    ///     returning the target to the pool.
     /// </returns>
     public static RenderTargetLease RentScaled(
         this RenderTargetPool pool,
@@ -151,6 +157,86 @@ public static class RenderTargetPoolExtensions
     }
 }
 
-internal sealed class SharedRenderTargetPool : RenderTargetPool { }
+// TODO: Account for different graphics devices?
+internal sealed class SharedRenderTargetPool : RenderTargetPool
+{
+    private readonly record struct Key(
+        int Width,
+        int Height,
+        RenderTargetDescriptor Descriptor
+    )
+    {
+        public static Key From(RenderTarget2D target)
+        {
+            return new Key(target.Width, target.Height, RenderTargetDescriptor.From(target));
+        }
+    }
 
-internal sealed class ConfigurableRenderTargetPool : RenderTargetPool { }
+    private readonly Dictionary<Key, Stack<RenderTarget2D>> cache = [];
+    private bool disposed;
+
+    public override RenderTargetLease Rent(GraphicsDevice device, int width, int height, RenderTargetDescriptor descriptor)
+    {
+        ArgumentNullException.ThrowIfNull(device);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(width, 0);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(height, 0);
+
+        ObjectDisposedException.ThrowIf(disposed, this);
+
+        var key = new Key(width, height, descriptor);
+        if (!cache.TryGetValue(key, out var stack))
+        {
+            cache[key] = stack = [];
+        }
+
+        var target = stack.Count > 0
+            ? stack.Pop()
+            : descriptor.Create(device, width, height);
+
+        return new RenderTargetLease(target, this);
+    }
+
+    public override void Return(RenderTarget2D target, bool clearTarget = false)
+    {
+        ArgumentNullException.ThrowIfNull(target);
+
+        if (target.IsDisposed)
+        {
+            return;
+        }
+
+        ObjectDisposedException.ThrowIf(disposed, this);
+
+        var key = Key.From(target);
+        if (!cache.TryGetValue(key, out var stack))
+        {
+            cache[key] = stack = [];
+        }
+        
+        stack.Push(target);
+    }
+
+    public override void Dispose()
+    {
+        if (disposed)
+        {
+            return;
+        }
+
+        Trim();
+        disposed = true;
+    }
+
+    private void Trim()
+    {
+        foreach (var stack in cache.Values)
+        {
+            while (stack.Count > 0)
+            {
+                stack.Pop().Dispose();
+            }
+        }
+        
+        cache.Clear();
+    }
+}

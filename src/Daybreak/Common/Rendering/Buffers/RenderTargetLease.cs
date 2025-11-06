@@ -14,14 +14,9 @@ namespace Daybreak.Common.Rendering;
 /// </summary>
 /// <param name="pool">The pool leasing the target.</param>
 /// <param name="target">The target being leased.</param>
-/// <param name="returnOnDispose">
-///     Whether to automatically return the target to the pool when it's
-///     disposed.
-/// </param>
 public readonly struct RenderTargetLease(
     RenderTarget2D target,
-    RenderTargetPool pool,
-    bool returnOnDispose = true
+    RenderTargetPool pool
 ) : IDisposable
 {
     /// <summary>
@@ -34,9 +29,6 @@ public readonly struct RenderTargetLease(
     /// </summary>
     public void Dispose()
     {
-        if (returnOnDispose)
-        {
-            pool.Return(Target);
-        }
+        pool.Return(Target);
     }
 }

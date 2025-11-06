@@ -16,7 +16,7 @@ namespace Daybreak.Common.Rendering;
 /// <param name="Depth"><see cref="RenderTarget2D.DepthStencilFormat"/></param>
 /// <param name="MultiSampleCount"><see cref="RenderTarget2D.MultiSampleCount"/></param>
 /// <param name="Usage"><see cref="RenderTarget2D.RenderTargetUsage"/></param>
-/// <param name="GenerateMipmaps"><see cref="RenderTarget2D.MultiSampleCount"/></param>
+/// <param name="GenerateMipmaps"><see cref="RenderTarget2D.LevelCount"/></param>
 public readonly record struct RenderTargetDescriptor(
     SurfaceFormat Format,
     DepthFormat Depth,
@@ -50,5 +50,19 @@ public readonly record struct RenderTargetDescriptor(
     public RenderTarget2D Create(GraphicsDevice device, int width, int height)
     {
         return new RenderTarget2D(device, width, height, GenerateMipmaps, Format, Depth, MultiSampleCount, Usage);
+    }
+
+    /// <summary>
+    ///     Constructs a descriptor from an existing target.
+    /// </summary>
+    public static RenderTargetDescriptor From(RenderTarget2D target)
+    {
+        return new RenderTargetDescriptor(
+            target.Format,
+            target.DepthStencilFormat,
+            target.MultiSampleCount,
+            RenderTargetUsage.DiscardContents,
+            target.LevelCount > 1
+        );
     }
 }
