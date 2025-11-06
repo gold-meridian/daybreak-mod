@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
+using Daybreak.Common.Features.Hooks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -116,6 +117,12 @@ public abstract class RenderTargetPool : IDisposable
     ///     occur (such as during mod unloading).
     /// </summary>
     public abstract void Dispose();
+
+    [OnLoad]
+    private static void UnloadShared()
+    {
+        Shared.Dispose();
+    }
 }
 
 /// <summary>
