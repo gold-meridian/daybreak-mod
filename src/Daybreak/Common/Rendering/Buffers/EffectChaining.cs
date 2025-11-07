@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Daybreak.Common.Assets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
 
 namespace Daybreak.Common.Rendering;
@@ -15,40 +16,74 @@ namespace Daybreak.Common.Rendering;
  */
 
 /// <summary>
-///     An effect in an effect chain, denoting how an image should be rendered
-///     with a given <paramref name="Effect"/>.
+///     An entry in an effect chain which an arbitrary function to apply a
+///     shader, alongside any parameters to use for rendering the target with
+///     the shader.
 /// </summary>
-/// <param name="Effect">The effect, or <see langword="null"/> for default.</param>
+/// <param name="ApplyEffect">Applies the effect.</param>
 /// <param name="Parameters">
 ///     The parameters to use to render the texture with the effect.
 /// </param>
 public readonly record struct EffectChainEntry(
-    ShaderData Effect,
-    SpriteBatchParameters Parameters
+    Action ApplyEffect,
+    SpriteBatchParameters Parameters = default
 )
 {
-    // Really simple wrapper over shader data to accept an arbitrary Effect
-    // object.
-    private sealed class EffectShaderData(Effect effect) : ShaderData(
-        DummyAssetProvider.From(effect),
-        effect.CurrentTechnique.Passes.First().Name
-    );
-
     /// <summary>
-    ///     An effect in an effect chain, denoting how an image should be
-    ///     rendered with a given <paramref name="effect"/>.
+    ///     Applies a <see cref="ShaderData"/>.
     /// </summary>
-    /// <param name="effect">The effect, or <see langword="null"/> for default.</param>
-    /// <param name="parameters">
-    ///     The parameters to use to render the texture with the effect.
-    /// </param>
+    public EffectChainEntry(
+        ShaderData shader,
+        SpriteBatchParameters parameters = default
+    ) : this(shader.Apply, parameters)
+    {
+        
+    }
+    
+    /// <summary>
+    ///     Applies an <see cref="Effect"/>.
+    /// </summary>
     public EffectChainEntry(
         Effect effect,
         SpriteBatchParameters parameters
     ) : this(
-        new EffectShaderData(effect),
+        ApplyEffectFunc(effect),
         parameters
     ) { }
+
+    /// <summary>
+    ///     Creates an entry from a player shader.
+    /// </summary>
+    /// <param name="player">The player context.</param>
+    /// <param name="shader">The shader.</param>
+    /// <param name="drawData">The draw context, if any.</param>
+    /// <param name="parameters">
+    ///     The parameters to use when rendering the actual texture.
+    /// </param>
+    public static EffectChainEntry FromPlayerShader(
+        Player player,
+        PlayerShader shader,
+        DrawData? drawData = null,
+        SpriteBatchParameters parameters = default
+    )
+    {
+        // Transcribed and modified from PlayerDrawHelper.SetShaderForData.
+        Action shaderData = shader.ShaderType switch
+        {
+            PlayerDrawHelper.ShaderConfiguration.ArmorShader => () => GameShaders.Armor.Apply(shader.LocalIndex, player, drawData),
+            PlayerDrawHelper.ShaderConfiguration.HairShader => () => GameShaders.Hair.Apply(shader.LocalIndex, player, drawData),
+            PlayerDrawHelper.ShaderConfiguration.TileShader => Main.tileShader.CurrentTechnique.Passes[shader.LocalIndex].Apply,
+            PlayerDrawHelper.ShaderConfiguration.TilePaintID => Main.tileShader.CurrentTechnique.Passes[Main.ConvertPaintIdToTileShaderIndex(shader.LocalIndex, false, false)].Apply,
+            _ => throw new ArgumentOutOfRangeException(nameof(shader)),
+        };
+
+        return new EffectChainEntry(shaderData, parameters);
+    }
+
+    private static Action ApplyEffectFunc(Effect effect, string? pass = null)
+    {
+        return () => effect.CurrentTechnique.Passes[pass ?? effect.CurrentTechnique.Passes.First().Name].Apply();
+    }
 }
 
 /// <summary>
@@ -180,7 +215,7 @@ public sealed class DrawWithEffectsScope : IDisposable
             using (new RenderTargetScope(graphicsDevice, nextLease.Target, true, true, Color.Transparent))
             {
                 spriteBatch.Begin(effect.Parameters.ToSnapshot(effect_target_snapshot));
-                effect.Effect.Apply();
+                effect.ApplyEffect();
 
                 spriteBatch.Draw(Lease.Target, Vector2.Zero, Color.White);
 

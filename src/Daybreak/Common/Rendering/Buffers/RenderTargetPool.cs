@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Daybreak.Common.Features.Hooks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 
 namespace Daybreak.Common.Rendering;
 
@@ -118,7 +119,38 @@ public abstract class RenderTargetPool : IDisposable
     /// </summary>
     public abstract void Dispose();
 
+    private static readonly List<RenderTargetLease> leases_to_clear = [];
+    
+    /// <summary>
+    ///     Queues a lease to be disposed of on the next render frame for cases
+    ///     where ownership of the lease is given up for rendering during a
+    ///     frame.
+    /// </summary>
+    /// <param name="lease">
+    ///     The lease to dispose of at the start of the next frame.
+    /// </param>
+    public static void ReturnNextFrame(RenderTargetLease lease)
+    {
+        leases_to_clear.Add(lease);
+    }
+
     [OnLoad]
+    private static void RegisterFrameLeaseDisposal()
+    {
+        On_Main.DoDraw += (orig, self, time) =>
+        {
+            foreach (var lease in leases_to_clear)
+            {
+                lease.Dispose();
+            }
+            
+            leases_to_clear.Clear();
+            
+            orig(self, time);
+        };
+    }
+
+    [OnUnload]
     private static void UnloadShared()
     {
         Shared.Dispose();
