@@ -50,7 +50,7 @@ public readonly struct RenderTargetScope : IDisposable
             RenderTargetPreserver.PreserveBindings(previous);
         }
         
-        device.SetRenderTargets(target);
+        device.SetRenderTarget(target);
 
         if (clear)
         {

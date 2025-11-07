@@ -5,6 +5,7 @@ using Daybreak.Common.Features.Hooks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Daybreak.Common.Rendering;
 
@@ -120,7 +121,7 @@ public abstract class RenderTargetPool : IDisposable
     public abstract void Dispose();
 
     private static readonly List<RenderTargetLease> leases_to_clear = [];
-    
+
     /// <summary>
     ///     Queues a lease to be disposed of on the next render frame for cases
     ///     where ownership of the lease is given up for rendering during a
@@ -134,7 +135,7 @@ public abstract class RenderTargetPool : IDisposable
         leases_to_clear.Add(lease);
     }
 
-    [OnLoad]
+    [OnLoad(Side = ModSide.Client)]
     private static void RegisterFrameLeaseDisposal()
     {
         On_Main.DoDraw += (orig, self, time) =>
@@ -143,17 +144,22 @@ public abstract class RenderTargetPool : IDisposable
             {
                 lease.Dispose();
             }
-            
+
             leases_to_clear.Clear();
-            
+
             orig(self, time);
         };
     }
 
-    [OnUnload]
+    [OnUnload(Side = ModSide.Client)]
     private static void UnloadShared()
     {
-        Shared.Dispose();
+        Main.RunOnMainThread(
+            () =>
+            {
+                Shared.Dispose();
+            }
+        );
     }
 }
 
@@ -251,7 +257,7 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         {
             cache[key] = stack = [];
         }
-        
+
         stack.Push(target);
     }
 
@@ -275,7 +281,7 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
                 stack.Pop().Dispose();
             }
         }
-        
+
         cache.Clear();
     }
 }
