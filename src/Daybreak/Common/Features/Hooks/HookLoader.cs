@@ -3,8 +3,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
+using Terraria.ModLoader.Default;
 
 namespace Daybreak.Common.Features.Hooks;
 
@@ -40,9 +43,21 @@ internal static class HookLoader
             Autoload_ResolveStaticHooks_CallOnLoads
         );
 
+        /*
         MonoModHooks.Add(
             typeof(MenuLoader).GetMethod(nameof(MenuLoader.Unload), BindingFlags.NonPublic | BindingFlags.Static)!,
             Unload_CallOnUnloads
+        );
+        */
+
+        MonoModHooks.Add(
+            typeof(MonoModHooks).GetMethod(nameof(MonoModHooks.RemoveAll), BindingFlags.NonPublic | BindingFlags.Static)!,
+            RemoveAll_SkipDaybreak
+        );
+
+        MonoModHooks.Modify(
+            typeof(Mod).GetMethod(nameof(Mod.UnloadContent), BindingFlags.NonPublic | BindingFlags.Instance)!,
+            UnloadContent_CallOnUnloads
         );
 
         // AutoloadConfig and EnsureResizeArraysAttributeStaticCtorsRun are the
@@ -107,6 +122,7 @@ internal static class HookLoader
         LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, CallOnLoads);
     }
 
+    /*
     private static void Unload_CallOnUnloads(Action orig)
     {
         foreach (var mod in ModLoader.Mods)
@@ -123,6 +139,53 @@ internal static class HookLoader
         }
 
         orig();
+    }
+    */
+
+    private static void RemoveAll_SkipDaybreak(Action<Mod> orig, Mod mod)
+    {
+        if (mod is ModImpl)
+        {
+            return;
+        }
+
+        // Force our edits to unload when it gets to ModLoaderMod instead (late
+        // stage).
+        if (mod is ModLoaderMod)
+        {
+            orig(ModContent.GetInstance<ModImpl>());
+            return;
+        }
+
+        orig(mod);
+    }
+
+    private static void UnloadContent_CallOnUnloads(ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        c.GotoNext(MoveType.After, x => x.MatchCallvirt<Mod>(nameof(Mod.Unload)));
+
+        c.EmitLdarg0();
+        c.EmitDelegate(
+            static (Mod mod) =>
+            {
+                var loadableTypes = AssemblyManager.GetLoadableTypes(mod.Code)
+                                                   .OrderBy(x => x.FullName, StringComparer.InvariantCulture)
+                                                   .ToArray();
+                LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), CallOnUnloads);
+            }
+        );
+
+        c.GotoNext(MoveType.Before, x => x.MatchCallvirt<ILoadable>(nameof(ILoadable.Unload)));
+
+        c.EmitDup();
+        c.EmitDelegate(
+            static (ILoadable loadable) =>
+            {
+                CallOnUnloads(loadable);
+            }
+        );
     }
 
     private static void CallOnUnloads(ILoadable instance)
