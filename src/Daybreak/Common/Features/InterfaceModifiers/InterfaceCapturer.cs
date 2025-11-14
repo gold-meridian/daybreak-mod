@@ -12,10 +12,6 @@ internal sealed class InterfaceCapturer : ModSystem
 {
     private static RenderTargetLease? rtLease;
 
-    public static bool ShouldCaptureThisFrame => Fade > 0f;
-
-    public static float Fade { get; set; }
-
     public override void Load()
     {
         base.Load();
@@ -49,7 +45,7 @@ internal sealed class InterfaceCapturer : ModSystem
         c.EmitDelegate(
             static (ref bool scopeApplied) =>
             {
-                if (!ShouldCaptureThisFrame)
+                if (!UserInterfaceModifier.ShouldCaptureThisFrame)
                 {
                     return default(RenderTargetScope);
                 }
@@ -84,11 +80,22 @@ internal sealed class InterfaceCapturer : ModSystem
 
                 rtScope.Dispose();
 
+                Debug.Assert(rtLease is not null);
+
+                var uiInfo = new UserInterfaceInfo(Vector2.Zero, rtLease.Target);
+                UserInterfaceModifier.ApplyTo(ref uiInfo);
+
                 Main.spriteBatch.Begin();
                 Main.spriteBatch.Draw(
-                    rtLease!.Target,
+                    uiInfo.Texture,
+                    uiInfo.Position,
+                    null,
+                    uiInfo.Color,
+                    uiInfo.Rotation,
                     Vector2.Zero,
-                    Color.White * Fade
+                    uiInfo.Scale,
+                    uiInfo.SpriteEffects,
+                    0f
                 );
                 Main.spriteBatch.End();
             }
