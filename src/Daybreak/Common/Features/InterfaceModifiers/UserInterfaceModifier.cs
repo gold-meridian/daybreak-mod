@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Daybreak.Common.Features.InterfaceModifiers;
 
@@ -10,13 +12,18 @@ public static class UserInterfaceModifier
     /// <summary>
     ///     All active modifiers to apply to the interface.
     /// </summary>
-    public static IEnumerable<IUserInterfaceModifier> Modifiers => modifiers;
+    public static IEnumerable<IUserInterfaceModifier> Modifiers => singleton_modifiers.Where(x => !x.Finished).Concat(modifiers);
 
     /// <summary>
     ///     Whether the user interface should be captured this frame to apply
     ///     rendering modifiers.
     /// </summary>
-    public static bool ShouldCaptureThisFrame => modifiers.Count > 0;
+    public static bool ShouldCaptureThisFrame => Modifiers.Any();
+
+    private static readonly List<IUserInterfaceModifier> singleton_modifiers =
+    [
+        new HideUserInterfaceModifier(),
+    ];
 
     private static readonly List<IUserInterfaceModifier> modifiers = [];
 
@@ -56,18 +63,18 @@ public static class UserInterfaceModifier
 
 #region Common modifiers
     /// <summary>
-    ///     A basic fade modifier for the UI which may stack with other fades.
+    ///     Attempts to hide the user interface.  This function is special and
+    ///     should be called every frame with the desired delta per frame.  The
+    ///     greatest delta will be used.
+    ///     <br />
+    ///     If this function does not get called for a frame, it will attempt to
+    ///     start showing the UI again, completing in half a second (30 ticks)
+    ///     if it was completely hidden.
     /// </summary>
-    /// <param name="lengthInTicks">
-    ///     The length to fade out for, in ticks.  If <c>0</c>, hides it instantly.
-    /// </param>
-    /// <remarks>
-    ///     Be sure to call <see cref="HideUserInterfaceModifier.Show"/> to
-    ///     reveal the UI after.
-    /// </remarks>
-    public static HideUserInterfaceModifier Hide(int lengthInTicks)
+    /// <param name="deltaAlpha">The amount to subtract.</param>
+    public static void Hide(float deltaAlpha)
     {
-        return new HideUserInterfaceModifier(lengthInTicks);
+        HideUserInterfaceModifier.DeltaAlpha = MathF.Max(HideUserInterfaceModifier.DeltaAlpha, deltaAlpha);
     }
 #endregion
 }

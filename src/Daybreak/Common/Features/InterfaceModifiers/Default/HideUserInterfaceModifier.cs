@@ -1,53 +1,34 @@
 ﻿namespace Daybreak.Common.Features.InterfaceModifiers;
 
 /// <summary>
-///     A basic fade modifier for the UI which may stack with other fades.
+///     A special modifier which can fade the UI in and out.
 /// </summary>
-/// <param name="lengthInTicks">
-///     The length to fade out for, in ticks.  If <c>0</c>, hides it instantly.
-/// </param>
-public sealed class HideUserInterfaceModifier(int lengthInTicks = 0) : IUserInterfaceModifier
+internal sealed class HideUserInterfaceModifier : IUserInterfaceModifier
 {
-    /// <inheritdoc />
-    public bool Finished => fadeIn && Progress >= 1f;
+    public bool Finished => DeltaAlpha <= 0f && alpha >= 1f;
 
-    private int fadeLength = lengthInTicks;
-    private int fadeTicks;
-    private bool fadeIn;
+    public static float DeltaAlpha { get; set; }
 
-    private float Progress =>
-        fadeLength == 0 ? 1f : fadeTicks / (float)fadeLength;
+    private static float alpha = 1f;
 
-    /// <inheritdoc />
+    private const float show_rate = 1f / 30f;
+
     public void Update(ref UserInterfaceInfo uiInfo)
     {
-        fadeTicks++;
-
-        if (fadeIn)
+        // If there's a delta, subtract it, otherwise start trying to show the
+        // UI.  Always set to zero after since Hide should be getting called
+        // every frame.
+        if (DeltaAlpha > 0f)
         {
-            uiInfo.Color *= 1f - Progress;
+            alpha -= DeltaAlpha;
         }
         else
         {
-            uiInfo.Color *= Progress;
-        }
-    }
-
-    /// <summary>
-    ///     Shows the UI again.
-    /// </summary>
-    /// <param name="lengthInTicks">
-    ///     The length to fade in for, in ticks.  If <c>-1</c>, uses the same
-    ///     length it took to fade out,  If <c>0</c>, shows it instantly.
-    /// </param>
-    public void Show(int lengthInTicks = -1)
-    {
-        if (lengthInTicks > -1)
-        {
-            fadeLength = lengthInTicks;
+            alpha += show_rate;
         }
 
-        fadeTicks = 0;
-        fadeIn = true;
+        DeltaAlpha = 0f;
+
+        uiInfo.Color *= alpha;
     }
 }
