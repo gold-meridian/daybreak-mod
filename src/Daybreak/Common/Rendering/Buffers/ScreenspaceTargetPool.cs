@@ -146,7 +146,7 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
         offscreenTargetHeight = Main.instance.tileTarget.Height;
     }
 
-    [OnUnload(Side = ModSide.Client)]
+    [OnLoad(Side = ModSide.Client)]
     private static void AddHooks()
     {
         On_Main.EnsureRenderTargetContent += (orig, self) =>
