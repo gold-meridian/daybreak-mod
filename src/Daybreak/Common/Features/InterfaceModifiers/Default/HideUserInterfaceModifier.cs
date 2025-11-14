@@ -27,6 +27,11 @@ internal sealed class HideUserInterfaceModifier : IUserInterfaceModifier
             alpha += show_rate;
         }
 
+        if (alpha <= 0f)
+        {
+            alpha = 0f;
+        }
+
         DeltaAlpha = 0f;
 
         uiInfo.Color *= alpha;

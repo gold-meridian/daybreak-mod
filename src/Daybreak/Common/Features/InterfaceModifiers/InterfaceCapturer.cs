@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Daybreak.Common.CIL;
 using Daybreak.Common.Rendering;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
@@ -8,10 +7,15 @@ using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.InterfaceModifiers;
 
-internal sealed class InterfaceCapturer : ModSystem
+/// <summary>
+///     Responsible for capturing the UI.
+/// </summary>
+public sealed class InterfaceCapturer : ModSystem
 {
     private static RenderTargetLease? rtLease;
+    private static RenderTargetScope? rtScope;
 
+    /// <inheritdoc />
     public override void Load()
     {
         base.Load();
@@ -34,26 +38,21 @@ internal sealed class InterfaceCapturer : ModSystem
     {
         var c = new ILCursor(il);
 
-        var rtScopeAppliedVar = c.AddVariable<bool>();
-        var rtScopeVar = c.AddVariable<RenderTargetScope>();
-
         c.GotoNext(x => x.MatchLdsfld<Main>(nameof(Main.hideUI)));
         c.GotoNext(MoveType.Before, x => x.MatchLdsfld<Main>(nameof(Main.spriteBatch)));
 
         // initialize and apply scope
-        c.EmitLdloca(rtScopeAppliedVar);
         c.EmitDelegate(
-            static (ref bool scopeApplied) =>
+            static () =>
             {
                 if (!UserInterfaceModifier.ShouldCaptureThisFrame)
                 {
-                    return default(RenderTargetScope);
+                    return;
                 }
 
                 Debug.Assert(rtLease is not null);
 
-                scopeApplied = true;
-                return new RenderTargetScope(
+                rtScope = new RenderTargetScope(
                     Main.instance.GraphicsDevice,
                     rtLease.Target,
                     preserveContents: true,
@@ -62,23 +61,21 @@ internal sealed class InterfaceCapturer : ModSystem
                 );
             }
         );
-        c.EmitStloc(rtScopeVar);
 
         c.GotoNext(x => x.MatchCall<Main>(nameof(Main.DrawInterface)));
         c.GotoNext(MoveType.Before, x => x.MatchCall(typeof(TimeLogger), nameof(TimeLogger.DetailedDrawTime)));
 
         // unapply scope
-        c.EmitLdloc(rtScopeAppliedVar);
-        c.EmitLdloc(rtScopeVar);
         c.EmitDelegate(
-            static (bool scopeApplied, RenderTargetScope rtScope) =>
+            static () =>
             {
-                if (!scopeApplied)
+                if (!rtScope.HasValue)
                 {
                     return;
                 }
 
-                rtScope.Dispose();
+                rtScope.Value.Dispose();
+                rtScope = null;
 
                 Debug.Assert(rtLease is not null);
 
@@ -100,5 +97,46 @@ internal sealed class InterfaceCapturer : ModSystem
                 Main.spriteBatch.End();
             }
         );
+    }
+
+    /// <summary>
+    ///     Pauses the capture, rendering it to the screen rather than the UI
+    ///     target.
+    /// </summary>
+    public static void PauseCapture()
+    {
+        if (!rtScope.HasValue)
+        {
+            return;
+        }
+
+        Main.spriteBatch.End(out var ss);
+
+        rtScope.Value.Dispose();
+
+        Main.spriteBatch.Begin(ss);
+    }
+
+    /// <summary>
+    ///     Resumes capture.
+    /// </summary>
+    public static void ResumeCapture()
+    {
+        if (rtLease is null)
+        {
+            return;
+        }
+
+        Main.spriteBatch.End(out var ss);
+
+        rtScope = new RenderTargetScope(
+            Main.instance.GraphicsDevice,
+            rtLease.Target,
+            preserveContents: true,
+            clear: true,
+            clearColor: Color.Transparent
+        );
+
+        Main.spriteBatch.Begin(ss);
     }
 }
