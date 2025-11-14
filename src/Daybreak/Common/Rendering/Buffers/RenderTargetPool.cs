@@ -219,7 +219,6 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         ArgumentNullException.ThrowIfNull(device);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(width, 0);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(height, 0);
-
         ObjectDisposedException.ThrowIf(disposed, this);
 
         var key = new Key(width, height, descriptor);
@@ -238,7 +237,6 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
     public override void Return(RenderTargetLease lease)
     {
         ArgumentNullException.ThrowIfNull(lease);
-
         ObjectDisposedException.ThrowIf(disposed, this);
 
         var key = Key.From(lease.Target);
