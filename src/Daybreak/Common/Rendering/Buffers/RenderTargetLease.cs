@@ -14,7 +14,7 @@ namespace Daybreak.Common.Rendering;
 /// </summary>
 /// <param name="pool">The pool leasing the target.</param>
 /// <param name="target">The target being leased.</param>
-public readonly struct RenderTargetLease(
+public sealed class RenderTargetLease(
     RenderTarget2D target,
     RenderTargetPool pool
 ) : IDisposable
@@ -22,7 +22,7 @@ public readonly struct RenderTargetLease(
     /// <summary>
     ///     The target being leased.
     /// </summary>
-    public RenderTarget2D Target => target;
+    public RenderTarget2D Target { get; set; } = target;
 
     /// <summary>
     ///     Returns the target back to the pool.
