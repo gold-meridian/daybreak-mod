@@ -29,6 +29,6 @@ public sealed class RenderTargetLease(
     /// </summary>
     public void Dispose()
     {
-        pool.Return(Target);
+        pool.Return(this);
     }
 }

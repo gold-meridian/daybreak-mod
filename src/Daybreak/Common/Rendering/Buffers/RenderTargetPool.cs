@@ -43,6 +43,8 @@ public abstract class RenderTargetPool : IDisposable
     ///     applicability.  It assumes targets should not be manually cleared
     ///     and always returns a target of the exact request descriptor and
     ///     dimensions.
+    ///     <br />
+    ///     Disposed on unload.
     /// </remarks>
     public static RenderTargetPool Shared => shared;
 
@@ -82,17 +84,9 @@ public abstract class RenderTargetPool : IDisposable
     ///     Returns to the pool a render target that was previously obtained via
     ///     <see cref="Rent"/> on the same <see name="RenderTargetPool"/>.
     /// </summary>
-    /// <param name="target">
-    ///     The buffer previously obtained from <see cref="Rent"/> to return to
+    /// <param name="lease">
+    ///     The lease previously obtained from <see cref="Rent"/> to return to
     ///     the pool.
-    /// </param>
-    /// <param name="clearTarget">
-    ///     If <see langword="true"/> and if the pool will store the buffer to
-    ///     enable subsequent reuse, <see name="Return"/> will clear the buffer
-    ///     <b>regardless of the usage parameter</b> so that a subsequent
-    ///     consumer via <see cref="Rent"/> will not see the previous consumer's
-    ///     content.  If <see langword="false"/> or if the pool will release the
-    ///     buffer, the target's contents are left unchanged.
     /// </param>
     /// <remarks>
     ///     This is automatically called by
@@ -107,7 +101,7 @@ public abstract class RenderTargetPool : IDisposable
     ///     order to rent it again, or it my release the returned buffer if it's
     ///     determined that the pool already has enough buffers stored.
     /// </remarks>
-    public abstract void Return(RenderTarget2D target, bool clearTarget = false);
+    public abstract void Return(RenderTargetLease lease);
 
     /// <summary>
     ///     Disposes of the pool and releases any owned render targets,
@@ -241,24 +235,19 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         return new RenderTargetLease(target, this);
     }
 
-    public override void Return(RenderTarget2D target, bool clearTarget = false)
+    public override void Return(RenderTargetLease lease)
     {
-        ArgumentNullException.ThrowIfNull(target);
-
-        if (target.IsDisposed)
-        {
-            return;
-        }
+        ArgumentNullException.ThrowIfNull(lease);
 
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        var key = Key.From(target);
+        var key = Key.From(lease.Target);
         if (!cache.TryGetValue(key, out var stack))
         {
             cache[key] = stack = [];
         }
 
-        stack.Push(target);
+        stack.Push(lease.Target);
     }
 
     public override void Dispose()
