@@ -19,7 +19,7 @@ public sealed class ExpectCloneableAttribute(bool isCloneable = true) : Attribut
 
 internal partial class ContractEnforcer
 {
-    private static void CheckClonabilityContracts(ILoadable loadable)
+    private static void CheckCloneabilityContracts(ILoadable loadable)
     {
         if (loadable is not ModType)
         {

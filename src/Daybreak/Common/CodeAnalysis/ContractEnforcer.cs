@@ -13,7 +13,7 @@ internal static partial class ContractEnforcer
             return;
         }
 
-        CheckClonabilityContracts(loadable);
+        CheckCloneabilityContracts(loadable);
     }
 
     private static bool IsSubclassOfGeneric(this Type? checkType, Type baseType)
