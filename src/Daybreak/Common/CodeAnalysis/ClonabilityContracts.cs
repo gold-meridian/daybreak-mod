@@ -8,7 +8,7 @@ namespace Daybreak.Common.CodeAnalysis;
 ///     Requires that the annotated type's <c>IsCloneable</c> property be equal
 ///     to the value <paramref name="isCloneable"/>.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class ExpectCloneableAttribute(bool isCloneable = true) : Attribute
 {
     /// <summary>
