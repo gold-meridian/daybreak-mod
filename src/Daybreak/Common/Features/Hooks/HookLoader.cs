@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Daybreak.Common.CodeAnalysis;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using Terraria.ModLoader;
@@ -100,6 +101,8 @@ internal static class HookLoader
             return false;
         }
 
+        ContractEnforcer.ValidateLoadable(instance);
+        
         ResolveInstancedHooks(instance);
         CallOnLoads(instance);
         return true;
