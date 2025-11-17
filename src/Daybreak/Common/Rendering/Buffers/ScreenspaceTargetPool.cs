@@ -23,7 +23,7 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
     /// <remarks>
     ///     Disposed on unload.
     /// </remarks>
-    public static ScreenspaceTargetPool Shared { get; } = new();
+    public new static ScreenspaceTargetPool Shared { get; } = new();
 
     /// <summary>
     /// 
