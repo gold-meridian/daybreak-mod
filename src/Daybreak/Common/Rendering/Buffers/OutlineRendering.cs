@@ -63,7 +63,6 @@ public sealed class DrawOutlinedScope : IDisposable
     );
 
     private readonly SpriteBatch spriteBatch;
-    private readonly GraphicsDevice graphicsDevice;
     private readonly Point outputSize;
     private readonly Vector2 destination;
     private readonly Color outlineColor;
@@ -83,7 +82,6 @@ public sealed class DrawOutlinedScope : IDisposable
     /// </summary>
     public DrawOutlinedScope(
         SpriteBatch spriteBatch,
-        GraphicsDevice graphicsDevice,
         RenderTargetPool pool,
         Point outputSize,
         Vector2 destination,
@@ -97,12 +95,10 @@ public sealed class DrawOutlinedScope : IDisposable
         OutlineDirections directions = OutlineDirections.Four
     )
     {
-        ArgumentNullException.ThrowIfNull(graphicsDevice);
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentOutOfRangeException.ThrowIfLessThan(thickness, 1);
 
         this.spriteBatch = spriteBatch;
-        this.graphicsDevice = graphicsDevice;
         this.outputSize = outputSize;
         this.destination = destination;
         this.outlineColor = outlineColor;
@@ -112,12 +108,12 @@ public sealed class DrawOutlinedScope : IDisposable
         this.targetParameters = targetParameters;
         this.directions = directions;
 
-        contentLease = pool.RentScaled(graphicsDevice, outputSize, contentScale, RenderTargetDescriptor.Default);
-        outlineLease = pool.Rent(graphicsDevice, contentLease.Target.Width, contentLease.Target.Height, RenderTargetDescriptor.Default);
+        contentLease = pool.RentScaled(spriteBatch.GraphicsDevice, outputSize, contentScale, RenderTargetDescriptor.Default);
+        outlineLease = pool.Rent(spriteBatch.GraphicsDevice, contentLease.Target.Width, contentLease.Target.Height, RenderTargetDescriptor.Default);
 
-        sbScope = spriteBatch.CreateScope();
+        sbScope = spriteBatch.Scope();
         {
-            rtScope = new RenderTargetScope(graphicsDevice, contentLease.Target, true, true, Color.Transparent);
+            rtScope = contentLease.Scope(clearColor: Color.Transparent);
             sbScope.Begin(initParameters.ToSnapshot(default_snapshot));
         }
     }
@@ -136,7 +132,7 @@ public sealed class DrawOutlinedScope : IDisposable
             _ => throw new ArgumentOutOfRangeException(nameof(directions), directions, null),
         };
 
-        using (new RenderTargetScope(graphicsDevice, outlineLease.Target, true, true, Color.Transparent))
+        using (outlineLease.Scope(clearColor: Color.Transparent))
         {
             spriteBatch.Begin(outlineParameters.ToSnapshot(default_snapshot));
 
@@ -179,7 +175,6 @@ public static class OutlineRenderingExtensions
     /// </summary>
     public static DrawOutlinedScope DrawOutlined(
         this SpriteBatch spriteBatch,
-        GraphicsDevice graphicsDevice,
         RenderTargetPool pool,
         Point outputSize,
         Vector2 destination,
@@ -195,7 +190,6 @@ public static class OutlineRenderingExtensions
     {
         return new DrawOutlinedScope(
             spriteBatch,
-            graphicsDevice,
             pool,
             outputSize,
             destination,

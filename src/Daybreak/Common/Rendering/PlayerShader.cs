@@ -21,7 +21,7 @@ public readonly record struct PlayerShader(
     ///     Creates a new wrapper over a packed value.
     /// </summary>
     /// <param name="packed">The packed value.</param>
-    /// <returns>The desconstructed wrapper.</returns>
+    /// <returns>The deconstructed wrapper.</returns>
     public static PlayerShader FromPacked(int packed)
     {
         return new PlayerShader(

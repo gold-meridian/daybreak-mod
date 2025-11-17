@@ -67,7 +67,7 @@ public static class SpriteBatchScopeExtensions
     /// <summary>
     ///     See <see cref="SpriteBatchScope"/>.
     /// </summary>
-    public static SpriteBatchScope CreateScope(this SpriteBatch @this)
+    public static SpriteBatchScope Scope(this SpriteBatch @this)
     {
         return new SpriteBatchScope(@this);
     }

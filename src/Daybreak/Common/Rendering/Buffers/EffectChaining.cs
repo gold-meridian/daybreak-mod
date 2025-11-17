@@ -35,11 +35,8 @@ public readonly record struct EffectChainEntry(
     public EffectChainEntry(
         ShaderData shader,
         SpriteBatchParameters parameters = default
-    ) : this(shader.Apply, parameters)
-    {
-        
-    }
-    
+    ) : this(shader.Apply, parameters) { }
+
     /// <summary>
     ///     Applies an <see cref="Effect"/>.
     /// </summary>
@@ -139,7 +136,6 @@ public sealed class DrawWithEffectsScope : IDisposable
     /// <param name="spriteBatch">
     ///     The <see cref="SpriteBatch"/> to render with.
     /// </param>
-    /// <param name="graphicsDevice">The device to create targets from.</param>
     /// <param name="pool">
     ///     The <see cref="RenderTargetPool"/> to retrieve targets from.
     /// </param>
@@ -147,9 +143,6 @@ public sealed class DrawWithEffectsScope : IDisposable
     /// <param name="preserveContents">
     ///     Whether to preserve contents of existing targets before swapping to
     ///     the initial new target.
-    /// </param>
-    /// <param name="clear">
-    ///     Whether to clear the initial target before use.
     /// </param>
     /// <param name="clearColor">
     ///     What color to clear the initial target to before use.
@@ -163,11 +156,9 @@ public sealed class DrawWithEffectsScope : IDisposable
     /// <param name="effects">The effects to render with.</param>
     public DrawWithEffectsScope(
         SpriteBatch spriteBatch,
-        GraphicsDevice graphicsDevice,
         RenderTargetPool pool,
         Point targetSize,
         bool preserveContents = true,
-        bool clear = true,
         Color? clearColor = null,
         RenderTargetDescriptor? descriptor = null,
         SpriteBatchParameters parameters = default,
@@ -175,14 +166,13 @@ public sealed class DrawWithEffectsScope : IDisposable
     )
     {
         ArgumentNullException.ThrowIfNull(spriteBatch);
-        ArgumentNullException.ThrowIfNull(graphicsDevice);
         ArgumentNullException.ThrowIfNull(pool);
 
         ArgumentOutOfRangeException.ThrowIfLessThan(targetSize.X, 1);
         ArgumentOutOfRangeException.ThrowIfLessThan(targetSize.Y, 1);
 
         this.spriteBatch = spriteBatch;
-        this.graphicsDevice = graphicsDevice;
+        graphicsDevice = spriteBatch.graphicsDevice;
         this.pool = pool;
         this.effects = effects;
 
@@ -192,9 +182,9 @@ public sealed class DrawWithEffectsScope : IDisposable
 
         Lease = pool.Rent(graphicsDevice, width, height, renderDesc);
 
-        sbScope = spriteBatch.CreateScope();
+        sbScope = spriteBatch.Scope();
         {
-            rtScope = new RenderTargetScope(graphicsDevice, Lease.Target, preserveContents, clear, clearColor);
+            rtScope = Lease.Scope(preserveContents, clearColor);
             sbScope.Begin(parameters.ToSnapshot(default_target_snapshot));
         }
     }
@@ -212,7 +202,7 @@ public sealed class DrawWithEffectsScope : IDisposable
         foreach (var effect in effects)
         {
             var nextLease = pool.Rent(graphicsDevice, width, height, renderDesc);
-            using (new RenderTargetScope(graphicsDevice, nextLease.Target, true, true, Color.Transparent))
+            using (nextLease.Scope(clearColor: Color.Transparent))
             {
                 spriteBatch.Begin(effect.Parameters.ToSnapshot(effect_target_snapshot));
                 effect.ApplyEffect();
@@ -246,26 +236,24 @@ public static class EffectChainingExtensions
     /// </returns>
     public static DrawWithEffectsScope DrawWithEffects(
         this SpriteBatch spriteBatch,
-        GraphicsDevice graphicsDevice,
         RenderTargetPool pool,
         Point targetSize,
-        bool clear = true,
+        bool preserveContents = true,
         Color? clearColor = null,
         RenderTargetDescriptor? descriptor = null,
         SpriteBatchParameters parameters = default,
-        params EffectChainEntry[] effects
+        params IEnumerable<EffectChainEntry> effects
     )
     {
         return new DrawWithEffectsScope(
             spriteBatch,
-            graphicsDevice,
             pool,
             targetSize,
-            clear: clear,
-            clearColor: clearColor,
-            descriptor: descriptor,
-            parameters: parameters,
-            effects: effects
+            preserveContents,
+            clearColor,
+            descriptor,
+            parameters,
+            effects
         );
     }
 }

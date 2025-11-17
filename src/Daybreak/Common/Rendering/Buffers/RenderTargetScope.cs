@@ -17,44 +17,41 @@ namespace Daybreak.Common.Rendering;
 /// </summary>
 public readonly struct RenderTargetScope : IDisposable
 {
-    private readonly GraphicsDevice device;
+    private readonly GraphicsDevice graphicsDevice;
     private readonly RenderTargetBinding[] previous;
 
     /// <summary>
     ///     Creates a new scope, saving the current device targets and starts
     ///     rendering to the new one instead.
     /// </summary>
-    /// <param name="device">The device to manage targets for.</param>
     /// <param name="target">The target to render to.</param>
     /// <param name="preserveContents">
     ///     Whether to ensure swapped targets preserve their contents.
     /// </param>
-    /// <param name="clear">Whether to clear the target.</param>
-    /// <param name="clearColor">The color to clear the target to.</param>
+    /// <param name="clearColor">
+    ///     If not null, clears the target to the given color.
+    /// </param>
     public RenderTargetScope(
-        GraphicsDevice device,
         RenderTarget2D target,
         bool preserveContents = true,
-        bool clear = false,
         Color? clearColor = null
     )
     {
-        ArgumentNullException.ThrowIfNull(device);
         ArgumentNullException.ThrowIfNull(target);
 
-        this.device = device;
-        previous = device.GetRenderTargets();
+        graphicsDevice = target.GraphicsDevice;
+        previous = graphicsDevice.GetRenderTargets();
 
         if (preserveContents)
         {
             RenderTargetPreserver.PreserveBindings(previous);
         }
-        
-        device.SetRenderTarget(target);
 
-        if (clear)
+        graphicsDevice.SetRenderTarget(target);
+
+        if (clearColor.HasValue)
         {
-            device.Clear(clearColor ?? Color.Transparent);
+            graphicsDevice.Clear(clearColor.Value);
         }
     }
 
@@ -64,6 +61,60 @@ public readonly struct RenderTargetScope : IDisposable
     /// </summary>
     public void Dispose()
     {
-        device.SetRenderTargets(previous);
+        graphicsDevice.SetRenderTargets(previous);
+    }
+}
+
+/// <summary>
+///     Extensions supporting <see cref="RenderTargetScope"/>.
+/// </summary>
+public static class RenderTargetScopeExtensions
+{
+    /// <summary>
+    ///     Creates a new scope, saving the current device targets and starts
+    ///     rendering to the new one instead.
+    /// </summary>
+    /// <param name="target">The target to render to.</param>
+    /// <param name="preserveContents">
+    ///     Whether to ensure swapped targets preserve their contents.
+    /// </param>
+    /// <param name="clearColor">
+    ///     If not null, clears the target to the given color.
+    /// </param>
+    public static RenderTargetScope Scope(
+        this RenderTarget2D target,
+        bool preserveContents = true,
+        Color? clearColor = null
+    )
+    {
+        return new RenderTargetScope(
+            target,
+            preserveContents,
+            clearColor
+        );
+    }
+
+    /// <summary>
+    ///     Creates a new scope, saving the current device targets and starts
+    ///     rendering to the new one instead.
+    /// </summary>
+    /// <param name="target">The target to render to.</param>
+    /// <param name="preserveContents">
+    ///     Whether to ensure swapped targets preserve their contents.
+    /// </param>
+    /// <param name="clearColor">
+    ///     If not null, clears the target to the given color.
+    /// </param>
+    public static RenderTargetScope Scope(
+        this RenderTargetLease target,
+        bool preserveContents = true,
+        Color? clearColor = null
+    )
+    {
+        return new RenderTargetScope(
+            target.Target,
+            preserveContents,
+            clearColor
+        );
     }
 }

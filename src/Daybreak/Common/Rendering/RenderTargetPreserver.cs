@@ -7,6 +7,9 @@ namespace Daybreak.Common.Rendering;
 
 /// <summary>
 ///     Handles preserving the contents of <see cref="RenderTarget2D" />s.
+///     <br />
+///     For most cases, <see cref="RenderTargetScope"/> is preferred for
+///     temporarily swapping render targets.
 /// </summary>
 public static class RenderTargetPreserver
 {

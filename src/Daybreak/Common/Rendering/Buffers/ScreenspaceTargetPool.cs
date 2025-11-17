@@ -34,7 +34,7 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
         int offscreenTargetWidth,
         int offscreenTargetHeight
     );
-
+    
     private readonly Dictionary<RenderTargetLease, GetTargetSize> cache = [];
     private bool disposed;
 
@@ -56,6 +56,16 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
         return Rent(device, (_, _, _, _) => (width, height), descriptor);
     }
 
+    /// <inheritdoc cref="Rent(GraphicsDevice,GetTargetSize,RenderTargetDescriptor?)"/>
+    public RenderTargetLease Rent(
+        GraphicsDevice device,
+        Func<int, int, (int, int)> targetSizeCallback,
+        RenderTargetDescriptor? descriptor = null
+    )
+    {
+        return Rent(device, (width, height, _, _) => targetSizeCallback(width, height), descriptor);
+    }
+
     /// <summary>
     ///     Rents a target with varying width and height, to be recalculated
     ///     whenever the screen is resized.  For the lifetime of the lease, this
@@ -66,12 +76,14 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
     public RenderTargetLease Rent(
         GraphicsDevice device,
         GetTargetSize targetSizeCallback,
-        RenderTargetDescriptor descriptor
+        RenderTargetDescriptor? descriptor = null
     )
     {
         ArgumentNullException.ThrowIfNull(device);
         ArgumentNullException.ThrowIfNull(targetSizeCallback);
         ObjectDisposedException.ThrowIf(disposed, this);
+
+        descriptor ??= RenderTargetDescriptor.Default;
 
         GetTargetSizes(
             device,
@@ -87,7 +99,7 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
             offscreenTargetHeight
         );
 
-        var target = descriptor.Create(device, width, height);
+        var target = descriptor.Value.Create(device, width, height);
         var lease = new RenderTargetLease(target, this);
         {
             cache[lease] = targetSizeCallback;

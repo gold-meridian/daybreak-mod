@@ -16,6 +16,88 @@ namespace Daybreak.Common.Rendering;
  */
 
 /// <summary>
+///     Describes the creation parameters of a render target.
+/// </summary>
+/// <param name="Format"><see cref="RenderTarget2D.Format"/></param>
+/// <param name="Depth"><see cref="RenderTarget2D.DepthStencilFormat"/></param>
+/// <param name="MultiSampleCount"><see cref="RenderTarget2D.MultiSampleCount"/></param>
+/// <param name="Usage"><see cref="RenderTarget2D.RenderTargetUsage"/></param>
+/// <param name="GenerateMipmaps"><see cref="RenderTarget2D.LevelCount"/></param>
+public readonly record struct RenderTargetDescriptor(
+    SurfaceFormat Format,
+    DepthFormat Depth,
+    int MultiSampleCount,
+    RenderTargetUsage Usage,
+    bool GenerateMipmaps
+)
+{
+    /// <summary>
+    ///     Default creation parameters.
+    /// </summary>
+    public static RenderTargetDescriptor Default { get; } = new(
+        SurfaceFormat.Color,
+        DepthFormat.None,
+        0,
+        RenderTargetUsage.DiscardContents,
+        false
+    );
+
+    /// <summary>
+    ///     <see cref="RenderTarget2D.MultiSampleCount"/>
+    /// </summary>
+    public int MultiSampleCount { get; } = Math.Max(0, MultiSampleCount);
+
+    /// <summary>
+    ///     Creates a new 2D render target from the descriptor.
+    /// </summary>
+    /// <param name="device">The device to create the target from.</param>
+    /// <param name="width">The width of the target.</param>
+    /// <param name="height">The height of the target.</param>
+    public RenderTarget2D Create(GraphicsDevice device, int width, int height)
+    {
+        return new RenderTarget2D(device, width, height, GenerateMipmaps, Format, Depth, MultiSampleCount, Usage);
+    }
+
+    /// <summary>
+    ///     Constructs a descriptor from an existing target.
+    /// </summary>
+    public static RenderTargetDescriptor From(RenderTarget2D target)
+    {
+        return new RenderTargetDescriptor(
+            target.Format,
+            target.DepthStencilFormat,
+            target.MultiSampleCount,
+            RenderTargetUsage.DiscardContents,
+            target.LevelCount > 1
+        );
+    }
+}
+
+/// <summary>
+///     A leased target from a pool, to be returned back.
+/// </summary>
+/// <param name="pool">The pool leasing the target.</param>
+/// <param name="target">The target being leased.</param>
+public sealed class RenderTargetLease(
+    RenderTarget2D target,
+    RenderTargetPool pool
+) : IDisposable
+{
+    /// <summary>
+    ///     The target being leased.
+    /// </summary>
+    public RenderTarget2D Target { get; set; } = target;
+
+    /// <summary>
+    ///     Returns the target back to the pool.
+    /// </summary>
+    public void Dispose()
+    {
+        pool.Return(this);
+    }
+}
+
+/// <summary>
 ///     Provides a resource pool that enables reusing instances of render
 ///     targets.
 /// </summary>

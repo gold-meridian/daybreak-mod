@@ -52,13 +52,7 @@ public sealed class InterfaceCapturer : ModSystem
 
                 Debug.Assert(rtLease is not null);
 
-                rtScope = new RenderTargetScope(
-                    Main.instance.GraphicsDevice,
-                    rtLease.Target,
-                    preserveContents: true,
-                    clear: true,
-                    clearColor: Color.Transparent
-                );
+                rtScope = rtLease.Scope(clearColor: Color.Transparent);
             }
         );
 
@@ -129,13 +123,7 @@ public sealed class InterfaceCapturer : ModSystem
 
         Main.spriteBatch.End(out var ss);
 
-        rtScope = new RenderTargetScope(
-            Main.instance.GraphicsDevice,
-            rtLease.Target,
-            preserveContents: true,
-            clear: true,
-            clearColor: Color.Transparent
-        );
+        rtScope = rtLease.Scope(clearColor: Color.Transparent);
 
         Main.spriteBatch.Begin(ss);
     }
