@@ -8,8 +8,14 @@ using Terraria.ModLoader.IO;
 
 namespace Daybreak.Common.Features.NPCs;
 
+/// <summary>
+///     Returns whether an NPC has been downed.
+/// </summary>
 public delegate bool DownedGetter();
 
+/// <summary>
+///     Sets whether an NPC has been downed.
+/// </summary>
 public delegate void DownedSetter(bool value);
 
 internal readonly record struct DownedHandler(

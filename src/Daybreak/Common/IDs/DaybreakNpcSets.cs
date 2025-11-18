@@ -30,7 +30,7 @@ public sealed class DaybreakNpcSets : ModSystem
     public static bool?[] ContributesToEocSpawn { get; private set; } = [];
 
     /// <summary>
-    ///     Whether the NPC should be counted when determing whether the
+    ///     Whether the NPC should be counted when determining whether the
     ///     Traveling Merchant is eligible to spawn.
     /// </summary>
     public static bool?[] ContributesToTravelingMerchantSpawn { get; private set; } = [];

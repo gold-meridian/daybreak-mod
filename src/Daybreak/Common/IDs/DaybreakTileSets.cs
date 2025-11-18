@@ -12,8 +12,12 @@ namespace Daybreak.Common.IDs;
 /// </summary>
 public sealed class DaybreakTileSets : ModSystem
 {
+    /// <summary>
+    ///     Copies the draw data of another tile.
+    /// </summary>
     public static int?[] OtherTileDrawDataToCopy { get; private set; } = [];
 
+    /// <inheritdoc />
     public override void ResizeArrays()
     {
         base.ResizeArrays();
@@ -29,6 +33,7 @@ public sealed class DaybreakTileSets : ModSystem
         }
     }
 
+    /// <inheritdoc />
     public override void Load()
     {
         base.Load();

@@ -33,15 +33,6 @@ public readonly struct SpriteBatchScope : IDisposable
     }
 
     /// <summary>
-    ///     Begins the <see cref="SpriteBatch"/> with the
-    ///     <paramref name="snapshot"/>.
-    /// </summary>
-    public void Begin(SpriteBatchSnapshot snapshot)
-    {
-        spriteBatch.Begin(snapshot);
-    }
-
-    /// <summary>
     ///     Ends the <see cref="SpriteBatch"/> and starts it with the old
     ///     parameters if it has already begun prior.
     /// </summary>

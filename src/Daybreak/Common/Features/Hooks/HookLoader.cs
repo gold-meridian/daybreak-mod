@@ -154,9 +154,10 @@ internal static class HookLoader
 
         // Force our edits to unload when it gets to ModLoaderMod instead (late
         // stage).
-        if (mod is ModLoaderMod)
+        // Use TryGetMod because GetInstance may return null in early unload stages.
+        if (mod is ModLoaderMod && ModLoader.TryGetMod("Daybreak", out var modImpl))
         {
-            orig(ModContent.GetInstance<ModImpl>());
+            orig(modImpl);
             return;
         }
 

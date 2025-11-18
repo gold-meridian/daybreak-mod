@@ -114,7 +114,7 @@ public sealed class DrawOutlinedScope : IDisposable
         sbScope = spriteBatch.Scope();
         {
             rtScope = contentLease.Scope(clearColor: Color.Transparent);
-            sbScope.Begin(initParameters.ToSnapshot(default_snapshot));
+            spriteBatch.Begin(initParameters.ToSnapshot(default_snapshot));
         }
     }
 

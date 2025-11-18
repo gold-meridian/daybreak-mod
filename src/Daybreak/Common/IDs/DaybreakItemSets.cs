@@ -11,6 +11,9 @@ namespace Daybreak.Common.IDs;
 [PublicAPI]
 public sealed class DaybreakItemSets : ModSystem
 {
+    /// <summary>
+    ///     Determines whether a given item has a pre-renderer.
+    /// </summary>
     public static IPreRenderedItem?[] PreRenderedItems { get; private set; } = [];
 
     /// <inheritdoc />

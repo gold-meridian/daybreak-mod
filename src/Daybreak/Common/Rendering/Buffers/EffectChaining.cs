@@ -185,7 +185,7 @@ public sealed class DrawWithEffectsScope : IDisposable
         sbScope = spriteBatch.Scope();
         {
             rtScope = Lease.Scope(preserveContents, clearColor);
-            sbScope.Begin(parameters.ToSnapshot(default_target_snapshot));
+            spriteBatch.Begin(parameters.ToSnapshot(default_target_snapshot));
         }
     }
 
