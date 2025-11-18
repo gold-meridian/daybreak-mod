@@ -34,7 +34,7 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
         int offscreenTargetWidth,
         int offscreenTargetHeight
     );
-    
+
     private readonly Dictionary<RenderTargetLease, GetTargetSize> cache = [];
     private bool disposed;
 
@@ -54,6 +54,19 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
         ObjectDisposedException.ThrowIf(disposed, this);
 
         return Rent(device, (_, _, _, _) => (width, height), descriptor);
+    }
+
+    /// <inheritdoc cref="Rent(GraphicsDevice,GetTargetSize,RenderTargetDescriptor?)"/>
+    public RenderTargetLease Rent(
+        GraphicsDevice device,
+        RenderTargetDescriptor? descriptor = null
+    )
+    {
+        return Rent(
+            device,
+            (width, height) => (width, height),
+            descriptor
+        );
     }
 
     /// <inheritdoc cref="Rent(GraphicsDevice,GetTargetSize,RenderTargetDescriptor?)"/>

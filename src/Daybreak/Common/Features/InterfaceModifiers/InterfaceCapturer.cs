@@ -23,11 +23,7 @@ public sealed class InterfaceCapturer : ModSystem
         Main.RunOnMainThread(
             () =>
             {
-                rtLease = ScreenspaceTargetPool.Shared.Rent(
-                    Main.instance.GraphicsDevice,
-                    (width, height, _, _) => (width, height),
-                    RenderTargetDescriptor.Default
-                );
+                rtLease = ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice);
             }
         );
 

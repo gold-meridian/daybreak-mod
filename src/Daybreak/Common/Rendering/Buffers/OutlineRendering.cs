@@ -108,8 +108,8 @@ public sealed class DrawOutlinedScope : IDisposable
         this.targetParameters = targetParameters;
         this.directions = directions;
 
-        contentLease = pool.RentScaled(spriteBatch.GraphicsDevice, outputSize, contentScale, RenderTargetDescriptor.Default);
-        outlineLease = pool.Rent(spriteBatch.GraphicsDevice, contentLease.Target.Width, contentLease.Target.Height, RenderTargetDescriptor.Default);
+        contentLease = pool.RentScaled(spriteBatch.GraphicsDevice, outputSize, contentScale);
+        outlineLease = pool.Rent(spriteBatch.GraphicsDevice, contentLease.Target.Width, contentLease.Target.Height);
 
         sbScope = spriteBatch.Scope();
         {
