@@ -1,6 +1,8 @@
 using System;
+using System.Reflection;
 using JetBrains.Annotations;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Core;
 
 namespace Daybreak.Common.Features.Hooks;
 
@@ -19,6 +21,12 @@ internal interface IHasSide
 ///     If the method is static, it will just be called at the end of
 ///     <see cref="Mod.Autoload" />.
 /// </summary>
+/// <remarks>
+///     If the type is annotated with <see cref="AutoloadAttribute"/>, whether
+///     the type is autoload-able is also taken into account.  This means it
+///     takes into account the Sided-ness of the containing type and whether
+///     autoloading is enabled for it.
+/// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
@@ -40,6 +48,12 @@ public sealed class OnLoadAttribute : Attribute, IHasSide
 ///     <see cref="ModContent.UnloadModContent" />
 ///     (before <see cref="MenuLoader.Unload" />).
 /// </summary>
+/// <remarks>
+///     If the type is annotated with <see cref="AutoloadAttribute"/>, whether
+///     the type is autoload-able is also taken into account.  This means it
+///     takes into account the Sided-ness of the containing type and whether
+///     autoloading is enabled for it.
+/// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
@@ -66,6 +80,12 @@ public sealed class OnUnloadAttribute : Attribute, IHasSide
 ///     does not have any generic parameters (technical limitation).
 /// </summary>
 /// <typeparam name="T">The hook type to subscribe the method to.</typeparam>
+/// <remarks>
+///     If the type is annotated with <see cref="AutoloadAttribute"/>, whether
+///     the type is autoload-able is also taken into account.  This means it
+///     takes into account the Sided-ness of the containing type and whether
+///     autoloading is enabled for it.
+/// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
