@@ -866,24 +866,22 @@ public static partial class GlobalProjectileHooks
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_OnSpawn_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_OnSpawn_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.OnSpawn.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.OnSpawn.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_OnSpawn_Impl(GlobalProjectileHooks.OnSpawn.Definition hook) : this()
+    public GlobalProjectile_OnSpawn_Impl(GlobalProjectileHooks.OnSpawn.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnSpawn(
@@ -907,24 +905,22 @@ public sealed partial class GlobalProjectile_OnSpawn_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_PreAI_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_PreAI_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.PreAI.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.PreAI.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_PreAI_Impl(GlobalProjectileHooks.PreAI.Definition hook) : this()
+    public GlobalProjectile_PreAI_Impl(GlobalProjectileHooks.PreAI.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreAI(
@@ -944,24 +940,22 @@ public sealed partial class GlobalProjectile_PreAI_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_AI_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_AI_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.AI.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.AI.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_AI_Impl(GlobalProjectileHooks.AI.Definition hook) : this()
+    public GlobalProjectile_AI_Impl(GlobalProjectileHooks.AI.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void AI(
@@ -981,24 +975,22 @@ public sealed partial class GlobalProjectile_AI_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_PostAI_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_PostAI_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.PostAI.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.PostAI.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_PostAI_Impl(GlobalProjectileHooks.PostAI.Definition hook) : this()
+    public GlobalProjectile_PostAI_Impl(GlobalProjectileHooks.PostAI.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostAI(
@@ -1018,24 +1010,22 @@ public sealed partial class GlobalProjectile_PostAI_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_ShouldUpdatePosition_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_ShouldUpdatePosition_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.ShouldUpdatePosition.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.ShouldUpdatePosition.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_ShouldUpdatePosition_Impl(GlobalProjectileHooks.ShouldUpdatePosition.Definition hook) : this()
+    public GlobalProjectile_ShouldUpdatePosition_Impl(GlobalProjectileHooks.ShouldUpdatePosition.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ShouldUpdatePosition(
@@ -1055,24 +1045,22 @@ public sealed partial class GlobalProjectile_ShouldUpdatePosition_Impl() : Terra
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_TileCollideStyle_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_TileCollideStyle_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.TileCollideStyle.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.TileCollideStyle.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_TileCollideStyle_Impl(GlobalProjectileHooks.TileCollideStyle.Definition hook) : this()
+    public GlobalProjectile_TileCollideStyle_Impl(GlobalProjectileHooks.TileCollideStyle.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool TileCollideStyle(
@@ -1108,24 +1096,22 @@ public sealed partial class GlobalProjectile_TileCollideStyle_Impl() : Terraria.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_OnTileCollide_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_OnTileCollide_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.OnTileCollide.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.OnTileCollide.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_OnTileCollide_Impl(GlobalProjectileHooks.OnTileCollide.Definition hook) : this()
+    public GlobalProjectile_OnTileCollide_Impl(GlobalProjectileHooks.OnTileCollide.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool OnTileCollide(
@@ -1149,24 +1135,22 @@ public sealed partial class GlobalProjectile_OnTileCollide_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_PreKill_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_PreKill_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.PreKill.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.PreKill.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_PreKill_Impl(GlobalProjectileHooks.PreKill.Definition hook) : this()
+    public GlobalProjectile_PreKill_Impl(GlobalProjectileHooks.PreKill.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreKill(
@@ -1190,24 +1174,22 @@ public sealed partial class GlobalProjectile_PreKill_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_OnKill_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_OnKill_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.OnKill.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.OnKill.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_OnKill_Impl(GlobalProjectileHooks.OnKill.Definition hook) : this()
+    public GlobalProjectile_OnKill_Impl(GlobalProjectileHooks.OnKill.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnKill(
@@ -1231,24 +1213,22 @@ public sealed partial class GlobalProjectile_OnKill_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_CanCutTiles_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_CanCutTiles_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.CanCutTiles.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.CanCutTiles.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_CanCutTiles_Impl(GlobalProjectileHooks.CanCutTiles.Definition hook) : this()
+    public GlobalProjectile_CanCutTiles_Impl(GlobalProjectileHooks.CanCutTiles.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanCutTiles(
@@ -1268,24 +1248,22 @@ public sealed partial class GlobalProjectile_CanCutTiles_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_CutTiles_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_CutTiles_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.CutTiles.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.CutTiles.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_CutTiles_Impl(GlobalProjectileHooks.CutTiles.Definition hook) : this()
+    public GlobalProjectile_CutTiles_Impl(GlobalProjectileHooks.CutTiles.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void CutTiles(
@@ -1305,24 +1283,22 @@ public sealed partial class GlobalProjectile_CutTiles_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_CanDamage_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_CanDamage_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.CanDamage.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.CanDamage.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_CanDamage_Impl(GlobalProjectileHooks.CanDamage.Definition hook) : this()
+    public GlobalProjectile_CanDamage_Impl(GlobalProjectileHooks.CanDamage.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanDamage(
@@ -1342,24 +1318,22 @@ public sealed partial class GlobalProjectile_CanDamage_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_MinionContactDamage_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_MinionContactDamage_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.MinionContactDamage.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.MinionContactDamage.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_MinionContactDamage_Impl(GlobalProjectileHooks.MinionContactDamage.Definition hook) : this()
+    public GlobalProjectile_MinionContactDamage_Impl(GlobalProjectileHooks.MinionContactDamage.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool MinionContactDamage(
@@ -1379,24 +1353,22 @@ public sealed partial class GlobalProjectile_MinionContactDamage_Impl() : Terrar
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_ModifyDamageHitbox_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_ModifyDamageHitbox_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.ModifyDamageHitbox.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.ModifyDamageHitbox.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_ModifyDamageHitbox_Impl(GlobalProjectileHooks.ModifyDamageHitbox.Definition hook) : this()
+    public GlobalProjectile_ModifyDamageHitbox_Impl(GlobalProjectileHooks.ModifyDamageHitbox.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyDamageHitbox(
@@ -1420,24 +1392,22 @@ public sealed partial class GlobalProjectile_ModifyDamageHitbox_Impl() : Terrari
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_CanHitNPC_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_CanHitNPC_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.CanHitNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.CanHitNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_CanHitNPC_Impl(GlobalProjectileHooks.CanHitNPC.Definition hook) : this()
+    public GlobalProjectile_CanHitNPC_Impl(GlobalProjectileHooks.CanHitNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanHitNPC(
@@ -1461,24 +1431,22 @@ public sealed partial class GlobalProjectile_CanHitNPC_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_ModifyHitNPC_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_ModifyHitNPC_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.ModifyHitNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.ModifyHitNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_ModifyHitNPC_Impl(GlobalProjectileHooks.ModifyHitNPC.Definition hook) : this()
+    public GlobalProjectile_ModifyHitNPC_Impl(GlobalProjectileHooks.ModifyHitNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitNPC(
@@ -1506,24 +1474,22 @@ public sealed partial class GlobalProjectile_ModifyHitNPC_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_OnHitNPC_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_OnHitNPC_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.OnHitNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.OnHitNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_OnHitNPC_Impl(GlobalProjectileHooks.OnHitNPC.Definition hook) : this()
+    public GlobalProjectile_OnHitNPC_Impl(GlobalProjectileHooks.OnHitNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitNPC(
@@ -1555,24 +1521,22 @@ public sealed partial class GlobalProjectile_OnHitNPC_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_CanHitPvp_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_CanHitPvp_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.CanHitPvp.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.CanHitPvp.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_CanHitPvp_Impl(GlobalProjectileHooks.CanHitPvp.Definition hook) : this()
+    public GlobalProjectile_CanHitPvp_Impl(GlobalProjectileHooks.CanHitPvp.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanHitPvp(
@@ -1596,24 +1560,22 @@ public sealed partial class GlobalProjectile_CanHitPvp_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_CanHitPlayer_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_CanHitPlayer_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.CanHitPlayer.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.CanHitPlayer.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_CanHitPlayer_Impl(GlobalProjectileHooks.CanHitPlayer.Definition hook) : this()
+    public GlobalProjectile_CanHitPlayer_Impl(GlobalProjectileHooks.CanHitPlayer.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanHitPlayer(
@@ -1637,24 +1599,22 @@ public sealed partial class GlobalProjectile_CanHitPlayer_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_ModifyHitPlayer_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_ModifyHitPlayer_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.ModifyHitPlayer.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.ModifyHitPlayer.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_ModifyHitPlayer_Impl(GlobalProjectileHooks.ModifyHitPlayer.Definition hook) : this()
+    public GlobalProjectile_ModifyHitPlayer_Impl(GlobalProjectileHooks.ModifyHitPlayer.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitPlayer(
@@ -1682,24 +1642,22 @@ public sealed partial class GlobalProjectile_ModifyHitPlayer_Impl() : Terraria.M
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_OnHitPlayer_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_OnHitPlayer_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.OnHitPlayer.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.OnHitPlayer.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_OnHitPlayer_Impl(GlobalProjectileHooks.OnHitPlayer.Definition hook) : this()
+    public GlobalProjectile_OnHitPlayer_Impl(GlobalProjectileHooks.OnHitPlayer.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitPlayer(
@@ -1727,24 +1685,22 @@ public sealed partial class GlobalProjectile_OnHitPlayer_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_Colliding_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_Colliding_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.Colliding.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.Colliding.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_Colliding_Impl(GlobalProjectileHooks.Colliding.Definition hook) : this()
+    public GlobalProjectile_Colliding_Impl(GlobalProjectileHooks.Colliding.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? Colliding(
@@ -1772,24 +1728,22 @@ public sealed partial class GlobalProjectile_Colliding_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_GetAlpha_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_GetAlpha_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.GetAlpha.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.GetAlpha.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_GetAlpha_Impl(GlobalProjectileHooks.GetAlpha.Definition hook) : this()
+    public GlobalProjectile_GetAlpha_Impl(GlobalProjectileHooks.GetAlpha.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override Microsoft.Xna.Framework.Color? GetAlpha(
@@ -1813,24 +1767,22 @@ public sealed partial class GlobalProjectile_GetAlpha_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_PreDrawExtras_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_PreDrawExtras_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.PreDrawExtras.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.PreDrawExtras.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_PreDrawExtras_Impl(GlobalProjectileHooks.PreDrawExtras.Definition hook) : this()
+    public GlobalProjectile_PreDrawExtras_Impl(GlobalProjectileHooks.PreDrawExtras.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDrawExtras(
@@ -1850,24 +1802,22 @@ public sealed partial class GlobalProjectile_PreDrawExtras_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_PreDraw_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_PreDraw_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.PreDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.PreDraw.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_PreDraw_Impl(GlobalProjectileHooks.PreDraw.Definition hook) : this()
+    public GlobalProjectile_PreDraw_Impl(GlobalProjectileHooks.PreDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDraw(
@@ -1891,24 +1841,22 @@ public sealed partial class GlobalProjectile_PreDraw_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_PostDraw_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_PostDraw_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.PostDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.PostDraw.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_PostDraw_Impl(GlobalProjectileHooks.PostDraw.Definition hook) : this()
+    public GlobalProjectile_PostDraw_Impl(GlobalProjectileHooks.PostDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDraw(
@@ -1932,24 +1880,22 @@ public sealed partial class GlobalProjectile_PostDraw_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_DrawBehind_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_DrawBehind_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.DrawBehind.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.DrawBehind.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_DrawBehind_Impl(GlobalProjectileHooks.DrawBehind.Definition hook) : this()
+    public GlobalProjectile_DrawBehind_Impl(GlobalProjectileHooks.DrawBehind.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void DrawBehind(
@@ -1993,24 +1939,22 @@ public sealed partial class GlobalProjectile_DrawBehind_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_CanUseGrapple_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_CanUseGrapple_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.CanUseGrapple.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.CanUseGrapple.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_CanUseGrapple_Impl(GlobalProjectileHooks.CanUseGrapple.Definition hook) : this()
+    public GlobalProjectile_CanUseGrapple_Impl(GlobalProjectileHooks.CanUseGrapple.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanUseGrapple(
@@ -2034,24 +1978,22 @@ public sealed partial class GlobalProjectile_CanUseGrapple_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_UseGrapple_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_UseGrapple_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.UseGrapple.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.UseGrapple.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_UseGrapple_Impl(GlobalProjectileHooks.UseGrapple.Definition hook) : this()
+    public GlobalProjectile_UseGrapple_Impl(GlobalProjectileHooks.UseGrapple.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UseGrapple(
@@ -2075,24 +2017,22 @@ public sealed partial class GlobalProjectile_UseGrapple_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_NumGrappleHooks_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_NumGrappleHooks_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.NumGrappleHooks.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.NumGrappleHooks.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_NumGrappleHooks_Impl(GlobalProjectileHooks.NumGrappleHooks.Definition hook) : this()
+    public GlobalProjectile_NumGrappleHooks_Impl(GlobalProjectileHooks.NumGrappleHooks.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void NumGrappleHooks(
@@ -2120,24 +2060,22 @@ public sealed partial class GlobalProjectile_NumGrappleHooks_Impl() : Terraria.M
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_GrappleRetreatSpeed_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_GrappleRetreatSpeed_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.GrappleRetreatSpeed.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.GrappleRetreatSpeed.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_GrappleRetreatSpeed_Impl(GlobalProjectileHooks.GrappleRetreatSpeed.Definition hook) : this()
+    public GlobalProjectile_GrappleRetreatSpeed_Impl(GlobalProjectileHooks.GrappleRetreatSpeed.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GrappleRetreatSpeed(
@@ -2165,24 +2103,22 @@ public sealed partial class GlobalProjectile_GrappleRetreatSpeed_Impl() : Terrar
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_GrapplePullSpeed_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_GrapplePullSpeed_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.GrapplePullSpeed.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.GrapplePullSpeed.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_GrapplePullSpeed_Impl(GlobalProjectileHooks.GrapplePullSpeed.Definition hook) : this()
+    public GlobalProjectile_GrapplePullSpeed_Impl(GlobalProjectileHooks.GrapplePullSpeed.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GrapplePullSpeed(
@@ -2210,24 +2146,22 @@ public sealed partial class GlobalProjectile_GrapplePullSpeed_Impl() : Terraria.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_GrappleTargetPoint_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_GrappleTargetPoint_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.GrappleTargetPoint.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.GrappleTargetPoint.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_GrappleTargetPoint_Impl(GlobalProjectileHooks.GrappleTargetPoint.Definition hook) : this()
+    public GlobalProjectile_GrappleTargetPoint_Impl(GlobalProjectileHooks.GrappleTargetPoint.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GrappleTargetPoint(
@@ -2259,24 +2193,22 @@ public sealed partial class GlobalProjectile_GrappleTargetPoint_Impl() : Terrari
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_GrappleCanLatchOnTo_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_GrappleCanLatchOnTo_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.GrappleCanLatchOnTo.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.GrappleCanLatchOnTo.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_GrappleCanLatchOnTo_Impl(GlobalProjectileHooks.GrappleCanLatchOnTo.Definition hook) : this()
+    public GlobalProjectile_GrappleCanLatchOnTo_Impl(GlobalProjectileHooks.GrappleCanLatchOnTo.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? GrappleCanLatchOnTo(
@@ -2308,24 +2240,22 @@ public sealed partial class GlobalProjectile_GrappleCanLatchOnTo_Impl() : Terrar
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_PrepareBombToBlow_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_PrepareBombToBlow_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.PrepareBombToBlow.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.PrepareBombToBlow.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_PrepareBombToBlow_Impl(GlobalProjectileHooks.PrepareBombToBlow.Definition hook) : this()
+    public GlobalProjectile_PrepareBombToBlow_Impl(GlobalProjectileHooks.PrepareBombToBlow.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PrepareBombToBlow(
@@ -2345,24 +2275,22 @@ public sealed partial class GlobalProjectile_PrepareBombToBlow_Impl() : Terraria
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_EmitEnchantmentVisualsAt_Impl() : Terraria.ModLoader.GlobalProjectile
+public sealed partial class GlobalProjectile_EmitEnchantmentVisualsAt_Impl : Terraria.ModLoader.GlobalProjectile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.EmitEnchantmentVisualsAt.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalProjectileHooks.EmitEnchantmentVisualsAt.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalProjectile_EmitEnchantmentVisualsAt_Impl(GlobalProjectileHooks.EmitEnchantmentVisualsAt.Definition hook) : this()
+    public GlobalProjectile_EmitEnchantmentVisualsAt_Impl(GlobalProjectileHooks.EmitEnchantmentVisualsAt.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void EmitEnchantmentVisualsAt(

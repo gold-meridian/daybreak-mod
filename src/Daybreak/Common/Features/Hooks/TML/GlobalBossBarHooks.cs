@@ -62,20 +62,18 @@ public static partial class GlobalBossBarHooks
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalBossBar_PreDraw_Impl() : Terraria.ModLoader.GlobalBossBar
+public sealed partial class GlobalBossBar_PreDraw_Impl : Terraria.ModLoader.GlobalBossBar
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalBossBarHooks.PreDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalBossBarHooks.PreDraw.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalBossBar_PreDraw_Impl(GlobalBossBarHooks.PreDraw.Definition hook) : this()
+    public GlobalBossBar_PreDraw_Impl(GlobalBossBarHooks.PreDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDraw(
@@ -103,20 +101,18 @@ public sealed partial class GlobalBossBar_PreDraw_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalBossBar_PostDraw_Impl() : Terraria.ModLoader.GlobalBossBar
+public sealed partial class GlobalBossBar_PostDraw_Impl : Terraria.ModLoader.GlobalBossBar
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalBossBarHooks.PostDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalBossBarHooks.PostDraw.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalBossBar_PostDraw_Impl(GlobalBossBarHooks.PostDraw.Definition hook) : this()
+    public GlobalBossBar_PostDraw_Impl(GlobalBossBarHooks.PostDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDraw(

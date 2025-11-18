@@ -1134,20 +1134,18 @@ public static partial class GlobalTileHooks
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_DropCritterChance_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_DropCritterChance_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.DropCritterChance.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.DropCritterChance.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_DropCritterChance_Impl(GlobalTileHooks.DropCritterChance.Definition hook) : this()
+    public GlobalTile_DropCritterChance_Impl(GlobalTileHooks.DropCritterChance.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void DropCritterChance(
@@ -1187,20 +1185,18 @@ public sealed partial class GlobalTile_DropCritterChance_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_CanDrop_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_CanDrop_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.CanDrop.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.CanDrop.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_CanDrop_Impl(GlobalTileHooks.CanDrop.Definition hook) : this()
+    public GlobalTile_CanDrop_Impl(GlobalTileHooks.CanDrop.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanDrop(
@@ -1228,20 +1224,18 @@ public sealed partial class GlobalTile_CanDrop_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_Drop_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_Drop_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.Drop.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.Drop.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_Drop_Impl(GlobalTileHooks.Drop.Definition hook) : this()
+    public GlobalTile_Drop_Impl(GlobalTileHooks.Drop.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void Drop(
@@ -1269,20 +1263,18 @@ public sealed partial class GlobalTile_Drop_Impl() : Terraria.ModLoader.GlobalTi
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_CanKillTile_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_CanKillTile_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.CanKillTile.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.CanKillTile.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_CanKillTile_Impl(GlobalTileHooks.CanKillTile.Definition hook) : this()
+    public GlobalTile_CanKillTile_Impl(GlobalTileHooks.CanKillTile.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanKillTile(
@@ -1314,20 +1306,18 @@ public sealed partial class GlobalTile_CanKillTile_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_KillTile_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_KillTile_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.KillTile.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.KillTile.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_KillTile_Impl(GlobalTileHooks.KillTile.Definition hook) : this()
+    public GlobalTile_KillTile_Impl(GlobalTileHooks.KillTile.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void KillTile(
@@ -1367,20 +1357,18 @@ public sealed partial class GlobalTile_KillTile_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_NearbyEffects_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_NearbyEffects_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.NearbyEffects.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.NearbyEffects.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_NearbyEffects_Impl(GlobalTileHooks.NearbyEffects.Definition hook) : this()
+    public GlobalTile_NearbyEffects_Impl(GlobalTileHooks.NearbyEffects.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void NearbyEffects(
@@ -1412,20 +1400,18 @@ public sealed partial class GlobalTile_NearbyEffects_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_IsTileDangerous_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_IsTileDangerous_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.IsTileDangerous.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.IsTileDangerous.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_IsTileDangerous_Impl(GlobalTileHooks.IsTileDangerous.Definition hook) : this()
+    public GlobalTile_IsTileDangerous_Impl(GlobalTileHooks.IsTileDangerous.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? IsTileDangerous(
@@ -1457,20 +1443,18 @@ public sealed partial class GlobalTile_IsTileDangerous_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_IsTileBiomeSightable_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_IsTileBiomeSightable_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.IsTileBiomeSightable.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.IsTileBiomeSightable.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_IsTileBiomeSightable_Impl(GlobalTileHooks.IsTileBiomeSightable.Definition hook) : this()
+    public GlobalTile_IsTileBiomeSightable_Impl(GlobalTileHooks.IsTileBiomeSightable.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? IsTileBiomeSightable(
@@ -1502,20 +1486,18 @@ public sealed partial class GlobalTile_IsTileBiomeSightable_Impl() : Terraria.Mo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_IsTileSpelunkable_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_IsTileSpelunkable_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.IsTileSpelunkable.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.IsTileSpelunkable.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_IsTileSpelunkable_Impl(GlobalTileHooks.IsTileSpelunkable.Definition hook) : this()
+    public GlobalTile_IsTileSpelunkable_Impl(GlobalTileHooks.IsTileSpelunkable.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? IsTileSpelunkable(
@@ -1543,20 +1525,18 @@ public sealed partial class GlobalTile_IsTileSpelunkable_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_SetSpriteEffects_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_SetSpriteEffects_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.SetSpriteEffects.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.SetSpriteEffects.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_SetSpriteEffects_Impl(GlobalTileHooks.SetSpriteEffects.Definition hook) : this()
+    public GlobalTile_SetSpriteEffects_Impl(GlobalTileHooks.SetSpriteEffects.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void SetSpriteEffects(
@@ -1588,20 +1568,18 @@ public sealed partial class GlobalTile_SetSpriteEffects_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_AnimateTile_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_AnimateTile_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.AnimateTile.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.AnimateTile.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_AnimateTile_Impl(GlobalTileHooks.AnimateTile.Definition hook) : this()
+    public GlobalTile_AnimateTile_Impl(GlobalTileHooks.AnimateTile.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void AnimateTile()
@@ -1614,20 +1592,18 @@ public sealed partial class GlobalTile_AnimateTile_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_DrawEffects_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_DrawEffects_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.DrawEffects.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.DrawEffects.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_DrawEffects_Impl(GlobalTileHooks.DrawEffects.Definition hook) : this()
+    public GlobalTile_DrawEffects_Impl(GlobalTileHooks.DrawEffects.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void DrawEffects(
@@ -1663,20 +1639,18 @@ public sealed partial class GlobalTile_DrawEffects_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_EmitParticles_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_EmitParticles_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.EmitParticles.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.EmitParticles.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_EmitParticles_Impl(GlobalTileHooks.EmitParticles.Definition hook) : this()
+    public GlobalTile_EmitParticles_Impl(GlobalTileHooks.EmitParticles.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void EmitParticles(
@@ -1724,20 +1698,18 @@ public sealed partial class GlobalTile_EmitParticles_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_SpecialDraw_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_SpecialDraw_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.SpecialDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.SpecialDraw.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_SpecialDraw_Impl(GlobalTileHooks.SpecialDraw.Definition hook) : this()
+    public GlobalTile_SpecialDraw_Impl(GlobalTileHooks.SpecialDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void SpecialDraw(
@@ -1769,20 +1741,18 @@ public sealed partial class GlobalTile_SpecialDraw_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_PreDrawPlacementPreview_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_PreDrawPlacementPreview_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.PreDrawPlacementPreview.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.PreDrawPlacementPreview.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_PreDrawPlacementPreview_Impl(GlobalTileHooks.PreDrawPlacementPreview.Definition hook) : this()
+    public GlobalTile_PreDrawPlacementPreview_Impl(GlobalTileHooks.PreDrawPlacementPreview.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDrawPlacementPreview(
@@ -1834,20 +1804,18 @@ public sealed partial class GlobalTile_PreDrawPlacementPreview_Impl() : Terraria
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_PostDrawPlacementPreview_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_PostDrawPlacementPreview_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.PostDrawPlacementPreview.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.PostDrawPlacementPreview.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_PostDrawPlacementPreview_Impl(GlobalTileHooks.PostDrawPlacementPreview.Definition hook) : this()
+    public GlobalTile_PostDrawPlacementPreview_Impl(GlobalTileHooks.PostDrawPlacementPreview.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDrawPlacementPreview(
@@ -1899,20 +1867,18 @@ public sealed partial class GlobalTile_PostDrawPlacementPreview_Impl() : Terrari
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_TileFrame_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_TileFrame_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.TileFrame.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.TileFrame.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_TileFrame_Impl(GlobalTileHooks.TileFrame.Definition hook) : this()
+    public GlobalTile_TileFrame_Impl(GlobalTileHooks.TileFrame.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool TileFrame(
@@ -1948,20 +1914,18 @@ public sealed partial class GlobalTile_TileFrame_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_AdjTiles_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_AdjTiles_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.AdjTiles.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.AdjTiles.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_AdjTiles_Impl(GlobalTileHooks.AdjTiles.Definition hook) : this()
+    public GlobalTile_AdjTiles_Impl(GlobalTileHooks.AdjTiles.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override int[] AdjTiles(
@@ -1981,20 +1945,18 @@ public sealed partial class GlobalTile_AdjTiles_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_RightClick_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_RightClick_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.RightClick.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.RightClick.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_RightClick_Impl(GlobalTileHooks.RightClick.Definition hook) : this()
+    public GlobalTile_RightClick_Impl(GlobalTileHooks.RightClick.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void RightClick(
@@ -2022,20 +1984,18 @@ public sealed partial class GlobalTile_RightClick_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_MouseOver_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_MouseOver_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.MouseOver.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.MouseOver.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_MouseOver_Impl(GlobalTileHooks.MouseOver.Definition hook) : this()
+    public GlobalTile_MouseOver_Impl(GlobalTileHooks.MouseOver.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void MouseOver(
@@ -2063,20 +2023,18 @@ public sealed partial class GlobalTile_MouseOver_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_MouseOverFar_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_MouseOverFar_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.MouseOverFar.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.MouseOverFar.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_MouseOverFar_Impl(GlobalTileHooks.MouseOverFar.Definition hook) : this()
+    public GlobalTile_MouseOverFar_Impl(GlobalTileHooks.MouseOverFar.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void MouseOverFar(
@@ -2104,20 +2062,18 @@ public sealed partial class GlobalTile_MouseOverFar_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_AutoSelect_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_AutoSelect_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.AutoSelect.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.AutoSelect.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_AutoSelect_Impl(GlobalTileHooks.AutoSelect.Definition hook) : this()
+    public GlobalTile_AutoSelect_Impl(GlobalTileHooks.AutoSelect.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool AutoSelect(
@@ -2149,20 +2105,18 @@ public sealed partial class GlobalTile_AutoSelect_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_PreHitWire_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_PreHitWire_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.PreHitWire.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.PreHitWire.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_PreHitWire_Impl(GlobalTileHooks.PreHitWire.Definition hook) : this()
+    public GlobalTile_PreHitWire_Impl(GlobalTileHooks.PreHitWire.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreHitWire(
@@ -2190,20 +2144,18 @@ public sealed partial class GlobalTile_PreHitWire_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_HitWire_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_HitWire_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.HitWire.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.HitWire.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_HitWire_Impl(GlobalTileHooks.HitWire.Definition hook) : this()
+    public GlobalTile_HitWire_Impl(GlobalTileHooks.HitWire.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void HitWire(
@@ -2231,20 +2183,18 @@ public sealed partial class GlobalTile_HitWire_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_Slope_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_Slope_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.Slope.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.Slope.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_Slope_Impl(GlobalTileHooks.Slope.Definition hook) : this()
+    public GlobalTile_Slope_Impl(GlobalTileHooks.Slope.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool Slope(
@@ -2272,20 +2222,18 @@ public sealed partial class GlobalTile_Slope_Impl() : Terraria.ModLoader.GlobalT
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_FloorVisuals_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_FloorVisuals_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.FloorVisuals.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.FloorVisuals.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_FloorVisuals_Impl(GlobalTileHooks.FloorVisuals.Definition hook) : this()
+    public GlobalTile_FloorVisuals_Impl(GlobalTileHooks.FloorVisuals.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void FloorVisuals(
@@ -2309,20 +2257,18 @@ public sealed partial class GlobalTile_FloorVisuals_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_ChangeWaterfallStyle_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_ChangeWaterfallStyle_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.ChangeWaterfallStyle.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.ChangeWaterfallStyle.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_ChangeWaterfallStyle_Impl(GlobalTileHooks.ChangeWaterfallStyle.Definition hook) : this()
+    public GlobalTile_ChangeWaterfallStyle_Impl(GlobalTileHooks.ChangeWaterfallStyle.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ChangeWaterfallStyle(
@@ -2346,20 +2292,18 @@ public sealed partial class GlobalTile_ChangeWaterfallStyle_Impl() : Terraria.Mo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_CanReplace_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_CanReplace_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.CanReplace.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.CanReplace.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_CanReplace_Impl(GlobalTileHooks.CanReplace.Definition hook) : this()
+    public GlobalTile_CanReplace_Impl(GlobalTileHooks.CanReplace.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanReplace(
@@ -2391,20 +2335,18 @@ public sealed partial class GlobalTile_CanReplace_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_ReplaceTile_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_ReplaceTile_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.ReplaceTile.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.ReplaceTile.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_ReplaceTile_Impl(GlobalTileHooks.ReplaceTile.Definition hook) : this()
+    public GlobalTile_ReplaceTile_Impl(GlobalTileHooks.ReplaceTile.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ReplaceTile(
@@ -2440,20 +2382,18 @@ public sealed partial class GlobalTile_ReplaceTile_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_PostSetupTileMerge_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_PostSetupTileMerge_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.PostSetupTileMerge.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.PostSetupTileMerge.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_PostSetupTileMerge_Impl(GlobalTileHooks.PostSetupTileMerge.Definition hook) : this()
+    public GlobalTile_PostSetupTileMerge_Impl(GlobalTileHooks.PostSetupTileMerge.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostSetupTileMerge()
@@ -2466,20 +2406,18 @@ public sealed partial class GlobalTile_PostSetupTileMerge_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_PreShakeTree_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_PreShakeTree_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.PreShakeTree.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.PreShakeTree.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_PreShakeTree_Impl(GlobalTileHooks.PreShakeTree.Definition hook) : this()
+    public GlobalTile_PreShakeTree_Impl(GlobalTileHooks.PreShakeTree.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PreShakeTree(
@@ -2507,20 +2445,18 @@ public sealed partial class GlobalTile_PreShakeTree_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_ShakeTree_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_ShakeTree_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.ShakeTree.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.ShakeTree.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_ShakeTree_Impl(GlobalTileHooks.ShakeTree.Definition hook) : this()
+    public GlobalTile_ShakeTree_Impl(GlobalTileHooks.ShakeTree.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ShakeTree(
@@ -2548,20 +2484,18 @@ public sealed partial class GlobalTile_ShakeTree_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_KillSound_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_KillSound_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.KillSound.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.KillSound.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_KillSound_Impl(GlobalTileHooks.KillSound.Definition hook) : this()
+    public GlobalTile_KillSound_Impl(GlobalTileHooks.KillSound.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool KillSound(
@@ -2593,20 +2527,18 @@ public sealed partial class GlobalTile_KillSound_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_NumDust_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_NumDust_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.NumDust.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.NumDust.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_NumDust_Impl(GlobalTileHooks.NumDust.Definition hook) : this()
+    public GlobalTile_NumDust_Impl(GlobalTileHooks.NumDust.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void NumDust(
@@ -2642,20 +2574,18 @@ public sealed partial class GlobalTile_NumDust_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_CreateDust_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_CreateDust_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.CreateDust.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.CreateDust.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_CreateDust_Impl(GlobalTileHooks.CreateDust.Definition hook) : this()
+    public GlobalTile_CreateDust_Impl(GlobalTileHooks.CreateDust.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CreateDust(
@@ -2687,20 +2617,18 @@ public sealed partial class GlobalTile_CreateDust_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_CanPlace_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_CanPlace_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.CanPlace.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.CanPlace.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_CanPlace_Impl(GlobalTileHooks.CanPlace.Definition hook) : this()
+    public GlobalTile_CanPlace_Impl(GlobalTileHooks.CanPlace.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanPlace(
@@ -2728,20 +2656,18 @@ public sealed partial class GlobalTile_CanPlace_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_CanExplode_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_CanExplode_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.CanExplode.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.CanExplode.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_CanExplode_Impl(GlobalTileHooks.CanExplode.Definition hook) : this()
+    public GlobalTile_CanExplode_Impl(GlobalTileHooks.CanExplode.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanExplode(
@@ -2769,20 +2695,18 @@ public sealed partial class GlobalTile_CanExplode_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_PreDraw_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_PreDraw_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.PreDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.PreDraw.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_PreDraw_Impl(GlobalTileHooks.PreDraw.Definition hook) : this()
+    public GlobalTile_PreDraw_Impl(GlobalTileHooks.PreDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDraw(
@@ -2814,20 +2738,18 @@ public sealed partial class GlobalTile_PreDraw_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_PostDraw_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_PostDraw_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.PostDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.PostDraw.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_PostDraw_Impl(GlobalTileHooks.PostDraw.Definition hook) : this()
+    public GlobalTile_PostDraw_Impl(GlobalTileHooks.PostDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDraw(
@@ -2859,20 +2781,18 @@ public sealed partial class GlobalTile_PostDraw_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_RandomUpdate_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_RandomUpdate_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.RandomUpdate.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.RandomUpdate.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_RandomUpdate_Impl(GlobalTileHooks.RandomUpdate.Definition hook) : this()
+    public GlobalTile_RandomUpdate_Impl(GlobalTileHooks.RandomUpdate.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void RandomUpdate(
@@ -2900,20 +2820,18 @@ public sealed partial class GlobalTile_RandomUpdate_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_PlaceInWorld_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_PlaceInWorld_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.PlaceInWorld.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.PlaceInWorld.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_PlaceInWorld_Impl(GlobalTileHooks.PlaceInWorld.Definition hook) : this()
+    public GlobalTile_PlaceInWorld_Impl(GlobalTileHooks.PlaceInWorld.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PlaceInWorld(
@@ -2945,20 +2863,18 @@ public sealed partial class GlobalTile_PlaceInWorld_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalTile_ModifyLight_Impl() : Terraria.ModLoader.GlobalTile
+public sealed partial class GlobalTile_ModifyLight_Impl : Terraria.ModLoader.GlobalTile
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.ModifyLight.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalTileHooks.ModifyLight.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalTile_ModifyLight_Impl(GlobalTileHooks.ModifyLight.Definition hook) : this()
+    public GlobalTile_ModifyLight_Impl(GlobalTileHooks.ModifyLight.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyLight(

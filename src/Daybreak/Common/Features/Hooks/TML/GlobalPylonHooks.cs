@@ -168,20 +168,18 @@ public static partial class GlobalPylonHooks
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalPylon_PreDrawMapIcon_Impl() : Terraria.ModLoader.GlobalPylon
+public sealed partial class GlobalPylon_PreDrawMapIcon_Impl : Terraria.ModLoader.GlobalPylon
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalPylonHooks.PreDrawMapIcon.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalPylonHooks.PreDrawMapIcon.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalPylon_PreDrawMapIcon_Impl(GlobalPylonHooks.PreDrawMapIcon.Definition hook) : this()
+    public GlobalPylon_PreDrawMapIcon_Impl(GlobalPylonHooks.PreDrawMapIcon.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDrawMapIcon(
@@ -225,20 +223,18 @@ public sealed partial class GlobalPylon_PreDrawMapIcon_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalPylon_PreCanPlacePylon_Impl() : Terraria.ModLoader.GlobalPylon
+public sealed partial class GlobalPylon_PreCanPlacePylon_Impl : Terraria.ModLoader.GlobalPylon
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalPylonHooks.PreCanPlacePylon.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalPylonHooks.PreCanPlacePylon.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalPylon_PreCanPlacePylon_Impl(GlobalPylonHooks.PreCanPlacePylon.Definition hook) : this()
+    public GlobalPylon_PreCanPlacePylon_Impl(GlobalPylonHooks.PreCanPlacePylon.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? PreCanPlacePylon(
@@ -270,20 +266,18 @@ public sealed partial class GlobalPylon_PreCanPlacePylon_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalPylon_ValidTeleportCheck_PreNPCCount_Impl() : Terraria.ModLoader.GlobalPylon
+public sealed partial class GlobalPylon_ValidTeleportCheck_PreNPCCount_Impl : Terraria.ModLoader.GlobalPylon
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalPylonHooks.ValidTeleportCheck_PreNPCCount.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalPylonHooks.ValidTeleportCheck_PreNPCCount.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalPylon_ValidTeleportCheck_PreNPCCount_Impl(GlobalPylonHooks.ValidTeleportCheck_PreNPCCount.Definition hook) : this()
+    public GlobalPylon_ValidTeleportCheck_PreNPCCount_Impl(GlobalPylonHooks.ValidTeleportCheck_PreNPCCount.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? ValidTeleportCheck_PreNPCCount(
@@ -307,20 +301,18 @@ public sealed partial class GlobalPylon_ValidTeleportCheck_PreNPCCount_Impl() : 
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalPylon_ValidTeleportCheck_PreAnyDanger_Impl() : Terraria.ModLoader.GlobalPylon
+public sealed partial class GlobalPylon_ValidTeleportCheck_PreAnyDanger_Impl : Terraria.ModLoader.GlobalPylon
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalPylonHooks.ValidTeleportCheck_PreAnyDanger.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalPylonHooks.ValidTeleportCheck_PreAnyDanger.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalPylon_ValidTeleportCheck_PreAnyDanger_Impl(GlobalPylonHooks.ValidTeleportCheck_PreAnyDanger.Definition hook) : this()
+    public GlobalPylon_ValidTeleportCheck_PreAnyDanger_Impl(GlobalPylonHooks.ValidTeleportCheck_PreAnyDanger.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? ValidTeleportCheck_PreAnyDanger(
@@ -340,20 +332,18 @@ public sealed partial class GlobalPylon_ValidTeleportCheck_PreAnyDanger_Impl() :
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalPylon_ValidTeleportCheck_PreBiomeRequirements_Impl() : Terraria.ModLoader.GlobalPylon
+public sealed partial class GlobalPylon_ValidTeleportCheck_PreBiomeRequirements_Impl : Terraria.ModLoader.GlobalPylon
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalPylonHooks.ValidTeleportCheck_PreBiomeRequirements.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalPylonHooks.ValidTeleportCheck_PreBiomeRequirements.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalPylon_ValidTeleportCheck_PreBiomeRequirements_Impl(GlobalPylonHooks.ValidTeleportCheck_PreBiomeRequirements.Definition hook) : this()
+    public GlobalPylon_ValidTeleportCheck_PreBiomeRequirements_Impl(GlobalPylonHooks.ValidTeleportCheck_PreBiomeRequirements.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? ValidTeleportCheck_PreBiomeRequirements(
@@ -377,20 +367,18 @@ public sealed partial class GlobalPylon_ValidTeleportCheck_PreBiomeRequirements_
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalPylon_PostValidTeleportCheck_Impl() : Terraria.ModLoader.GlobalPylon
+public sealed partial class GlobalPylon_PostValidTeleportCheck_Impl : Terraria.ModLoader.GlobalPylon
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalPylonHooks.PostValidTeleportCheck.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalPylonHooks.PostValidTeleportCheck.Definition hook;
+    public override string Name => base.Name + '_' + field;
 
-    public override string Name => base.Name + '_' + namePrefix;
-
-    public GlobalPylon_PostValidTeleportCheck_Impl(GlobalPylonHooks.PostValidTeleportCheck.Definition hook) : this()
+    public GlobalPylon_PostValidTeleportCheck_Impl(GlobalPylonHooks.PostValidTeleportCheck.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostValidTeleportCheck(

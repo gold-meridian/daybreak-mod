@@ -93,18 +93,15 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
         var implName = $"{type.Name}_{hookName}_Impl";
         sb.AppendLine("[Terraria.ModLoader.Autoload(false)]");
-        sb.AppendLine($"public sealed partial class {implName}() : {type.FullName}");
+        sb.AppendLine($"public sealed partial class {implName} : {type.FullName}");
         sb.AppendLine("{");
 
-        sb.AppendLine("    [Terraria.ModLoader.CloneByReference]");
-        sb.AppendLine("    private string namePrefix = string.Empty;");
+        sb.AppendLine("    [field: Terraria.ModLoader.CloneByReference]");
+        sb.AppendLine($"    private readonly {hooksName}.{hookName}.Definition hook;");
         sb.AppendLine();
 
         sb.AppendLine("    [field: Terraria.ModLoader.CloneByReference]");
-        sb.AppendLine($"    private {hooksName}.{hookName}.Definition hook;");
-        sb.AppendLine();
-
-        sb.AppendLine("    public override string Name => base.Name + '_' + namePrefix;");
+        sb.AppendLine("    public override string Name => base.Name + '_' + field;");
         sb.AppendLine();
 
         if (HasProperty(type, "InstancePerEntity"))
@@ -119,10 +116,10 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
             sb.AppendLine();
         }
 
-        sb.AppendLine($"    public {implName}({hooksName}.{hookName}.Definition hook) : this()");
+        sb.AppendLine($"    public {implName}({hooksName}.{hookName}.Definition hook)");
         sb.AppendLine("    {");
         sb.AppendLine("        this.hook = hook;");
-        sb.AppendLine("        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));");
+        sb.AppendLine("        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));");
         sb.AppendLine("    }");
         sb.AppendLine();
 

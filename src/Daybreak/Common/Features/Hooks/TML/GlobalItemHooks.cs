@@ -2826,24 +2826,22 @@ public static partial class GlobalItemHooks
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnCreated_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnCreated_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnCreated.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnCreated.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnCreated_Impl(GlobalItemHooks.OnCreated.Definition hook) : this()
+    public GlobalItem_OnCreated_Impl(GlobalItemHooks.OnCreated.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnCreated(
@@ -2867,24 +2865,22 @@ public sealed partial class GlobalItem_OnCreated_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnSpawn_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnSpawn_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnSpawn.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnSpawn.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnSpawn_Impl(GlobalItemHooks.OnSpawn.Definition hook) : this()
+    public GlobalItem_OnSpawn_Impl(GlobalItemHooks.OnSpawn.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnSpawn(
@@ -2908,24 +2904,22 @@ public sealed partial class GlobalItem_OnSpawn_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ChoosePrefix_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ChoosePrefix_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ChoosePrefix.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ChoosePrefix.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ChoosePrefix_Impl(GlobalItemHooks.ChoosePrefix.Definition hook) : this()
+    public GlobalItem_ChoosePrefix_Impl(GlobalItemHooks.ChoosePrefix.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override int ChoosePrefix(
@@ -2949,24 +2943,22 @@ public sealed partial class GlobalItem_ChoosePrefix_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PrefixChance_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PrefixChance_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PrefixChance.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PrefixChance.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PrefixChance_Impl(GlobalItemHooks.PrefixChance.Definition hook) : this()
+    public GlobalItem_PrefixChance_Impl(GlobalItemHooks.PrefixChance.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? PrefixChance(
@@ -2994,24 +2986,22 @@ public sealed partial class GlobalItem_PrefixChance_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_AllowPrefix_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_AllowPrefix_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.AllowPrefix.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.AllowPrefix.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_AllowPrefix_Impl(GlobalItemHooks.AllowPrefix.Definition hook) : this()
+    public GlobalItem_AllowPrefix_Impl(GlobalItemHooks.AllowPrefix.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool AllowPrefix(
@@ -3035,24 +3025,22 @@ public sealed partial class GlobalItem_AllowPrefix_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanUseItem_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanUseItem_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanUseItem.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanUseItem.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanUseItem_Impl(GlobalItemHooks.CanUseItem.Definition hook) : this()
+    public GlobalItem_CanUseItem_Impl(GlobalItemHooks.CanUseItem.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanUseItem(
@@ -3076,24 +3064,22 @@ public sealed partial class GlobalItem_CanUseItem_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanAutoReuseItem_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanAutoReuseItem_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanAutoReuseItem.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanAutoReuseItem.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanAutoReuseItem_Impl(GlobalItemHooks.CanAutoReuseItem.Definition hook) : this()
+    public GlobalItem_CanAutoReuseItem_Impl(GlobalItemHooks.CanAutoReuseItem.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanAutoReuseItem(
@@ -3117,24 +3103,22 @@ public sealed partial class GlobalItem_CanAutoReuseItem_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UseStyle_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UseStyle_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UseStyle.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UseStyle.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UseStyle_Impl(GlobalItemHooks.UseStyle.Definition hook) : this()
+    public GlobalItem_UseStyle_Impl(GlobalItemHooks.UseStyle.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UseStyle(
@@ -3162,24 +3146,22 @@ public sealed partial class GlobalItem_UseStyle_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_HoldStyle_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_HoldStyle_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.HoldStyle.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.HoldStyle.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_HoldStyle_Impl(GlobalItemHooks.HoldStyle.Definition hook) : this()
+    public GlobalItem_HoldStyle_Impl(GlobalItemHooks.HoldStyle.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void HoldStyle(
@@ -3207,24 +3189,22 @@ public sealed partial class GlobalItem_HoldStyle_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_HoldItem_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_HoldItem_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.HoldItem.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.HoldItem.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_HoldItem_Impl(GlobalItemHooks.HoldItem.Definition hook) : this()
+    public GlobalItem_HoldItem_Impl(GlobalItemHooks.HoldItem.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void HoldItem(
@@ -3248,24 +3228,22 @@ public sealed partial class GlobalItem_HoldItem_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UseTimeMultiplier_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UseTimeMultiplier_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UseTimeMultiplier.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UseTimeMultiplier.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UseTimeMultiplier_Impl(GlobalItemHooks.UseTimeMultiplier.Definition hook) : this()
+    public GlobalItem_UseTimeMultiplier_Impl(GlobalItemHooks.UseTimeMultiplier.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override float UseTimeMultiplier(
@@ -3289,24 +3267,22 @@ public sealed partial class GlobalItem_UseTimeMultiplier_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UseAnimationMultiplier_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UseAnimationMultiplier_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UseAnimationMultiplier.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UseAnimationMultiplier.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UseAnimationMultiplier_Impl(GlobalItemHooks.UseAnimationMultiplier.Definition hook) : this()
+    public GlobalItem_UseAnimationMultiplier_Impl(GlobalItemHooks.UseAnimationMultiplier.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override float UseAnimationMultiplier(
@@ -3330,24 +3306,22 @@ public sealed partial class GlobalItem_UseAnimationMultiplier_Impl() : Terraria.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UseSpeedMultiplier_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UseSpeedMultiplier_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UseSpeedMultiplier.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UseSpeedMultiplier.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UseSpeedMultiplier_Impl(GlobalItemHooks.UseSpeedMultiplier.Definition hook) : this()
+    public GlobalItem_UseSpeedMultiplier_Impl(GlobalItemHooks.UseSpeedMultiplier.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override float UseSpeedMultiplier(
@@ -3371,24 +3345,22 @@ public sealed partial class GlobalItem_UseSpeedMultiplier_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_GetHealLife_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_GetHealLife_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.GetHealLife.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.GetHealLife.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_GetHealLife_Impl(GlobalItemHooks.GetHealLife.Definition hook) : this()
+    public GlobalItem_GetHealLife_Impl(GlobalItemHooks.GetHealLife.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GetHealLife(
@@ -3420,24 +3392,22 @@ public sealed partial class GlobalItem_GetHealLife_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_GetHealMana_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_GetHealMana_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.GetHealMana.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.GetHealMana.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_GetHealMana_Impl(GlobalItemHooks.GetHealMana.Definition hook) : this()
+    public GlobalItem_GetHealMana_Impl(GlobalItemHooks.GetHealMana.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GetHealMana(
@@ -3469,24 +3439,22 @@ public sealed partial class GlobalItem_GetHealMana_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyManaCost_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyManaCost_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyManaCost.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyManaCost.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyManaCost_Impl(GlobalItemHooks.ModifyManaCost.Definition hook) : this()
+    public GlobalItem_ModifyManaCost_Impl(GlobalItemHooks.ModifyManaCost.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyManaCost(
@@ -3518,24 +3486,22 @@ public sealed partial class GlobalItem_ModifyManaCost_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnMissingMana_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnMissingMana_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnMissingMana.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnMissingMana.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnMissingMana_Impl(GlobalItemHooks.OnMissingMana.Definition hook) : this()
+    public GlobalItem_OnMissingMana_Impl(GlobalItemHooks.OnMissingMana.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnMissingMana(
@@ -3563,24 +3529,22 @@ public sealed partial class GlobalItem_OnMissingMana_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnConsumeMana_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnConsumeMana_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnConsumeMana.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnConsumeMana.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnConsumeMana_Impl(GlobalItemHooks.OnConsumeMana.Definition hook) : this()
+    public GlobalItem_OnConsumeMana_Impl(GlobalItemHooks.OnConsumeMana.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnConsumeMana(
@@ -3608,24 +3572,22 @@ public sealed partial class GlobalItem_OnConsumeMana_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyPotionDelay_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyPotionDelay_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyPotionDelay.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyPotionDelay.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyPotionDelay_Impl(GlobalItemHooks.ModifyPotionDelay.Definition hook) : this()
+    public GlobalItem_ModifyPotionDelay_Impl(GlobalItemHooks.ModifyPotionDelay.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyPotionDelay(
@@ -3653,24 +3615,22 @@ public sealed partial class GlobalItem_ModifyPotionDelay_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ApplyPotionDelay_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ApplyPotionDelay_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ApplyPotionDelay.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ApplyPotionDelay.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ApplyPotionDelay_Impl(GlobalItemHooks.ApplyPotionDelay.Definition hook) : this()
+    public GlobalItem_ApplyPotionDelay_Impl(GlobalItemHooks.ApplyPotionDelay.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ApplyPotionDelay(
@@ -3698,24 +3658,22 @@ public sealed partial class GlobalItem_ApplyPotionDelay_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyWeaponDamage_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyWeaponDamage_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyWeaponDamage.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyWeaponDamage.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyWeaponDamage_Impl(GlobalItemHooks.ModifyWeaponDamage.Definition hook) : this()
+    public GlobalItem_ModifyWeaponDamage_Impl(GlobalItemHooks.ModifyWeaponDamage.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyWeaponDamage(
@@ -3743,24 +3701,22 @@ public sealed partial class GlobalItem_ModifyWeaponDamage_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyResearchSorting_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyResearchSorting_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyResearchSorting.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyResearchSorting.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyResearchSorting_Impl(GlobalItemHooks.ModifyResearchSorting.Definition hook) : this()
+    public GlobalItem_ModifyResearchSorting_Impl(GlobalItemHooks.ModifyResearchSorting.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyResearchSorting(
@@ -3784,24 +3740,22 @@ public sealed partial class GlobalItem_ModifyResearchSorting_Impl() : Terraria.M
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanConsumeBait_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanConsumeBait_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanConsumeBait.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanConsumeBait.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanConsumeBait_Impl(GlobalItemHooks.CanConsumeBait.Definition hook) : this()
+    public GlobalItem_CanConsumeBait_Impl(GlobalItemHooks.CanConsumeBait.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanConsumeBait(
@@ -3825,24 +3779,22 @@ public sealed partial class GlobalItem_CanConsumeBait_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanResearch_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanResearch_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanResearch.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanResearch.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanResearch_Impl(GlobalItemHooks.CanResearch.Definition hook) : this()
+    public GlobalItem_CanResearch_Impl(GlobalItemHooks.CanResearch.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanResearch(
@@ -3862,24 +3814,22 @@ public sealed partial class GlobalItem_CanResearch_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnResearched_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnResearched_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnResearched.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnResearched.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnResearched_Impl(GlobalItemHooks.OnResearched.Definition hook) : this()
+    public GlobalItem_OnResearched_Impl(GlobalItemHooks.OnResearched.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnResearched(
@@ -3903,24 +3853,22 @@ public sealed partial class GlobalItem_OnResearched_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyWeaponKnockback_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyWeaponKnockback_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyWeaponKnockback.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyWeaponKnockback.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyWeaponKnockback_Impl(GlobalItemHooks.ModifyWeaponKnockback.Definition hook) : this()
+    public GlobalItem_ModifyWeaponKnockback_Impl(GlobalItemHooks.ModifyWeaponKnockback.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyWeaponKnockback(
@@ -3948,24 +3896,22 @@ public sealed partial class GlobalItem_ModifyWeaponKnockback_Impl() : Terraria.M
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyWeaponCrit_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyWeaponCrit_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyWeaponCrit.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyWeaponCrit.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyWeaponCrit_Impl(GlobalItemHooks.ModifyWeaponCrit.Definition hook) : this()
+    public GlobalItem_ModifyWeaponCrit_Impl(GlobalItemHooks.ModifyWeaponCrit.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyWeaponCrit(
@@ -3993,24 +3939,22 @@ public sealed partial class GlobalItem_ModifyWeaponCrit_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_NeedsAmmo_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_NeedsAmmo_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.NeedsAmmo.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.NeedsAmmo.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_NeedsAmmo_Impl(GlobalItemHooks.NeedsAmmo.Definition hook) : this()
+    public GlobalItem_NeedsAmmo_Impl(GlobalItemHooks.NeedsAmmo.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool NeedsAmmo(
@@ -4034,24 +3978,22 @@ public sealed partial class GlobalItem_NeedsAmmo_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PickAmmo_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PickAmmo_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PickAmmo.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PickAmmo.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PickAmmo_Impl(GlobalItemHooks.PickAmmo.Definition hook) : this()
+    public GlobalItem_PickAmmo_Impl(GlobalItemHooks.PickAmmo.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PickAmmo(
@@ -4095,24 +4037,22 @@ public sealed partial class GlobalItem_PickAmmo_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanChooseAmmo_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanChooseAmmo_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanChooseAmmo.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanChooseAmmo.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanChooseAmmo_Impl(GlobalItemHooks.CanChooseAmmo.Definition hook) : this()
+    public GlobalItem_CanChooseAmmo_Impl(GlobalItemHooks.CanChooseAmmo.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanChooseAmmo(
@@ -4140,24 +4080,22 @@ public sealed partial class GlobalItem_CanChooseAmmo_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanBeChosenAsAmmo_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanBeChosenAsAmmo_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanBeChosenAsAmmo.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanBeChosenAsAmmo.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanBeChosenAsAmmo_Impl(GlobalItemHooks.CanBeChosenAsAmmo.Definition hook) : this()
+    public GlobalItem_CanBeChosenAsAmmo_Impl(GlobalItemHooks.CanBeChosenAsAmmo.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanBeChosenAsAmmo(
@@ -4185,24 +4123,22 @@ public sealed partial class GlobalItem_CanBeChosenAsAmmo_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanConsumeAmmo_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanConsumeAmmo_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanConsumeAmmo.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanConsumeAmmo.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanConsumeAmmo_Impl(GlobalItemHooks.CanConsumeAmmo.Definition hook) : this()
+    public GlobalItem_CanConsumeAmmo_Impl(GlobalItemHooks.CanConsumeAmmo.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanConsumeAmmo(
@@ -4230,24 +4166,22 @@ public sealed partial class GlobalItem_CanConsumeAmmo_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanBeConsumedAsAmmo_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanBeConsumedAsAmmo_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanBeConsumedAsAmmo.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanBeConsumedAsAmmo.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanBeConsumedAsAmmo_Impl(GlobalItemHooks.CanBeConsumedAsAmmo.Definition hook) : this()
+    public GlobalItem_CanBeConsumedAsAmmo_Impl(GlobalItemHooks.CanBeConsumedAsAmmo.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanBeConsumedAsAmmo(
@@ -4275,24 +4209,22 @@ public sealed partial class GlobalItem_CanBeConsumedAsAmmo_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnConsumeAmmo_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnConsumeAmmo_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnConsumeAmmo.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnConsumeAmmo.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnConsumeAmmo_Impl(GlobalItemHooks.OnConsumeAmmo.Definition hook) : this()
+    public GlobalItem_OnConsumeAmmo_Impl(GlobalItemHooks.OnConsumeAmmo.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnConsumeAmmo(
@@ -4320,24 +4252,22 @@ public sealed partial class GlobalItem_OnConsumeAmmo_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnConsumedAsAmmo_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnConsumedAsAmmo_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnConsumedAsAmmo.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnConsumedAsAmmo.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnConsumedAsAmmo_Impl(GlobalItemHooks.OnConsumedAsAmmo.Definition hook) : this()
+    public GlobalItem_OnConsumedAsAmmo_Impl(GlobalItemHooks.OnConsumedAsAmmo.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnConsumedAsAmmo(
@@ -4365,24 +4295,22 @@ public sealed partial class GlobalItem_OnConsumedAsAmmo_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanShoot_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanShoot_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanShoot.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanShoot.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanShoot_Impl(GlobalItemHooks.CanShoot.Definition hook) : this()
+    public GlobalItem_CanShoot_Impl(GlobalItemHooks.CanShoot.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanShoot(
@@ -4406,24 +4334,22 @@ public sealed partial class GlobalItem_CanShoot_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyShootStats_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyShootStats_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyShootStats.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyShootStats.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyShootStats_Impl(GlobalItemHooks.ModifyShootStats.Definition hook) : this()
+    public GlobalItem_ModifyShootStats_Impl(GlobalItemHooks.ModifyShootStats.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyShootStats(
@@ -4467,24 +4393,22 @@ public sealed partial class GlobalItem_ModifyShootStats_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_Shoot_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_Shoot_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.Shoot.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.Shoot.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_Shoot_Impl(GlobalItemHooks.Shoot.Definition hook) : this()
+    public GlobalItem_Shoot_Impl(GlobalItemHooks.Shoot.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool Shoot(
@@ -4532,24 +4456,22 @@ public sealed partial class GlobalItem_Shoot_Impl() : Terraria.ModLoader.GlobalI
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UseItemHitbox_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UseItemHitbox_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UseItemHitbox.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UseItemHitbox.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UseItemHitbox_Impl(GlobalItemHooks.UseItemHitbox.Definition hook) : this()
+    public GlobalItem_UseItemHitbox_Impl(GlobalItemHooks.UseItemHitbox.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UseItemHitbox(
@@ -4581,24 +4503,22 @@ public sealed partial class GlobalItem_UseItemHitbox_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_MeleeEffects_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_MeleeEffects_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.MeleeEffects.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.MeleeEffects.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_MeleeEffects_Impl(GlobalItemHooks.MeleeEffects.Definition hook) : this()
+    public GlobalItem_MeleeEffects_Impl(GlobalItemHooks.MeleeEffects.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void MeleeEffects(
@@ -4626,24 +4546,22 @@ public sealed partial class GlobalItem_MeleeEffects_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanCatchNPC_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanCatchNPC_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanCatchNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanCatchNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanCatchNPC_Impl(GlobalItemHooks.CanCatchNPC.Definition hook) : this()
+    public GlobalItem_CanCatchNPC_Impl(GlobalItemHooks.CanCatchNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanCatchNPC(
@@ -4671,24 +4589,22 @@ public sealed partial class GlobalItem_CanCatchNPC_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnCatchNPC_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnCatchNPC_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnCatchNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnCatchNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnCatchNPC_Impl(GlobalItemHooks.OnCatchNPC.Definition hook) : this()
+    public GlobalItem_OnCatchNPC_Impl(GlobalItemHooks.OnCatchNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnCatchNPC(
@@ -4720,24 +4636,22 @@ public sealed partial class GlobalItem_OnCatchNPC_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyItemScale_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyItemScale_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyItemScale.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyItemScale.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyItemScale_Impl(GlobalItemHooks.ModifyItemScale.Definition hook) : this()
+    public GlobalItem_ModifyItemScale_Impl(GlobalItemHooks.ModifyItemScale.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyItemScale(
@@ -4765,24 +4679,22 @@ public sealed partial class GlobalItem_ModifyItemScale_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanHitNPC_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanHitNPC_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanHitNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanHitNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanHitNPC_Impl(GlobalItemHooks.CanHitNPC.Definition hook) : this()
+    public GlobalItem_CanHitNPC_Impl(GlobalItemHooks.CanHitNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanHitNPC(
@@ -4810,24 +4722,22 @@ public sealed partial class GlobalItem_CanHitNPC_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanMeleeAttackCollideWithNPC_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanMeleeAttackCollideWithNPC_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanMeleeAttackCollideWithNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanMeleeAttackCollideWithNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanMeleeAttackCollideWithNPC_Impl(GlobalItemHooks.CanMeleeAttackCollideWithNPC.Definition hook) : this()
+    public GlobalItem_CanMeleeAttackCollideWithNPC_Impl(GlobalItemHooks.CanMeleeAttackCollideWithNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanMeleeAttackCollideWithNPC(
@@ -4859,24 +4769,22 @@ public sealed partial class GlobalItem_CanMeleeAttackCollideWithNPC_Impl() : Ter
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyHitNPC_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyHitNPC_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyHitNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyHitNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyHitNPC_Impl(GlobalItemHooks.ModifyHitNPC.Definition hook) : this()
+    public GlobalItem_ModifyHitNPC_Impl(GlobalItemHooks.ModifyHitNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitNPC(
@@ -4908,24 +4816,22 @@ public sealed partial class GlobalItem_ModifyHitNPC_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnHitNPC_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnHitNPC_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnHitNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnHitNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnHitNPC_Impl(GlobalItemHooks.OnHitNPC.Definition hook) : this()
+    public GlobalItem_OnHitNPC_Impl(GlobalItemHooks.OnHitNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitNPC(
@@ -4961,24 +4867,22 @@ public sealed partial class GlobalItem_OnHitNPC_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanHitPvp_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanHitPvp_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanHitPvp.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanHitPvp.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanHitPvp_Impl(GlobalItemHooks.CanHitPvp.Definition hook) : this()
+    public GlobalItem_CanHitPvp_Impl(GlobalItemHooks.CanHitPvp.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanHitPvp(
@@ -5006,24 +4910,22 @@ public sealed partial class GlobalItem_CanHitPvp_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyHitPvp_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyHitPvp_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyHitPvp.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyHitPvp.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyHitPvp_Impl(GlobalItemHooks.ModifyHitPvp.Definition hook) : this()
+    public GlobalItem_ModifyHitPvp_Impl(GlobalItemHooks.ModifyHitPvp.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitPvp(
@@ -5055,24 +4957,22 @@ public sealed partial class GlobalItem_ModifyHitPvp_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnHitPvp_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnHitPvp_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnHitPvp.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnHitPvp.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnHitPvp_Impl(GlobalItemHooks.OnHitPvp.Definition hook) : this()
+    public GlobalItem_OnHitPvp_Impl(GlobalItemHooks.OnHitPvp.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitPvp(
@@ -5104,24 +5004,22 @@ public sealed partial class GlobalItem_OnHitPvp_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UseItem_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UseItem_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UseItem.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UseItem.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UseItem_Impl(GlobalItemHooks.UseItem.Definition hook) : this()
+    public GlobalItem_UseItem_Impl(GlobalItemHooks.UseItem.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? UseItem(
@@ -5145,24 +5043,22 @@ public sealed partial class GlobalItem_UseItem_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UseAnimation_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UseAnimation_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UseAnimation.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UseAnimation.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UseAnimation_Impl(GlobalItemHooks.UseAnimation.Definition hook) : this()
+    public GlobalItem_UseAnimation_Impl(GlobalItemHooks.UseAnimation.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UseAnimation(
@@ -5186,24 +5082,22 @@ public sealed partial class GlobalItem_UseAnimation_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ConsumeItem_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ConsumeItem_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ConsumeItem.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ConsumeItem.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ConsumeItem_Impl(GlobalItemHooks.ConsumeItem.Definition hook) : this()
+    public GlobalItem_ConsumeItem_Impl(GlobalItemHooks.ConsumeItem.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ConsumeItem(
@@ -5227,24 +5121,22 @@ public sealed partial class GlobalItem_ConsumeItem_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnConsumeItem_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnConsumeItem_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnConsumeItem.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnConsumeItem.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnConsumeItem_Impl(GlobalItemHooks.OnConsumeItem.Definition hook) : this()
+    public GlobalItem_OnConsumeItem_Impl(GlobalItemHooks.OnConsumeItem.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnConsumeItem(
@@ -5268,24 +5160,22 @@ public sealed partial class GlobalItem_OnConsumeItem_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UseItemFrame_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UseItemFrame_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UseItemFrame.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UseItemFrame.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UseItemFrame_Impl(GlobalItemHooks.UseItemFrame.Definition hook) : this()
+    public GlobalItem_UseItemFrame_Impl(GlobalItemHooks.UseItemFrame.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UseItemFrame(
@@ -5309,24 +5199,22 @@ public sealed partial class GlobalItem_UseItemFrame_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_HoldItemFrame_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_HoldItemFrame_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.HoldItemFrame.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.HoldItemFrame.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_HoldItemFrame_Impl(GlobalItemHooks.HoldItemFrame.Definition hook) : this()
+    public GlobalItem_HoldItemFrame_Impl(GlobalItemHooks.HoldItemFrame.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void HoldItemFrame(
@@ -5350,24 +5238,22 @@ public sealed partial class GlobalItem_HoldItemFrame_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_AltFunctionUse_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_AltFunctionUse_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.AltFunctionUse.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.AltFunctionUse.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_AltFunctionUse_Impl(GlobalItemHooks.AltFunctionUse.Definition hook) : this()
+    public GlobalItem_AltFunctionUse_Impl(GlobalItemHooks.AltFunctionUse.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool AltFunctionUse(
@@ -5391,24 +5277,22 @@ public sealed partial class GlobalItem_AltFunctionUse_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UpdateInventory_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UpdateInventory_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UpdateInventory.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UpdateInventory.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UpdateInventory_Impl(GlobalItemHooks.UpdateInventory.Definition hook) : this()
+    public GlobalItem_UpdateInventory_Impl(GlobalItemHooks.UpdateInventory.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateInventory(
@@ -5432,24 +5316,22 @@ public sealed partial class GlobalItem_UpdateInventory_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UpdateInfoAccessory_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UpdateInfoAccessory_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UpdateInfoAccessory.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UpdateInfoAccessory.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UpdateInfoAccessory_Impl(GlobalItemHooks.UpdateInfoAccessory.Definition hook) : this()
+    public GlobalItem_UpdateInfoAccessory_Impl(GlobalItemHooks.UpdateInfoAccessory.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateInfoAccessory(
@@ -5473,24 +5355,22 @@ public sealed partial class GlobalItem_UpdateInfoAccessory_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UpdateEquip_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UpdateEquip_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UpdateEquip.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UpdateEquip.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UpdateEquip_Impl(GlobalItemHooks.UpdateEquip.Definition hook) : this()
+    public GlobalItem_UpdateEquip_Impl(GlobalItemHooks.UpdateEquip.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateEquip(
@@ -5514,24 +5394,22 @@ public sealed partial class GlobalItem_UpdateEquip_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UpdateAccessory_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UpdateAccessory_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UpdateAccessory.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UpdateAccessory.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UpdateAccessory_Impl(GlobalItemHooks.UpdateAccessory.Definition hook) : this()
+    public GlobalItem_UpdateAccessory_Impl(GlobalItemHooks.UpdateAccessory.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateAccessory(
@@ -5559,24 +5437,22 @@ public sealed partial class GlobalItem_UpdateAccessory_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UpdateVanity_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UpdateVanity_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UpdateVanity.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UpdateVanity.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UpdateVanity_Impl(GlobalItemHooks.UpdateVanity.Definition hook) : this()
+    public GlobalItem_UpdateVanity_Impl(GlobalItemHooks.UpdateVanity.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateVanity(
@@ -5600,24 +5476,22 @@ public sealed partial class GlobalItem_UpdateVanity_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UpdateVisibleAccessory_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UpdateVisibleAccessory_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UpdateVisibleAccessory.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UpdateVisibleAccessory.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UpdateVisibleAccessory_Impl(GlobalItemHooks.UpdateVisibleAccessory.Definition hook) : this()
+    public GlobalItem_UpdateVisibleAccessory_Impl(GlobalItemHooks.UpdateVisibleAccessory.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateVisibleAccessory(
@@ -5645,24 +5519,22 @@ public sealed partial class GlobalItem_UpdateVisibleAccessory_Impl() : Terraria.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UpdateItemDye_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UpdateItemDye_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UpdateItemDye.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UpdateItemDye.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UpdateItemDye_Impl(GlobalItemHooks.UpdateItemDye.Definition hook) : this()
+    public GlobalItem_UpdateItemDye_Impl(GlobalItemHooks.UpdateItemDye.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateItemDye(
@@ -5694,24 +5566,22 @@ public sealed partial class GlobalItem_UpdateItemDye_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_IsArmorSet_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_IsArmorSet_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.IsArmorSet.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.IsArmorSet.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_IsArmorSet_Impl(GlobalItemHooks.IsArmorSet.Definition hook) : this()
+    public GlobalItem_IsArmorSet_Impl(GlobalItemHooks.IsArmorSet.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override string IsArmorSet(
@@ -5739,24 +5609,22 @@ public sealed partial class GlobalItem_IsArmorSet_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UpdateArmorSet_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UpdateArmorSet_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UpdateArmorSet.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UpdateArmorSet.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UpdateArmorSet_Impl(GlobalItemHooks.UpdateArmorSet.Definition hook) : this()
+    public GlobalItem_UpdateArmorSet_Impl(GlobalItemHooks.UpdateArmorSet.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateArmorSet(
@@ -5780,24 +5648,22 @@ public sealed partial class GlobalItem_UpdateArmorSet_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_IsVanitySet_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_IsVanitySet_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.IsVanitySet.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.IsVanitySet.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_IsVanitySet_Impl(GlobalItemHooks.IsVanitySet.Definition hook) : this()
+    public GlobalItem_IsVanitySet_Impl(GlobalItemHooks.IsVanitySet.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override string IsVanitySet(
@@ -5825,24 +5691,22 @@ public sealed partial class GlobalItem_IsVanitySet_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PreUpdateVanitySet_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PreUpdateVanitySet_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PreUpdateVanitySet.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PreUpdateVanitySet.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PreUpdateVanitySet_Impl(GlobalItemHooks.PreUpdateVanitySet.Definition hook) : this()
+    public GlobalItem_PreUpdateVanitySet_Impl(GlobalItemHooks.PreUpdateVanitySet.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PreUpdateVanitySet(
@@ -5866,24 +5730,22 @@ public sealed partial class GlobalItem_PreUpdateVanitySet_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_UpdateVanitySet_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_UpdateVanitySet_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.UpdateVanitySet.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.UpdateVanitySet.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_UpdateVanitySet_Impl(GlobalItemHooks.UpdateVanitySet.Definition hook) : this()
+    public GlobalItem_UpdateVanitySet_Impl(GlobalItemHooks.UpdateVanitySet.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateVanitySet(
@@ -5907,24 +5769,22 @@ public sealed partial class GlobalItem_UpdateVanitySet_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ArmorSetShadows_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ArmorSetShadows_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ArmorSetShadows.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ArmorSetShadows.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ArmorSetShadows_Impl(GlobalItemHooks.ArmorSetShadows.Definition hook) : this()
+    public GlobalItem_ArmorSetShadows_Impl(GlobalItemHooks.ArmorSetShadows.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ArmorSetShadows(
@@ -5948,24 +5808,22 @@ public sealed partial class GlobalItem_ArmorSetShadows_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_SetMatch_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_SetMatch_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.SetMatch.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.SetMatch.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_SetMatch_Impl(GlobalItemHooks.SetMatch.Definition hook) : this()
+    public GlobalItem_SetMatch_Impl(GlobalItemHooks.SetMatch.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void SetMatch(
@@ -6001,24 +5859,22 @@ public sealed partial class GlobalItem_SetMatch_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanRightClick_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanRightClick_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanRightClick.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanRightClick.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanRightClick_Impl(GlobalItemHooks.CanRightClick.Definition hook) : this()
+    public GlobalItem_CanRightClick_Impl(GlobalItemHooks.CanRightClick.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanRightClick(
@@ -6038,24 +5894,22 @@ public sealed partial class GlobalItem_CanRightClick_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_RightClick_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_RightClick_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.RightClick.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.RightClick.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_RightClick_Impl(GlobalItemHooks.RightClick.Definition hook) : this()
+    public GlobalItem_RightClick_Impl(GlobalItemHooks.RightClick.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void RightClick(
@@ -6079,24 +5933,22 @@ public sealed partial class GlobalItem_RightClick_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyItemLoot_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyItemLoot_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyItemLoot.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyItemLoot.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyItemLoot_Impl(GlobalItemHooks.ModifyItemLoot.Definition hook) : this()
+    public GlobalItem_ModifyItemLoot_Impl(GlobalItemHooks.ModifyItemLoot.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyItemLoot(
@@ -6120,24 +5972,22 @@ public sealed partial class GlobalItem_ModifyItemLoot_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanStack_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanStack_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanStack.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanStack.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanStack_Impl(GlobalItemHooks.CanStack.Definition hook) : this()
+    public GlobalItem_CanStack_Impl(GlobalItemHooks.CanStack.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanStack(
@@ -6161,24 +6011,22 @@ public sealed partial class GlobalItem_CanStack_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanStackInWorld_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanStackInWorld_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanStackInWorld.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanStackInWorld.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanStackInWorld_Impl(GlobalItemHooks.CanStackInWorld.Definition hook) : this()
+    public GlobalItem_CanStackInWorld_Impl(GlobalItemHooks.CanStackInWorld.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanStackInWorld(
@@ -6202,24 +6050,22 @@ public sealed partial class GlobalItem_CanStackInWorld_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnStack_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnStack_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnStack.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnStack.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnStack_Impl(GlobalItemHooks.OnStack.Definition hook) : this()
+    public GlobalItem_OnStack_Impl(GlobalItemHooks.OnStack.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnStack(
@@ -6247,24 +6093,22 @@ public sealed partial class GlobalItem_OnStack_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_SplitStack_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_SplitStack_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.SplitStack.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.SplitStack.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_SplitStack_Impl(GlobalItemHooks.SplitStack.Definition hook) : this()
+    public GlobalItem_SplitStack_Impl(GlobalItemHooks.SplitStack.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void SplitStack(
@@ -6292,24 +6136,22 @@ public sealed partial class GlobalItem_SplitStack_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ReforgePrice_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ReforgePrice_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ReforgePrice.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ReforgePrice.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ReforgePrice_Impl(GlobalItemHooks.ReforgePrice.Definition hook) : this()
+    public GlobalItem_ReforgePrice_Impl(GlobalItemHooks.ReforgePrice.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ReforgePrice(
@@ -6337,24 +6179,22 @@ public sealed partial class GlobalItem_ReforgePrice_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanReforge_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanReforge_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanReforge.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanReforge.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanReforge_Impl(GlobalItemHooks.CanReforge.Definition hook) : this()
+    public GlobalItem_CanReforge_Impl(GlobalItemHooks.CanReforge.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanReforge(
@@ -6374,24 +6214,22 @@ public sealed partial class GlobalItem_CanReforge_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PreReforge_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PreReforge_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PreReforge.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PreReforge.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PreReforge_Impl(GlobalItemHooks.PreReforge.Definition hook) : this()
+    public GlobalItem_PreReforge_Impl(GlobalItemHooks.PreReforge.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PreReforge(
@@ -6411,24 +6249,22 @@ public sealed partial class GlobalItem_PreReforge_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PostReforge_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PostReforge_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PostReforge.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PostReforge.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PostReforge_Impl(GlobalItemHooks.PostReforge.Definition hook) : this()
+    public GlobalItem_PostReforge_Impl(GlobalItemHooks.PostReforge.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostReforge(
@@ -6448,24 +6284,22 @@ public sealed partial class GlobalItem_PostReforge_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_DrawArmorColor_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_DrawArmorColor_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.DrawArmorColor.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.DrawArmorColor.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_DrawArmorColor_Impl(GlobalItemHooks.DrawArmorColor.Definition hook) : this()
+    public GlobalItem_DrawArmorColor_Impl(GlobalItemHooks.DrawArmorColor.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void DrawArmorColor(
@@ -6509,24 +6343,22 @@ public sealed partial class GlobalItem_DrawArmorColor_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ArmorArmGlowMask_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ArmorArmGlowMask_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ArmorArmGlowMask.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ArmorArmGlowMask.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ArmorArmGlowMask_Impl(GlobalItemHooks.ArmorArmGlowMask.Definition hook) : this()
+    public GlobalItem_ArmorArmGlowMask_Impl(GlobalItemHooks.ArmorArmGlowMask.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ArmorArmGlowMask(
@@ -6562,24 +6394,22 @@ public sealed partial class GlobalItem_ArmorArmGlowMask_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_VerticalWingSpeeds_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_VerticalWingSpeeds_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.VerticalWingSpeeds.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.VerticalWingSpeeds.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_VerticalWingSpeeds_Impl(GlobalItemHooks.VerticalWingSpeeds.Definition hook) : this()
+    public GlobalItem_VerticalWingSpeeds_Impl(GlobalItemHooks.VerticalWingSpeeds.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void VerticalWingSpeeds(
@@ -6623,24 +6453,22 @@ public sealed partial class GlobalItem_VerticalWingSpeeds_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_HorizontalWingSpeeds_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_HorizontalWingSpeeds_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.HorizontalWingSpeeds.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.HorizontalWingSpeeds.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_HorizontalWingSpeeds_Impl(GlobalItemHooks.HorizontalWingSpeeds.Definition hook) : this()
+    public GlobalItem_HorizontalWingSpeeds_Impl(GlobalItemHooks.HorizontalWingSpeeds.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void HorizontalWingSpeeds(
@@ -6672,24 +6500,22 @@ public sealed partial class GlobalItem_HorizontalWingSpeeds_Impl() : Terraria.Mo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_WingUpdate_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_WingUpdate_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.WingUpdate.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.WingUpdate.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_WingUpdate_Impl(GlobalItemHooks.WingUpdate.Definition hook) : this()
+    public GlobalItem_WingUpdate_Impl(GlobalItemHooks.WingUpdate.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool WingUpdate(
@@ -6717,24 +6543,22 @@ public sealed partial class GlobalItem_WingUpdate_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_Update_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_Update_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.Update.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.Update.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_Update_Impl(GlobalItemHooks.Update.Definition hook) : this()
+    public GlobalItem_Update_Impl(GlobalItemHooks.Update.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void Update(
@@ -6762,24 +6586,22 @@ public sealed partial class GlobalItem_Update_Impl() : Terraria.ModLoader.Global
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PostUpdate_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PostUpdate_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PostUpdate.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PostUpdate.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PostUpdate_Impl(GlobalItemHooks.PostUpdate.Definition hook) : this()
+    public GlobalItem_PostUpdate_Impl(GlobalItemHooks.PostUpdate.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostUpdate(
@@ -6799,24 +6621,22 @@ public sealed partial class GlobalItem_PostUpdate_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_GrabRange_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_GrabRange_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.GrabRange.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.GrabRange.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_GrabRange_Impl(GlobalItemHooks.GrabRange.Definition hook) : this()
+    public GlobalItem_GrabRange_Impl(GlobalItemHooks.GrabRange.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GrabRange(
@@ -6844,24 +6664,22 @@ public sealed partial class GlobalItem_GrabRange_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_GrabStyle_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_GrabStyle_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.GrabStyle.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.GrabStyle.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_GrabStyle_Impl(GlobalItemHooks.GrabStyle.Definition hook) : this()
+    public GlobalItem_GrabStyle_Impl(GlobalItemHooks.GrabStyle.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool GrabStyle(
@@ -6885,24 +6703,22 @@ public sealed partial class GlobalItem_GrabStyle_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanPickup_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanPickup_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanPickup.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanPickup.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanPickup_Impl(GlobalItemHooks.CanPickup.Definition hook) : this()
+    public GlobalItem_CanPickup_Impl(GlobalItemHooks.CanPickup.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanPickup(
@@ -6926,24 +6742,22 @@ public sealed partial class GlobalItem_CanPickup_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_OnPickup_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_OnPickup_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.OnPickup.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.OnPickup.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_OnPickup_Impl(GlobalItemHooks.OnPickup.Definition hook) : this()
+    public GlobalItem_OnPickup_Impl(GlobalItemHooks.OnPickup.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool OnPickup(
@@ -6967,24 +6781,22 @@ public sealed partial class GlobalItem_OnPickup_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ItemSpace_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ItemSpace_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ItemSpace.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ItemSpace.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ItemSpace_Impl(GlobalItemHooks.ItemSpace.Definition hook) : this()
+    public GlobalItem_ItemSpace_Impl(GlobalItemHooks.ItemSpace.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ItemSpace(
@@ -7008,24 +6820,22 @@ public sealed partial class GlobalItem_ItemSpace_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_GetAlpha_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_GetAlpha_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.GetAlpha.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.GetAlpha.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_GetAlpha_Impl(GlobalItemHooks.GetAlpha.Definition hook) : this()
+    public GlobalItem_GetAlpha_Impl(GlobalItemHooks.GetAlpha.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override Microsoft.Xna.Framework.Color? GetAlpha(
@@ -7049,24 +6859,22 @@ public sealed partial class GlobalItem_GetAlpha_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PreDrawInWorld_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PreDrawInWorld_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PreDrawInWorld.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PreDrawInWorld.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PreDrawInWorld_Impl(GlobalItemHooks.PreDrawInWorld.Definition hook) : this()
+    public GlobalItem_PreDrawInWorld_Impl(GlobalItemHooks.PreDrawInWorld.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDrawInWorld(
@@ -7110,24 +6918,22 @@ public sealed partial class GlobalItem_PreDrawInWorld_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PostDrawInWorld_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PostDrawInWorld_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PostDrawInWorld.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PostDrawInWorld.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PostDrawInWorld_Impl(GlobalItemHooks.PostDrawInWorld.Definition hook) : this()
+    public GlobalItem_PostDrawInWorld_Impl(GlobalItemHooks.PostDrawInWorld.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDrawInWorld(
@@ -7171,24 +6977,22 @@ public sealed partial class GlobalItem_PostDrawInWorld_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PreDrawInInventory_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PreDrawInInventory_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PreDrawInInventory.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PreDrawInInventory.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PreDrawInInventory_Impl(GlobalItemHooks.PreDrawInInventory.Definition hook) : this()
+    public GlobalItem_PreDrawInInventory_Impl(GlobalItemHooks.PreDrawInInventory.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDrawInInventory(
@@ -7236,24 +7040,22 @@ public sealed partial class GlobalItem_PreDrawInInventory_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PostDrawInInventory_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PostDrawInInventory_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PostDrawInInventory.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PostDrawInInventory.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PostDrawInInventory_Impl(GlobalItemHooks.PostDrawInInventory.Definition hook) : this()
+    public GlobalItem_PostDrawInInventory_Impl(GlobalItemHooks.PostDrawInInventory.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDrawInInventory(
@@ -7301,24 +7103,22 @@ public sealed partial class GlobalItem_PostDrawInInventory_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_HoldoutOffset_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_HoldoutOffset_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.HoldoutOffset.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.HoldoutOffset.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_HoldoutOffset_Impl(GlobalItemHooks.HoldoutOffset.Definition hook) : this()
+    public GlobalItem_HoldoutOffset_Impl(GlobalItemHooks.HoldoutOffset.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override Microsoft.Xna.Framework.Vector2? HoldoutOffset(
@@ -7338,24 +7138,22 @@ public sealed partial class GlobalItem_HoldoutOffset_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_HoldoutOrigin_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_HoldoutOrigin_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.HoldoutOrigin.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.HoldoutOrigin.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_HoldoutOrigin_Impl(GlobalItemHooks.HoldoutOrigin.Definition hook) : this()
+    public GlobalItem_HoldoutOrigin_Impl(GlobalItemHooks.HoldoutOrigin.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override Microsoft.Xna.Framework.Vector2? HoldoutOrigin(
@@ -7375,24 +7173,22 @@ public sealed partial class GlobalItem_HoldoutOrigin_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanEquipAccessory_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanEquipAccessory_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanEquipAccessory.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanEquipAccessory.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanEquipAccessory_Impl(GlobalItemHooks.CanEquipAccessory.Definition hook) : this()
+    public GlobalItem_CanEquipAccessory_Impl(GlobalItemHooks.CanEquipAccessory.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanEquipAccessory(
@@ -7424,24 +7220,22 @@ public sealed partial class GlobalItem_CanEquipAccessory_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CanAccessoryBeEquippedWith_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CanAccessoryBeEquippedWith_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CanAccessoryBeEquippedWith.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CanAccessoryBeEquippedWith.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CanAccessoryBeEquippedWith_Impl(GlobalItemHooks.CanAccessoryBeEquippedWith.Definition hook) : this()
+    public GlobalItem_CanAccessoryBeEquippedWith_Impl(GlobalItemHooks.CanAccessoryBeEquippedWith.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanAccessoryBeEquippedWith(
@@ -7469,24 +7263,22 @@ public sealed partial class GlobalItem_CanAccessoryBeEquippedWith_Impl() : Terra
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ExtractinatorUse_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ExtractinatorUse_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ExtractinatorUse.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ExtractinatorUse.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ExtractinatorUse_Impl(GlobalItemHooks.ExtractinatorUse.Definition hook) : this()
+    public GlobalItem_ExtractinatorUse_Impl(GlobalItemHooks.ExtractinatorUse.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ExtractinatorUse(
@@ -7518,24 +7310,22 @@ public sealed partial class GlobalItem_ExtractinatorUse_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_CaughtFishStack_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_CaughtFishStack_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.CaughtFishStack.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.CaughtFishStack.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_CaughtFishStack_Impl(GlobalItemHooks.CaughtFishStack.Definition hook) : this()
+    public GlobalItem_CaughtFishStack_Impl(GlobalItemHooks.CaughtFishStack.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void CaughtFishStack(
@@ -7559,24 +7349,22 @@ public sealed partial class GlobalItem_CaughtFishStack_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_IsAnglerQuestAvailable_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_IsAnglerQuestAvailable_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.IsAnglerQuestAvailable.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.IsAnglerQuestAvailable.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_IsAnglerQuestAvailable_Impl(GlobalItemHooks.IsAnglerQuestAvailable.Definition hook) : this()
+    public GlobalItem_IsAnglerQuestAvailable_Impl(GlobalItemHooks.IsAnglerQuestAvailable.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool IsAnglerQuestAvailable(
@@ -7596,24 +7384,22 @@ public sealed partial class GlobalItem_IsAnglerQuestAvailable_Impl() : Terraria.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_AnglerChat_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_AnglerChat_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.AnglerChat.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.AnglerChat.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_AnglerChat_Impl(GlobalItemHooks.AnglerChat.Definition hook) : this()
+    public GlobalItem_AnglerChat_Impl(GlobalItemHooks.AnglerChat.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void AnglerChat(
@@ -7641,24 +7427,22 @@ public sealed partial class GlobalItem_AnglerChat_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_AddRecipes_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_AddRecipes_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.AddRecipes.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.AddRecipes.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_AddRecipes_Impl(GlobalItemHooks.AddRecipes.Definition hook) : this()
+    public GlobalItem_AddRecipes_Impl(GlobalItemHooks.AddRecipes.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void AddRecipes()
@@ -7671,24 +7455,22 @@ public sealed partial class GlobalItem_AddRecipes_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PreDrawTooltip_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PreDrawTooltip_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PreDrawTooltip.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PreDrawTooltip.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PreDrawTooltip_Impl(GlobalItemHooks.PreDrawTooltip.Definition hook) : this()
+    public GlobalItem_PreDrawTooltip_Impl(GlobalItemHooks.PreDrawTooltip.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDrawTooltip(
@@ -7720,24 +7502,22 @@ public sealed partial class GlobalItem_PreDrawTooltip_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PostDrawTooltip_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PostDrawTooltip_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PostDrawTooltip.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PostDrawTooltip.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PostDrawTooltip_Impl(GlobalItemHooks.PostDrawTooltip.Definition hook) : this()
+    public GlobalItem_PostDrawTooltip_Impl(GlobalItemHooks.PostDrawTooltip.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDrawTooltip(
@@ -7761,24 +7541,22 @@ public sealed partial class GlobalItem_PostDrawTooltip_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PreDrawTooltipLine_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PreDrawTooltipLine_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PreDrawTooltipLine.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PreDrawTooltipLine.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PreDrawTooltipLine_Impl(GlobalItemHooks.PreDrawTooltipLine.Definition hook) : this()
+    public GlobalItem_PreDrawTooltipLine_Impl(GlobalItemHooks.PreDrawTooltipLine.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDrawTooltipLine(
@@ -7806,24 +7584,22 @@ public sealed partial class GlobalItem_PreDrawTooltipLine_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PostDrawTooltipLine_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_PostDrawTooltipLine_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.PostDrawTooltipLine.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.PostDrawTooltipLine.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_PostDrawTooltipLine_Impl(GlobalItemHooks.PostDrawTooltipLine.Definition hook) : this()
+    public GlobalItem_PostDrawTooltipLine_Impl(GlobalItemHooks.PostDrawTooltipLine.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDrawTooltipLine(
@@ -7847,24 +7623,22 @@ public sealed partial class GlobalItem_PostDrawTooltipLine_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_ModifyTooltips_Impl() : Terraria.ModLoader.GlobalItem
+public sealed partial class GlobalItem_ModifyTooltips_Impl : Terraria.ModLoader.GlobalItem
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ModifyTooltips.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalItemHooks.ModifyTooltips.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalItem_ModifyTooltips_Impl(GlobalItemHooks.ModifyTooltips.Definition hook) : this()
+    public GlobalItem_ModifyTooltips_Impl(GlobalItemHooks.ModifyTooltips.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyTooltips(

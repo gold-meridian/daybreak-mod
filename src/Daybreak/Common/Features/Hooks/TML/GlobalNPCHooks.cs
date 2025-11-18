@@ -1932,24 +1932,22 @@ public static partial class GlobalNPCHooks
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_SetDefaultsFromNetId_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_SetDefaultsFromNetId_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.SetDefaultsFromNetId.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.SetDefaultsFromNetId.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_SetDefaultsFromNetId_Impl(GlobalNPCHooks.SetDefaultsFromNetId.Definition hook) : this()
+    public GlobalNPC_SetDefaultsFromNetId_Impl(GlobalNPCHooks.SetDefaultsFromNetId.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void SetDefaultsFromNetId(
@@ -1969,24 +1967,22 @@ public sealed partial class GlobalNPC_SetDefaultsFromNetId_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_OnSpawn_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_OnSpawn_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.OnSpawn.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.OnSpawn.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_OnSpawn_Impl(GlobalNPCHooks.OnSpawn.Definition hook) : this()
+    public GlobalNPC_OnSpawn_Impl(GlobalNPCHooks.OnSpawn.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnSpawn(
@@ -2010,24 +2006,22 @@ public sealed partial class GlobalNPC_OnSpawn_Impl() : Terraria.ModLoader.Global
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ApplyDifficultyAndPlayerScaling_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ApplyDifficultyAndPlayerScaling_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ApplyDifficultyAndPlayerScaling.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ApplyDifficultyAndPlayerScaling.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ApplyDifficultyAndPlayerScaling_Impl(GlobalNPCHooks.ApplyDifficultyAndPlayerScaling.Definition hook) : this()
+    public GlobalNPC_ApplyDifficultyAndPlayerScaling_Impl(GlobalNPCHooks.ApplyDifficultyAndPlayerScaling.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ApplyDifficultyAndPlayerScaling(
@@ -2059,24 +2053,22 @@ public sealed partial class GlobalNPC_ApplyDifficultyAndPlayerScaling_Impl() : T
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_SetBestiary_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_SetBestiary_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.SetBestiary.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.SetBestiary.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_SetBestiary_Impl(GlobalNPCHooks.SetBestiary.Definition hook) : this()
+    public GlobalNPC_SetBestiary_Impl(GlobalNPCHooks.SetBestiary.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void SetBestiary(
@@ -2104,24 +2096,22 @@ public sealed partial class GlobalNPC_SetBestiary_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyTypeName_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyTypeName_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyTypeName.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyTypeName.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyTypeName_Impl(GlobalNPCHooks.ModifyTypeName.Definition hook) : this()
+    public GlobalNPC_ModifyTypeName_Impl(GlobalNPCHooks.ModifyTypeName.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyTypeName(
@@ -2145,24 +2135,22 @@ public sealed partial class GlobalNPC_ModifyTypeName_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyHoverBoundingBox_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyHoverBoundingBox_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyHoverBoundingBox.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyHoverBoundingBox.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyHoverBoundingBox_Impl(GlobalNPCHooks.ModifyHoverBoundingBox.Definition hook) : this()
+    public GlobalNPC_ModifyHoverBoundingBox_Impl(GlobalNPCHooks.ModifyHoverBoundingBox.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHoverBoundingBox(
@@ -2186,24 +2174,22 @@ public sealed partial class GlobalNPC_ModifyHoverBoundingBox_Impl() : Terraria.M
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_PreHoverInteract_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_PreHoverInteract_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.PreHoverInteract.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.PreHoverInteract.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_PreHoverInteract_Impl(GlobalNPCHooks.PreHoverInteract.Definition hook) : this()
+    public GlobalNPC_PreHoverInteract_Impl(GlobalNPCHooks.PreHoverInteract.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreHoverInteract(
@@ -2227,24 +2213,22 @@ public sealed partial class GlobalNPC_PreHoverInteract_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyTownNPCProfile_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyTownNPCProfile_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyTownNPCProfile.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyTownNPCProfile.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyTownNPCProfile_Impl(GlobalNPCHooks.ModifyTownNPCProfile.Definition hook) : this()
+    public GlobalNPC_ModifyTownNPCProfile_Impl(GlobalNPCHooks.ModifyTownNPCProfile.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override Terraria.GameContent.ITownNPCProfile ModifyTownNPCProfile(
@@ -2264,24 +2248,22 @@ public sealed partial class GlobalNPC_ModifyTownNPCProfile_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyNPCNameList_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyNPCNameList_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyNPCNameList.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyNPCNameList.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyNPCNameList_Impl(GlobalNPCHooks.ModifyNPCNameList.Definition hook) : this()
+    public GlobalNPC_ModifyNPCNameList_Impl(GlobalNPCHooks.ModifyNPCNameList.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyNPCNameList(
@@ -2305,24 +2287,22 @@ public sealed partial class GlobalNPC_ModifyNPCNameList_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ResetEffects_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ResetEffects_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ResetEffects.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ResetEffects.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ResetEffects_Impl(GlobalNPCHooks.ResetEffects.Definition hook) : this()
+    public GlobalNPC_ResetEffects_Impl(GlobalNPCHooks.ResetEffects.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ResetEffects(
@@ -2342,24 +2322,22 @@ public sealed partial class GlobalNPC_ResetEffects_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_PreAI_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_PreAI_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.PreAI.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.PreAI.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_PreAI_Impl(GlobalNPCHooks.PreAI.Definition hook) : this()
+    public GlobalNPC_PreAI_Impl(GlobalNPCHooks.PreAI.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreAI(
@@ -2379,24 +2357,22 @@ public sealed partial class GlobalNPC_PreAI_Impl() : Terraria.ModLoader.GlobalNP
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_AI_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_AI_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.AI.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.AI.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_AI_Impl(GlobalNPCHooks.AI.Definition hook) : this()
+    public GlobalNPC_AI_Impl(GlobalNPCHooks.AI.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void AI(
@@ -2416,24 +2392,22 @@ public sealed partial class GlobalNPC_AI_Impl() : Terraria.ModLoader.GlobalNPC
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_PostAI_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_PostAI_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.PostAI.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.PostAI.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_PostAI_Impl(GlobalNPCHooks.PostAI.Definition hook) : this()
+    public GlobalNPC_PostAI_Impl(GlobalNPCHooks.PostAI.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostAI(
@@ -2453,24 +2427,22 @@ public sealed partial class GlobalNPC_PostAI_Impl() : Terraria.ModLoader.GlobalN
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_FindFrame_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_FindFrame_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.FindFrame.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.FindFrame.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_FindFrame_Impl(GlobalNPCHooks.FindFrame.Definition hook) : this()
+    public GlobalNPC_FindFrame_Impl(GlobalNPCHooks.FindFrame.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void FindFrame(
@@ -2494,24 +2466,22 @@ public sealed partial class GlobalNPC_FindFrame_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_HitEffect_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_HitEffect_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.HitEffect.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.HitEffect.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_HitEffect_Impl(GlobalNPCHooks.HitEffect.Definition hook) : this()
+    public GlobalNPC_HitEffect_Impl(GlobalNPCHooks.HitEffect.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void HitEffect(
@@ -2535,24 +2505,22 @@ public sealed partial class GlobalNPC_HitEffect_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_UpdateLifeRegen_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_UpdateLifeRegen_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.UpdateLifeRegen.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.UpdateLifeRegen.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_UpdateLifeRegen_Impl(GlobalNPCHooks.UpdateLifeRegen.Definition hook) : this()
+    public GlobalNPC_UpdateLifeRegen_Impl(GlobalNPCHooks.UpdateLifeRegen.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void UpdateLifeRegen(
@@ -2576,24 +2544,22 @@ public sealed partial class GlobalNPC_UpdateLifeRegen_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CheckActive_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CheckActive_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CheckActive.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CheckActive.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CheckActive_Impl(GlobalNPCHooks.CheckActive.Definition hook) : this()
+    public GlobalNPC_CheckActive_Impl(GlobalNPCHooks.CheckActive.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CheckActive(
@@ -2613,24 +2579,22 @@ public sealed partial class GlobalNPC_CheckActive_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CheckDead_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CheckDead_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CheckDead.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CheckDead.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CheckDead_Impl(GlobalNPCHooks.CheckDead.Definition hook) : this()
+    public GlobalNPC_CheckDead_Impl(GlobalNPCHooks.CheckDead.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CheckDead(
@@ -2650,24 +2614,22 @@ public sealed partial class GlobalNPC_CheckDead_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_SpecialOnKill_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_SpecialOnKill_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.SpecialOnKill.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.SpecialOnKill.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_SpecialOnKill_Impl(GlobalNPCHooks.SpecialOnKill.Definition hook) : this()
+    public GlobalNPC_SpecialOnKill_Impl(GlobalNPCHooks.SpecialOnKill.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool SpecialOnKill(
@@ -2687,24 +2649,22 @@ public sealed partial class GlobalNPC_SpecialOnKill_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_PreKill_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_PreKill_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.PreKill.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.PreKill.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_PreKill_Impl(GlobalNPCHooks.PreKill.Definition hook) : this()
+    public GlobalNPC_PreKill_Impl(GlobalNPCHooks.PreKill.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreKill(
@@ -2724,24 +2684,22 @@ public sealed partial class GlobalNPC_PreKill_Impl() : Terraria.ModLoader.Global
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_OnKill_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_OnKill_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.OnKill.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.OnKill.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_OnKill_Impl(GlobalNPCHooks.OnKill.Definition hook) : this()
+    public GlobalNPC_OnKill_Impl(GlobalNPCHooks.OnKill.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnKill(
@@ -2761,24 +2719,22 @@ public sealed partial class GlobalNPC_OnKill_Impl() : Terraria.ModLoader.GlobalN
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanFallThroughPlatforms_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanFallThroughPlatforms_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanFallThroughPlatforms.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanFallThroughPlatforms.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanFallThroughPlatforms_Impl(GlobalNPCHooks.CanFallThroughPlatforms.Definition hook) : this()
+    public GlobalNPC_CanFallThroughPlatforms_Impl(GlobalNPCHooks.CanFallThroughPlatforms.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanFallThroughPlatforms(
@@ -2798,24 +2754,22 @@ public sealed partial class GlobalNPC_CanFallThroughPlatforms_Impl() : Terraria.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanBeCaughtBy_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanBeCaughtBy_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanBeCaughtBy.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanBeCaughtBy.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanBeCaughtBy_Impl(GlobalNPCHooks.CanBeCaughtBy.Definition hook) : this()
+    public GlobalNPC_CanBeCaughtBy_Impl(GlobalNPCHooks.CanBeCaughtBy.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanBeCaughtBy(
@@ -2843,24 +2797,22 @@ public sealed partial class GlobalNPC_CanBeCaughtBy_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_OnCaughtBy_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_OnCaughtBy_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.OnCaughtBy.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.OnCaughtBy.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_OnCaughtBy_Impl(GlobalNPCHooks.OnCaughtBy.Definition hook) : this()
+    public GlobalNPC_OnCaughtBy_Impl(GlobalNPCHooks.OnCaughtBy.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnCaughtBy(
@@ -2892,24 +2844,22 @@ public sealed partial class GlobalNPC_OnCaughtBy_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyNPCLoot_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyNPCLoot_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyNPCLoot.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyNPCLoot.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyNPCLoot_Impl(GlobalNPCHooks.ModifyNPCLoot.Definition hook) : this()
+    public GlobalNPC_ModifyNPCLoot_Impl(GlobalNPCHooks.ModifyNPCLoot.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyNPCLoot(
@@ -2933,24 +2883,22 @@ public sealed partial class GlobalNPC_ModifyNPCLoot_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyGlobalLoot_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyGlobalLoot_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyGlobalLoot.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyGlobalLoot.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyGlobalLoot_Impl(GlobalNPCHooks.ModifyGlobalLoot.Definition hook) : this()
+    public GlobalNPC_ModifyGlobalLoot_Impl(GlobalNPCHooks.ModifyGlobalLoot.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyGlobalLoot(
@@ -2970,24 +2918,22 @@ public sealed partial class GlobalNPC_ModifyGlobalLoot_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanHitPlayer_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanHitPlayer_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanHitPlayer.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanHitPlayer.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanHitPlayer_Impl(GlobalNPCHooks.CanHitPlayer.Definition hook) : this()
+    public GlobalNPC_CanHitPlayer_Impl(GlobalNPCHooks.CanHitPlayer.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanHitPlayer(
@@ -3015,24 +2961,22 @@ public sealed partial class GlobalNPC_CanHitPlayer_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyHitPlayer_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyHitPlayer_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyHitPlayer.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyHitPlayer.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyHitPlayer_Impl(GlobalNPCHooks.ModifyHitPlayer.Definition hook) : this()
+    public GlobalNPC_ModifyHitPlayer_Impl(GlobalNPCHooks.ModifyHitPlayer.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitPlayer(
@@ -3060,24 +3004,22 @@ public sealed partial class GlobalNPC_ModifyHitPlayer_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_OnHitPlayer_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_OnHitPlayer_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.OnHitPlayer.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.OnHitPlayer.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_OnHitPlayer_Impl(GlobalNPCHooks.OnHitPlayer.Definition hook) : this()
+    public GlobalNPC_OnHitPlayer_Impl(GlobalNPCHooks.OnHitPlayer.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitPlayer(
@@ -3105,24 +3047,22 @@ public sealed partial class GlobalNPC_OnHitPlayer_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanHitNPC_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanHitNPC_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanHitNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanHitNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanHitNPC_Impl(GlobalNPCHooks.CanHitNPC.Definition hook) : this()
+    public GlobalNPC_CanHitNPC_Impl(GlobalNPCHooks.CanHitNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanHitNPC(
@@ -3146,24 +3086,22 @@ public sealed partial class GlobalNPC_CanHitNPC_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanBeHitByNPC_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanBeHitByNPC_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanBeHitByNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanBeHitByNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanBeHitByNPC_Impl(GlobalNPCHooks.CanBeHitByNPC.Definition hook) : this()
+    public GlobalNPC_CanBeHitByNPC_Impl(GlobalNPCHooks.CanBeHitByNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool CanBeHitByNPC(
@@ -3187,24 +3125,22 @@ public sealed partial class GlobalNPC_CanBeHitByNPC_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyHitNPC_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyHitNPC_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyHitNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyHitNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyHitNPC_Impl(GlobalNPCHooks.ModifyHitNPC.Definition hook) : this()
+    public GlobalNPC_ModifyHitNPC_Impl(GlobalNPCHooks.ModifyHitNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitNPC(
@@ -3232,24 +3168,22 @@ public sealed partial class GlobalNPC_ModifyHitNPC_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_OnHitNPC_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_OnHitNPC_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.OnHitNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.OnHitNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_OnHitNPC_Impl(GlobalNPCHooks.OnHitNPC.Definition hook) : this()
+    public GlobalNPC_OnHitNPC_Impl(GlobalNPCHooks.OnHitNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitNPC(
@@ -3277,24 +3211,22 @@ public sealed partial class GlobalNPC_OnHitNPC_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanBeHitByItem_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanBeHitByItem_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanBeHitByItem.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanBeHitByItem.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanBeHitByItem_Impl(GlobalNPCHooks.CanBeHitByItem.Definition hook) : this()
+    public GlobalNPC_CanBeHitByItem_Impl(GlobalNPCHooks.CanBeHitByItem.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanBeHitByItem(
@@ -3322,24 +3254,22 @@ public sealed partial class GlobalNPC_CanBeHitByItem_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanCollideWithPlayerMeleeAttack_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanCollideWithPlayerMeleeAttack_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanCollideWithPlayerMeleeAttack.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanCollideWithPlayerMeleeAttack.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanCollideWithPlayerMeleeAttack_Impl(GlobalNPCHooks.CanCollideWithPlayerMeleeAttack.Definition hook) : this()
+    public GlobalNPC_CanCollideWithPlayerMeleeAttack_Impl(GlobalNPCHooks.CanCollideWithPlayerMeleeAttack.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanCollideWithPlayerMeleeAttack(
@@ -3371,24 +3301,22 @@ public sealed partial class GlobalNPC_CanCollideWithPlayerMeleeAttack_Impl() : T
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyHitByItem_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyHitByItem_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyHitByItem.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyHitByItem.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyHitByItem_Impl(GlobalNPCHooks.ModifyHitByItem.Definition hook) : this()
+    public GlobalNPC_ModifyHitByItem_Impl(GlobalNPCHooks.ModifyHitByItem.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitByItem(
@@ -3420,24 +3348,22 @@ public sealed partial class GlobalNPC_ModifyHitByItem_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_OnHitByItem_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_OnHitByItem_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.OnHitByItem.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.OnHitByItem.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_OnHitByItem_Impl(GlobalNPCHooks.OnHitByItem.Definition hook) : this()
+    public GlobalNPC_OnHitByItem_Impl(GlobalNPCHooks.OnHitByItem.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitByItem(
@@ -3473,24 +3399,22 @@ public sealed partial class GlobalNPC_OnHitByItem_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanBeHitByProjectile_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanBeHitByProjectile_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanBeHitByProjectile.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanBeHitByProjectile.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanBeHitByProjectile_Impl(GlobalNPCHooks.CanBeHitByProjectile.Definition hook) : this()
+    public GlobalNPC_CanBeHitByProjectile_Impl(GlobalNPCHooks.CanBeHitByProjectile.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanBeHitByProjectile(
@@ -3514,24 +3438,22 @@ public sealed partial class GlobalNPC_CanBeHitByProjectile_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyHitByProjectile_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyHitByProjectile_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyHitByProjectile.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyHitByProjectile.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyHitByProjectile_Impl(GlobalNPCHooks.ModifyHitByProjectile.Definition hook) : this()
+    public GlobalNPC_ModifyHitByProjectile_Impl(GlobalNPCHooks.ModifyHitByProjectile.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyHitByProjectile(
@@ -3559,24 +3481,22 @@ public sealed partial class GlobalNPC_ModifyHitByProjectile_Impl() : Terraria.Mo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_OnHitByProjectile_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_OnHitByProjectile_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.OnHitByProjectile.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.OnHitByProjectile.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_OnHitByProjectile_Impl(GlobalNPCHooks.OnHitByProjectile.Definition hook) : this()
+    public GlobalNPC_OnHitByProjectile_Impl(GlobalNPCHooks.OnHitByProjectile.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnHitByProjectile(
@@ -3608,24 +3528,22 @@ public sealed partial class GlobalNPC_OnHitByProjectile_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyIncomingHit_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyIncomingHit_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyIncomingHit.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyIncomingHit.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyIncomingHit_Impl(GlobalNPCHooks.ModifyIncomingHit.Definition hook) : this()
+    public GlobalNPC_ModifyIncomingHit_Impl(GlobalNPCHooks.ModifyIncomingHit.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyIncomingHit(
@@ -3649,24 +3567,22 @@ public sealed partial class GlobalNPC_ModifyIncomingHit_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_BossHeadSlot_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_BossHeadSlot_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.BossHeadSlot.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.BossHeadSlot.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_BossHeadSlot_Impl(GlobalNPCHooks.BossHeadSlot.Definition hook) : this()
+    public GlobalNPC_BossHeadSlot_Impl(GlobalNPCHooks.BossHeadSlot.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void BossHeadSlot(
@@ -3690,24 +3606,22 @@ public sealed partial class GlobalNPC_BossHeadSlot_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_BossHeadRotation_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_BossHeadRotation_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.BossHeadRotation.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.BossHeadRotation.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_BossHeadRotation_Impl(GlobalNPCHooks.BossHeadRotation.Definition hook) : this()
+    public GlobalNPC_BossHeadRotation_Impl(GlobalNPCHooks.BossHeadRotation.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void BossHeadRotation(
@@ -3731,24 +3645,22 @@ public sealed partial class GlobalNPC_BossHeadRotation_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_BossHeadSpriteEffects_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_BossHeadSpriteEffects_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.BossHeadSpriteEffects.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.BossHeadSpriteEffects.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_BossHeadSpriteEffects_Impl(GlobalNPCHooks.BossHeadSpriteEffects.Definition hook) : this()
+    public GlobalNPC_BossHeadSpriteEffects_Impl(GlobalNPCHooks.BossHeadSpriteEffects.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void BossHeadSpriteEffects(
@@ -3772,24 +3684,22 @@ public sealed partial class GlobalNPC_BossHeadSpriteEffects_Impl() : Terraria.Mo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_GetAlpha_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_GetAlpha_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.GetAlpha.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.GetAlpha.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_GetAlpha_Impl(GlobalNPCHooks.GetAlpha.Definition hook) : this()
+    public GlobalNPC_GetAlpha_Impl(GlobalNPCHooks.GetAlpha.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override Microsoft.Xna.Framework.Color? GetAlpha(
@@ -3813,24 +3723,22 @@ public sealed partial class GlobalNPC_GetAlpha_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_DrawEffects_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_DrawEffects_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.DrawEffects.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.DrawEffects.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_DrawEffects_Impl(GlobalNPCHooks.DrawEffects.Definition hook) : this()
+    public GlobalNPC_DrawEffects_Impl(GlobalNPCHooks.DrawEffects.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void DrawEffects(
@@ -3854,24 +3762,22 @@ public sealed partial class GlobalNPC_DrawEffects_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_PreDraw_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_PreDraw_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.PreDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.PreDraw.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_PreDraw_Impl(GlobalNPCHooks.PreDraw.Definition hook) : this()
+    public GlobalNPC_PreDraw_Impl(GlobalNPCHooks.PreDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDraw(
@@ -3903,24 +3809,22 @@ public sealed partial class GlobalNPC_PreDraw_Impl() : Terraria.ModLoader.Global
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_PostDraw_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_PostDraw_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.PostDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.PostDraw.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_PostDraw_Impl(GlobalNPCHooks.PostDraw.Definition hook) : this()
+    public GlobalNPC_PostDraw_Impl(GlobalNPCHooks.PostDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDraw(
@@ -3952,24 +3856,22 @@ public sealed partial class GlobalNPC_PostDraw_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_DrawBehind_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_DrawBehind_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.DrawBehind.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.DrawBehind.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_DrawBehind_Impl(GlobalNPCHooks.DrawBehind.Definition hook) : this()
+    public GlobalNPC_DrawBehind_Impl(GlobalNPCHooks.DrawBehind.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void DrawBehind(
@@ -3993,24 +3895,22 @@ public sealed partial class GlobalNPC_DrawBehind_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_DrawHealthBar_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_DrawHealthBar_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.DrawHealthBar.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.DrawHealthBar.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_DrawHealthBar_Impl(GlobalNPCHooks.DrawHealthBar.Definition hook) : this()
+    public GlobalNPC_DrawHealthBar_Impl(GlobalNPCHooks.DrawHealthBar.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? DrawHealthBar(
@@ -4042,24 +3942,22 @@ public sealed partial class GlobalNPC_DrawHealthBar_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_EditSpawnRate_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_EditSpawnRate_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.EditSpawnRate.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.EditSpawnRate.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_EditSpawnRate_Impl(GlobalNPCHooks.EditSpawnRate.Definition hook) : this()
+    public GlobalNPC_EditSpawnRate_Impl(GlobalNPCHooks.EditSpawnRate.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void EditSpawnRate(
@@ -4087,24 +3985,22 @@ public sealed partial class GlobalNPC_EditSpawnRate_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_EditSpawnRange_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_EditSpawnRange_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.EditSpawnRange.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.EditSpawnRange.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_EditSpawnRange_Impl(GlobalNPCHooks.EditSpawnRange.Definition hook) : this()
+    public GlobalNPC_EditSpawnRange_Impl(GlobalNPCHooks.EditSpawnRange.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void EditSpawnRange(
@@ -4140,24 +4036,22 @@ public sealed partial class GlobalNPC_EditSpawnRange_Impl() : Terraria.ModLoader
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_EditSpawnPool_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_EditSpawnPool_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.EditSpawnPool.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.EditSpawnPool.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_EditSpawnPool_Impl(GlobalNPCHooks.EditSpawnPool.Definition hook) : this()
+    public GlobalNPC_EditSpawnPool_Impl(GlobalNPCHooks.EditSpawnPool.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void EditSpawnPool(
@@ -4181,24 +4075,22 @@ public sealed partial class GlobalNPC_EditSpawnPool_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_SpawnNPC_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_SpawnNPC_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.SpawnNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.SpawnNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_SpawnNPC_Impl(GlobalNPCHooks.SpawnNPC.Definition hook) : this()
+    public GlobalNPC_SpawnNPC_Impl(GlobalNPCHooks.SpawnNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void SpawnNPC(
@@ -4226,24 +4118,22 @@ public sealed partial class GlobalNPC_SpawnNPC_Impl() : Terraria.ModLoader.Globa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanChat_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanChat_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanChat.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanChat.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanChat_Impl(GlobalNPCHooks.CanChat.Definition hook) : this()
+    public GlobalNPC_CanChat_Impl(GlobalNPCHooks.CanChat.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanChat(
@@ -4263,24 +4153,22 @@ public sealed partial class GlobalNPC_CanChat_Impl() : Terraria.ModLoader.Global
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_GetChat_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_GetChat_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.GetChat.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.GetChat.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_GetChat_Impl(GlobalNPCHooks.GetChat.Definition hook) : this()
+    public GlobalNPC_GetChat_Impl(GlobalNPCHooks.GetChat.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void GetChat(
@@ -4304,24 +4192,22 @@ public sealed partial class GlobalNPC_GetChat_Impl() : Terraria.ModLoader.Global
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_PreChatButtonClicked_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_PreChatButtonClicked_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.PreChatButtonClicked.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.PreChatButtonClicked.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_PreChatButtonClicked_Impl(GlobalNPCHooks.PreChatButtonClicked.Definition hook) : this()
+    public GlobalNPC_PreChatButtonClicked_Impl(GlobalNPCHooks.PreChatButtonClicked.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreChatButtonClicked(
@@ -4345,24 +4231,22 @@ public sealed partial class GlobalNPC_PreChatButtonClicked_Impl() : Terraria.Mod
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_OnChatButtonClicked_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_OnChatButtonClicked_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.OnChatButtonClicked.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.OnChatButtonClicked.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_OnChatButtonClicked_Impl(GlobalNPCHooks.OnChatButtonClicked.Definition hook) : this()
+    public GlobalNPC_OnChatButtonClicked_Impl(GlobalNPCHooks.OnChatButtonClicked.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnChatButtonClicked(
@@ -4386,24 +4270,22 @@ public sealed partial class GlobalNPC_OnChatButtonClicked_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyShop_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyShop_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyShop.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyShop.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyShop_Impl(GlobalNPCHooks.ModifyShop.Definition hook) : this()
+    public GlobalNPC_ModifyShop_Impl(GlobalNPCHooks.ModifyShop.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyShop(
@@ -4423,24 +4305,22 @@ public sealed partial class GlobalNPC_ModifyShop_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyActiveShop_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyActiveShop_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyActiveShop.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyActiveShop.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyActiveShop_Impl(GlobalNPCHooks.ModifyActiveShop.Definition hook) : this()
+    public GlobalNPC_ModifyActiveShop_Impl(GlobalNPCHooks.ModifyActiveShop.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ModifyActiveShop(
@@ -4468,24 +4348,22 @@ public sealed partial class GlobalNPC_ModifyActiveShop_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_SetupTravelShop_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_SetupTravelShop_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.SetupTravelShop.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.SetupTravelShop.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_SetupTravelShop_Impl(GlobalNPCHooks.SetupTravelShop.Definition hook) : this()
+    public GlobalNPC_SetupTravelShop_Impl(GlobalNPCHooks.SetupTravelShop.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void SetupTravelShop(
@@ -4509,24 +4387,22 @@ public sealed partial class GlobalNPC_SetupTravelShop_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_CanGoToStatue_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_CanGoToStatue_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.CanGoToStatue.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.CanGoToStatue.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_CanGoToStatue_Impl(GlobalNPCHooks.CanGoToStatue.Definition hook) : this()
+    public GlobalNPC_CanGoToStatue_Impl(GlobalNPCHooks.CanGoToStatue.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool? CanGoToStatue(
@@ -4550,24 +4426,22 @@ public sealed partial class GlobalNPC_CanGoToStatue_Impl() : Terraria.ModLoader.
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_OnGoToStatue_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_OnGoToStatue_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.OnGoToStatue.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.OnGoToStatue.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_OnGoToStatue_Impl(GlobalNPCHooks.OnGoToStatue.Definition hook) : this()
+    public GlobalNPC_OnGoToStatue_Impl(GlobalNPCHooks.OnGoToStatue.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnGoToStatue(
@@ -4591,24 +4465,22 @@ public sealed partial class GlobalNPC_OnGoToStatue_Impl() : Terraria.ModLoader.G
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_BuffTownNPC_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_BuffTownNPC_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.BuffTownNPC.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.BuffTownNPC.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_BuffTownNPC_Impl(GlobalNPCHooks.BuffTownNPC.Definition hook) : this()
+    public GlobalNPC_BuffTownNPC_Impl(GlobalNPCHooks.BuffTownNPC.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void BuffTownNPC(
@@ -4632,24 +4504,22 @@ public sealed partial class GlobalNPC_BuffTownNPC_Impl() : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyDeathMessage_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyDeathMessage_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyDeathMessage.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyDeathMessage.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyDeathMessage_Impl(GlobalNPCHooks.ModifyDeathMessage.Definition hook) : this()
+    public GlobalNPC_ModifyDeathMessage_Impl(GlobalNPCHooks.ModifyDeathMessage.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ModifyDeathMessage(
@@ -4677,24 +4547,22 @@ public sealed partial class GlobalNPC_ModifyDeathMessage_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_TownNPCAttackStrength_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_TownNPCAttackStrength_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.TownNPCAttackStrength.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.TownNPCAttackStrength.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_TownNPCAttackStrength_Impl(GlobalNPCHooks.TownNPCAttackStrength.Definition hook) : this()
+    public GlobalNPC_TownNPCAttackStrength_Impl(GlobalNPCHooks.TownNPCAttackStrength.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void TownNPCAttackStrength(
@@ -4722,24 +4590,22 @@ public sealed partial class GlobalNPC_TownNPCAttackStrength_Impl() : Terraria.Mo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_TownNPCAttackCooldown_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_TownNPCAttackCooldown_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.TownNPCAttackCooldown.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.TownNPCAttackCooldown.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_TownNPCAttackCooldown_Impl(GlobalNPCHooks.TownNPCAttackCooldown.Definition hook) : this()
+    public GlobalNPC_TownNPCAttackCooldown_Impl(GlobalNPCHooks.TownNPCAttackCooldown.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void TownNPCAttackCooldown(
@@ -4767,24 +4633,22 @@ public sealed partial class GlobalNPC_TownNPCAttackCooldown_Impl() : Terraria.Mo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_TownNPCAttackProj_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_TownNPCAttackProj_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.TownNPCAttackProj.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.TownNPCAttackProj.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_TownNPCAttackProj_Impl(GlobalNPCHooks.TownNPCAttackProj.Definition hook) : this()
+    public GlobalNPC_TownNPCAttackProj_Impl(GlobalNPCHooks.TownNPCAttackProj.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void TownNPCAttackProj(
@@ -4812,24 +4676,22 @@ public sealed partial class GlobalNPC_TownNPCAttackProj_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_TownNPCAttackProjSpeed_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_TownNPCAttackProjSpeed_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.TownNPCAttackProjSpeed.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.TownNPCAttackProjSpeed.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_TownNPCAttackProjSpeed_Impl(GlobalNPCHooks.TownNPCAttackProjSpeed.Definition hook) : this()
+    public GlobalNPC_TownNPCAttackProjSpeed_Impl(GlobalNPCHooks.TownNPCAttackProjSpeed.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void TownNPCAttackProjSpeed(
@@ -4861,24 +4723,22 @@ public sealed partial class GlobalNPC_TownNPCAttackProjSpeed_Impl() : Terraria.M
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_TownNPCAttackShoot_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_TownNPCAttackShoot_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.TownNPCAttackShoot.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.TownNPCAttackShoot.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_TownNPCAttackShoot_Impl(GlobalNPCHooks.TownNPCAttackShoot.Definition hook) : this()
+    public GlobalNPC_TownNPCAttackShoot_Impl(GlobalNPCHooks.TownNPCAttackShoot.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void TownNPCAttackShoot(
@@ -4902,24 +4762,22 @@ public sealed partial class GlobalNPC_TownNPCAttackShoot_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_TownNPCAttackMagic_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_TownNPCAttackMagic_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.TownNPCAttackMagic.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.TownNPCAttackMagic.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_TownNPCAttackMagic_Impl(GlobalNPCHooks.TownNPCAttackMagic.Definition hook) : this()
+    public GlobalNPC_TownNPCAttackMagic_Impl(GlobalNPCHooks.TownNPCAttackMagic.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void TownNPCAttackMagic(
@@ -4943,24 +4801,22 @@ public sealed partial class GlobalNPC_TownNPCAttackMagic_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_TownNPCAttackSwing_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_TownNPCAttackSwing_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.TownNPCAttackSwing.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.TownNPCAttackSwing.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_TownNPCAttackSwing_Impl(GlobalNPCHooks.TownNPCAttackSwing.Definition hook) : this()
+    public GlobalNPC_TownNPCAttackSwing_Impl(GlobalNPCHooks.TownNPCAttackSwing.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void TownNPCAttackSwing(
@@ -4988,24 +4844,22 @@ public sealed partial class GlobalNPC_TownNPCAttackSwing_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_DrawTownAttackGun_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_DrawTownAttackGun_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.DrawTownAttackGun.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.DrawTownAttackGun.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_DrawTownAttackGun_Impl(GlobalNPCHooks.DrawTownAttackGun.Definition hook) : this()
+    public GlobalNPC_DrawTownAttackGun_Impl(GlobalNPCHooks.DrawTownAttackGun.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void DrawTownAttackGun(
@@ -5041,24 +4895,22 @@ public sealed partial class GlobalNPC_DrawTownAttackGun_Impl() : Terraria.ModLoa
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_DrawTownAttackSwing_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_DrawTownAttackSwing_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.DrawTownAttackSwing.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.DrawTownAttackSwing.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_DrawTownAttackSwing_Impl(GlobalNPCHooks.DrawTownAttackSwing.Definition hook) : this()
+    public GlobalNPC_DrawTownAttackSwing_Impl(GlobalNPCHooks.DrawTownAttackSwing.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void DrawTownAttackSwing(
@@ -5098,24 +4950,22 @@ public sealed partial class GlobalNPC_DrawTownAttackSwing_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ModifyCollisionData_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ModifyCollisionData_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ModifyCollisionData.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ModifyCollisionData.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ModifyCollisionData_Impl(GlobalNPCHooks.ModifyCollisionData.Definition hook) : this()
+    public GlobalNPC_ModifyCollisionData_Impl(GlobalNPCHooks.ModifyCollisionData.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool ModifyCollisionData(
@@ -5151,24 +5001,22 @@ public sealed partial class GlobalNPC_ModifyCollisionData_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_NeedSaving_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_NeedSaving_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.NeedSaving.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.NeedSaving.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_NeedSaving_Impl(GlobalNPCHooks.NeedSaving.Definition hook) : this()
+    public GlobalNPC_NeedSaving_Impl(GlobalNPCHooks.NeedSaving.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool NeedSaving(
@@ -5188,24 +5036,22 @@ public sealed partial class GlobalNPC_NeedSaving_Impl() : Terraria.ModLoader.Glo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_PickEmote_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_PickEmote_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.PickEmote.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.PickEmote.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_PickEmote_Impl(GlobalNPCHooks.PickEmote.Definition hook) : this()
+    public GlobalNPC_PickEmote_Impl(GlobalNPCHooks.PickEmote.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override int? PickEmote(
@@ -5237,24 +5083,22 @@ public sealed partial class GlobalNPC_PickEmote_Impl() : Terraria.ModLoader.Glob
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_ChatBubblePosition_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_ChatBubblePosition_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.ChatBubblePosition.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.ChatBubblePosition.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_ChatBubblePosition_Impl(GlobalNPCHooks.ChatBubblePosition.Definition hook) : this()
+    public GlobalNPC_ChatBubblePosition_Impl(GlobalNPCHooks.ChatBubblePosition.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void ChatBubblePosition(
@@ -5282,24 +5126,22 @@ public sealed partial class GlobalNPC_ChatBubblePosition_Impl() : Terraria.ModLo
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_PartyHatPosition_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_PartyHatPosition_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.PartyHatPosition.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.PartyHatPosition.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_PartyHatPosition_Impl(GlobalNPCHooks.PartyHatPosition.Definition hook) : this()
+    public GlobalNPC_PartyHatPosition_Impl(GlobalNPCHooks.PartyHatPosition.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PartyHatPosition(
@@ -5327,24 +5169,22 @@ public sealed partial class GlobalNPC_PartyHatPosition_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalNPC_EmoteBubblePosition_Impl() : Terraria.ModLoader.GlobalNPC
+public sealed partial class GlobalNPC_EmoteBubblePosition_Impl : Terraria.ModLoader.GlobalNPC
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.EmoteBubblePosition.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalNPCHooks.EmoteBubblePosition.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalNPC_EmoteBubblePosition_Impl(GlobalNPCHooks.EmoteBubblePosition.Definition hook) : this()
+    public GlobalNPC_EmoteBubblePosition_Impl(GlobalNPCHooks.EmoteBubblePosition.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void EmoteBubblePosition(

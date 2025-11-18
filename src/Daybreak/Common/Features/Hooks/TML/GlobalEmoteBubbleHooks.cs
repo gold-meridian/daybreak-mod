@@ -251,24 +251,22 @@ public static partial class GlobalEmoteBubbleHooks
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalEmoteBubble_OnSpawn_Impl() : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_OnSpawn_Impl : Terraria.ModLoader.GlobalEmoteBubble
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalEmoteBubbleHooks.OnSpawn.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalEmoteBubbleHooks.OnSpawn.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalEmoteBubble_OnSpawn_Impl(GlobalEmoteBubbleHooks.OnSpawn.Definition hook) : this()
+    public GlobalEmoteBubble_OnSpawn_Impl(GlobalEmoteBubbleHooks.OnSpawn.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void OnSpawn(
@@ -288,24 +286,22 @@ public sealed partial class GlobalEmoteBubble_OnSpawn_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalEmoteBubble_UpdateFrame_Impl() : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_UpdateFrame_Impl : Terraria.ModLoader.GlobalEmoteBubble
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalEmoteBubbleHooks.UpdateFrame.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalEmoteBubbleHooks.UpdateFrame.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalEmoteBubble_UpdateFrame_Impl(GlobalEmoteBubbleHooks.UpdateFrame.Definition hook) : this()
+    public GlobalEmoteBubble_UpdateFrame_Impl(GlobalEmoteBubbleHooks.UpdateFrame.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool UpdateFrame(
@@ -325,24 +321,22 @@ public sealed partial class GlobalEmoteBubble_UpdateFrame_Impl() : Terraria.ModL
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalEmoteBubble_UpdateFrameInEmoteMenu_Impl() : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_UpdateFrameInEmoteMenu_Impl : Terraria.ModLoader.GlobalEmoteBubble
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalEmoteBubbleHooks.UpdateFrameInEmoteMenu.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalEmoteBubbleHooks.UpdateFrameInEmoteMenu.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalEmoteBubble_UpdateFrameInEmoteMenu_Impl(GlobalEmoteBubbleHooks.UpdateFrameInEmoteMenu.Definition hook) : this()
+    public GlobalEmoteBubble_UpdateFrameInEmoteMenu_Impl(GlobalEmoteBubbleHooks.UpdateFrameInEmoteMenu.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool UpdateFrameInEmoteMenu(
@@ -366,24 +360,22 @@ public sealed partial class GlobalEmoteBubble_UpdateFrameInEmoteMenu_Impl() : Te
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalEmoteBubble_PreDraw_Impl() : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_PreDraw_Impl : Terraria.ModLoader.GlobalEmoteBubble
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalEmoteBubbleHooks.PreDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalEmoteBubbleHooks.PreDraw.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalEmoteBubble_PreDraw_Impl(GlobalEmoteBubbleHooks.PreDraw.Definition hook) : this()
+    public GlobalEmoteBubble_PreDraw_Impl(GlobalEmoteBubbleHooks.PreDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDraw(
@@ -427,24 +419,22 @@ public sealed partial class GlobalEmoteBubble_PreDraw_Impl() : Terraria.ModLoade
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalEmoteBubble_PostDraw_Impl() : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_PostDraw_Impl : Terraria.ModLoader.GlobalEmoteBubble
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalEmoteBubbleHooks.PostDraw.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalEmoteBubbleHooks.PostDraw.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalEmoteBubble_PostDraw_Impl(GlobalEmoteBubbleHooks.PostDraw.Definition hook) : this()
+    public GlobalEmoteBubble_PostDraw_Impl(GlobalEmoteBubbleHooks.PostDraw.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDraw(
@@ -488,24 +478,22 @@ public sealed partial class GlobalEmoteBubble_PostDraw_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalEmoteBubble_PreDrawInEmoteMenu_Impl() : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_PreDrawInEmoteMenu_Impl : Terraria.ModLoader.GlobalEmoteBubble
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalEmoteBubbleHooks.PreDrawInEmoteMenu.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalEmoteBubbleHooks.PreDrawInEmoteMenu.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalEmoteBubble_PreDrawInEmoteMenu_Impl(GlobalEmoteBubbleHooks.PreDrawInEmoteMenu.Definition hook) : this()
+    public GlobalEmoteBubble_PreDrawInEmoteMenu_Impl(GlobalEmoteBubbleHooks.PreDrawInEmoteMenu.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override bool PreDrawInEmoteMenu(
@@ -545,24 +533,22 @@ public sealed partial class GlobalEmoteBubble_PreDrawInEmoteMenu_Impl() : Terrar
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalEmoteBubble_PostDrawInEmoteMenu_Impl() : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_PostDrawInEmoteMenu_Impl : Terraria.ModLoader.GlobalEmoteBubble
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalEmoteBubbleHooks.PostDrawInEmoteMenu.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalEmoteBubbleHooks.PostDrawInEmoteMenu.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalEmoteBubble_PostDrawInEmoteMenu_Impl(GlobalEmoteBubbleHooks.PostDrawInEmoteMenu.Definition hook) : this()
+    public GlobalEmoteBubble_PostDrawInEmoteMenu_Impl(GlobalEmoteBubbleHooks.PostDrawInEmoteMenu.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override void PostDrawInEmoteMenu(
@@ -602,24 +588,22 @@ public sealed partial class GlobalEmoteBubble_PostDrawInEmoteMenu_Impl() : Terra
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalEmoteBubble_GetFrame_Impl() : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_GetFrame_Impl : Terraria.ModLoader.GlobalEmoteBubble
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalEmoteBubbleHooks.GetFrame.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalEmoteBubbleHooks.GetFrame.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalEmoteBubble_GetFrame_Impl(GlobalEmoteBubbleHooks.GetFrame.Definition hook) : this()
+    public GlobalEmoteBubble_GetFrame_Impl(GlobalEmoteBubbleHooks.GetFrame.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override Microsoft.Xna.Framework.Rectangle? GetFrame(
@@ -639,24 +623,22 @@ public sealed partial class GlobalEmoteBubble_GetFrame_Impl() : Terraria.ModLoad
 }
 
 [Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalEmoteBubble_GetFrameInEmoteMenu_Impl() : Terraria.ModLoader.GlobalEmoteBubble
+public sealed partial class GlobalEmoteBubble_GetFrameInEmoteMenu_Impl : Terraria.ModLoader.GlobalEmoteBubble
 {
-    [Terraria.ModLoader.CloneByReference]
-    private string namePrefix = string.Empty;
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalEmoteBubbleHooks.GetFrameInEmoteMenu.Definition hook;
 
     [field: Terraria.ModLoader.CloneByReference]
-    private GlobalEmoteBubbleHooks.GetFrameInEmoteMenu.Definition hook;
-
-    public override string Name => base.Name + '_' + namePrefix;
+    public override string Name => base.Name + '_' + field;
 
     public override bool InstancePerEntity => true;
 
     protected override bool CloneNewInstances => true;
 
-    public GlobalEmoteBubble_GetFrameInEmoteMenu_Impl(GlobalEmoteBubbleHooks.GetFrameInEmoteMenu.Definition hook) : this()
+    public GlobalEmoteBubble_GetFrameInEmoteMenu_Impl(GlobalEmoteBubbleHooks.GetFrameInEmoteMenu.Definition hook)
     {
         this.hook = hook;
-        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
     }
 
     public override Microsoft.Xna.Framework.Rectangle? GetFrameInEmoteMenu(
