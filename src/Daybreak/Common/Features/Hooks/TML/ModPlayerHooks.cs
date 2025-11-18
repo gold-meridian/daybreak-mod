@@ -66,6 +66,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyManaCost(Terraria.Item,System.Single&,System.Single&)
 //     System.Void Terraria.ModLoader.ModPlayer::OnMissingMana(Terraria.Item,System.Int32)
 //     System.Void Terraria.ModLoader.ModPlayer::OnConsumeMana(Terraria.Item,System.Int32)
+//     System.Boolean Terraria.ModLoader.ModPlayer::ApplyPotionDelay(Terraria.Item,System.Int32)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyWeaponDamage(Terraria.Item,Terraria.ModLoader.StatModifier&)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyWeaponKnockback(Terraria.Item,Terraria.ModLoader.StatModifier&)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyWeaponCrit(Terraria.Item,System.Single&)
@@ -1252,6 +1253,28 @@ public static partial class ModPlayerHooks
             add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnConsumeMana_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnConsumeMana")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnConsumeMana; use a flag to disable behavior.");
+        }
+    }
+
+    public sealed partial class ApplyPotionDelay
+    {
+        public delegate bool Original(
+            Terraria.Item item,
+            int potionDelay
+        );
+
+        public delegate bool Definition(
+            Original orig,
+            Terraria.ModLoader.ModPlayer self,
+            Terraria.Item item,
+            int potionDelay
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_ApplyPotionDelay_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::ApplyPotionDelay")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ApplyPotionDelay; use a flag to disable behavior.");
         }
     }
 
@@ -4654,6 +4677,45 @@ public sealed partial class ModPlayer_OnConsumeMana_Impl() : Terraria.ModLoader.
             this,
             item,
             manaConsumed
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_ApplyPotionDelay_Impl() : Terraria.ModLoader.ModPlayer
+{
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private ModPlayerHooks.ApplyPotionDelay.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    protected override bool CloneNewInstances => true;
+
+    public ModPlayer_ApplyPotionDelay_Impl(ModPlayerHooks.ApplyPotionDelay.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override bool ApplyPotionDelay(
+        Terraria.Item item,
+        int potionDelay
+    )
+    {
+        return hook(
+            (
+                Terraria.Item item_captured,
+                int potionDelay_captured
+            ) => base.ApplyPotionDelay(
+                item_captured,
+                potionDelay_captured
+            ),
+            this,
+            item,
+            potionDelay
         );
     }
 }

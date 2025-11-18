@@ -26,6 +26,8 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalItem::ModifyManaCost(Terraria.Item,Terraria.Player,System.Single&,System.Single&)
 //     System.Void Terraria.ModLoader.GlobalItem::OnMissingMana(Terraria.Item,Terraria.Player,System.Int32)
 //     System.Void Terraria.ModLoader.GlobalItem::OnConsumeMana(Terraria.Item,Terraria.Player,System.Int32)
+//     System.Void Terraria.ModLoader.GlobalItem::ModifyPotionDelay(Terraria.Item,Terraria.Player,System.Int32&)
+//     System.Boolean Terraria.ModLoader.GlobalItem::ApplyPotionDelay(Terraria.Item,Terraria.Player,System.Int32)
 //     System.Void Terraria.ModLoader.GlobalItem::ModifyWeaponDamage(Terraria.Item,Terraria.Player,Terraria.ModLoader.StatModifier&)
 //     System.Void Terraria.ModLoader.GlobalItem::ModifyResearchSorting(Terraria.Item,Terraria.ID.ContentSamples/CreativeHelper/ItemGroup&)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalItem::CanConsumeBait(Terraria.Player,Terraria.Item)
@@ -536,6 +538,54 @@ public static partial class GlobalItemHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalItem_OnConsumeMana_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalItem::OnConsumeMana")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::OnConsumeMana; use a flag to disable behavior.");
+        }
+    }
+
+    public sealed partial class ModifyPotionDelay
+    {
+        public delegate void Original(
+            Terraria.Item item,
+            Terraria.Player player,
+            ref int baseDelay
+        );
+
+        public delegate void Definition(
+            Original orig,
+            Terraria.ModLoader.GlobalItem self,
+            Terraria.Item item,
+            Terraria.Player player,
+            ref int baseDelay
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalItem_ModifyPotionDelay_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalItem::ModifyPotionDelay")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ModifyPotionDelay; use a flag to disable behavior.");
+        }
+    }
+
+    public sealed partial class ApplyPotionDelay
+    {
+        public delegate bool Original(
+            Terraria.Item item,
+            Terraria.Player player,
+            int potionDelay
+        );
+
+        public delegate bool Definition(
+            Original orig,
+            Terraria.ModLoader.GlobalItem self,
+            Terraria.Item item,
+            Terraria.Player player,
+            int potionDelay
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalItem_ApplyPotionDelay_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalItem::ApplyPotionDelay")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ApplyPotionDelay; use a flag to disable behavior.");
         }
     }
 
@@ -3553,6 +3603,96 @@ public sealed partial class GlobalItem_OnConsumeMana_Impl() : Terraria.ModLoader
             item,
             player,
             manaConsumed
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalItem_ModifyPotionDelay_Impl() : Terraria.ModLoader.GlobalItem
+{
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalItemHooks.ModifyPotionDelay.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public GlobalItem_ModifyPotionDelay_Impl(GlobalItemHooks.ModifyPotionDelay.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override void ModifyPotionDelay(
+        Terraria.Item item,
+        Terraria.Player player,
+        ref int baseDelay
+    )
+    {
+        hook(
+            (
+                Terraria.Item item_captured,
+                Terraria.Player player_captured,
+                ref int baseDelay_captured
+            ) => base.ModifyPotionDelay(
+                item_captured,
+                player_captured,
+                ref baseDelay_captured
+            ),
+            this,
+            item,
+            player,
+            ref baseDelay
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalItem_ApplyPotionDelay_Impl() : Terraria.ModLoader.GlobalItem
+{
+    [Terraria.ModLoader.CloneByReference]
+    private string namePrefix = string.Empty;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    private GlobalItemHooks.ApplyPotionDelay.Definition hook;
+
+    public override string Name => base.Name + '_' + namePrefix;
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public GlobalItem_ApplyPotionDelay_Impl(GlobalItemHooks.ApplyPotionDelay.Definition hook) : this()
+    {
+        this.hook = hook;
+        namePrefix = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override bool ApplyPotionDelay(
+        Terraria.Item item,
+        Terraria.Player player,
+        int potionDelay
+    )
+    {
+        return hook(
+            (
+                Terraria.Item item_captured,
+                Terraria.Player player_captured,
+                int potionDelay_captured
+            ) => base.ApplyPotionDelay(
+                item_captured,
+                player_captured,
+                potionDelay_captured
+            ),
+            this,
+            item,
+            player,
+            potionDelay
         );
     }
 }
