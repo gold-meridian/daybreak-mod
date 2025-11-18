@@ -118,6 +118,7 @@ internal static class HookLoader
         }
 
         var loadableTypes = AssemblyManager.GetLoadableTypes(self.Code)
+                                           .Where(x => AutoloadAttribute.GetValue(x).NeedsAutoloading)
                                            .OrderBy(x => x.FullName, StringComparer.InvariantCulture)
                                            .ToArray();
 
@@ -175,6 +176,7 @@ internal static class HookLoader
             static (Mod mod) =>
             {
                 var loadableTypes = AssemblyManager.GetLoadableTypes(mod.Code)
+                                                   .Where(x => AutoloadAttribute.GetValue(x).NeedsAutoloading)
                                                    .OrderBy(x => x.FullName, StringComparer.InvariantCulture)
                                                    .ToArray();
                 LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), CallOnUnloads);
