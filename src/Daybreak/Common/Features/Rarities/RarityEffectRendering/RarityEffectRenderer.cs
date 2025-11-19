@@ -132,7 +132,6 @@ internal sealed class RarityEffectRenderer : ModSystem
         c.Remove();
 
         c.EmitLdarg1(); // info
-        c.EmitLdfld(typeof(Main.MouseTextCache).GetField(nameof(Main.MouseTextCache.rare), BindingFlags.Public | BindingFlags.Instance)!);
         c.EmitDelegate(
             (
                 SpriteBatch spriteBatch,
@@ -145,10 +144,12 @@ internal sealed class RarityEffectRenderer : ModSystem
                 Vector2 baseScale,
                 float maxWidth,
                 float spread,
-                int rare
+                Main.MouseTextCache info
             ) =>
             {
-                if (!TryGetSpecialRarity(rare, out var rarity))
+                // fix(#6): Use additional hardcoded checks to discern when this
+                //          is not a rarity rendering context.
+                if (info.diff > 0 || info.rare == 0 || !TryGetSpecialRarity(info.rare, out var rarity))
                 {
                     ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, text, position, baseColor, rotation, origin, baseScale, maxWidth, spread);
                     return Vector2.Zero;
