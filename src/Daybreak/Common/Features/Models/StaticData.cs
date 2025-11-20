@@ -21,22 +21,24 @@ public static class StaticData
     ///     The data is not initialized.
     /// </exception>
     /// <remarks>
-    ///     See <see cref="StaticData{TData}"/> for an explanation of this API.
+    ///     See <see cref="IStatic{TData}"/> for an explanation of this API.
     /// </remarks>
     public static TData Get<TData>()
+        where TData : IStatic<TData>
     {
-        return StaticData<TData>.Data
+        return IStatic<TData>.Data
             ?? throw new InvalidOperationException($"Attempted to get uninitialized StaticData: {typeof(TData)}");
     }
 }
 
 /// <summary>
-///     A special kind of <see cref="InstanceData"/> in which the singleton
-///     instance is expected to be the only instance, providing external data.
+///     A special kind of data model in which a singleton instance is created on
+///     load and creates a single real, non-null instance whose nullability
+///     contracts must be fulfilled.
 ///     <br />
 ///     This model guarantees the provided data to be fully loaded and non-null.
 ///     <br />
-///     Only one <see cref="StaticData{TData}"/> may exist for any
+///     Only one <see cref="IStatic{TData}"/> may exist for any
 ///     <typeparamref name="TData"/>.
 /// </summary>
 /// <typeparam name="TData">The external data to provide.</typeparam>
@@ -45,7 +47,8 @@ public static class StaticData
 ///     on acquired resources or data which are initialized at load time,
 ///     thereby not automatically guaranting values are not nullable.
 /// </remarks>
-public abstract class StaticData<TData> : InstanceData
+public interface IStatic<TData> : ILoadable
+    where TData : IStatic<TData>
 {
     /// <summary>
     ///     The data instance produced by this static data.
@@ -65,19 +68,12 @@ public abstract class StaticData<TData> : InstanceData
         }
     }
 
-    /// <summary>
-    ///     
-    /// </summary>
-    /// <param name="mod">The mod this belongs to.</param>
-    protected sealed override void LoadSingleton(Mod mod)
+    void ILoadable.Load(Mod mod)
     {
-        Data = LoadData(mod);
+        Data = TData.LoadData(mod);
     }
 
-    /// <summary>
-    ///     Unloads the data owned by this type.
-    /// </summary>
-    protected sealed override void UnloadSingleton()
+    void ILoadable.Unload()
     {
         // Presumably never loaded in the first place, shouldn't generally be
         // possible but may occur on early unloads?  I don't think this is
@@ -88,7 +84,7 @@ public abstract class StaticData<TData> : InstanceData
             return;
         }
 
-        UnloadData(Data);
+        TData.UnloadData(Data);
     }
 
     /// <summary>
@@ -96,12 +92,12 @@ public abstract class StaticData<TData> : InstanceData
     /// </summary>
     /// <param name="mod">The mod this belongs to.</param>
     /// <returns>The initialized <typeparamref name="TData"/> instance.</returns>
-    protected abstract TData LoadData(Mod mod);
+    protected static abstract TData LoadData(Mod mod);
 
     /// <summary>
     ///     Responsible for uninitializing the <typeparamref name="TData"/>.
     ///     Expected to dispose of resouces, etc.
     /// </summary>
     /// <param name="data">The data to clean up/uninitialize.</param>
-    protected abstract void UnloadData(TData data);
+    protected static abstract void UnloadData(TData data);
 }
