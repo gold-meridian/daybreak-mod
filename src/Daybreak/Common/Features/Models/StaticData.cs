@@ -4,34 +4,6 @@ using Terraria.ModLoader;
 namespace Daybreak.Common.Features.Models;
 
 /// <summary>
-///     Manages access to static data.
-/// </summary>
-/// <remarks>
-///     See <see cref="StaticData{TData}"/> for an explanation of this API.
-/// </remarks>
-public static class StaticData
-{
-    /// <summary>
-    ///     Gets a static data instance, throwing if it is somehow
-    ///     uninitialized.
-    /// </summary>
-    /// <typeparam name="TData">The data type.</typeparam>
-    /// <returns>The data instance.</returns>
-    /// <exception cref="InvalidOperationException">
-    ///     The data is not initialized.
-    /// </exception>
-    /// <remarks>
-    ///     See <see cref="IStatic{TData}"/> for an explanation of this API.
-    /// </remarks>
-    public static TData Get<TData>()
-        where TData : IStatic<TData>
-    {
-        return IStatic<TData>.Data
-            ?? throw new InvalidOperationException($"Attempted to get uninitialized StaticData: {typeof(TData)}");
-    }
-}
-
-/// <summary>
 ///     A special kind of data model in which a singleton instance is created on
 ///     load and creates a single real, non-null instance whose nullability
 ///     contracts must be fulfilled.
@@ -53,15 +25,15 @@ public interface IStatic<TData> : ILoadable
     /// <summary>
     ///     The data instance produced by this static data.
     /// </summary>
-    internal static TData? Data
+    public static TData Instance
     {
-        get;
+        get => field ?? throw new InvalidOperationException($"Attempted to get uninitialized IStatic<{typeof(TData)}>");
 
         set
         {
             if (field is not null)
             {
-                throw new InvalidOperationException($"Duplicate initialization of StaticData: {typeof(TData)} (do you have duplicate StaticData<{typeof(TData)}>s?)");
+                throw new InvalidOperationException($"Duplicate initialization of IStatic<{typeof(TData)}> (do you have duplicate StaticData<{typeof(TData)}>s?)");
             }
 
             field = value;
@@ -70,21 +42,12 @@ public interface IStatic<TData> : ILoadable
 
     void ILoadable.Load(Mod mod)
     {
-        Data = TData.LoadData(mod);
+        Instance = TData.LoadData(mod);
     }
 
     void ILoadable.Unload()
     {
-        // Presumably never loaded in the first place, shouldn't generally be
-        // possible but may occur on early unloads?  I don't think this is
-        // possible since it wouldn't know to unload it if AddContent wasn't
-        // first called, but better safe than sorry.
-        if (Data is null)
-        {
-            return;
-        }
-
-        TData.UnloadData(Data);
+        TData.UnloadData(Instance);
     }
 
     /// <summary>
