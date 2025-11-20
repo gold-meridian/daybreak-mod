@@ -46,8 +46,13 @@ public readonly record struct RenderTargetDescriptor(
     ///     <see cref="Default"/> with usage set to
     ///     <see cref="RenderTargetUsage.PreserveContents"/>.
     /// </summary>
-    public static RenderTargetDescriptor DefaultPreserveContents { get; } =
-        Default with { Usage = RenderTargetUsage.PreserveContents };
+    public static RenderTargetDescriptor DefaultPreserveContents { get; } = new(
+        SurfaceFormat.Color,
+        DepthFormat.None,
+        0,
+        RenderTargetUsage.PreserveContents,
+        false
+    );
 
     /// <summary>
     ///     <see cref="RenderTarget2D.MultiSampleCount"/>
