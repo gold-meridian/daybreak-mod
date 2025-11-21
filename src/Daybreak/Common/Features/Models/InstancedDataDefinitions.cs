@@ -8,18 +8,40 @@ namespace Daybreak.Common.Features.Models;
 // GlobalProjectile
 // ModPlayer
 
-/// <summary>
-///     Base implementation of <see cref="InstanceData"/> belonging to an entity
-///     <typeparamref name="TEntity"/>.
-/// </summary>
-/// <typeparam name="TEntity">The entity type.</typeparam>
-public abstract class EntityData<TEntity> : InstanceData
+public abstract class PlayerData : InstanceData
 {
-    public abstract TEntity Entity { get; protected set; }
-}
+    private sealed class ModPlayerImpl<T> : ModPlayer
+    {
+        public override void ResetEffects()
+        {
+            base.ResetEffects();
+        }
 
-public abstract class PlayerData : EntityData<Player>
-{
+        public override ModPlayer Clone(Player newEntity)
+        {
+            return base.Clone(newEntity);
+        }
+
+        public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+        {
+            base.SyncPlayer(toWho, fromWho, newPlayer);
+        }
+
+        public override void CopyClientState(ModPlayer targetCopy)
+        {
+            base.CopyClientState(targetCopy);
+        }
+
+        public override void SendClientChanges(ModPlayer clientPlayer)
+        {
+            base.SendClientChanges(clientPlayer);
+        }
+    }
+    
+    public required Player Player { get; init; }
+
+    public required ModPlayer ModPlayer { get; init; }
+
     protected sealed override void LoadSingleton(Mod mod)
     {
         throw new System.NotImplementedException();
@@ -31,8 +53,10 @@ public abstract class PlayerData : EntityData<Player>
     }
 }
 
+/*
 public abstract class ItemData : EntityData<Player> { }
 
 public abstract class NpcData : EntityData<Player> { }
 
 public abstract class ProjectileData : EntityData<Player> { }
+*/
