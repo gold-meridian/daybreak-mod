@@ -4,7 +4,20 @@ using Terraria.ModLoader.IO;
 
 namespace Daybreak.Common.Features.Models;
 
-public interface IBinding { }
+/// <summary>
+///     The type-unsafe contract for a <see cref="Binding{T}"/>.
+/// </summary>
+public interface IBinding
+{
+    /// <inheritdoc cref="Binding{T}.Reset"/>
+    void Reset(IBound b);
+
+    /// <inheritdoc cref="Binding{T}.SaveTag"/>
+    void SaveTag(IBound b, TagCompound tag);
+
+    /// <inheritdoc cref="Binding{T}.LoadTag"/>
+    void LoadTag(IBound b, TagCompound tag);
+}
 
 /// <summary>
 ///     A configuration object determining the behavior of a
@@ -26,7 +39,7 @@ public sealed class Binding<T> : IBinding
     /// <summary>
     ///     Controls the behavior in <c>ResetEffects</c>.
     /// </summary>
-    public ResetToAction? ResetTo { get; set; }
+    public ResetToAction? Reset { get; set; }
 
     /// <summary>
     ///     Used to write data in <c>SaveData</c>.
@@ -47,6 +60,21 @@ public sealed class Binding<T> : IBinding
     ///     Controls behavior in <c>LoadTag</c>.
     /// </summary>
     public LoadTagAction? LoadTag { get; set; }
+
+    void IBinding.Reset(IBound b)
+    {
+        Reset?.Invoke((Bound<T>)b);
+    }
+
+    void IBinding.SaveTag(IBound b, TagCompound tag)
+    {
+        SaveTag?.Invoke((Bound<T>)b, tag);
+    }
+
+    void IBinding.LoadTag(IBound b, TagCompound tag)
+    {
+        LoadTag?.Invoke((Bound<T>)b, tag);
+    }
 }
 
 /// <summary>
@@ -189,7 +217,7 @@ public sealed class Bound<T> : IBound
     /// </summary>
     public Bound<T> ResetTo(Binding<T>.ResetToAction callback)
     {
-        Binding.ResetTo = callback;
+        Binding.Reset = callback;
         return this;
     }
 
@@ -198,7 +226,7 @@ public sealed class Bound<T> : IBound
     /// </summary>
     public Bound<T> ResetTo(Func<T> callback)
     {
-        Binding.ResetTo = _ => callback();
+        Binding.Reset = _ => callback();
         return this;
     }
 
@@ -207,7 +235,7 @@ public sealed class Bound<T> : IBound
     /// </summary>
     public Bound<T> ResetToDefault()
     {
-        Binding.ResetTo = b => b.DefaultValueProvider();
+        Binding.Reset = b => b.DefaultValueProvider();
         return this;
     }
 

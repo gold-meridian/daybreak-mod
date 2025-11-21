@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Terraria.ModLoader;
 
@@ -12,14 +13,20 @@ namespace Daybreak.Common.Features.Models;
 /// </summary>
 public interface IBoundDataProvider
 {
+    /// <inheritdoc cref="BoundDataProvider{TProvider}.PropertyMap"/>
+    Dictionary<PropertyInfo, IBound> PropertyMap { get; }
+
     /// <inheritdoc cref="BoundDataProvider{TProvider}.Properties"/>
-    IBound[] Properties { get; }
+    IEnumerable<IBound> Properties { get; }
 
     /// <inheritdoc cref="BoundDataProvider{TProvider}.Name"/>
     string Name { get; }
 
     /// <inheritdoc cref="BoundDataProvider{TProvider}.Mod"/>
     Mod Mod { get; }
+
+    /// <inheritdoc cref="BoundDataProvider{TProvider}.Mod"/>
+    IBoundDataProvider Clone();
 }
 
 /// <summary>
@@ -27,11 +34,11 @@ public interface IBoundDataProvider
 ///     objects.
 /// </summary>
 /// <typeparam name="TProvider">The self.</typeparam>
-public abstract class BoundDataProvider<TProvider> : ILoadable
-    where TProvider : BoundDataProvider<TProvider>
+public abstract class BoundDataProvider<TProvider> : IBoundDataProvider, ILoadable
+    where TProvider : BoundDataProvider<TProvider>, new()
 {
     // ReSharper disable once StaticMemberInGenericType
-    private static IBound[] properties = [];
+    private static Dictionary<PropertyInfo, IBound> propertyMap = [];
 
     // ReSharper disable once StaticMemberInGenericType
     private static string name = NameProvider.GetDefaultName(typeof(TProvider));
@@ -42,7 +49,17 @@ public abstract class BoundDataProvider<TProvider> : ILoadable
     /// <summary>
     ///     The bound values belonging to the <see cref="TProvider"/>.
     /// </summary>
-    public IBound[] Properties => properties;
+    public Dictionary<PropertyInfo, IBound> PropertyMap => propertyMap;
+
+    /// <summary>
+    ///     The bound properties for a real instance.  Empty on the template
+    ///     instance.
+    /// </summary>
+    public IEnumerable<IBound> Properties
+    {
+        get => field ?? [];
+        private set;
+    }
 
     /// <summary>
     ///     The name of this data provider, which is used for things such as
@@ -66,12 +83,10 @@ public abstract class BoundDataProvider<TProvider> : ILoadable
     void ILoadable.Load(Mod mod)
     {
         ownedMod = mod;
-        properties = GetType()
+        propertyMap = GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(x => x.PropertyType.IsAssignableTo(typeof(IBinding)))
-                    .Select(x => x.GetValue(this))
-                    .Cast<IBound>()
-                    .ToArray();
+                    .Where(x => x.PropertyType.IsAssignableTo(typeof(IBound)))
+                    .ToDictionary(x => x, x => (IBound)x.GetValue(this)!);
 
         Load();
     }
@@ -90,4 +105,25 @@ public abstract class BoundDataProvider<TProvider> : ILoadable
     ///     Unloads the template instance.
     /// </summary>
     protected abstract void Unload();
+
+    /// <summary>
+    ///     Creates a real instance of this data provider from the template
+    ///     instance.
+    /// </summary>
+    /// <returns></returns>
+    public IBoundDataProvider Clone()
+    {
+        var provider = new TProvider();
+        var properties = new List<IBound>(propertyMap.Count);
+
+        foreach (var (propertyInfo, bound) in propertyMap)
+        {
+            var property = bound.Clone();
+            propertyInfo.SetValue(provider, property);
+            properties.Add(property);
+        }
+
+        provider.Properties = properties;
+        return provider;
+    }
 }

@@ -59,7 +59,7 @@ public sealed class ResetToAttribute<T>(T value) : BindingConfigurationAttribute
     /// <inheritdoc />
     protected override void Configure(Binding<T> binding)
     {
-        binding.ResetTo = b => b.Value = Value;
+        binding.Reset = b => b.Value = Value;
     }
 }
 
@@ -74,7 +74,7 @@ public sealed class ResetToDefaultAttribute<T> : BindingConfigurationAttribute<T
     /// <inheritdoc />
     protected override void Configure(Binding<T> binding)
     {
-        binding.ResetTo = b => b.Value = b.DefaultValueProvider();
+        binding.Reset = b => b.Value = b.DefaultValueProvider();
     }
 }
 #endregion
