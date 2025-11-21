@@ -89,7 +89,7 @@ public sealed class OnUnloadAttribute : Attribute, IHasSide
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class SubscribesToAttribute<T> : Attribute, IHasSide
+public class SubscribesToAttribute<T> : Attribute, IHasSide
 {
     /// <summary>
     ///     The side to load this on.

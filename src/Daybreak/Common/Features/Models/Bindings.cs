@@ -178,6 +178,11 @@ public sealed class Bound<T> : IBound
         return Clone();
     }
 
+    /// <summary>
+    ///     Returns the value.
+    /// </summary>
+    public static implicit operator T(Bound<T> b) => b.Value;
+
 #region Binding configuration
     /// <summary>
     ///     Configures the binding to reset to the provided value.
