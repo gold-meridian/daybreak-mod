@@ -356,11 +356,7 @@ internal static class HookLoader
     {
         foreach (var method in methods)
         {
-            var attributes = method.GetCustomAttributes(typeof(SubscribesToAttribute<>), inherit: false);
-            if (attributes.Length == 0)
-            {
-                continue;
-            }
+            var attributes = method.GetCustomAttributes<SubscribesToAttribute>(inherit: false);
 
             foreach (var attribute in attributes)
             {
@@ -369,7 +365,7 @@ internal static class HookLoader
                     continue;
                 }
 
-                var hookType = attribute.GetType().GetGenericArguments()[0];
+                var hookType = attribute.GetHookType();
                 Subscribe(hookType, method, instance);
             }
         }

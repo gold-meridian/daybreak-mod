@@ -65,6 +65,24 @@ public sealed class OnUnloadAttribute : Attribute, IHasSide
     public ModSide Side { get; set; } = ModSide.Both;
 }
 
+/// <inheritdoc cref="SubscribesToAttribute{T}"/>
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public abstract class SubscribesToAttribute : Attribute, IHasSide
+{
+    /// <summary>
+    ///     The side to load this on.
+    /// </summary>
+    public ModSide Side { get; set; } = ModSide.Both;
+
+    /// <summary>
+    ///     The type containing the hook definition.
+    /// </summary>
+    /// <returns></returns>
+    public abstract Type GetHookType();
+}
+
 /// <summary>
 ///     Automatically subscribes the decorated method to the hook of type
 ///     <typeparamref name="T" /> if applicable.
@@ -89,10 +107,11 @@ public sealed class OnUnloadAttribute : Attribute, IHasSide
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class SubscribesToAttribute<T> : Attribute, IHasSide
+public class SubscribesToAttribute<T> : SubscribesToAttribute
 {
-    /// <summary>
-    ///     The side to load this on.
-    /// </summary>
-    public ModSide Side { get; set; } = ModSide.Both;
+    /// <inheritdoc />
+    public override Type GetHookType()
+    {
+        return typeof(T);
+    }
 }
