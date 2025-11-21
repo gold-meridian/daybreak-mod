@@ -6,17 +6,24 @@ using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.Models;
 
-public abstract class PlayerDataProvider : BoundDataProvider
+/// <summary>
+///     A <see cref="BoundDataProvider{TProvider}"/> implemented for
+///     <see cref="Player"/> data.
+/// </summary>
+/// <typeparam name="TProvider">The self.</typeparam>
+public abstract class PlayerDataProvider<TProvider> : BoundDataProvider<TProvider>
+    where TProvider : PlayerDataProvider<TProvider>
 {
-    protected override ILoadable CreateContent(IBound[] properties)
-    {
-        return null;
-    }
+    /// <inheritdoc />
+    protected override void Load() { }
+
+    /// <inheritdoc />
+    protected override void Unload() { }
 }
 
 internal sealed class PlayerDataProviderImpl(Type type) : ModPlayer
 {
-    public Dictionary<Type, PlayerDataProvider> DataProviders { get; } = [];
+    public Dictionary<Type, IBoundDataProvider> DataProviders { get; } = [];
 }
 
 /// <summary>
@@ -36,7 +43,7 @@ public static class PlayerExtensions
         ///     otherwise <see langword="false"/>.
         /// </summary>
         public bool TryGet<T>([NotNullWhen(returnValue: true)] out T? data)
-            where T : PlayerDataProvider
+            where T : PlayerDataProvider<T>
         {
             data = null;
 
@@ -63,7 +70,7 @@ public static class PlayerExtensions
         ///     Gets data from the player, throwing if it isn't present.
         /// </summary>
         public T Get<T>()
-            where T : PlayerDataProvider
+            where T : PlayerDataProvider<T>
         {
             player.TryGet<T>(out var data);
             return data ?? throw new InvalidOperationException($"Cannot get player data: {typeof(T)}");

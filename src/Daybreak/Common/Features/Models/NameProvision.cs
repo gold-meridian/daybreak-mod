@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.Models;
 
@@ -32,7 +31,7 @@ public static class NameProvider
 }
 
 /// <summary>
-///     Used to provide a name to a <see cref="ModType"/>.
+///     Used to provide a name to <see cref="BoundDataProvider{TProvider}"/>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
 public abstract class AbstractNameProviderAttribute : Attribute
