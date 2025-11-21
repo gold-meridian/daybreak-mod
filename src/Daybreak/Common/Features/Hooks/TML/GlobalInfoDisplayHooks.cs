@@ -12,6 +12,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalInfoDisplay::ModifyDisplayParameters(Terraria.ModLoader.InfoDisplay,System.String&,System.String&,Microsoft.Xna.Framework.Color&,Microsoft.Xna.Framework.Color&)
 public static partial class GlobalInfoDisplayHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ActiveAttribute : SubscribesToAttribute<Active>;
+
     public sealed partial class Active
     {
         public delegate bool? Original(
@@ -31,6 +34,9 @@ public static partial class GlobalInfoDisplayHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalInfoDisplay::Active; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyDisplayParametersAttribute : SubscribesToAttribute<ModifyDisplayParameters>;
 
     public sealed partial class ModifyDisplayParameters
     {

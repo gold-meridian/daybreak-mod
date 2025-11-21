@@ -20,7 +20,7 @@ namespace Daybreak.Common.Features.Models;
 ///     thereby not automatically guaranting values are not nullable.
 /// </remarks>
 public interface IStatic<TData> : ILoadable
-    where TData : IStatic<TData>, new()
+    where TData : IStatic<TData>
 {
     /// <summary>
     ///     The data instance produced by this static data.

@@ -24,6 +24,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalBlockType::ModifyLight(System.Int32,System.Int32,System.Int32,System.Single&,System.Single&,System.Single&)
 public static partial class GlobalWallHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DropAttribute : SubscribesToAttribute<Drop>;
+
     public sealed partial class Drop
     {
         public delegate bool Original(
@@ -50,6 +53,9 @@ public static partial class GlobalWallHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class KillWallAttribute : SubscribesToAttribute<KillWall>;
+
     public sealed partial class KillWall
     {
         public delegate void Original(
@@ -75,6 +81,9 @@ public static partial class GlobalWallHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalWall::KillWall; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class WallFrameAttribute : SubscribesToAttribute<WallFrame>;
 
     public sealed partial class WallFrame
     {
@@ -106,6 +115,9 @@ public static partial class GlobalWallHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeTeleportedToAttribute : SubscribesToAttribute<CanBeTeleportedTo>;
+
     public sealed partial class CanBeTeleportedTo
     {
         public delegate bool Original(
@@ -134,6 +146,9 @@ public static partial class GlobalWallHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class KillSoundAttribute : SubscribesToAttribute<KillSound>;
+
     public sealed partial class KillSound
     {
         public delegate bool Original(
@@ -159,6 +174,9 @@ public static partial class GlobalWallHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalWall::KillSound; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class NumDustAttribute : SubscribesToAttribute<NumDust>;
 
     public sealed partial class NumDust
     {
@@ -188,6 +206,9 @@ public static partial class GlobalWallHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CreateDustAttribute : SubscribesToAttribute<CreateDust>;
+
     public sealed partial class CreateDust
     {
         public delegate bool Original(
@@ -214,6 +235,9 @@ public static partial class GlobalWallHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanPlaceAttribute : SubscribesToAttribute<CanPlace>;
+
     public sealed partial class CanPlace
     {
         public delegate bool Original(
@@ -238,6 +262,9 @@ public static partial class GlobalWallHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanExplodeAttribute : SubscribesToAttribute<CanExplode>;
+
     public sealed partial class CanExplode
     {
         public delegate bool Original(
@@ -261,6 +288,9 @@ public static partial class GlobalWallHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalWall::CanExplode; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
 
     public sealed partial class PreDraw
     {
@@ -288,6 +318,9 @@ public static partial class GlobalWallHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+
     public sealed partial class PostDraw
     {
         public delegate void Original(
@@ -314,6 +347,9 @@ public static partial class GlobalWallHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class RandomUpdateAttribute : SubscribesToAttribute<RandomUpdate>;
+
     public sealed partial class RandomUpdate
     {
         public delegate void Original(
@@ -337,6 +373,9 @@ public static partial class GlobalWallHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalWall::RandomUpdate; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PlaceInWorldAttribute : SubscribesToAttribute<PlaceInWorld>;
 
     public sealed partial class PlaceInWorld
     {
@@ -363,6 +402,9 @@ public static partial class GlobalWallHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalWall::PlaceInWorld; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyLightAttribute : SubscribesToAttribute<ModifyLight>;
 
     public sealed partial class ModifyLight
     {

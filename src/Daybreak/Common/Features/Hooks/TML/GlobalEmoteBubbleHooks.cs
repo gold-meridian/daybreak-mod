@@ -19,6 +19,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Nullable`1<Microsoft.Xna.Framework.Rectangle> Terraria.ModLoader.GlobalEmoteBubble::GetFrameInEmoteMenu(System.Int32,System.Int32,System.Int32)
 public static partial class GlobalEmoteBubbleHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnSpawnAttribute : SubscribesToAttribute<OnSpawn>;
+
     public sealed partial class OnSpawn
     {
         public delegate void Original(
@@ -39,6 +42,9 @@ public static partial class GlobalEmoteBubbleHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateFrameAttribute : SubscribesToAttribute<UpdateFrame>;
+
     public sealed partial class UpdateFrame
     {
         public delegate bool Original(
@@ -58,6 +64,9 @@ public static partial class GlobalEmoteBubbleHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::UpdateFrame; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateFrameInEmoteMenuAttribute : SubscribesToAttribute<UpdateFrameInEmoteMenu>;
 
     public sealed partial class UpdateFrameInEmoteMenu
     {
@@ -80,6 +89,9 @@ public static partial class GlobalEmoteBubbleHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::UpdateFrameInEmoteMenu; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
 
     public sealed partial class PreDraw
     {
@@ -113,6 +125,9 @@ public static partial class GlobalEmoteBubbleHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+
     public sealed partial class PostDraw
     {
         public delegate void Original(
@@ -145,6 +160,9 @@ public static partial class GlobalEmoteBubbleHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawInEmoteMenuAttribute : SubscribesToAttribute<PreDrawInEmoteMenu>;
+
     public sealed partial class PreDrawInEmoteMenu
     {
         public delegate bool Original(
@@ -174,6 +192,9 @@ public static partial class GlobalEmoteBubbleHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::PreDrawInEmoteMenu; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawInEmoteMenuAttribute : SubscribesToAttribute<PostDrawInEmoteMenu>;
 
     public sealed partial class PostDrawInEmoteMenu
     {
@@ -205,6 +226,9 @@ public static partial class GlobalEmoteBubbleHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetFrameAttribute : SubscribesToAttribute<GetFrame>;
+
     public sealed partial class GetFrame
     {
         public delegate Microsoft.Xna.Framework.Rectangle? Original(
@@ -224,6 +248,9 @@ public static partial class GlobalEmoteBubbleHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalEmoteBubble::GetFrame; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetFrameInEmoteMenuAttribute : SubscribesToAttribute<GetFrameInEmoteMenu>;
 
     public sealed partial class GetFrameInEmoteMenu
     {

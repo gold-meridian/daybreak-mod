@@ -20,6 +20,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Boolean Terraria.ModLoader.GlobalBuff::RightClick(System.Int32,System.Int32)
 public static partial class GlobalBuffHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class Update_int_Player_intAttribute : SubscribesToAttribute<Update_int_Player_int>;
+
     public sealed partial class Update_int_Player_int
     {
         public delegate void Original(
@@ -44,6 +47,9 @@ public static partial class GlobalBuffHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class Update_int_NPC_intAttribute : SubscribesToAttribute<Update_int_NPC_int>;
+
     public sealed partial class Update_int_NPC_int
     {
         public delegate void Original(
@@ -67,6 +73,9 @@ public static partial class GlobalBuffHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::Update_int_NPC_int; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ReApply_int_Player_int_intAttribute : SubscribesToAttribute<ReApply_int_Player_int_int>;
 
     public sealed partial class ReApply_int_Player_int_int
     {
@@ -94,6 +103,9 @@ public static partial class GlobalBuffHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ReApply_int_NPC_int_intAttribute : SubscribesToAttribute<ReApply_int_NPC_int_int>;
+
     public sealed partial class ReApply_int_NPC_int_int
     {
         public delegate bool Original(
@@ -119,6 +131,9 @@ public static partial class GlobalBuffHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::ReApply_int_NPC_int_int; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyBuffTextAttribute : SubscribesToAttribute<ModifyBuffText>;
 
     public sealed partial class ModifyBuffText
     {
@@ -146,6 +161,9 @@ public static partial class GlobalBuffHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CustomBuffTipSizeAttribute : SubscribesToAttribute<CustomBuffTipSize>;
+
     public sealed partial class CustomBuffTipSize
     {
         public delegate void Original(
@@ -167,6 +185,9 @@ public static partial class GlobalBuffHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::CustomBuffTipSize; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawCustomBuffTipAttribute : SubscribesToAttribute<DrawCustomBuffTip>;
 
     public sealed partial class DrawCustomBuffTip
     {
@@ -194,6 +215,9 @@ public static partial class GlobalBuffHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
+
     public sealed partial class PreDraw
     {
         public delegate bool Original(
@@ -220,6 +244,9 @@ public static partial class GlobalBuffHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+
     public sealed partial class PostDraw
     {
         public delegate void Original(
@@ -245,6 +272,9 @@ public static partial class GlobalBuffHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBuff::PostDraw; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class RightClickAttribute : SubscribesToAttribute<RightClick>;
 
     public sealed partial class RightClick
     {

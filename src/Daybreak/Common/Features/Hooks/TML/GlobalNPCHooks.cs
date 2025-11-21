@@ -90,6 +90,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalNPC::EmoteBubblePosition(Terraria.NPC,Microsoft.Xna.Framework.Vector2&,Microsoft.Xna.Framework.Graphics.SpriteEffects&)
 public static partial class GlobalNPCHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SetDefaultsFromNetIdAttribute : SubscribesToAttribute<SetDefaultsFromNetId>;
+
     public sealed partial class SetDefaultsFromNetId
     {
         public delegate void Original(
@@ -109,6 +112,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::SetDefaultsFromNetId; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnSpawnAttribute : SubscribesToAttribute<OnSpawn>;
 
     public sealed partial class OnSpawn
     {
@@ -131,6 +137,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::OnSpawn; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ApplyDifficultyAndPlayerScalingAttribute : SubscribesToAttribute<ApplyDifficultyAndPlayerScaling>;
 
     public sealed partial class ApplyDifficultyAndPlayerScaling
     {
@@ -158,6 +167,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SetBestiaryAttribute : SubscribesToAttribute<SetBestiary>;
+
     public sealed partial class SetBestiary
     {
         public delegate void Original(
@@ -182,6 +194,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyTypeNameAttribute : SubscribesToAttribute<ModifyTypeName>;
+
     public sealed partial class ModifyTypeName
     {
         public delegate void Original(
@@ -203,6 +218,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::ModifyTypeName; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHoverBoundingBoxAttribute : SubscribesToAttribute<ModifyHoverBoundingBox>;
 
     public sealed partial class ModifyHoverBoundingBox
     {
@@ -226,6 +244,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreHoverInteractAttribute : SubscribesToAttribute<PreHoverInteract>;
+
     public sealed partial class PreHoverInteract
     {
         public delegate bool Original(
@@ -248,6 +269,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyTownNPCProfileAttribute : SubscribesToAttribute<ModifyTownNPCProfile>;
+
     public sealed partial class ModifyTownNPCProfile
     {
         public delegate Terraria.GameContent.ITownNPCProfile Original(
@@ -267,6 +291,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::ModifyTownNPCProfile; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyNPCNameListAttribute : SubscribesToAttribute<ModifyNPCNameList>;
 
     public sealed partial class ModifyNPCNameList
     {
@@ -290,6 +317,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ResetEffectsAttribute : SubscribesToAttribute<ResetEffects>;
+
     public sealed partial class ResetEffects
     {
         public delegate void Original(
@@ -309,6 +339,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::ResetEffects; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreAIAttribute : SubscribesToAttribute<PreAI>;
 
     public sealed partial class PreAI
     {
@@ -330,6 +363,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AIAttribute : SubscribesToAttribute<AI>;
+
     public sealed partial class AI
     {
         public delegate void Original(
@@ -350,6 +386,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostAIAttribute : SubscribesToAttribute<PostAI>;
+
     public sealed partial class PostAI
     {
         public delegate void Original(
@@ -369,6 +408,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::PostAI; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class FindFrameAttribute : SubscribesToAttribute<FindFrame>;
 
     public sealed partial class FindFrame
     {
@@ -392,6 +434,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HitEffectAttribute : SubscribesToAttribute<HitEffect>;
+
     public sealed partial class HitEffect
     {
         public delegate void Original(
@@ -413,6 +458,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::HitEffect; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateLifeRegenAttribute : SubscribesToAttribute<UpdateLifeRegen>;
 
     public sealed partial class UpdateLifeRegen
     {
@@ -436,6 +484,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CheckActiveAttribute : SubscribesToAttribute<CheckActive>;
+
     public sealed partial class CheckActive
     {
         public delegate bool Original(
@@ -455,6 +506,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::CheckActive; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CheckDeadAttribute : SubscribesToAttribute<CheckDead>;
 
     public sealed partial class CheckDead
     {
@@ -476,6 +530,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SpecialOnKillAttribute : SubscribesToAttribute<SpecialOnKill>;
+
     public sealed partial class SpecialOnKill
     {
         public delegate bool Original(
@@ -495,6 +552,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::SpecialOnKill; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreKillAttribute : SubscribesToAttribute<PreKill>;
 
     public sealed partial class PreKill
     {
@@ -516,6 +576,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnKillAttribute : SubscribesToAttribute<OnKill>;
+
     public sealed partial class OnKill
     {
         public delegate void Original(
@@ -536,6 +599,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanFallThroughPlatformsAttribute : SubscribesToAttribute<CanFallThroughPlatforms>;
+
     public sealed partial class CanFallThroughPlatforms
     {
         public delegate bool? Original(
@@ -555,6 +621,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::CanFallThroughPlatforms; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeCaughtByAttribute : SubscribesToAttribute<CanBeCaughtBy>;
 
     public sealed partial class CanBeCaughtBy
     {
@@ -579,6 +648,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::CanBeCaughtBy; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnCaughtByAttribute : SubscribesToAttribute<OnCaughtBy>;
 
     public sealed partial class OnCaughtBy
     {
@@ -606,6 +678,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyNPCLootAttribute : SubscribesToAttribute<ModifyNPCLoot>;
+
     public sealed partial class ModifyNPCLoot
     {
         public delegate void Original(
@@ -628,6 +703,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyGlobalLootAttribute : SubscribesToAttribute<ModifyGlobalLoot>;
+
     public sealed partial class ModifyGlobalLoot
     {
         public delegate void Original(
@@ -647,6 +725,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::ModifyGlobalLoot; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitPlayerAttribute : SubscribesToAttribute<CanHitPlayer>;
 
     public sealed partial class CanHitPlayer
     {
@@ -672,6 +753,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitPlayerAttribute : SubscribesToAttribute<ModifyHitPlayer>;
+
     public sealed partial class ModifyHitPlayer
     {
         public delegate void Original(
@@ -695,6 +779,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::ModifyHitPlayer; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitPlayerAttribute : SubscribesToAttribute<OnHitPlayer>;
 
     public sealed partial class OnHitPlayer
     {
@@ -720,6 +807,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitNPCAttribute : SubscribesToAttribute<CanHitNPC>;
+
     public sealed partial class CanHitNPC
     {
         public delegate bool Original(
@@ -742,6 +832,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeHitByNPCAttribute : SubscribesToAttribute<CanBeHitByNPC>;
+
     public sealed partial class CanBeHitByNPC
     {
         public delegate bool Original(
@@ -763,6 +856,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::CanBeHitByNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute<ModifyHitNPC>;
 
     public sealed partial class ModifyHitNPC
     {
@@ -788,6 +884,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitNPCAttribute : SubscribesToAttribute<OnHitNPC>;
+
     public sealed partial class OnHitNPC
     {
         public delegate void Original(
@@ -812,6 +911,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeHitByItemAttribute : SubscribesToAttribute<CanBeHitByItem>;
+
     public sealed partial class CanBeHitByItem
     {
         public delegate bool? Original(
@@ -835,6 +937,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::CanBeHitByItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanCollideWithPlayerMeleeAttackAttribute : SubscribesToAttribute<CanCollideWithPlayerMeleeAttack>;
 
     public sealed partial class CanCollideWithPlayerMeleeAttack
     {
@@ -862,6 +967,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitByItemAttribute : SubscribesToAttribute<ModifyHitByItem>;
+
     public sealed partial class ModifyHitByItem
     {
         public delegate void Original(
@@ -887,6 +995,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::ModifyHitByItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitByItemAttribute : SubscribesToAttribute<OnHitByItem>;
 
     public sealed partial class OnHitByItem
     {
@@ -916,6 +1027,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeHitByProjectileAttribute : SubscribesToAttribute<CanBeHitByProjectile>;
+
     public sealed partial class CanBeHitByProjectile
     {
         public delegate bool? Original(
@@ -937,6 +1051,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::CanBeHitByProjectile; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitByProjectileAttribute : SubscribesToAttribute<ModifyHitByProjectile>;
 
     public sealed partial class ModifyHitByProjectile
     {
@@ -961,6 +1078,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::ModifyHitByProjectile; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitByProjectileAttribute : SubscribesToAttribute<OnHitByProjectile>;
 
     public sealed partial class OnHitByProjectile
     {
@@ -988,6 +1108,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyIncomingHitAttribute : SubscribesToAttribute<ModifyIncomingHit>;
+
     public sealed partial class ModifyIncomingHit
     {
         public delegate void Original(
@@ -1009,6 +1132,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::ModifyIncomingHit; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class BossHeadSlotAttribute : SubscribesToAttribute<BossHeadSlot>;
 
     public sealed partial class BossHeadSlot
     {
@@ -1032,6 +1158,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class BossHeadRotationAttribute : SubscribesToAttribute<BossHeadRotation>;
+
     public sealed partial class BossHeadRotation
     {
         public delegate void Original(
@@ -1053,6 +1182,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::BossHeadRotation; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class BossHeadSpriteEffectsAttribute : SubscribesToAttribute<BossHeadSpriteEffects>;
 
     public sealed partial class BossHeadSpriteEffects
     {
@@ -1076,6 +1208,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetAlphaAttribute : SubscribesToAttribute<GetAlpha>;
+
     public sealed partial class GetAlpha
     {
         public delegate Microsoft.Xna.Framework.Color? Original(
@@ -1098,6 +1233,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawEffectsAttribute : SubscribesToAttribute<DrawEffects>;
+
     public sealed partial class DrawEffects
     {
         public delegate void Original(
@@ -1119,6 +1257,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::DrawEffects; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
 
     public sealed partial class PreDraw
     {
@@ -1146,6 +1287,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+
     public sealed partial class PostDraw
     {
         public delegate void Original(
@@ -1172,6 +1316,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawBehindAttribute : SubscribesToAttribute<DrawBehind>;
+
     public sealed partial class DrawBehind
     {
         public delegate void Original(
@@ -1193,6 +1340,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::DrawBehind; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawHealthBarAttribute : SubscribesToAttribute<DrawHealthBar>;
 
     public sealed partial class DrawHealthBar
     {
@@ -1220,6 +1370,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class EditSpawnRateAttribute : SubscribesToAttribute<EditSpawnRate>;
+
     public sealed partial class EditSpawnRate
     {
         public delegate void Original(
@@ -1243,6 +1396,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::EditSpawnRate; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class EditSpawnRangeAttribute : SubscribesToAttribute<EditSpawnRange>;
 
     public sealed partial class EditSpawnRange
     {
@@ -1272,6 +1428,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class EditSpawnPoolAttribute : SubscribesToAttribute<EditSpawnPool>;
+
     public sealed partial class EditSpawnPool
     {
         public delegate void Original(
@@ -1293,6 +1452,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::EditSpawnPool; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SpawnNPCAttribute : SubscribesToAttribute<SpawnNPC>;
 
     public sealed partial class SpawnNPC
     {
@@ -1318,6 +1480,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanChatAttribute : SubscribesToAttribute<CanChat>;
+
     public sealed partial class CanChat
     {
         public delegate bool? Original(
@@ -1337,6 +1502,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::CanChat; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetChatAttribute : SubscribesToAttribute<GetChat>;
 
     public sealed partial class GetChat
     {
@@ -1360,6 +1528,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreChatButtonClickedAttribute : SubscribesToAttribute<PreChatButtonClicked>;
+
     public sealed partial class PreChatButtonClicked
     {
         public delegate bool Original(
@@ -1381,6 +1552,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::PreChatButtonClicked; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnChatButtonClickedAttribute : SubscribesToAttribute<OnChatButtonClicked>;
 
     public sealed partial class OnChatButtonClicked
     {
@@ -1404,6 +1578,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyShopAttribute : SubscribesToAttribute<ModifyShop>;
+
     public sealed partial class ModifyShop
     {
         public delegate void Original(
@@ -1423,6 +1600,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::ModifyShop; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyActiveShopAttribute : SubscribesToAttribute<ModifyActiveShop>;
 
     public sealed partial class ModifyActiveShop
     {
@@ -1448,6 +1628,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SetupTravelShopAttribute : SubscribesToAttribute<SetupTravelShop>;
+
     public sealed partial class SetupTravelShop
     {
         public delegate void Original(
@@ -1469,6 +1652,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::SetupTravelShop; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanGoToStatueAttribute : SubscribesToAttribute<CanGoToStatue>;
 
     public sealed partial class CanGoToStatue
     {
@@ -1492,6 +1678,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnGoToStatueAttribute : SubscribesToAttribute<OnGoToStatue>;
+
     public sealed partial class OnGoToStatue
     {
         public delegate void Original(
@@ -1514,6 +1703,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class BuffTownNPCAttribute : SubscribesToAttribute<BuffTownNPC>;
+
     public sealed partial class BuffTownNPC
     {
         public delegate void Original(
@@ -1535,6 +1727,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::BuffTownNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyDeathMessageAttribute : SubscribesToAttribute<ModifyDeathMessage>;
 
     public sealed partial class ModifyDeathMessage
     {
@@ -1560,6 +1755,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class TownNPCAttackStrengthAttribute : SubscribesToAttribute<TownNPCAttackStrength>;
+
     public sealed partial class TownNPCAttackStrength
     {
         public delegate void Original(
@@ -1583,6 +1781,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::TownNPCAttackStrength; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class TownNPCAttackCooldownAttribute : SubscribesToAttribute<TownNPCAttackCooldown>;
 
     public sealed partial class TownNPCAttackCooldown
     {
@@ -1608,6 +1809,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class TownNPCAttackProjAttribute : SubscribesToAttribute<TownNPCAttackProj>;
+
     public sealed partial class TownNPCAttackProj
     {
         public delegate void Original(
@@ -1631,6 +1835,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::TownNPCAttackProj; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class TownNPCAttackProjSpeedAttribute : SubscribesToAttribute<TownNPCAttackProjSpeed>;
 
     public sealed partial class TownNPCAttackProjSpeed
     {
@@ -1658,6 +1865,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class TownNPCAttackShootAttribute : SubscribesToAttribute<TownNPCAttackShoot>;
+
     public sealed partial class TownNPCAttackShoot
     {
         public delegate void Original(
@@ -1680,6 +1890,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class TownNPCAttackMagicAttribute : SubscribesToAttribute<TownNPCAttackMagic>;
+
     public sealed partial class TownNPCAttackMagic
     {
         public delegate void Original(
@@ -1701,6 +1914,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::TownNPCAttackMagic; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class TownNPCAttackSwingAttribute : SubscribesToAttribute<TownNPCAttackSwing>;
 
     public sealed partial class TownNPCAttackSwing
     {
@@ -1725,6 +1941,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::TownNPCAttackSwing; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawTownAttackGunAttribute : SubscribesToAttribute<DrawTownAttackGun>;
 
     public sealed partial class DrawTownAttackGun
     {
@@ -1753,6 +1972,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::DrawTownAttackGun; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawTownAttackSwingAttribute : SubscribesToAttribute<DrawTownAttackSwing>;
 
     public sealed partial class DrawTownAttackSwing
     {
@@ -1784,6 +2006,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyCollisionDataAttribute : SubscribesToAttribute<ModifyCollisionData>;
+
     public sealed partial class ModifyCollisionData
     {
         public delegate bool Original(
@@ -1812,6 +2037,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class NeedSavingAttribute : SubscribesToAttribute<NeedSaving>;
+
     public sealed partial class NeedSaving
     {
         public delegate bool Original(
@@ -1831,6 +2059,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::NeedSaving; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PickEmoteAttribute : SubscribesToAttribute<PickEmote>;
 
     public sealed partial class PickEmote
     {
@@ -1858,6 +2089,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ChatBubblePositionAttribute : SubscribesToAttribute<ChatBubblePosition>;
+
     public sealed partial class ChatBubblePosition
     {
         public delegate void Original(
@@ -1882,6 +2116,9 @@ public static partial class GlobalNPCHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PartyHatPositionAttribute : SubscribesToAttribute<PartyHatPosition>;
+
     public sealed partial class PartyHatPosition
     {
         public delegate void Original(
@@ -1905,6 +2142,9 @@ public static partial class GlobalNPCHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::PartyHatPosition; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class EmoteBubblePositionAttribute : SubscribesToAttribute<EmoteBubblePosition>;
 
     public sealed partial class EmoteBubblePosition
     {

@@ -46,6 +46,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalProjectile::EmitEnchantmentVisualsAt(Terraria.Projectile,Microsoft.Xna.Framework.Vector2,System.Int32,System.Int32)
 public static partial class GlobalProjectileHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnSpawnAttribute : SubscribesToAttribute<OnSpawn>;
+
     public sealed partial class OnSpawn
     {
         public delegate void Original(
@@ -68,6 +71,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreAIAttribute : SubscribesToAttribute<PreAI>;
+
     public sealed partial class PreAI
     {
         public delegate bool Original(
@@ -87,6 +93,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::PreAI; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AIAttribute : SubscribesToAttribute<AI>;
 
     public sealed partial class AI
     {
@@ -108,6 +117,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostAIAttribute : SubscribesToAttribute<PostAI>;
+
     public sealed partial class PostAI
     {
         public delegate void Original(
@@ -128,6 +140,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ShouldUpdatePositionAttribute : SubscribesToAttribute<ShouldUpdatePosition>;
+
     public sealed partial class ShouldUpdatePosition
     {
         public delegate bool Original(
@@ -147,6 +162,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::ShouldUpdatePosition; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class TileCollideStyleAttribute : SubscribesToAttribute<TileCollideStyle>;
 
     public sealed partial class TileCollideStyle
     {
@@ -176,6 +194,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnTileCollideAttribute : SubscribesToAttribute<OnTileCollide>;
+
     public sealed partial class OnTileCollide
     {
         public delegate bool Original(
@@ -197,6 +218,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::OnTileCollide; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreKillAttribute : SubscribesToAttribute<PreKill>;
 
     public sealed partial class PreKill
     {
@@ -220,6 +244,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnKillAttribute : SubscribesToAttribute<OnKill>;
+
     public sealed partial class OnKill
     {
         public delegate void Original(
@@ -242,6 +269,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanCutTilesAttribute : SubscribesToAttribute<CanCutTiles>;
+
     public sealed partial class CanCutTiles
     {
         public delegate bool? Original(
@@ -261,6 +291,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::CanCutTiles; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CutTilesAttribute : SubscribesToAttribute<CutTiles>;
 
     public sealed partial class CutTiles
     {
@@ -282,6 +315,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanDamageAttribute : SubscribesToAttribute<CanDamage>;
+
     public sealed partial class CanDamage
     {
         public delegate bool? Original(
@@ -302,6 +338,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class MinionContactDamageAttribute : SubscribesToAttribute<MinionContactDamage>;
+
     public sealed partial class MinionContactDamage
     {
         public delegate bool Original(
@@ -321,6 +360,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::MinionContactDamage; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyDamageHitboxAttribute : SubscribesToAttribute<ModifyDamageHitbox>;
 
     public sealed partial class ModifyDamageHitbox
     {
@@ -344,6 +386,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitNPCAttribute : SubscribesToAttribute<CanHitNPC>;
+
     public sealed partial class CanHitNPC
     {
         public delegate bool? Original(
@@ -365,6 +410,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::CanHitNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute<ModifyHitNPC>;
 
     public sealed partial class ModifyHitNPC
     {
@@ -389,6 +437,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::ModifyHitNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitNPCAttribute : SubscribesToAttribute<OnHitNPC>;
 
     public sealed partial class OnHitNPC
     {
@@ -416,6 +467,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitPvpAttribute : SubscribesToAttribute<CanHitPvp>;
+
     public sealed partial class CanHitPvp
     {
         public delegate bool Original(
@@ -438,6 +492,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitPlayerAttribute : SubscribesToAttribute<CanHitPlayer>;
+
     public sealed partial class CanHitPlayer
     {
         public delegate bool Original(
@@ -459,6 +516,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::CanHitPlayer; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitPlayerAttribute : SubscribesToAttribute<ModifyHitPlayer>;
 
     public sealed partial class ModifyHitPlayer
     {
@@ -484,6 +544,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitPlayerAttribute : SubscribesToAttribute<OnHitPlayer>;
+
     public sealed partial class OnHitPlayer
     {
         public delegate void Original(
@@ -507,6 +570,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::OnHitPlayer; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CollidingAttribute : SubscribesToAttribute<Colliding>;
 
     public sealed partial class Colliding
     {
@@ -532,6 +598,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetAlphaAttribute : SubscribesToAttribute<GetAlpha>;
+
     public sealed partial class GetAlpha
     {
         public delegate Microsoft.Xna.Framework.Color? Original(
@@ -554,6 +623,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawExtrasAttribute : SubscribesToAttribute<PreDrawExtras>;
+
     public sealed partial class PreDrawExtras
     {
         public delegate bool Original(
@@ -573,6 +645,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::PreDrawExtras; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
 
     public sealed partial class PreDraw
     {
@@ -596,6 +671,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+
     public sealed partial class PostDraw
     {
         public delegate void Original(
@@ -617,6 +695,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::PostDraw; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawBehindAttribute : SubscribesToAttribute<DrawBehind>;
 
     public sealed partial class DrawBehind
     {
@@ -650,6 +731,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanUseGrappleAttribute : SubscribesToAttribute<CanUseGrapple>;
+
     public sealed partial class CanUseGrapple
     {
         public delegate bool? Original(
@@ -672,6 +756,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseGrappleAttribute : SubscribesToAttribute<UseGrapple>;
+
     public sealed partial class UseGrapple
     {
         public delegate void Original(
@@ -693,6 +780,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::UseGrapple; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class NumGrappleHooksAttribute : SubscribesToAttribute<NumGrappleHooks>;
 
     public sealed partial class NumGrappleHooks
     {
@@ -718,6 +808,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GrappleRetreatSpeedAttribute : SubscribesToAttribute<GrappleRetreatSpeed>;
+
     public sealed partial class GrappleRetreatSpeed
     {
         public delegate void Original(
@@ -742,6 +835,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GrapplePullSpeedAttribute : SubscribesToAttribute<GrapplePullSpeed>;
+
     public sealed partial class GrapplePullSpeed
     {
         public delegate void Original(
@@ -765,6 +861,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::GrapplePullSpeed; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GrappleTargetPointAttribute : SubscribesToAttribute<GrappleTargetPoint>;
 
     public sealed partial class GrappleTargetPoint
     {
@@ -792,6 +891,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GrappleCanLatchOnToAttribute : SubscribesToAttribute<GrappleCanLatchOnTo>;
+
     public sealed partial class GrappleCanLatchOnTo
     {
         public delegate bool? Original(
@@ -818,6 +920,9 @@ public static partial class GlobalProjectileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PrepareBombToBlowAttribute : SubscribesToAttribute<PrepareBombToBlow>;
+
     public sealed partial class PrepareBombToBlow
     {
         public delegate void Original(
@@ -837,6 +942,9 @@ public static partial class GlobalProjectileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::PrepareBombToBlow; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class EmitEnchantmentVisualsAtAttribute : SubscribesToAttribute<EmitEnchantmentVisualsAt>;
 
     public sealed partial class EmitEnchantmentVisualsAt
     {

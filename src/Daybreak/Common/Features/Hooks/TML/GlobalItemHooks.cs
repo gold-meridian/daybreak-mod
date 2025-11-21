@@ -123,6 +123,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalItem::ModifyTooltips(Terraria.Item,System.Collections.Generic.List`1<Terraria.ModLoader.TooltipLine>)
 public static partial class GlobalItemHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnCreatedAttribute : SubscribesToAttribute<OnCreated>;
+
     public sealed partial class OnCreated
     {
         public delegate void Original(
@@ -144,6 +147,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::OnCreated; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnSpawnAttribute : SubscribesToAttribute<OnSpawn>;
 
     public sealed partial class OnSpawn
     {
@@ -167,6 +173,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ChoosePrefixAttribute : SubscribesToAttribute<ChoosePrefix>;
+
     public sealed partial class ChoosePrefix
     {
         public delegate int Original(
@@ -188,6 +197,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ChoosePrefix; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PrefixChanceAttribute : SubscribesToAttribute<PrefixChance>;
 
     public sealed partial class PrefixChance
     {
@@ -213,6 +225,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AllowPrefixAttribute : SubscribesToAttribute<AllowPrefix>;
+
     public sealed partial class AllowPrefix
     {
         public delegate bool Original(
@@ -234,6 +249,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::AllowPrefix; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanUseItemAttribute : SubscribesToAttribute<CanUseItem>;
 
     public sealed partial class CanUseItem
     {
@@ -257,6 +275,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanAutoReuseItemAttribute : SubscribesToAttribute<CanAutoReuseItem>;
+
     public sealed partial class CanAutoReuseItem
     {
         public delegate bool? Original(
@@ -278,6 +299,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanAutoReuseItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseStyleAttribute : SubscribesToAttribute<UseStyle>;
 
     public sealed partial class UseStyle
     {
@@ -303,6 +327,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HoldStyleAttribute : SubscribesToAttribute<HoldStyle>;
+
     public sealed partial class HoldStyle
     {
         public delegate void Original(
@@ -327,6 +354,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HoldItemAttribute : SubscribesToAttribute<HoldItem>;
+
     public sealed partial class HoldItem
     {
         public delegate void Original(
@@ -348,6 +378,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::HoldItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseTimeMultiplierAttribute : SubscribesToAttribute<UseTimeMultiplier>;
 
     public sealed partial class UseTimeMultiplier
     {
@@ -371,6 +404,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseAnimationMultiplierAttribute : SubscribesToAttribute<UseAnimationMultiplier>;
+
     public sealed partial class UseAnimationMultiplier
     {
         public delegate float Original(
@@ -393,6 +429,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseSpeedMultiplierAttribute : SubscribesToAttribute<UseSpeedMultiplier>;
+
     public sealed partial class UseSpeedMultiplier
     {
         public delegate float Original(
@@ -414,6 +453,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::UseSpeedMultiplier; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetHealLifeAttribute : SubscribesToAttribute<GetHealLife>;
 
     public sealed partial class GetHealLife
     {
@@ -441,6 +483,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetHealManaAttribute : SubscribesToAttribute<GetHealMana>;
+
     public sealed partial class GetHealMana
     {
         public delegate void Original(
@@ -466,6 +511,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::GetHealMana; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyManaCostAttribute : SubscribesToAttribute<ModifyManaCost>;
 
     public sealed partial class ModifyManaCost
     {
@@ -493,6 +541,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnMissingManaAttribute : SubscribesToAttribute<OnMissingMana>;
+
     public sealed partial class OnMissingMana
     {
         public delegate void Original(
@@ -516,6 +567,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::OnMissingMana; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnConsumeManaAttribute : SubscribesToAttribute<OnConsumeMana>;
 
     public sealed partial class OnConsumeMana
     {
@@ -541,6 +595,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyPotionDelayAttribute : SubscribesToAttribute<ModifyPotionDelay>;
+
     public sealed partial class ModifyPotionDelay
     {
         public delegate void Original(
@@ -564,6 +621,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ModifyPotionDelay; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ApplyPotionDelayAttribute : SubscribesToAttribute<ApplyPotionDelay>;
 
     public sealed partial class ApplyPotionDelay
     {
@@ -589,6 +649,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyWeaponDamageAttribute : SubscribesToAttribute<ModifyWeaponDamage>;
+
     public sealed partial class ModifyWeaponDamage
     {
         public delegate void Original(
@@ -613,6 +676,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyResearchSortingAttribute : SubscribesToAttribute<ModifyResearchSorting>;
+
     public sealed partial class ModifyResearchSorting
     {
         public delegate void Original(
@@ -634,6 +700,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ModifyResearchSorting; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanConsumeBaitAttribute : SubscribesToAttribute<CanConsumeBait>;
 
     public sealed partial class CanConsumeBait
     {
@@ -657,6 +726,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanResearchAttribute : SubscribesToAttribute<CanResearch>;
+
     public sealed partial class CanResearch
     {
         public delegate bool Original(
@@ -676,6 +748,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanResearch; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnResearchedAttribute : SubscribesToAttribute<OnResearched>;
 
     public sealed partial class OnResearched
     {
@@ -698,6 +773,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::OnResearched; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyWeaponKnockbackAttribute : SubscribesToAttribute<ModifyWeaponKnockback>;
 
     public sealed partial class ModifyWeaponKnockback
     {
@@ -723,6 +801,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyWeaponCritAttribute : SubscribesToAttribute<ModifyWeaponCrit>;
+
     public sealed partial class ModifyWeaponCrit
     {
         public delegate void Original(
@@ -747,6 +828,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class NeedsAmmoAttribute : SubscribesToAttribute<NeedsAmmo>;
+
     public sealed partial class NeedsAmmo
     {
         public delegate bool Original(
@@ -768,6 +852,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::NeedsAmmo; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PickAmmoAttribute : SubscribesToAttribute<PickAmmo>;
 
     public sealed partial class PickAmmo
     {
@@ -801,6 +888,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanChooseAmmoAttribute : SubscribesToAttribute<CanChooseAmmo>;
+
     public sealed partial class CanChooseAmmo
     {
         public delegate bool? Original(
@@ -824,6 +914,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanChooseAmmo; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeChosenAsAmmoAttribute : SubscribesToAttribute<CanBeChosenAsAmmo>;
 
     public sealed partial class CanBeChosenAsAmmo
     {
@@ -849,6 +942,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanConsumeAmmoAttribute : SubscribesToAttribute<CanConsumeAmmo>;
+
     public sealed partial class CanConsumeAmmo
     {
         public delegate bool Original(
@@ -872,6 +968,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanConsumeAmmo; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeConsumedAsAmmoAttribute : SubscribesToAttribute<CanBeConsumedAsAmmo>;
 
     public sealed partial class CanBeConsumedAsAmmo
     {
@@ -897,6 +996,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnConsumeAmmoAttribute : SubscribesToAttribute<OnConsumeAmmo>;
+
     public sealed partial class OnConsumeAmmo
     {
         public delegate void Original(
@@ -920,6 +1022,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::OnConsumeAmmo; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnConsumedAsAmmoAttribute : SubscribesToAttribute<OnConsumedAsAmmo>;
 
     public sealed partial class OnConsumedAsAmmo
     {
@@ -945,6 +1050,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanShootAttribute : SubscribesToAttribute<CanShoot>;
+
     public sealed partial class CanShoot
     {
         public delegate bool Original(
@@ -966,6 +1074,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanShoot; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyShootStatsAttribute : SubscribesToAttribute<ModifyShootStats>;
 
     public sealed partial class ModifyShootStats
     {
@@ -998,6 +1109,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ModifyShootStats; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ShootAttribute : SubscribesToAttribute<Shoot>;
 
     public sealed partial class Shoot
     {
@@ -1033,6 +1147,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseItemHitboxAttribute : SubscribesToAttribute<UseItemHitbox>;
+
     public sealed partial class UseItemHitbox
     {
         public delegate void Original(
@@ -1059,6 +1176,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class MeleeEffectsAttribute : SubscribesToAttribute<MeleeEffects>;
+
     public sealed partial class MeleeEffects
     {
         public delegate void Original(
@@ -1083,6 +1203,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanCatchNPCAttribute : SubscribesToAttribute<CanCatchNPC>;
+
     public sealed partial class CanCatchNPC
     {
         public delegate bool? Original(
@@ -1106,6 +1229,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanCatchNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnCatchNPCAttribute : SubscribesToAttribute<OnCatchNPC>;
 
     public sealed partial class OnCatchNPC
     {
@@ -1133,6 +1259,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyItemScaleAttribute : SubscribesToAttribute<ModifyItemScale>;
+
     public sealed partial class ModifyItemScale
     {
         public delegate void Original(
@@ -1157,6 +1286,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitNPCAttribute : SubscribesToAttribute<CanHitNPC>;
+
     public sealed partial class CanHitNPC
     {
         public delegate bool? Original(
@@ -1180,6 +1312,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanHitNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanMeleeAttackCollideWithNPCAttribute : SubscribesToAttribute<CanMeleeAttackCollideWithNPC>;
 
     public sealed partial class CanMeleeAttackCollideWithNPC
     {
@@ -1207,6 +1342,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute<ModifyHitNPC>;
+
     public sealed partial class ModifyHitNPC
     {
         public delegate void Original(
@@ -1232,6 +1370,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ModifyHitNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitNPCAttribute : SubscribesToAttribute<OnHitNPC>;
 
     public sealed partial class OnHitNPC
     {
@@ -1261,6 +1402,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitPvpAttribute : SubscribesToAttribute<CanHitPvp>;
+
     public sealed partial class CanHitPvp
     {
         public delegate bool Original(
@@ -1284,6 +1428,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanHitPvp; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitPvpAttribute : SubscribesToAttribute<ModifyHitPvp>;
 
     public sealed partial class ModifyHitPvp
     {
@@ -1311,6 +1458,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitPvpAttribute : SubscribesToAttribute<OnHitPvp>;
+
     public sealed partial class OnHitPvp
     {
         public delegate void Original(
@@ -1337,6 +1487,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseItemAttribute : SubscribesToAttribute<UseItem>;
+
     public sealed partial class UseItem
     {
         public delegate bool? Original(
@@ -1358,6 +1511,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::UseItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseAnimationAttribute : SubscribesToAttribute<UseAnimation>;
 
     public sealed partial class UseAnimation
     {
@@ -1381,6 +1537,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ConsumeItemAttribute : SubscribesToAttribute<ConsumeItem>;
+
     public sealed partial class ConsumeItem
     {
         public delegate bool Original(
@@ -1402,6 +1561,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ConsumeItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnConsumeItemAttribute : SubscribesToAttribute<OnConsumeItem>;
 
     public sealed partial class OnConsumeItem
     {
@@ -1425,6 +1587,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseItemFrameAttribute : SubscribesToAttribute<UseItemFrame>;
+
     public sealed partial class UseItemFrame
     {
         public delegate void Original(
@@ -1446,6 +1611,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::UseItemFrame; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HoldItemFrameAttribute : SubscribesToAttribute<HoldItemFrame>;
 
     public sealed partial class HoldItemFrame
     {
@@ -1469,6 +1637,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AltFunctionUseAttribute : SubscribesToAttribute<AltFunctionUse>;
+
     public sealed partial class AltFunctionUse
     {
         public delegate bool Original(
@@ -1490,6 +1661,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::AltFunctionUse; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateInventoryAttribute : SubscribesToAttribute<UpdateInventory>;
 
     public sealed partial class UpdateInventory
     {
@@ -1513,6 +1687,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateInfoAccessoryAttribute : SubscribesToAttribute<UpdateInfoAccessory>;
+
     public sealed partial class UpdateInfoAccessory
     {
         public delegate void Original(
@@ -1535,6 +1712,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateEquipAttribute : SubscribesToAttribute<UpdateEquip>;
+
     public sealed partial class UpdateEquip
     {
         public delegate void Original(
@@ -1556,6 +1736,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::UpdateEquip; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateAccessoryAttribute : SubscribesToAttribute<UpdateAccessory>;
 
     public sealed partial class UpdateAccessory
     {
@@ -1581,6 +1764,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateVanityAttribute : SubscribesToAttribute<UpdateVanity>;
+
     public sealed partial class UpdateVanity
     {
         public delegate void Original(
@@ -1602,6 +1788,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::UpdateVanity; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateVisibleAccessoryAttribute : SubscribesToAttribute<UpdateVisibleAccessory>;
 
     public sealed partial class UpdateVisibleAccessory
     {
@@ -1626,6 +1815,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::UpdateVisibleAccessory; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateItemDyeAttribute : SubscribesToAttribute<UpdateItemDye>;
 
     public sealed partial class UpdateItemDye
     {
@@ -1653,6 +1845,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class IsArmorSetAttribute : SubscribesToAttribute<IsArmorSet>;
+
     public sealed partial class IsArmorSet
     {
         public delegate string Original(
@@ -1677,6 +1872,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateArmorSetAttribute : SubscribesToAttribute<UpdateArmorSet>;
+
     public sealed partial class UpdateArmorSet
     {
         public delegate void Original(
@@ -1698,6 +1896,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::UpdateArmorSet; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class IsVanitySetAttribute : SubscribesToAttribute<IsVanitySet>;
 
     public sealed partial class IsVanitySet
     {
@@ -1723,6 +1924,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreUpdateVanitySetAttribute : SubscribesToAttribute<PreUpdateVanitySet>;
+
     public sealed partial class PreUpdateVanitySet
     {
         public delegate void Original(
@@ -1744,6 +1948,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::PreUpdateVanitySet; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateVanitySetAttribute : SubscribesToAttribute<UpdateVanitySet>;
 
     public sealed partial class UpdateVanitySet
     {
@@ -1767,6 +1974,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ArmorSetShadowsAttribute : SubscribesToAttribute<ArmorSetShadows>;
+
     public sealed partial class ArmorSetShadows
     {
         public delegate void Original(
@@ -1788,6 +1998,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ArmorSetShadows; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SetMatchAttribute : SubscribesToAttribute<SetMatch>;
 
     public sealed partial class SetMatch
     {
@@ -1817,6 +2030,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanRightClickAttribute : SubscribesToAttribute<CanRightClick>;
+
     public sealed partial class CanRightClick
     {
         public delegate bool Original(
@@ -1836,6 +2052,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanRightClick; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class RightClickAttribute : SubscribesToAttribute<RightClick>;
 
     public sealed partial class RightClick
     {
@@ -1859,6 +2078,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyItemLootAttribute : SubscribesToAttribute<ModifyItemLoot>;
+
     public sealed partial class ModifyItemLoot
     {
         public delegate void Original(
@@ -1880,6 +2102,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ModifyItemLoot; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanStackAttribute : SubscribesToAttribute<CanStack>;
 
     public sealed partial class CanStack
     {
@@ -1903,6 +2128,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanStackInWorldAttribute : SubscribesToAttribute<CanStackInWorld>;
+
     public sealed partial class CanStackInWorld
     {
         public delegate bool Original(
@@ -1924,6 +2152,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanStackInWorld; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnStackAttribute : SubscribesToAttribute<OnStack>;
 
     public sealed partial class OnStack
     {
@@ -1949,6 +2180,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SplitStackAttribute : SubscribesToAttribute<SplitStack>;
+
     public sealed partial class SplitStack
     {
         public delegate void Original(
@@ -1972,6 +2206,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::SplitStack; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ReforgePriceAttribute : SubscribesToAttribute<ReforgePrice>;
 
     public sealed partial class ReforgePrice
     {
@@ -1997,6 +2234,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanReforgeAttribute : SubscribesToAttribute<CanReforge>;
+
     public sealed partial class CanReforge
     {
         public delegate bool Original(
@@ -2016,6 +2256,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanReforge; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreReforgeAttribute : SubscribesToAttribute<PreReforge>;
 
     public sealed partial class PreReforge
     {
@@ -2037,6 +2280,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostReforgeAttribute : SubscribesToAttribute<PostReforge>;
+
     public sealed partial class PostReforge
     {
         public delegate void Original(
@@ -2056,6 +2302,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::PostReforge; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawArmorColorAttribute : SubscribesToAttribute<DrawArmorColor>;
 
     public sealed partial class DrawArmorColor
     {
@@ -2089,6 +2338,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ArmorArmGlowMaskAttribute : SubscribesToAttribute<ArmorArmGlowMask>;
+
     public sealed partial class ArmorArmGlowMask
     {
         public delegate void Original(
@@ -2116,6 +2368,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ArmorArmGlowMask; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class VerticalWingSpeedsAttribute : SubscribesToAttribute<VerticalWingSpeeds>;
 
     public sealed partial class VerticalWingSpeeds
     {
@@ -2149,6 +2404,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HorizontalWingSpeedsAttribute : SubscribesToAttribute<HorizontalWingSpeeds>;
+
     public sealed partial class HorizontalWingSpeeds
     {
         public delegate void Original(
@@ -2175,6 +2433,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class WingUpdateAttribute : SubscribesToAttribute<WingUpdate>;
+
     public sealed partial class WingUpdate
     {
         public delegate bool Original(
@@ -2198,6 +2459,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::WingUpdate; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateAttribute : SubscribesToAttribute<Update>;
 
     public sealed partial class Update
     {
@@ -2223,6 +2487,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostUpdateAttribute : SubscribesToAttribute<PostUpdate>;
+
     public sealed partial class PostUpdate
     {
         public delegate void Original(
@@ -2242,6 +2509,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::PostUpdate; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GrabRangeAttribute : SubscribesToAttribute<GrabRange>;
 
     public sealed partial class GrabRange
     {
@@ -2267,6 +2537,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GrabStyleAttribute : SubscribesToAttribute<GrabStyle>;
+
     public sealed partial class GrabStyle
     {
         public delegate bool Original(
@@ -2288,6 +2561,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::GrabStyle; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanPickupAttribute : SubscribesToAttribute<CanPickup>;
 
     public sealed partial class CanPickup
     {
@@ -2311,6 +2587,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnPickupAttribute : SubscribesToAttribute<OnPickup>;
+
     public sealed partial class OnPickup
     {
         public delegate bool Original(
@@ -2332,6 +2611,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::OnPickup; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ItemSpaceAttribute : SubscribesToAttribute<ItemSpace>;
 
     public sealed partial class ItemSpace
     {
@@ -2355,6 +2637,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetAlphaAttribute : SubscribesToAttribute<GetAlpha>;
+
     public sealed partial class GetAlpha
     {
         public delegate Microsoft.Xna.Framework.Color? Original(
@@ -2376,6 +2661,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::GetAlpha; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawInWorldAttribute : SubscribesToAttribute<PreDrawInWorld>;
 
     public sealed partial class PreDrawInWorld
     {
@@ -2409,6 +2697,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawInWorldAttribute : SubscribesToAttribute<PostDrawInWorld>;
+
     public sealed partial class PostDrawInWorld
     {
         public delegate void Original(
@@ -2440,6 +2731,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::PostDrawInWorld; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawInInventoryAttribute : SubscribesToAttribute<PreDrawInInventory>;
 
     public sealed partial class PreDrawInInventory
     {
@@ -2475,6 +2769,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawInInventoryAttribute : SubscribesToAttribute<PostDrawInInventory>;
+
     public sealed partial class PostDrawInInventory
     {
         public delegate void Original(
@@ -2509,6 +2806,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HoldoutOffsetAttribute : SubscribesToAttribute<HoldoutOffset>;
+
     public sealed partial class HoldoutOffset
     {
         public delegate Microsoft.Xna.Framework.Vector2? Original(
@@ -2529,6 +2829,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HoldoutOriginAttribute : SubscribesToAttribute<HoldoutOrigin>;
+
     public sealed partial class HoldoutOrigin
     {
         public delegate Microsoft.Xna.Framework.Vector2? Original(
@@ -2548,6 +2851,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::HoldoutOrigin; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanEquipAccessoryAttribute : SubscribesToAttribute<CanEquipAccessory>;
 
     public sealed partial class CanEquipAccessory
     {
@@ -2575,6 +2881,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanAccessoryBeEquippedWithAttribute : SubscribesToAttribute<CanAccessoryBeEquippedWith>;
+
     public sealed partial class CanAccessoryBeEquippedWith
     {
         public delegate bool Original(
@@ -2598,6 +2907,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::CanAccessoryBeEquippedWith; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ExtractinatorUseAttribute : SubscribesToAttribute<ExtractinatorUse>;
 
     public sealed partial class ExtractinatorUse
     {
@@ -2625,6 +2937,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CaughtFishStackAttribute : SubscribesToAttribute<CaughtFishStack>;
+
     public sealed partial class CaughtFishStack
     {
         public delegate void Original(
@@ -2647,6 +2962,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class IsAnglerQuestAvailableAttribute : SubscribesToAttribute<IsAnglerQuestAvailable>;
+
     public sealed partial class IsAnglerQuestAvailable
     {
         public delegate bool Original(
@@ -2666,6 +2984,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::IsAnglerQuestAvailable; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AnglerChatAttribute : SubscribesToAttribute<AnglerChat>;
 
     public sealed partial class AnglerChat
     {
@@ -2691,6 +3012,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AddRecipesAttribute : SubscribesToAttribute<AddRecipes>;
+
     public sealed partial class AddRecipes
     {
         public delegate void Original();
@@ -2707,6 +3031,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::AddRecipes; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawTooltipAttribute : SubscribesToAttribute<PreDrawTooltip>;
 
     public sealed partial class PreDrawTooltip
     {
@@ -2734,6 +3061,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawTooltipAttribute : SubscribesToAttribute<PostDrawTooltip>;
+
     public sealed partial class PostDrawTooltip
     {
         public delegate void Original(
@@ -2755,6 +3085,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::PostDrawTooltip; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawTooltipLineAttribute : SubscribesToAttribute<PreDrawTooltipLine>;
 
     public sealed partial class PreDrawTooltipLine
     {
@@ -2780,6 +3113,9 @@ public static partial class GlobalItemHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawTooltipLineAttribute : SubscribesToAttribute<PostDrawTooltipLine>;
+
     public sealed partial class PostDrawTooltipLine
     {
         public delegate void Original(
@@ -2801,6 +3137,9 @@ public static partial class GlobalItemHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::PostDrawTooltipLine; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyTooltipsAttribute : SubscribesToAttribute<ModifyTooltips>;
 
     public sealed partial class ModifyTooltips
     {

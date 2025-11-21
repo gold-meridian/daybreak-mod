@@ -10,7 +10,7 @@ public abstract class PlayerDataProvider : BoundDataProvider
 {
     protected override ILoadable CreateContent(IBound[] properties)
     {
-        
+        return null;
     }
 }
 

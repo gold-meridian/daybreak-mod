@@ -12,6 +12,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalBossBar::PostDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch,Terraria.NPC,Terraria.DataStructures.BossBarDrawParams)
 public static partial class GlobalBossBarHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
+
     public sealed partial class PreDraw
     {
         public delegate bool Original(
@@ -35,6 +38,9 @@ public static partial class GlobalBossBarHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalBossBar::PreDraw; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
 
     public sealed partial class PostDraw
     {

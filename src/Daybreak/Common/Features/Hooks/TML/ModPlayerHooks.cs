@@ -135,6 +135,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.ModPlayer::OnEquipmentLoadoutSwitched(System.Int32,System.Int32)
 public static partial class ModPlayerHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class InitializeAttribute : SubscribesToAttribute<Initialize>;
+
     public sealed partial class Initialize
     {
         public delegate void Original();
@@ -151,6 +154,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::Initialize; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ResetEffectsAttribute : SubscribesToAttribute<ResetEffects>;
 
     public sealed partial class ResetEffects
     {
@@ -169,6 +175,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ResetInfoAccessoriesAttribute : SubscribesToAttribute<ResetInfoAccessories>;
+
     public sealed partial class ResetInfoAccessories
     {
         public delegate void Original();
@@ -185,6 +194,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ResetInfoAccessories; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class RefreshInfoAccessoriesFromTeamPlayersAttribute : SubscribesToAttribute<RefreshInfoAccessoriesFromTeamPlayers>;
 
     public sealed partial class RefreshInfoAccessoriesFromTeamPlayers
     {
@@ -205,6 +217,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::RefreshInfoAccessoriesFromTeamPlayers; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyMaxStatsAttribute : SubscribesToAttribute<ModifyMaxStats>;
 
     public sealed partial class ModifyMaxStats
     {
@@ -228,6 +243,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateDeadAttribute : SubscribesToAttribute<UpdateDead>;
+
     public sealed partial class UpdateDead
     {
         public delegate void Original();
@@ -244,6 +262,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateDead; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreSaveCustomDataAttribute : SubscribesToAttribute<PreSaveCustomData>;
 
     public sealed partial class PreSaveCustomData
     {
@@ -262,6 +283,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreSavePlayerAttribute : SubscribesToAttribute<PreSavePlayer>;
+
     public sealed partial class PreSavePlayer
     {
         public delegate void Original();
@@ -278,6 +302,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreSavePlayer; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostSavePlayerAttribute : SubscribesToAttribute<PostSavePlayer>;
 
     public sealed partial class PostSavePlayer
     {
@@ -296,6 +323,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateBadLifeRegenAttribute : SubscribesToAttribute<UpdateBadLifeRegen>;
+
     public sealed partial class UpdateBadLifeRegen
     {
         public delegate void Original();
@@ -313,6 +343,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateLifeRegenAttribute : SubscribesToAttribute<UpdateLifeRegen>;
+
     public sealed partial class UpdateLifeRegen
     {
         public delegate void Original();
@@ -329,6 +362,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateLifeRegen; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class NaturalLifeRegenAttribute : SubscribesToAttribute<NaturalLifeRegen>;
 
     public sealed partial class NaturalLifeRegen
     {
@@ -350,6 +386,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateAutopauseAttribute : SubscribesToAttribute<UpdateAutopause>;
+
     public sealed partial class UpdateAutopause
     {
         public delegate void Original();
@@ -367,6 +406,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreUpdateAttribute : SubscribesToAttribute<PreUpdate>;
+
     public sealed partial class PreUpdate
     {
         public delegate void Original();
@@ -383,6 +425,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreUpdate; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ProcessTriggersAttribute : SubscribesToAttribute<ProcessTriggers>;
 
     public sealed partial class ProcessTriggers
     {
@@ -404,6 +449,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ArmorSetBonusActivatedAttribute : SubscribesToAttribute<ArmorSetBonusActivated>;
+
     public sealed partial class ArmorSetBonusActivated
     {
         public delegate void Original();
@@ -420,6 +468,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ArmorSetBonusActivated; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ArmorSetBonusHeldAttribute : SubscribesToAttribute<ArmorSetBonusHeld>;
 
     public sealed partial class ArmorSetBonusHeld
     {
@@ -441,6 +492,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SetControlsAttribute : SubscribesToAttribute<SetControls>;
+
     public sealed partial class SetControls
     {
         public delegate void Original();
@@ -457,6 +511,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::SetControls; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreUpdateBuffsAttribute : SubscribesToAttribute<PreUpdateBuffs>;
 
     public sealed partial class PreUpdateBuffs
     {
@@ -475,6 +532,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostUpdateBuffsAttribute : SubscribesToAttribute<PostUpdateBuffs>;
+
     public sealed partial class PostUpdateBuffs
     {
         public delegate void Original();
@@ -491,6 +551,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostUpdateBuffs; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateEquipsAttribute : SubscribesToAttribute<UpdateEquips>;
 
     public sealed partial class UpdateEquips
     {
@@ -509,6 +572,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostUpdateEquipsAttribute : SubscribesToAttribute<PostUpdateEquips>;
+
     public sealed partial class PostUpdateEquips
     {
         public delegate void Original();
@@ -525,6 +591,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostUpdateEquips; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateVisibleAccessoriesAttribute : SubscribesToAttribute<UpdateVisibleAccessories>;
 
     public sealed partial class UpdateVisibleAccessories
     {
@@ -543,6 +612,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateVisibleVanityAccessoriesAttribute : SubscribesToAttribute<UpdateVisibleVanityAccessories>;
+
     public sealed partial class UpdateVisibleVanityAccessories
     {
         public delegate void Original();
@@ -559,6 +631,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UpdateVisibleVanityAccessories; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UpdateDyesAttribute : SubscribesToAttribute<UpdateDyes>;
 
     public sealed partial class UpdateDyes
     {
@@ -577,6 +652,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostUpdateMiscEffectsAttribute : SubscribesToAttribute<PostUpdateMiscEffects>;
+
     public sealed partial class PostUpdateMiscEffects
     {
         public delegate void Original();
@@ -593,6 +671,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostUpdateMiscEffects; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostUpdateRunSpeedsAttribute : SubscribesToAttribute<PostUpdateRunSpeeds>;
 
     public sealed partial class PostUpdateRunSpeeds
     {
@@ -611,6 +692,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreUpdateMovementAttribute : SubscribesToAttribute<PreUpdateMovement>;
+
     public sealed partial class PreUpdateMovement
     {
         public delegate void Original();
@@ -628,6 +712,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostUpdateAttribute : SubscribesToAttribute<PostUpdate>;
+
     public sealed partial class PostUpdate
     {
         public delegate void Original();
@@ -644,6 +731,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostUpdate; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyExtraJumpDurationMultiplierAttribute : SubscribesToAttribute<ModifyExtraJumpDurationMultiplier>;
 
     public sealed partial class ModifyExtraJumpDurationMultiplier
     {
@@ -667,6 +757,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanStartExtraJumpAttribute : SubscribesToAttribute<CanStartExtraJump>;
+
     public sealed partial class CanStartExtraJump
     {
         public delegate bool Original(
@@ -686,6 +779,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanStartExtraJump; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnExtraJumpStartedAttribute : SubscribesToAttribute<OnExtraJumpStarted>;
 
     public sealed partial class OnExtraJumpStarted
     {
@@ -709,6 +805,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnExtraJumpEndedAttribute : SubscribesToAttribute<OnExtraJumpEnded>;
+
     public sealed partial class OnExtraJumpEnded
     {
         public delegate void Original(
@@ -728,6 +827,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnExtraJumpEnded; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnExtraJumpRefreshedAttribute : SubscribesToAttribute<OnExtraJumpRefreshed>;
 
     public sealed partial class OnExtraJumpRefreshed
     {
@@ -749,6 +851,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ExtraJumpVisualsAttribute : SubscribesToAttribute<ExtraJumpVisuals>;
+
     public sealed partial class ExtraJumpVisuals
     {
         public delegate void Original(
@@ -768,6 +873,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ExtraJumpVisuals; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanShowExtraJumpVisualsAttribute : SubscribesToAttribute<CanShowExtraJumpVisuals>;
 
     public sealed partial class CanShowExtraJumpVisuals
     {
@@ -789,6 +897,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnExtraJumpClearedAttribute : SubscribesToAttribute<OnExtraJumpCleared>;
+
     public sealed partial class OnExtraJumpCleared
     {
         public delegate void Original(
@@ -809,6 +920,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class FrameEffectsAttribute : SubscribesToAttribute<FrameEffects>;
+
     public sealed partial class FrameEffects
     {
         public delegate void Original();
@@ -825,6 +939,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::FrameEffects; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ImmuneToAttribute : SubscribesToAttribute<ImmuneTo>;
 
     public sealed partial class ImmuneTo
     {
@@ -850,6 +967,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class FreeDodgeAttribute : SubscribesToAttribute<FreeDodge>;
+
     public sealed partial class FreeDodge
     {
         public delegate bool Original(
@@ -869,6 +989,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::FreeDodge; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ConsumableDodgeAttribute : SubscribesToAttribute<ConsumableDodge>;
 
     public sealed partial class ConsumableDodge
     {
@@ -890,6 +1013,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHurtAttribute : SubscribesToAttribute<ModifyHurt>;
+
     public sealed partial class ModifyHurt
     {
         public delegate void Original(
@@ -909,6 +1035,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHurt; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHurtAttribute : SubscribesToAttribute<OnHurt>;
 
     public sealed partial class OnHurt
     {
@@ -930,6 +1059,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostHurtAttribute : SubscribesToAttribute<PostHurt>;
+
     public sealed partial class PostHurt
     {
         public delegate void Original(
@@ -949,6 +1081,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostHurt; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreKillAttribute : SubscribesToAttribute<PreKill>;
 
     public sealed partial class PreKill
     {
@@ -980,6 +1115,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class KillAttribute : SubscribesToAttribute<Kill>;
+
     public sealed partial class Kill
     {
         public delegate void Original(
@@ -1006,6 +1144,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreModifyLuckAttribute : SubscribesToAttribute<PreModifyLuck>;
+
     public sealed partial class PreModifyLuck
     {
         public delegate bool Original(
@@ -1025,6 +1166,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PreModifyLuck; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyLuckAttribute : SubscribesToAttribute<ModifyLuck>;
 
     public sealed partial class ModifyLuck
     {
@@ -1046,6 +1190,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreItemCheckAttribute : SubscribesToAttribute<PreItemCheck>;
+
     public sealed partial class PreItemCheck
     {
         public delegate bool Original();
@@ -1063,6 +1210,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostItemCheckAttribute : SubscribesToAttribute<PostItemCheck>;
+
     public sealed partial class PostItemCheck
     {
         public delegate void Original();
@@ -1079,6 +1229,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PostItemCheck; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseTimeMultiplierAttribute : SubscribesToAttribute<UseTimeMultiplier>;
 
     public sealed partial class UseTimeMultiplier
     {
@@ -1100,6 +1253,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseAnimationMultiplierAttribute : SubscribesToAttribute<UseAnimationMultiplier>;
+
     public sealed partial class UseAnimationMultiplier
     {
         public delegate float Original(
@@ -1120,6 +1276,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class UseSpeedMultiplierAttribute : SubscribesToAttribute<UseSpeedMultiplier>;
+
     public sealed partial class UseSpeedMultiplier
     {
         public delegate float Original(
@@ -1139,6 +1298,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::UseSpeedMultiplier; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetHealLifeAttribute : SubscribesToAttribute<GetHealLife>;
 
     public sealed partial class GetHealLife
     {
@@ -1164,6 +1326,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetHealManaAttribute : SubscribesToAttribute<GetHealMana>;
+
     public sealed partial class GetHealMana
     {
         public delegate void Original(
@@ -1187,6 +1352,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::GetHealMana; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyManaCostAttribute : SubscribesToAttribute<ModifyManaCost>;
 
     public sealed partial class ModifyManaCost
     {
@@ -1212,6 +1380,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnMissingManaAttribute : SubscribesToAttribute<OnMissingMana>;
+
     public sealed partial class OnMissingMana
     {
         public delegate void Original(
@@ -1233,6 +1404,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnMissingMana; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnConsumeManaAttribute : SubscribesToAttribute<OnConsumeMana>;
 
     public sealed partial class OnConsumeMana
     {
@@ -1256,6 +1430,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ApplyPotionDelayAttribute : SubscribesToAttribute<ApplyPotionDelay>;
+
     public sealed partial class ApplyPotionDelay
     {
         public delegate bool Original(
@@ -1277,6 +1454,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ApplyPotionDelay; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyWeaponDamageAttribute : SubscribesToAttribute<ModifyWeaponDamage>;
 
     public sealed partial class ModifyWeaponDamage
     {
@@ -1300,6 +1480,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyWeaponKnockbackAttribute : SubscribesToAttribute<ModifyWeaponKnockback>;
+
     public sealed partial class ModifyWeaponKnockback
     {
         public delegate void Original(
@@ -1321,6 +1504,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyWeaponKnockback; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyWeaponCritAttribute : SubscribesToAttribute<ModifyWeaponCrit>;
 
     public sealed partial class ModifyWeaponCrit
     {
@@ -1344,6 +1530,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanConsumeAmmoAttribute : SubscribesToAttribute<CanConsumeAmmo>;
+
     public sealed partial class CanConsumeAmmo
     {
         public delegate bool Original(
@@ -1365,6 +1554,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanConsumeAmmo; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnConsumeAmmoAttribute : SubscribesToAttribute<OnConsumeAmmo>;
 
     public sealed partial class OnConsumeAmmo
     {
@@ -1388,6 +1580,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanShootAttribute : SubscribesToAttribute<CanShoot>;
+
     public sealed partial class CanShoot
     {
         public delegate bool Original(
@@ -1407,6 +1602,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanShoot; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyShootStatsAttribute : SubscribesToAttribute<ModifyShootStats>;
 
     public sealed partial class ModifyShootStats
     {
@@ -1437,6 +1635,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyShootStats; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ShootAttribute : SubscribesToAttribute<Shoot>;
 
     public sealed partial class Shoot
     {
@@ -1470,6 +1671,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class MeleeEffectsAttribute : SubscribesToAttribute<MeleeEffects>;
+
     public sealed partial class MeleeEffects
     {
         public delegate void Original(
@@ -1491,6 +1695,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::MeleeEffects; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class EmitEnchantmentVisualsAtAttribute : SubscribesToAttribute<EmitEnchantmentVisualsAt>;
 
     public sealed partial class EmitEnchantmentVisualsAt
     {
@@ -1518,6 +1725,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanCatchNPCAttribute : SubscribesToAttribute<CanCatchNPC>;
+
     public sealed partial class CanCatchNPC
     {
         public delegate bool? Original(
@@ -1539,6 +1749,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanCatchNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnCatchNPCAttribute : SubscribesToAttribute<OnCatchNPC>;
 
     public sealed partial class OnCatchNPC
     {
@@ -1564,6 +1777,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyItemScaleAttribute : SubscribesToAttribute<ModifyItemScale>;
+
     public sealed partial class ModifyItemScale
     {
         public delegate void Original(
@@ -1585,6 +1801,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyItemScale; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitAnythingAttribute : SubscribesToAttribute<OnHitAnything>;
 
     public sealed partial class OnHitAnything
     {
@@ -1610,6 +1829,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitNPCAttribute : SubscribesToAttribute<CanHitNPC>;
+
     public sealed partial class CanHitNPC
     {
         public delegate bool Original(
@@ -1629,6 +1851,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanHitNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanMeleeAttackCollideWithNPCAttribute : SubscribesToAttribute<CanMeleeAttackCollideWithNPC>;
 
     public sealed partial class CanMeleeAttackCollideWithNPC
     {
@@ -1654,6 +1879,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute<ModifyHitNPC>;
+
     public sealed partial class ModifyHitNPC
     {
         public delegate void Original(
@@ -1675,6 +1903,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHitNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitNPCAttribute : SubscribesToAttribute<OnHitNPC>;
 
     public sealed partial class OnHitNPC
     {
@@ -1700,6 +1931,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitNPCWithItemAttribute : SubscribesToAttribute<CanHitNPCWithItem>;
+
     public sealed partial class CanHitNPCWithItem
     {
         public delegate bool? Original(
@@ -1721,6 +1955,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanHitNPCWithItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitNPCWithItemAttribute : SubscribesToAttribute<ModifyHitNPCWithItem>;
 
     public sealed partial class ModifyHitNPCWithItem
     {
@@ -1745,6 +1982,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHitNPCWithItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitNPCWithItemAttribute : SubscribesToAttribute<OnHitNPCWithItem>;
 
     public sealed partial class OnHitNPCWithItem
     {
@@ -1772,6 +2012,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitNPCWithProjAttribute : SubscribesToAttribute<CanHitNPCWithProj>;
+
     public sealed partial class CanHitNPCWithProj
     {
         public delegate bool? Original(
@@ -1793,6 +2036,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanHitNPCWithProj; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitNPCWithProjAttribute : SubscribesToAttribute<ModifyHitNPCWithProj>;
 
     public sealed partial class ModifyHitNPCWithProj
     {
@@ -1817,6 +2063,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyHitNPCWithProj; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitNPCWithProjAttribute : SubscribesToAttribute<OnHitNPCWithProj>;
 
     public sealed partial class OnHitNPCWithProj
     {
@@ -1844,6 +2093,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitPvpAttribute : SubscribesToAttribute<CanHitPvp>;
+
     public sealed partial class CanHitPvp
     {
         public delegate bool Original(
@@ -1865,6 +2117,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanHitPvp; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanHitPvpWithProjAttribute : SubscribesToAttribute<CanHitPvpWithProj>;
 
     public sealed partial class CanHitPvpWithProj
     {
@@ -1888,6 +2143,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeHitByNPCAttribute : SubscribesToAttribute<CanBeHitByNPC>;
+
     public sealed partial class CanBeHitByNPC
     {
         public delegate bool Original(
@@ -1909,6 +2167,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanBeHitByNPC; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitByNPCAttribute : SubscribesToAttribute<ModifyHitByNPC>;
 
     public sealed partial class ModifyHitByNPC
     {
@@ -1932,6 +2193,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitByNPCAttribute : SubscribesToAttribute<OnHitByNPC>;
+
     public sealed partial class OnHitByNPC
     {
         public delegate void Original(
@@ -1954,6 +2218,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeHitByProjectileAttribute : SubscribesToAttribute<CanBeHitByProjectile>;
+
     public sealed partial class CanBeHitByProjectile
     {
         public delegate bool Original(
@@ -1973,6 +2240,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanBeHitByProjectile; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyHitByProjectileAttribute : SubscribesToAttribute<ModifyHitByProjectile>;
 
     public sealed partial class ModifyHitByProjectile
     {
@@ -1996,6 +2266,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnHitByProjectileAttribute : SubscribesToAttribute<OnHitByProjectile>;
+
     public sealed partial class OnHitByProjectile
     {
         public delegate void Original(
@@ -2018,6 +2291,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyFishingAttemptAttribute : SubscribesToAttribute<ModifyFishingAttempt>;
+
     public sealed partial class ModifyFishingAttempt
     {
         public delegate void Original(
@@ -2037,6 +2313,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyFishingAttempt; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CatchFishAttribute : SubscribesToAttribute<CatchFish>;
 
     public sealed partial class CatchFish
     {
@@ -2066,6 +2345,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyCaughtFishAttribute : SubscribesToAttribute<ModifyCaughtFish>;
+
     public sealed partial class ModifyCaughtFish
     {
         public delegate void Original(
@@ -2086,6 +2368,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanConsumeBaitAttribute : SubscribesToAttribute<CanConsumeBait>;
+
     public sealed partial class CanConsumeBait
     {
         public delegate bool? Original(
@@ -2105,6 +2390,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanConsumeBait; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetFishingLevelAttribute : SubscribesToAttribute<GetFishingLevel>;
 
     public sealed partial class GetFishingLevel
     {
@@ -2130,6 +2418,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AnglerQuestRewardAttribute : SubscribesToAttribute<AnglerQuestReward>;
+
     public sealed partial class AnglerQuestReward
     {
         public delegate void Original(
@@ -2152,6 +2443,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class GetDyeTraderRewardAttribute : SubscribesToAttribute<GetDyeTraderReward>;
+
     public sealed partial class GetDyeTraderReward
     {
         public delegate void Original(
@@ -2171,6 +2465,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::GetDyeTraderReward; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawEffectsAttribute : SubscribesToAttribute<DrawEffects>;
 
     public sealed partial class DrawEffects
     {
@@ -2202,6 +2499,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyDrawInfoAttribute : SubscribesToAttribute<ModifyDrawInfo>;
+
     public sealed partial class ModifyDrawInfo
     {
         public delegate void Original(
@@ -2221,6 +2521,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyDrawInfo; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyDrawLayerOrderingAttribute : SubscribesToAttribute<ModifyDrawLayerOrdering>;
 
     public sealed partial class ModifyDrawLayerOrdering
     {
@@ -2242,6 +2545,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HideDrawLayersAttribute : SubscribesToAttribute<HideDrawLayers>;
+
     public sealed partial class HideDrawLayers
     {
         public delegate void Original(
@@ -2262,6 +2568,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyScreenPositionAttribute : SubscribesToAttribute<ModifyScreenPosition>;
+
     public sealed partial class ModifyScreenPosition
     {
         public delegate void Original();
@@ -2278,6 +2587,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyScreenPosition; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyZoomAttribute : SubscribesToAttribute<ModifyZoom>;
 
     public sealed partial class ModifyZoom
     {
@@ -2299,6 +2611,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PlayerConnectAttribute : SubscribesToAttribute<PlayerConnect>;
+
     public sealed partial class PlayerConnect
     {
         public delegate void Original();
@@ -2315,6 +2630,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::PlayerConnect; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PlayerDisconnectAttribute : SubscribesToAttribute<PlayerDisconnect>;
 
     public sealed partial class PlayerDisconnect
     {
@@ -2333,6 +2651,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnEnterWorldAttribute : SubscribesToAttribute<OnEnterWorld>;
+
     public sealed partial class OnEnterWorld
     {
         public delegate void Original();
@@ -2350,6 +2671,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnRespawnAttribute : SubscribesToAttribute<OnRespawn>;
+
     public sealed partial class OnRespawn
     {
         public delegate void Original();
@@ -2366,6 +2690,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnRespawn; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ShiftClickSlotAttribute : SubscribesToAttribute<ShiftClickSlot>;
 
     public sealed partial class ShiftClickSlot
     {
@@ -2391,6 +2718,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HoverSlotAttribute : SubscribesToAttribute<HoverSlot>;
+
     public sealed partial class HoverSlot
     {
         public delegate bool Original(
@@ -2414,6 +2744,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::HoverSlot; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostSellItemAttribute : SubscribesToAttribute<PostSellItem>;
 
     public sealed partial class PostSellItem
     {
@@ -2439,6 +2772,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanSellItemAttribute : SubscribesToAttribute<CanSellItem>;
+
     public sealed partial class CanSellItem
     {
         public delegate bool Original(
@@ -2462,6 +2798,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanSellItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostBuyItemAttribute : SubscribesToAttribute<PostBuyItem>;
 
     public sealed partial class PostBuyItem
     {
@@ -2487,6 +2826,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBuyItemAttribute : SubscribesToAttribute<CanBuyItem>;
+
     public sealed partial class CanBuyItem
     {
         public delegate bool Original(
@@ -2511,6 +2853,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanUseItemAttribute : SubscribesToAttribute<CanUseItem>;
+
     public sealed partial class CanUseItem
     {
         public delegate bool Original(
@@ -2531,6 +2876,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanAutoReuseItemAttribute : SubscribesToAttribute<CanAutoReuseItem>;
+
     public sealed partial class CanAutoReuseItem
     {
         public delegate bool? Original(
@@ -2550,6 +2898,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanAutoReuseItem; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyNurseHealAttribute : SubscribesToAttribute<ModifyNurseHeal>;
 
     public sealed partial class ModifyNurseHeal
     {
@@ -2577,6 +2928,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyNursePriceAttribute : SubscribesToAttribute<ModifyNursePrice>;
+
     public sealed partial class ModifyNursePrice
     {
         public delegate void Original(
@@ -2602,6 +2956,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::ModifyNursePrice; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostNurseHealAttribute : SubscribesToAttribute<PostNurseHeal>;
 
     public sealed partial class PostNurseHeal
     {
@@ -2629,6 +2986,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AddStartingItemsAttribute : SubscribesToAttribute<AddStartingItems>;
+
     public sealed partial class AddStartingItems
     {
         public delegate System.Collections.Generic.IEnumerable<Terraria.Item> Original(
@@ -2648,6 +3008,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::AddStartingItems; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyStartingInventoryAttribute : SubscribesToAttribute<ModifyStartingInventory>;
 
     public sealed partial class ModifyStartingInventory
     {
@@ -2671,6 +3034,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AddMaterialsForCraftingAttribute : SubscribesToAttribute<AddMaterialsForCrafting>;
+
     public sealed partial class AddMaterialsForCrafting
     {
         public delegate System.Collections.Generic.IEnumerable<Terraria.Item> Original(
@@ -2691,6 +3057,9 @@ public static partial class ModPlayerHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnPickupAttribute : SubscribesToAttribute<OnPickup>;
+
     public sealed partial class OnPickup
     {
         public delegate bool Original(
@@ -2710,6 +3079,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnPickup; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanBeTeleportedToAttribute : SubscribesToAttribute<CanBeTeleportedTo>;
 
     public sealed partial class CanBeTeleportedTo
     {
@@ -2732,6 +3104,9 @@ public static partial class ModPlayerHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::CanBeTeleportedTo; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class OnEquipmentLoadoutSwitchedAttribute : SubscribesToAttribute<OnEquipmentLoadoutSwitched>;
 
     public sealed partial class OnEquipmentLoadoutSwitched
     {

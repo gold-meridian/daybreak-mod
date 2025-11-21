@@ -52,6 +52,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalBlockType::ModifyLight(System.Int32,System.Int32,System.Int32,System.Single&,System.Single&,System.Single&)
 public static partial class GlobalTileHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DropCritterChanceAttribute : SubscribesToAttribute<DropCritterChance>;
+
     public sealed partial class DropCritterChance
     {
         public delegate void Original(
@@ -82,6 +85,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanDropAttribute : SubscribesToAttribute<CanDrop>;
+
     public sealed partial class CanDrop
     {
         public delegate bool Original(
@@ -106,6 +112,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DropAttribute : SubscribesToAttribute<Drop>;
+
     public sealed partial class Drop
     {
         public delegate void Original(
@@ -129,6 +138,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::Drop; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanKillTileAttribute : SubscribesToAttribute<CanKillTile>;
 
     public sealed partial class CanKillTile
     {
@@ -155,6 +167,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::CanKillTile; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class KillTileAttribute : SubscribesToAttribute<KillTile>;
 
     public sealed partial class KillTile
     {
@@ -186,6 +201,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class NearbyEffectsAttribute : SubscribesToAttribute<NearbyEffects>;
+
     public sealed partial class NearbyEffects
     {
         public delegate void Original(
@@ -211,6 +229,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::NearbyEffects; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class IsTileDangerousAttribute : SubscribesToAttribute<IsTileDangerous>;
 
     public sealed partial class IsTileDangerous
     {
@@ -238,6 +259,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class IsTileBiomeSightableAttribute : SubscribesToAttribute<IsTileBiomeSightable>;
+
     public sealed partial class IsTileBiomeSightable
     {
         public delegate bool? Original(
@@ -264,6 +288,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class IsTileSpelunkableAttribute : SubscribesToAttribute<IsTileSpelunkable>;
+
     public sealed partial class IsTileSpelunkable
     {
         public delegate bool? Original(
@@ -287,6 +314,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::IsTileSpelunkable; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SetSpriteEffectsAttribute : SubscribesToAttribute<SetSpriteEffects>;
 
     public sealed partial class SetSpriteEffects
     {
@@ -314,6 +344,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AnimateTileAttribute : SubscribesToAttribute<AnimateTile>;
+
     public sealed partial class AnimateTile
     {
         public delegate void Original();
@@ -330,6 +363,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::AnimateTile; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class DrawEffectsAttribute : SubscribesToAttribute<DrawEffects>;
 
     public sealed partial class DrawEffects
     {
@@ -358,6 +394,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::DrawEffects; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class EmitParticlesAttribute : SubscribesToAttribute<EmitParticles>;
 
     public sealed partial class EmitParticles
     {
@@ -393,6 +432,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SpecialDrawAttribute : SubscribesToAttribute<SpecialDraw>;
+
     public sealed partial class SpecialDraw
     {
         public delegate void Original(
@@ -418,6 +460,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::SpecialDraw; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawPlacementPreviewAttribute : SubscribesToAttribute<PreDrawPlacementPreview>;
 
     public sealed partial class PreDrawPlacementPreview
     {
@@ -455,6 +500,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawPlacementPreviewAttribute : SubscribesToAttribute<PostDrawPlacementPreview>;
+
     public sealed partial class PostDrawPlacementPreview
     {
         public delegate void Original(
@@ -491,6 +539,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class TileFrameAttribute : SubscribesToAttribute<TileFrame>;
+
     public sealed partial class TileFrame
     {
         public delegate bool Original(
@@ -519,6 +570,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AdjTilesAttribute : SubscribesToAttribute<AdjTiles>;
+
     public sealed partial class AdjTiles
     {
         public delegate int[] Original(
@@ -538,6 +592,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::AdjTiles; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class RightClickAttribute : SubscribesToAttribute<RightClick>;
 
     public sealed partial class RightClick
     {
@@ -563,6 +620,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class MouseOverAttribute : SubscribesToAttribute<MouseOver>;
+
     public sealed partial class MouseOver
     {
         public delegate void Original(
@@ -587,6 +647,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class MouseOverFarAttribute : SubscribesToAttribute<MouseOverFar>;
+
     public sealed partial class MouseOverFar
     {
         public delegate void Original(
@@ -610,6 +673,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::MouseOverFar; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class AutoSelectAttribute : SubscribesToAttribute<AutoSelect>;
 
     public sealed partial class AutoSelect
     {
@@ -637,6 +703,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreHitWireAttribute : SubscribesToAttribute<PreHitWire>;
+
     public sealed partial class PreHitWire
     {
         public delegate bool Original(
@@ -660,6 +729,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::PreHitWire; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class HitWireAttribute : SubscribesToAttribute<HitWire>;
 
     public sealed partial class HitWire
     {
@@ -685,6 +757,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class SlopeAttribute : SubscribesToAttribute<Slope>;
+
     public sealed partial class Slope
     {
         public delegate bool Original(
@@ -709,6 +784,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class FloorVisualsAttribute : SubscribesToAttribute<FloorVisuals>;
+
     public sealed partial class FloorVisuals
     {
         public delegate void Original(
@@ -731,6 +809,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ChangeWaterfallStyleAttribute : SubscribesToAttribute<ChangeWaterfallStyle>;
+
     public sealed partial class ChangeWaterfallStyle
     {
         public delegate void Original(
@@ -752,6 +833,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::ChangeWaterfallStyle; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanReplaceAttribute : SubscribesToAttribute<CanReplace>;
 
     public sealed partial class CanReplace
     {
@@ -778,6 +862,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::CanReplace; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ReplaceTileAttribute : SubscribesToAttribute<ReplaceTile>;
 
     public sealed partial class ReplaceTile
     {
@@ -807,6 +894,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostSetupTileMergeAttribute : SubscribesToAttribute<PostSetupTileMerge>;
+
     public sealed partial class PostSetupTileMerge
     {
         public delegate void Original();
@@ -823,6 +913,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::PostSetupTileMerge; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreShakeTreeAttribute : SubscribesToAttribute<PreShakeTree>;
 
     public sealed partial class PreShakeTree
     {
@@ -848,6 +941,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ShakeTreeAttribute : SubscribesToAttribute<ShakeTree>;
+
     public sealed partial class ShakeTree
     {
         public delegate bool Original(
@@ -871,6 +967,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::ShakeTree; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class KillSoundAttribute : SubscribesToAttribute<KillSound>;
 
     public sealed partial class KillSound
     {
@@ -897,6 +996,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::KillSound; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class NumDustAttribute : SubscribesToAttribute<NumDust>;
 
     public sealed partial class NumDust
     {
@@ -926,6 +1028,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CreateDustAttribute : SubscribesToAttribute<CreateDust>;
+
     public sealed partial class CreateDust
     {
         public delegate bool Original(
@@ -952,6 +1057,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanPlaceAttribute : SubscribesToAttribute<CanPlace>;
+
     public sealed partial class CanPlace
     {
         public delegate bool Original(
@@ -976,6 +1084,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class CanExplodeAttribute : SubscribesToAttribute<CanExplode>;
+
     public sealed partial class CanExplode
     {
         public delegate bool Original(
@@ -999,6 +1110,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::CanExplode; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
 
     public sealed partial class PreDraw
     {
@@ -1026,6 +1140,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+
     public sealed partial class PostDraw
     {
         public delegate void Original(
@@ -1052,6 +1169,9 @@ public static partial class GlobalTileHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class RandomUpdateAttribute : SubscribesToAttribute<RandomUpdate>;
+
     public sealed partial class RandomUpdate
     {
         public delegate void Original(
@@ -1075,6 +1195,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::RandomUpdate; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PlaceInWorldAttribute : SubscribesToAttribute<PlaceInWorld>;
 
     public sealed partial class PlaceInWorld
     {
@@ -1101,6 +1224,9 @@ public static partial class GlobalTileHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::PlaceInWorld; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ModifyLightAttribute : SubscribesToAttribute<ModifyLight>;
 
     public sealed partial class ModifyLight
     {

@@ -16,6 +16,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalPylon::PostValidTeleportCheck(Terraria.GameContent.TeleportPylonInfo,Terraria.GameContent.TeleportPylonInfo,System.Boolean&,System.Boolean&,System.String&)
 public static partial class GlobalPylonHooks
 {
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreDrawMapIconAttribute : SubscribesToAttribute<PreDrawMapIcon>;
+
     public sealed partial class PreDrawMapIcon
     {
         public delegate bool Original(
@@ -48,6 +51,9 @@ public static partial class GlobalPylonHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PreCanPlacePylonAttribute : SubscribesToAttribute<PreCanPlacePylon>;
+
     public sealed partial class PreCanPlacePylon
     {
         public delegate bool? Original(
@@ -74,6 +80,9 @@ public static partial class GlobalPylonHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ValidTeleportCheck_PreNPCCountAttribute : SubscribesToAttribute<ValidTeleportCheck_PreNPCCount>;
+
     public sealed partial class ValidTeleportCheck_PreNPCCount
     {
         public delegate bool? Original(
@@ -96,6 +105,9 @@ public static partial class GlobalPylonHooks
         }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ValidTeleportCheck_PreAnyDangerAttribute : SubscribesToAttribute<ValidTeleportCheck_PreAnyDanger>;
+
     public sealed partial class ValidTeleportCheck_PreAnyDanger
     {
         public delegate bool? Original(
@@ -115,6 +127,9 @@ public static partial class GlobalPylonHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalPylon::ValidTeleportCheck_PreAnyDanger; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class ValidTeleportCheck_PreBiomeRequirementsAttribute : SubscribesToAttribute<ValidTeleportCheck_PreBiomeRequirements>;
 
     public sealed partial class ValidTeleportCheck_PreBiomeRequirements
     {
@@ -137,6 +152,9 @@ public static partial class GlobalPylonHooks
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalPylon::ValidTeleportCheck_PreBiomeRequirements; use a flag to disable behavior.");
         }
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    public sealed class PostValidTeleportCheckAttribute : SubscribesToAttribute<PostValidTeleportCheck>;
 
     public sealed partial class PostValidTeleportCheck
     {

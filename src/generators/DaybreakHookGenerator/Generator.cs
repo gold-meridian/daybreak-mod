@@ -294,6 +294,9 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
         var typeName = type.Name;
 
+        sb.AppendLine("    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]");
+        sb.AppendLine($"    public sealed class {name}Attribute : SubscribesToAttribute<{name}>;");
+        sb.AppendLine();
         sb.AppendLine($"    public sealed partial class {name}");
         sb.AppendLine("    {");
         sb.AppendLine(GetDescriptionForMethod(method, original: true));
