@@ -40,9 +40,18 @@ internal sealed class PlayerDataProviderImpl : ModPlayer
     // We want to rebuild this map by hand.
     protected override bool CloneNewInstances => false;
 
-    public Dictionary<Type, IBoundDataProvider> DataProviders { get; } = [];
+    public Dictionary<Type, IBoundDataProvider> DataProviders { get; private set; } = [];
 
     public IEnumerable<IBoundDataProvider> Providers => DataProviders.Values;
+
+    public override void Load()
+    {
+        base.Load();
+
+        // Assign the template instance's map to the static map so we can use it
+        // during initial NewInstance creation later.
+        DataProviders = KnownDataProviders;
+    }
 
     public override ModPlayer NewInstance(Player entity)
     {
