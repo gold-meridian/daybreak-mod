@@ -47,7 +47,7 @@ public abstract class BoundDataProvider<TProvider> : IBoundDataProvider, ILoadab
     private static Mod ownedMod = null!;
 
     /// <summary>
-    ///     The bound values belonging to the <see cref="TProvider"/>.
+    ///     The bound values belonging to the <typeparamref name="TProvider"/>.
     /// </summary>
     public Dictionary<PropertyInfo, IBound> PropertyMap => propertyMap;
 
@@ -84,9 +84,14 @@ public abstract class BoundDataProvider<TProvider> : IBoundDataProvider, ILoadab
     {
         ownedMod = mod;
         propertyMap = GetType()
-                    .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(x => x.PropertyType.IsAssignableTo(typeof(IBound)))
-                    .ToDictionary(x => x, x => (IBound)x.GetValue(this)!);
+                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                     .Where(x => x.PropertyType.IsAssignableTo(typeof(IBound)))
+                     .ToDictionary(x => x, x => (IBound)x.GetValue(this)!);
+
+        foreach (var (propertyInfo, bound) in propertyMap)
+        {
+            bound.Binding.Configure(propertyInfo);
+        }
 
         Load();
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terraria.ModLoader.IO;
 
@@ -17,6 +18,13 @@ public interface IBinding
 
     /// <inheritdoc cref="Binding{T}.LoadTag"/>
     void LoadTag(IBound b, TagCompound tag);
+
+    /// <summary>
+    ///     Configures this binding from attributes on the
+    ///     <see cref="property"/>.
+    /// </summary>
+    /// <param name="property">The property.</param>
+    void Configure(PropertyInfo property);
 }
 
 /// <summary>
@@ -74,6 +82,15 @@ public sealed class Binding<T> : IBinding
     void IBinding.LoadTag(IBound b, TagCompound tag)
     {
         LoadTag?.Invoke((Bound<T>)b, tag);
+    }
+
+    void IBinding.Configure(PropertyInfo property)
+    {
+        var attributes = property.GetCustomAttributes<BindingConfigurationAttribute>();
+        foreach (var attribute in attributes)
+        {
+            attribute.Configure(this);
+        }
     }
 }
 
