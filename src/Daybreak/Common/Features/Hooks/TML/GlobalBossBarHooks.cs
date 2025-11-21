@@ -1,5 +1,7 @@
 namespace Daybreak.Common.Features.Hooks;
 
+// ReSharper disable ConvertToPrimaryConstructor
+// ReSharper disable RedundantLambdaParameterType
 // ReSharper disable PartialTypeWithSinglePart
 // ReSharper disable UnusedType.Global
 // ReSharper disable InconsistentNaming

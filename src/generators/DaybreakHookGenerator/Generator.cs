@@ -45,6 +45,8 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
         sb.AppendLine($"namespace {typeNamespace};");
         sb.AppendLine();
+        sb.AppendLine("// ReSharper disable ConvertToPrimaryConstructor");
+        sb.AppendLine("// ReSharper disable RedundantLambdaParameterType");
         sb.AppendLine("// ReSharper disable PartialTypeWithSinglePart");
         sb.AppendLine("// ReSharper disable UnusedType.Global");
         sb.AppendLine("// ReSharper disable InconsistentNaming");
