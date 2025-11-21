@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.Models;
 
@@ -28,10 +30,26 @@ public static class NameProvider
     {
         return type.Name;
     }
+
+#pragma warning disable CA2255
+    [ModuleInitializer]
+    internal static void HijackDefaultModTypeName()
+    {
+        // This is kind of evil, but it's quite useful!  Should be safe to hook
+        // this property getter because it's virtual (and we only need it to
+        // apply for this assembly and any assemblies loaded after).
+        // If inlining is somehow an issue, we can explore other options.
+        MonoModHooks.Add(
+            typeof(ModType).GetProperty(nameof(ModType.Name))!.GetMethod!,
+            (ModType self) => ForType(self.GetType())
+        );
+    }
+#pragma warning restore CA2255
 }
 
 /// <summary>
-///     Used to provide a name to <see cref="BoundDataProvider{TProvider}"/>.
+///     Used to provide a name to <see cref="BoundDataProvider{TProvider}"/> or
+///     <see cref="ModType"/>s.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
 public abstract class AbstractNameProviderAttribute : Attribute
@@ -71,7 +89,10 @@ public sealed class NestedTypeNameProviderAttribute(string? name = null) : Abstr
     {
         var typeName = name ?? NameProvider.GetDefaultName(type);
         var nestedNames = GetNestedNames(type).Append(typeName);
-        var nestedName = string.Join('+', nestedNames);
+        
+        // Normally I'd use '+', but we need '_' to generate more C#-compatible
+        // names.
+        var nestedName = string.Join('_', nestedNames);
         return nestedName;
     }
 
