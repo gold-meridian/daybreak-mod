@@ -1,4 +1,5 @@
 ﻿using System;
+using Terraria.ModLoader.IO;
 
 namespace Daybreak.Common.Features.Models;
 
@@ -79,5 +80,12 @@ public sealed class ResetToDefaultAttribute<T> : BindingConfigurationAttribute<T
 #endregion
 
 #region SerializeTag
-public sealed class SerializeTagAttribute(string? tagName) : Attribute;
+/// <summary>
+///     Marks that the annotated <see cref="Bound{T}"/>-object should be
+///     serialized and deserialized as <see cref="TagCompound"/> data.
+/// </summary>
+/// <param name="tagName">
+///     The name to serialize with.  Uses the property name if not set.
+/// </param>
+public sealed class SerializeTagAttribute(string? tagName = null) : Attribute;
 #endregion

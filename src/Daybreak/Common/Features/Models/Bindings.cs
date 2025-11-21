@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Terraria.ModLoader.IO;
 
 namespace Daybreak.Common.Features.Models;
+
+public interface IBinding { }
 
 /// <summary>
 ///     A configuration object determining the behavior of a
@@ -12,7 +15,7 @@ namespace Daybreak.Common.Features.Models;
 ///     any outside state.
 /// </summary>
 /// <typeparam name="T">The kind of value.</typeparam>
-public sealed class Binding<T>
+public sealed class Binding<T> : IBinding
 {
     /// <summary>
     ///     Used to reset the <see cref="Bound{T}"/> object in
@@ -24,6 +27,47 @@ public sealed class Binding<T>
     ///     Controls the behavior in <c>ResetEffects</c>.
     /// </summary>
     public ResetToAction? ResetTo { get; set; }
+
+    /// <summary>
+    ///     Used to write data in <c>SaveData</c>.
+    /// </summary>
+    public delegate void SaveTagAction(Bound<T> b, TagCompound tag);
+
+    /// <summary>
+    ///     Used to read data in <c>LoadData</c>.
+    /// </summary>
+    public delegate void LoadTagAction(Bound<T> b, TagCompound tag);
+
+    /// <summary>
+    ///     Controls behavior in <c>SaveTag</c>.
+    /// </summary>
+    public SaveTagAction? SaveTag { get; set; }
+
+    /// <summary>
+    ///     Controls behavior in <c>LoadTag</c>.
+    /// </summary>
+    public LoadTagAction? LoadTag { get; set; }
+}
+
+/// <summary>
+///     The type-unsafe contract of a <see cref="Binding{T}"/>.
+/// </summary>
+public interface IBound
+{
+    /// <inheritdoc cref="Bound{T}.Binding"/>
+    IBinding Binding { get; }
+
+    /// <inheritdoc cref="Bound{T}.Name"/>
+    string Name { get; }
+
+    /// <inheritdoc cref="Bound{T}.DefaultValueProvider"/>
+    Func<object?> DefaultValueProvider { get; }
+
+    /// <inheritdoc cref="Bound{T}.Value"/>
+    object? Value { get; set; }
+
+    /// <inheritdoc cref="Bound{T}.Clone"/>
+    IBound Clone();
 }
 
 /// <summary>
@@ -33,12 +77,14 @@ public sealed class Binding<T>
 ///     recreated as needed.
 /// </summary>
 /// <typeparam name="T">The kind of value.</typeparam>
-public sealed class Bound<T>
+public sealed class Bound<T> : IBound
 {
     /// <summary>
     ///     The shared binding instance this bound object is bound to.
     /// </summary>
     public Binding<T> Binding { get; }
+
+    IBinding IBound.Binding => Binding;
 
     /// <summary>
     ///     The name of this bound object, which should correspond to a property
@@ -51,10 +97,30 @@ public sealed class Bound<T>
     /// </summary>
     public Func<T> DefaultValueProvider { get; }
 
+    Func<object?> IBound.DefaultValueProvider => () => DefaultValueProvider();
+
     /// <summary>
     ///     The value held by this bound object.
     /// </summary>
     public T Value { get; set; }
+
+    object? IBound.Value
+    {
+        get => Value;
+
+        set
+        {
+            if (value == null)
+            {
+                // We have to accept nulls here.
+                Value = default(T)!;
+            }
+            else
+            {
+                Value = (T)value;
+            }
+        }
+    }
 
     /// <summary>
     ///     Initializes the template bound-object. 
@@ -107,6 +173,11 @@ public sealed class Bound<T>
         return new Bound<T>(DefaultValueProvider, Name, Binding);
     }
 
+    IBound IBound.Clone()
+    {
+        return Clone();
+    }
+
 #region Binding configuration
     /// <summary>
     ///     Configures the binding to reset to the provided value.
@@ -132,6 +203,60 @@ public sealed class Bound<T>
     public Bound<T> ResetToDefault()
     {
         Binding.ResetTo = b => b.DefaultValueProvider();
+        return this;
+    }
+
+    /// <summary>
+    ///     Configures the binding to save its value to a tag.
+    /// </summary>
+    public Bound<T> SaveTag(Binding<T>.SaveTagAction callback)
+    {
+        Binding.SaveTag = callback;
+        return this;
+    }
+
+    /// <summary>
+    ///     Configures the binding to save its value to a tag.
+    /// </summary>
+    public Bound<T> SaveTag(string name)
+    {
+        Binding.SaveTag = (b, tag) => tag[name] = b.Value;
+        return this;
+    }
+
+    /// <summary>
+    ///     Configures the binding to save its value to a tag.
+    /// </summary>
+    public Bound<T> SaveTag()
+    {
+        Binding.SaveTag = (b, tag) => tag[b.Name] = b.Value;
+        return this;
+    }
+
+    /// <summary>
+    ///     Configures the binding to load its value from a tag.
+    /// </summary>
+    public Bound<T> LoadTag(Binding<T>.LoadTagAction callback)
+    {
+        Binding.LoadTag = callback;
+        return this;
+    }
+
+    /// <summary>
+    ///     Configures the binding to load its value from a tag.
+    /// </summary>
+    public Bound<T> LoadTag(string name)
+    {
+        Binding.LoadTag = (b, tag) => b.Value = tag.Get<T>(name);
+        return this;
+    }
+
+    /// <summary>
+    ///     Configures the binding to load its value from a tag.
+    /// </summary>
+    public Bound<T> LoadTag()
+    {
+        Binding.LoadTag = (b, tag) => tag[b.Name] = b.Value;
         return this;
     }
 #endregion
