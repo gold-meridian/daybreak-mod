@@ -22,6 +22,11 @@ public interface IBoundDataProvider
     /// <inheritdoc cref="BoundDataProvider{TProvider}.Name"/>
     string Name { get; }
 
+    /// <summary>
+    ///     The full name, akin to <see cref="ModType.FullName"/>.
+    /// </summary>
+    string FullName => Mod.Name + '/' + Name;
+
     /// <inheritdoc cref="BoundDataProvider{TProvider}.Mod"/>
     Mod Mod { get; }
 

@@ -6,6 +6,7 @@ using Daybreak.Common.CodeAnalysis;
 using MonoMod.Utils;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Daybreak.Common.Features.Models;
 
@@ -80,6 +81,78 @@ internal sealed class PlayerDataProviderImpl : ModPlayer
             {
                 property.Binding.Reset(property);
             }
+        }
+    }
+
+    public override void SaveData(TagCompound tag)
+    {
+        base.SaveData(tag);
+
+        var exceptions = new List<Exception>();
+        var providers = Providers.ToArray();
+        var tags = providers.ToDictionary(x => x.FullName, _ => new TagCompound());
+
+        foreach (var provider in providers)
+        {
+            var fullName = provider.FullName;
+            var providerTag = tags[fullName];
+
+            try
+            {
+                foreach (var property in provider.Properties)
+                {
+                    property.Binding.SaveTag(property, providerTag);
+                }
+            }
+            catch (Exception e)
+            {
+                exceptions.Add(e);
+            }
+        }
+
+        foreach (var (name, providerTag) in tags)
+        {
+            tag[name] = providerTag;
+        }
+
+        if (exceptions.Count > 0)
+        {
+            throw new AggregateException("One or more errors occurred attempting to save player data. THIS IS NOT A DAYBREAK ERROR, please report to offending mods.", exceptions);
+        }
+    }
+
+    public override void LoadData(TagCompound tag)
+    {
+        base.LoadData(tag);
+
+        var exceptions = new List<Exception>();
+        var providers = Providers.ToArray();
+
+        foreach (var provider in providers)
+        {
+            var fullName = provider.FullName;
+
+            if (!tag.TryGet<TagCompound>(fullName, out var providerTag))
+            {
+                continue;
+            }
+
+            try
+            {
+                foreach (var property in provider.Properties)
+                {
+                    property.Binding.LoadTag(property, providerTag);
+                }
+            }
+            catch (Exception e)
+            {
+                exceptions.Add(e);
+            }
+        }
+
+        if (exceptions.Count > 0)
+        {
+            throw new AggregateException("One or more errors occurred attempting to load player data. THIS IS NOT A DAYBREAK ERROR, please report to offending mods.", exceptions);
         }
     }
 }
