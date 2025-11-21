@@ -1,0 +1,214 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Daybreak.Common.CodeAnalysis;
+using MonoMod.Utils;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
+
+namespace Daybreak.Common.Features.Models;
+
+/// <summary>
+///     A <see cref="BoundDataProvider{TProvider}"/> implemented for
+///     <see cref="Item"/> data.
+/// </summary>
+/// <typeparam name="TProvider">The self.</typeparam>
+public abstract class ItemDataProvider<TProvider> : BoundDataProvider<TProvider>
+    where TProvider : ItemDataProvider<TProvider>, new()
+{
+    /// <inheritdoc />
+    protected override void Load()
+    {
+        ItemDataProviderImpl.KnownDataProviders.Add(GetType(), this);
+    }
+
+    /// <inheritdoc />
+    protected override void Unload() { }
+}
+
+[ExpectCloneable(false)]
+internal sealed class ItemDataProviderImpl : GlobalItem
+{
+    /// <summary>
+    ///     Carries all known providers' template instances to create instanced
+    ///     data from.
+    /// </summary>
+    public static Dictionary<Type, IBoundDataProvider> KnownDataProviders { get; } = [];
+
+    // We specifically do not want to clone because we store a map of providers.
+    // We want to rebuild this map by hand.
+    protected override bool CloneNewInstances => false;
+
+    public override bool InstancePerEntity => true;
+
+    public Dictionary<Type, IBoundDataProvider> DataProviders { get; private set; } = [];
+
+    public IEnumerable<IBoundDataProvider> Providers => DataProviders.Values;
+
+    public override void Load()
+    {
+        base.Load();
+
+        // Assign the template instance's map to the static map so we can use it
+        // during initial NewInstance creation later.
+        DataProviders = KnownDataProviders;
+    }
+
+    public override GlobalItem NewInstance(Item entity)
+    {
+        var newInstance = (ItemDataProviderImpl)base.NewInstance(entity)!;
+        {
+            // Build a new map from the old one by cloning the template values
+            // into real instances.
+            newInstance.DataProviders.AddRange(
+                DataProviders.ToDictionary(
+                    x => x.Key,
+                    x => x.Value.Clone()
+                )
+            );
+        }
+
+        return newInstance;
+    }
+
+    /*
+    public override void ResetEffects()
+    {
+        base.ResetEffects();
+
+        foreach (var provider in Providers)
+        {
+            foreach (var property in provider.Properties)
+            {
+                property.Binding.Reset(property);
+            }
+        }
+    }
+    */
+
+    public override void SaveData(Item item, TagCompound tag)
+    {
+        base.SaveData(item, tag);
+
+        var exceptions = new List<Exception>();
+        var providers = Providers.ToArray();
+        var tags = providers.ToDictionary(x => x.FullName, _ => new TagCompound());
+
+        foreach (var provider in providers)
+        {
+            var fullName = provider.FullName;
+            var providerTag = tags[fullName];
+
+            try
+            {
+                foreach (var property in provider.Properties)
+                {
+                    property.Binding.SaveTag(property, providerTag);
+                }
+            }
+            catch (Exception e)
+            {
+                exceptions.Add(e);
+            }
+        }
+
+        foreach (var (name, providerTag) in tags)
+        {
+            tag[name] = providerTag;
+        }
+
+        if (exceptions.Count > 0)
+        {
+            throw new AggregateException("One or more errors occurred attempting to save Item data. THIS IS NOT A DAYBREAK ERROR, please report to offending mods.", exceptions);
+        }
+    }
+
+    public override void LoadData(Item item, TagCompound tag)
+    {
+        base.LoadData(item, tag);
+
+        var exceptions = new List<Exception>();
+        var providers = Providers.ToArray();
+
+        foreach (var provider in providers)
+        {
+            var fullName = provider.FullName;
+
+            if (!tag.TryGet<TagCompound>(fullName, out var providerTag))
+            {
+                continue;
+            }
+
+            try
+            {
+                foreach (var property in provider.Properties)
+                {
+                    property.Binding.LoadTag(property, providerTag);
+                }
+            }
+            catch (Exception e)
+            {
+                exceptions.Add(e);
+            }
+        }
+
+        if (exceptions.Count > 0)
+        {
+            throw new AggregateException("One or more errors occurred attempting to load Item data. THIS IS NOT A DAYBREAK ERROR, please report to offending mods.", exceptions);
+        }
+    }
+}
+
+/// <summary>
+///     Extensions to get data from Items.
+/// </summary>
+public static class ItemExtensions
+{
+    /// <summary>
+    ///     Extensions to get data from Items.
+    /// </summary>
+    extension(Item item)
+    {
+        /// <summary>
+        ///     Attempts to get data from the item.
+        ///     <br />
+        ///     Returns <see langword="true"/> if the data was present,
+        ///     otherwise <see langword="false"/>.
+        /// </summary>
+        public bool TryGet<T>([NotNullWhen(returnValue: true)] out T? data)
+            where T : ItemDataProvider<T>, new()
+        {
+            data = null;
+
+            if (!item.TryGetGlobalItem<ItemDataProviderImpl>(out var impl))
+            {
+                return false;
+            }
+
+            if (!impl.DataProviders.TryGetValue(typeof(T), out var provider))
+            {
+                return false;
+            }
+
+            if (provider is not T tProvider)
+            {
+                return false;
+            }
+
+            data = tProvider;
+            return true;
+        }
+
+        /// <summary>
+        ///     Gets data from the item, throwing if it isn't present.
+        /// </summary>
+        public T Get<T>()
+            where T : ItemDataProvider<T>, new()
+        {
+            item.TryGet<T>(out var data);
+            return data ?? throw new InvalidOperationException($"Cannot get item data: {typeof(T)}");
+        }
+    }
+}
