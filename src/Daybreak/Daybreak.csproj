@@ -14,4 +14,11 @@
         <Folder Include="Common\Features\Inventory\"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\..\Daybreak.CodeAnalysis\Daybreak.CodeAnalysis.csproj"
+                          PrivateAssets="All"
+                          ReferenceOutputAssembly="false"
+                          OutputItemType="Analyzer"/>
+    </ItemGroup>
+
 </Project>
