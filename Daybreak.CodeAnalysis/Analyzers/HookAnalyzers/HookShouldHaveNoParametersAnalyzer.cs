@@ -33,7 +33,7 @@ public sealed class HookShouldHaveNoParametersAnalyzer() : AbstractDiagnosticAna
                             return;
                         }
 
-                        var hasAnyLoadAttributes = attributes.Any(x => x.AttributeClass.InheritsFrom(onLoadAttributeSymbol));
+                        var hasAnyLoadAttributes = attributes.Any(x => x.AttributeClass.InheritsFrom(onLoadAttributeSymbol) || x.AttributeClass.InheritsFrom(onUnloadAttributeSymbol));
                         if (!hasAnyLoadAttributes)
                         {
                             return;

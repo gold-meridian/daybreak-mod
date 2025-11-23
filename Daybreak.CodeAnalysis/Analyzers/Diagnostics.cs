@@ -29,10 +29,20 @@ public static class Diagnostics
         isEnabledByDefault: true
     );
 
-    public static DiagnosticDescriptor HookReturnTypeDoesntMatch { get; } = new(
-        id: nameof(HookReturnTypeDoesntMatch),
-        title: "Target return type is invalid for hook",
-        messageFormat: "The return type of target method '{0}' is incompatible with the target hook '{1}'",
+    public static DiagnosticDescriptor InvalidHookReturnType { get; } = new(
+        id: nameof(InvalidHookReturnType),
+        title: "Target return type is invalid for the hook",
+        messageFormat: "The return type '{0}' of target method '{1}' is incompatible with the hook '{2}', expected '{3}'",
+        description: "Errors when the target method's return type is incompatible with the hook type; IL edits and detours must match while DAYBREAK-style mod loader return the type or <c>void</c>",
+        category: Categories.MAINTAINABILITY,
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true
+    );
+    
+    public static DiagnosticDescriptor InvalidHookReturnTypeOrVoid { get; } = new(
+        id: nameof(InvalidHookReturnTypeOrVoid),
+        title: "Target return type is invalid for the hook (permits void)",
+        messageFormat: "The return type '{0}' of target method '{1}' is incompatible with the hook '{2}', expected '{3}' (permits void)",
         description: "Errors when the target method's return type is incompatible with the hook type; IL edits and detours must match while DAYBREAK-style mod loader return the type or <c>void</c>",
         category: Categories.MAINTAINABILITY,
         defaultSeverity: DiagnosticSeverity.Error,

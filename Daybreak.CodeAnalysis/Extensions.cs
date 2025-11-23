@@ -20,5 +20,20 @@ internal static class Extensions
 
             return false;
         }
+        
+        public INamedTypeSymbol? FindBaseOpenGeneric(INamedTypeSymbol openGenericBaseType)
+        {
+            while (symbol is not null)
+            {
+                if (SymbolEqualityComparer.Default.Equals(symbol.OriginalDefinition, openGenericBaseType))
+                {
+                    return symbol;
+                }
+                
+                symbol = symbol.BaseType;
+            }
+
+            return null;
+        }
     }
 }
