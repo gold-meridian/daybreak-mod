@@ -60,7 +60,7 @@ public sealed class InvalidHookParametersAnalyzer() : AbstractDiagnosticAnalyzer
         bool permitsVoid;
         string hookName;
         ITypeSymbol expectedReturnType;
-        
+
         // attribute.FindBaseOpenGeneric(subscribesTo1) is { IsGenericType: true } closedGeneric
         var closedGeneric = attribute.GetClosedGenericAttribute(attributes);
 
@@ -68,28 +68,51 @@ public sealed class InvalidHookParametersAnalyzer() : AbstractDiagnosticAnalyzer
         {
             case HookKind.None:
                 return;
-            
+
             case HookKind.OnLoad:
                 permitsVoid = false;
                 expectedReturnType = voidSymbol;
                 hookName = "load hook";
                 break;
-            
+
             case HookKind.OnUnload:
                 permitsVoid = false;
                 expectedReturnType = voidSymbol;
                 hookName = "unload hook";
                 break;
 
-            // TODO
             case HookKind.IlEdit:
-                return;
+            {
+                // TODO
+                var hookType = closedGeneric?.TypeArguments.First();
+                if (hookType?.GetTypeMembers("Definition").FirstOrDefault() is not { DelegateInvokeMethod: { } invoke })
+                {
+                    return;
+                }
 
-            // TODO
+                permitsVoid = false;
+                expectedReturnType = voidSymbol;
+                hookName = $"IL edit hook: {hookType.Name}";
+                break;
+            }
+
             case HookKind.Detour:
-                return;
+            {
+                // TODO
+                var hookType = closedGeneric?.TypeArguments.First();
+                if (hookType?.GetTypeMembers("Definition").FirstOrDefault() is not { DelegateInvokeMethod: { } invoke })
+                {
+                    return;
+                }
+
+                permitsVoid = false;
+                expectedReturnType = invoke.ReturnType;
+                hookName = $"detour hook: {hookType.Name}";
+                break;
+            }
 
             case HookKind.Subscriber:
+            {
                 var hookType = closedGeneric?.TypeArguments.First();
                 if (hookType?.GetTypeMembers("Definition").FirstOrDefault() is not { DelegateInvokeMethod: { } invoke })
                 {
@@ -100,6 +123,7 @@ public sealed class InvalidHookParametersAnalyzer() : AbstractDiagnosticAnalyzer
                 expectedReturnType = invoke.ReturnType;
                 hookName = $"event-subscriber hook: {hookType.Name}";
                 break;
+            }
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(hookKind), hookKind, null);
