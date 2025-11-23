@@ -5,15 +5,14 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Daybreak.CodeAnalysis;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class HookMustBeStaticAnalyzer() : AbstractDiagnosticAnalyzer(Diagnostics.HookMustBeStatic)
+public sealed class InvalidHookStackingAnalyzer() : AbstractDiagnosticAnalyzer(Diagnostics.InvalidHookStacking)
 {
     protected override void InitializeWorker(AnalysisContext ctx)
     {
         ctx.RegisterCompilationStartAction(
             static startCtx =>
             {
-                var subscribesToAttributeSymbol = startCtx.Compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.SubscribesToAttribute");
-                if (subscribesToAttributeSymbol is null)
+                if (!startCtx.Compilation.TryGetHookAttributes(out var attrs))
                 {
                     return;
                 }
@@ -26,25 +25,34 @@ public sealed class HookMustBeStaticAnalyzer() : AbstractDiagnosticAnalyzer(Diag
                             return;
                         }
 
-                        if (symbol.IsStatic)
-                        {
-                            return;
-                        }
-
                         var attributes = symbol.GetAttributes();
                         if (attributes.Length == 0)
                         {
                             return;
                         }
 
-                        var hasAnyHookAttributes = attributes.Any(x => x.AttributeClass.InheritsFrom(subscribesToAttributeSymbol));
-                        if (!hasAnyHookAttributes)
+                        var hookKinds = attributes
+                                       .Select(x => x.AttributeClass.GetHookKind(attrs))
+                                       .Where(x => x != HookKind.None)
+                                       .ToArray();
+
+                        if (hookKinds.Length < 2)
+                        {
+                            return;
+                        }
+
+                        var legal = hookKinds.Distinct().All(x => x.ValidateMultiple(hookKinds));
+                        if (legal)
                         {
                             return;
                         }
 
                         symbolCtx.ReportDiagnostic(
-                            Diagnostic.Create(Diagnostics.HookMustBeStatic, symbol.Locations[0], symbol.Name)
+                            Diagnostic.Create(
+                                Diagnostics.InvalidHookStacking,
+                                symbol.Locations[0],
+                                symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
+                            )
                         );
                     },
                     SymbolKind.Method

@@ -5,16 +5,16 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Daybreak.CodeAnalysis;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class HookShouldHaveNoParametersAnalyzer() : AbstractDiagnosticAnalyzer(Diagnostics.HookShouldHaveNoParameters)
+public sealed class HookShouldHaveNoParametersAnalyzer() : AbstractDiagnosticAnalyzer(Diagnostics.InvalidHookParametersNone)
 {
     protected override void InitializeWorker(AnalysisContext ctx)
     {
         ctx.RegisterCompilationStartAction(
             static startCtx =>
             {
-                var onLoadAttributeSymbol = startCtx.Compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.OnLoadAttribute");
-                var onUnloadAttributeSymbol = startCtx.Compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.OnUnloadAttribute");
-                if (onLoadAttributeSymbol is null || onUnloadAttributeSymbol is null)
+                if (
+                    startCtx.Compilation.OnLoad is not { } onLoad
+                 || startCtx.Compilation.OnUnload is not { } onUnload)
                 {
                     return;
                 }
@@ -33,7 +33,7 @@ public sealed class HookShouldHaveNoParametersAnalyzer() : AbstractDiagnosticAna
                             return;
                         }
 
-                        var hasAnyLoadAttributes = attributes.Any(x => x.AttributeClass.InheritsFrom(onLoadAttributeSymbol) || x.AttributeClass.InheritsFrom(onUnloadAttributeSymbol));
+                        var hasAnyLoadAttributes = attributes.Any(x => x.AttributeClass.InheritsFrom(onLoad) || x.AttributeClass.InheritsFrom(onUnload));
                         if (!hasAnyLoadAttributes)
                         {
                             return;
@@ -45,7 +45,7 @@ public sealed class HookShouldHaveNoParametersAnalyzer() : AbstractDiagnosticAna
                         }
 
                         symbolCtx.ReportDiagnostic(
-                            Diagnostic.Create(Diagnostics.HookShouldHaveNoParameters, symbol.Locations[0], symbol.Name)
+                            Diagnostic.Create(Diagnostics.InvalidHookParametersNone, symbol.Locations[0], symbol.Name)
                         );
                     },
                     SymbolKind.Method

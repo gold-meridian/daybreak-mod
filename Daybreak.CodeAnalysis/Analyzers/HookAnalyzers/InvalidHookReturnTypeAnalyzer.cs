@@ -13,11 +13,8 @@ public sealed class InvalidHookReturnTypeAnalyzer() : AbstractDiagnosticAnalyzer
             static startCtx =>
             {
                 var voidSymbol = startCtx.Compilation.GetSpecialType(SpecialType.System_Void);
-                // var subscribesToAttributeSymbol = startCtx.Compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.SubscribesToAttribute");
-                var subscribesToAttributeSymbol1 = startCtx.Compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.SubscribesToAttribute`1");
-                var onLoadAttributeSymbol = startCtx.Compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.OnLoadAttribute");
-                var onUnloadAttributeSymbol = startCtx.Compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.OnUnloadAttribute");
-                if (subscribesToAttributeSymbol1 is null || onLoadAttributeSymbol is null || onUnloadAttributeSymbol is null)
+
+                if (!startCtx.Compilation.TryGetHookAttributes(out var attrs))
                 {
                     return;
                 }
@@ -46,19 +43,19 @@ public sealed class InvalidHookReturnTypeAnalyzer() : AbstractDiagnosticAnalyzer
                             string hookName;
                             ITypeSymbol expectedReturnType;
 
-                            if (attribute.AttributeClass.InheritsFrom(onLoadAttributeSymbol))
+                            if (attribute.AttributeClass.InheritsFrom(onLoad))
                             {
                                 permitsVoid = false;
                                 expectedReturnType = voidSymbol;
                                 hookName = "load hook";
                             }
-                            else if (attribute.AttributeClass.InheritsFrom(onUnloadAttributeSymbol))
+                            else if (attribute.AttributeClass.InheritsFrom(onUnload))
                             {
                                 permitsVoid = false;
                                 expectedReturnType = voidSymbol;
                                 hookName = "unload hook";
                             }
-                            else if (attribute.AttributeClass.FindBaseOpenGeneric(subscribesToAttributeSymbol1) is { IsGenericType: true } closedGeneric)
+                            else if (attribute.AttributeClass.FindBaseOpenGeneric(subscribesTo1) is { IsGenericType: true } closedGeneric)
                             {
                                 var hookType = closedGeneric.TypeArguments.First();
                                 if (hookType.GetTypeMembers("Definition").FirstOrDefault() is not { DelegateInvokeMethod: { } invoke })
@@ -68,7 +65,7 @@ public sealed class InvalidHookReturnTypeAnalyzer() : AbstractDiagnosticAnalyzer
 
                                 permitsVoid = !SymbolEqualityComparer.Default.Equals(invoke.ReturnType, voidSymbol);
                                 expectedReturnType = invoke.ReturnType;
-                                hookName = $"auto-generated hook: {hookType.Name}";
+                                hookName = $"event-subscriber hook: {hookType.Name}";
                             }
                             else
                             {

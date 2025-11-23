@@ -12,6 +12,12 @@ internal interface IHasSide
 }
 
 /// <summary>
+///     Shared between all hooking attributes to provide a common base for
+///     analysis.
+/// </summary>
+public abstract class BaseHookAttribute : Attribute;
+
+/// <summary>
 ///     Automatically calls the decorated function on load.
 ///     <br />
 ///     If the method is instanced, it expects to be part of a parent type
@@ -30,7 +36,7 @@ internal interface IHasSide
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class OnLoadAttribute : Attribute, IHasSide
+public sealed class OnLoadAttribute : BaseHookAttribute, IHasSide
 {
     /// <summary>
     ///     The side to load this on.
@@ -57,7 +63,7 @@ public sealed class OnLoadAttribute : Attribute, IHasSide
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class OnUnloadAttribute : Attribute, IHasSide
+public sealed class OnUnloadAttribute : BaseHookAttribute, IHasSide
 {
     /// <summary>
     ///     The side to load this on.
@@ -69,7 +75,7 @@ public sealed class OnUnloadAttribute : Attribute, IHasSide
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public abstract class SubscribesToAttribute : Attribute, IHasSide
+public abstract class SubscribesToAttribute : BaseHookAttribute, IHasSide
 {
     /// <summary>
     ///     The side to load this on.
@@ -115,3 +121,11 @@ public class SubscribesToAttribute<T> : SubscribesToAttribute
         return typeof(T);
     }
 }
+
+public abstract class IlEditAttribute : BaseHookAttribute;
+
+public class IlEditAttribute<T> : IlEditAttribute;
+
+public abstract class DetourAttribute : BaseHookAttribute;
+
+public class DetourAttribute<T> : BaseHookAttribute;
