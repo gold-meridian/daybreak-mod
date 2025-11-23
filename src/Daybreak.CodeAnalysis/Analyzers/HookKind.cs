@@ -24,9 +24,14 @@ public enum HookKind : byte
     Subscriber,
     
     /// <summary>
-    ///     DAYBREAK <c>OnLoad</c> and <c>OnUnload</c>.
+    ///     <c>OnLoad</c> attribute.
     /// </summary>
-    DaybreakLoader,
+    OnLoad,
+    
+    /// <summary>
+    ///     <c>OnUnload</c> attribute.
+    /// </summary>
+    OnUnload,
 }
 
 public enum HookInstancing
@@ -50,7 +55,8 @@ public static class HookKindExtensions
                     HookKind.IlEdit => HookInstancing.Both,
                     HookKind.Detour => HookInstancing.Both,
                     HookKind.Subscriber => HookInstancing.Both,
-                    HookKind.DaybreakLoader => HookInstancing.Both,
+                    HookKind.OnLoad => HookInstancing.Both,
+                    HookKind.OnUnload => HookInstancing.Both,
                     _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null),
                 };
             }
@@ -66,7 +72,8 @@ public static class HookKindExtensions
                     HookKind.IlEdit => true,
                     HookKind.Detour => false,
                     HookKind.Subscriber => false,
-                    HookKind.DaybreakLoader => false,
+                    HookKind.OnLoad => false,
+                    HookKind.OnUnload => false,
                     _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null),
                 };
             }

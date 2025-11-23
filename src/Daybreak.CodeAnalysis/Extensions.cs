@@ -35,22 +35,22 @@ internal static class Extensions
 
             return null;
         }
-        
+
         public HookKind GetHookKind(HookAttributes attrs)
         {
             if (symbol is null)
             {
                 return HookKind.None;
             }
-            
-            if (symbol.InheritsFrom(attrs.IlEdit))
+
+            if (symbol.InheritsFrom(attrs.OnLoad))
             {
-                return HookKind.IlEdit;
+                return HookKind.OnLoad;
             }
-            
-            if (symbol.InheritsFrom(attrs.Detour))
+
+            if (symbol.InheritsFrom(attrs.OnUnload))
             {
-                return HookKind.Detour;
+                return HookKind.OnUnload;
             }
 
             if (symbol.InheritsFrom(attrs.SubscribesTo))
@@ -58,7 +58,26 @@ internal static class Extensions
                 return HookKind.Subscriber;
             }
 
+            if (symbol.InheritsFrom(attrs.IlEdit))
+            {
+                return HookKind.IlEdit;
+            }
+
+            if (symbol.InheritsFrom(attrs.Detour))
+            {
+                return HookKind.Detour;
+            }
+
             return HookKind.None;
+        }
+
+        public INamedTypeSymbol? GetClosedGenericAttribute(HookAttributes attributes)
+        {
+            var closedGeneric = symbol.FindBaseOpenGeneric(attributes.SubscribesTo1)
+                             ?? symbol.FindBaseOpenGeneric(attributes.IlEdit1)
+                             ?? symbol.FindBaseOpenGeneric(attributes.Detour1);
+
+            return (closedGeneric?.IsGenericType ?? false) ? closedGeneric : null;
         }
     }
 
