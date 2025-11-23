@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -7,7 +8,13 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Daybreak.CodeAnalysis;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class InvalidHookParametersAnalyzer() : AbstractDiagnosticAnalyzer(Diagnostics.InvalidHookParameters, Diagnostics.InvalidHookReturnType, Diagnostics.InvalidHookReturnTypeOrVoid)
+public sealed class InvalidHookParametersAnalyzer() :
+    AbstractDiagnosticAnalyzer(
+        Diagnostics.InvalidHookParameters,
+        Diagnostics.InvalidHookParametersNone,
+        Diagnostics.InvalidHookReturnType,
+        Diagnostics.InvalidHookReturnTypeOrVoid
+    )
 {
     protected override void InitializeWorker(AnalysisContext ctx)
     {
@@ -37,7 +44,7 @@ public sealed class InvalidHookParametersAnalyzer() : AbstractDiagnosticAnalyzer
 
                         // Find the first valid one.  Other analyzers will error
                         // if there are multiple and they're incompatible.
-                        var (attribute, hookKind) = attributes.Select(x => (x.AttributeClass, hookKind: x.AttributeClass.GetHookKind(attrs))).FirstOrDefault(x => x.AttributeClass is not null && x.hookKind != HookKind.None);
+                        var (attribute, hookKind) = attributes.GetFirstHookAttribute(attrs);
                         if (attribute is null || hookKind == HookKind.None)
                         {
                             return;
@@ -85,7 +92,7 @@ public sealed class InvalidHookParametersAnalyzer() : AbstractDiagnosticAnalyzer
             {
                 // TODO
                 var hookType = closedGeneric?.TypeArguments.First();
-                if (hookType?.GetTypeMembers("Definition").FirstOrDefault() is not { DelegateInvokeMethod: { } invoke })
+                if (hookType?.GetTypeMembers("Definition").FirstOrDefault() is not { DelegateInvokeMethod: not null })
                 {
                     return;
                 }
@@ -121,7 +128,7 @@ public sealed class InvalidHookParametersAnalyzer() : AbstractDiagnosticAnalyzer
 
                 permitsVoid = !SymbolEqualityComparer.Default.Equals(invoke.ReturnType, voidSymbol);
                 expectedReturnType = invoke.ReturnType;
-                hookName = $"event-subscriber hook: {hookType.Name}";
+                hookName = $"event subscriber: {hookType.Name}";
                 break;
             }
 
@@ -150,17 +157,165 @@ public sealed class InvalidHookParametersAnalyzer() : AbstractDiagnosticAnalyzer
         }
     }
 
-    private static void CheckParameters(SymbolAnalysisContext symbolCtx, IMethodSymbol symbol, HookAttributes attributes, INamedTypeSymbol attribute, HookKind hookKind) { }
+    private static void CheckParameters(SymbolAnalysisContext symbolCtx, IMethodSymbol symbol, HookAttributes attributes, INamedTypeSymbol attribute, HookKind hookKind)
+    {
+        var closedGeneric = attribute.GetClosedGenericAttribute(attributes);
+        if (closedGeneric is null)
+        {
+            return;
+        }
+
+        var methodParams = symbol.Parameters;
+
+        switch (hookKind)
+        {
+            case HookKind.None:
+                return;
+
+            // TODO
+            case HookKind.IlEdit:
+                break;
+
+            // TODO
+            case HookKind.Detour:
+                break;
+
+            case HookKind.Subscriber:
+            {
+                var hookType = closedGeneric.TypeArguments.FirstOrDefault();
+                if (hookType?.GetTypeMembers("Definition").FirstOrDefault() is not { DelegateInvokeMethod: { } invoke } delegateType)
+                {
+                    return;
+                }
+
+                var delegateParams = invoke.Parameters;
+
+                if (!ParametersCompatible(hookKind, methodParams, delegateParams))
+                {
+                    symbolCtx.ReportDiagnostic(
+                        Diagnostic.Create(
+                            Diagnostics.InvalidHookParameters,
+                            symbol.Locations.First(),
+                            symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
+                            $"event subscriber: ${delegateType.Name}"
+                        )
+                    );
+                }
+
+                break;
+            }
+
+            case HookKind.OnLoad:
+            case HookKind.OnUnload:
+                if (!ParametersCompatible(hookKind, methodParams, ImmutableArray<IParameterSymbol>.Empty))
+                {
+                    symbolCtx.ReportDiagnostic(
+                        Diagnostic.Create(
+                            Diagnostics.InvalidHookParametersNone,
+                            symbol.Locations.First(),
+                            symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
+                            hookKind == HookKind.OnLoad ? "load hook" : "unload hook"
+                        )
+                    );
+                }
+
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(hookKind), hookKind, null);
+        }
+    }
 
     private static bool ParametersCompatible(
+        HookKind hookKind,
         ImmutableArray<IParameterSymbol> methodParams,
         ImmutableArray<IParameterSymbol> delegateParams
     )
     {
-        // Sort of an invalid case, but whatever.
-        if (delegateParams.Length == 0)
+        switch (hookKind)
         {
-            return methodParams.Length == 0;
+            case HookKind.None:
+                return true;
+
+            case HookKind.IlEdit:
+            case HookKind.Detour:
+                return true; // TODO
+
+            case HookKind.Subscriber:
+            {
+                // Should never happen!!
+                if (delegateParams.Length < 2)
+                {
+                    return true;
+                }
+
+                return MatchAllInOrder(methodParams, delegateParams)
+                    || MatchOmitting(methodParams, delegateParams, 0)
+                    || MatchOmitting(methodParams, delegateParams, 1)
+                    || MatchOmitting(methodParams, delegateParams, 0, 1);
+            }
+
+            case HookKind.OnLoad:
+            case HookKind.OnUnload:
+            {
+                return methodParams.Length == 0;
+            }
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(hookKind), hookKind, null);
         }
+    }
+
+    private static bool MatchAllInOrder(
+        ImmutableArray<IParameterSymbol> methodParams,
+        ImmutableArray<IParameterSymbol> delegateParams
+    )
+    {
+        if (methodParams.Length != delegateParams.Length)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < methodParams.Length; i++)
+        {
+            if (!SymbolEqualityComparer.Default.Equals(methodParams[i].Type, delegateParams[i].Type))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool MatchOmitting(
+        ImmutableArray<IParameterSymbol> methodParams,
+        ImmutableArray<IParameterSymbol> delegateParams,
+        params int[] indicesToOmit
+    )
+    {
+        var expected = new List<IParameterSymbol>(delegateParams.Length);
+
+        for (var i = 0; i < delegateParams.Length; i++)
+        {
+            if (!indicesToOmit.Contains(i))
+            {
+                expected.Add(delegateParams[i]);
+            }
+        }
+
+        if (methodParams.Length != expected.Count)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < methodParams.Length; i++)
+        {
+            if (!SymbolEqualityComparer.Default.Equals(methodParams[i].Type, expected[i].Type))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

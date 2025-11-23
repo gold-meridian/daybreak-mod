@@ -11,7 +11,7 @@ public static class Diagnostics
 
     public static DiagnosticDescriptor HookInstanceMismatch { get; } = new(
         id: nameof(HookInstanceMismatch),
-        title: "Target method should be {1}",
+        title: "Target method instancing mismatch",
         messageFormat: "The target method '{0}' must be {1} to be bound to the hook",
         description: "Errors when the target method is either static or instanced while the hook expects the other",
         category: Categories.MAINTAINABILITY,
@@ -32,7 +32,7 @@ public static class Diagnostics
     public static DiagnosticDescriptor InvalidHookParameters { get; } = new(
         id: nameof(InvalidHookParameters),
         title: "Target parameters are invalid for hook",
-        messageFormat: "The signature of target method '{0}' is incompatible with the target hook '{1}'",
+        messageFormat: "The signature of the target method '{0}' is incompatible with the target hook '{1}'",
         description: "Errors when the target method's parameters are incompatible with the hook type; IL edits and detours may omit <c>orig</c> while DAYBREAK-style mod loader may omit <c>orig</c> and <c>self</c>",
         category: Categories.MAINTAINABILITY,
         defaultSeverity: DiagnosticSeverity.Error,
@@ -42,7 +42,7 @@ public static class Diagnostics
     public static DiagnosticDescriptor InvalidHookParametersNone { get; } = new(
         id: nameof(InvalidHookParametersNone),
         title: "Target method should have no parameters",
-        messageFormat: "The target method '{0}' is not allowed to have any parameters",
+        messageFormat: "The signature of the target method '{0}' is incompatible with the target hook '{1}'; it should have no parameters",
         description: "Errors when the the target is bound to an <c>OnLoad</c> or an <c>OnUnload</c> hook and attempts to include parameters",
         category: Categories.MAINTAINABILITY,
         defaultSeverity: DiagnosticSeverity.Error,

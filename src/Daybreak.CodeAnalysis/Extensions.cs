@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using System.Linq;
+using Microsoft.CodeAnalysis;
 
 namespace Daybreak.CodeAnalysis;
 
@@ -97,9 +99,9 @@ internal static class Extensions
 
         public INamedTypeSymbol? IlEdit1 => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.IlEditAttribute`1");
 
-        public INamedTypeSymbol? Detour => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.IlEditAttribute");
+        public INamedTypeSymbol? Detour => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.DetourAttribute");
 
-        public INamedTypeSymbol? Detour1 => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.IlEditAttribute`1");
+        public INamedTypeSymbol? Detour1 => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.DetourAttribute`1");
 
         public bool TryGetHookAttributes(out HookAttributes attributes)
         {
@@ -131,6 +133,14 @@ internal static class Extensions
                 detour1
             );
             return true;
+        }
+    }
+
+    extension(ImmutableArray<AttributeData> attributes)
+    {
+        public (INamedTypeSymbol? AttributeClass, HookKind hookKind) GetFirstHookAttribute(HookAttributes attrs)
+        {
+            return attributes.Select(x => (x.AttributeClass, hookKind: x.AttributeClass.GetHookKind(attrs))).FirstOrDefault(x => x.AttributeClass is not null && x.hookKind != HookKind.None);
         }
     }
 }

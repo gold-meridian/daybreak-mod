@@ -1,4 +1,5 @@
 using Daybreak.Common.Features.Authorship;
+using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Features.ModPanel;
 using Daybreak.Content.UI;
 using Terraria;
@@ -19,6 +20,43 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
         MusicAutoloadingEnabled = false;
     }
 
+    [ModSystemHooks.AddRecipeGroups]
+    static void A(ModSystemHooks.AddRecipeGroups.Original orig)
+    {
+        
+    }
+    
+    [ModSystemHooks.AddRecipeGroups]
+    static void A(ModSystem self)
+    {
+        
+    }
+    
+    [ModSystemHooks.AddRecipeGroups]
+    static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self)
+    {
+        
+    }
+    
+    [ModSystemHooks.AddRecipeGroups]
+    static void A(ModSystem self, ModSystemHooks.AddRecipeGroups.Original orig)
+    {
+        
+    }
+    
+    [ModSystemHooks.AddRecipeGroups]
+    static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self, int invalid)
+    {
+        
+    }
+
+    [ModSystemHooks.CanWorldBePlayed]
+    int B()
+    {
+        
+    }
+
+    
     UIButton<string> IHasCustomModConfigButton.CreateModConfigButton(UIButton<string> button)
     {
         var originalText = button.Text;
