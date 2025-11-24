@@ -360,7 +360,7 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
         if (!original && method.ReturnType.FullName != typeof(void).FullName)
         {
-            sb.AppendLine($"        [return: SpeciallyPermitsVoidForGeneratedHooks]");
+            sb.AppendLine($"        [return: PermitsVoidInvokeParameterWithParameters(\"orig\")]");
         }
 
         sb.Append($"        public delegate {GetFullTypeNameOrCSharpKeyword(method.ReturnType, includeRefPrefix: true)} {name}(");

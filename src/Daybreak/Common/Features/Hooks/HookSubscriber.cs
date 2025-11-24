@@ -13,7 +13,21 @@ namespace Daybreak.Common.Features.Hooks;
 /// </summary>
 public static class HookSubscriber
 {
-    internal static void HandleSubscriber(
+    /// <summary>
+    ///     Context used to generate void-permissive return handlers.
+    /// </summary>
+    public readonly record struct ReturnExpressionContext(
+        ParameterInfo[] EventParameters,
+        ParameterExpression[] EventParameterExpressions,
+        MethodCallExpression CallExpression
+    );
+
+    /// <summary>
+    ///     Handles wrapping a method per <see cref="BuildWrapper"/> and
+    ///     subscribing that wrapper to an event given by
+    ///     <paramref name="hookDefinition"/>.
+    /// </summary>
+    public static void HandleSubscriber(
         BaseHookAttribute hookDefinition,
         MethodInfo bindingMethod,
         object? instance
@@ -32,31 +46,48 @@ public static class HookSubscriber
         eventInfo.AddEventHandler(null, wrapper);
     }
 
+    /// <summary>
+    ///     Builds an invocable delegate which wraps the given
+    ///     <see cref="bindingMethod"/>.  This wrapped delegate accounts for
+    ///     <see cref="OmittableAttribute"/>,
+    ///     <see cref="OriginalNameAttribute"/>, and
+    ///     <see cref="AbstractPermitsVoidAttribute"/> to build a new delegate
+    ///     which can be invoked with the parameters of
+    ///     <see cref="invokeMethod"/>.
+    /// </summary>
     public static Delegate BuildWrapper(
         Type delegateType,
-        MethodInfo eventInvoke,
+        MethodInfo invokeMethod,
         MethodInfo bindingMethod,
         object? instance
     )
     {
-        var eventParameters = eventInvoke.GetParameters();
-        var eventParameterExpressions = eventParameters
-                                       .Select(x => Expression.Parameter(x.ParameterType, x.Name))
-                                       .ToArray();
+        var eventParams = invokeMethod.GetParameters();
+        var eventParamExprs = eventParams
+                             .Select(x => Expression.Parameter(x.ParameterType, x.Name))
+                             .ToArray();
 
-        var targetParameters = bindingMethod.GetParameters();
+        var targetParams = bindingMethod.GetParameters();
 
-        var arguments = new List<Expression>();
-        for (var i = 0; i < eventParameterExpressions.Length; i++)
+        var arguments = new List<Expression>(targetParams.Length);
+        foreach (var targetParam in targetParams)
         {
-            var argExpr = eventParameterExpressions[i];
+            var name = targetParam.GetCustomAttribute<OriginalNameAttribute>() is { } origName
+                ? origName.Name
+                : targetParam.Name;
 
-            arguments.Add(argExpr);
+            var mappedParam = eventParams.FirstOrDefault(x => x.Name == name);
+            if (mappedParam is null || mappedParam.ParameterType != targetParam.ParameterType)
+            {
+                throw new InvalidOperationException("Incompatible hook-binding signatures");
+            }
+
+            arguments.Add(eventParamExprs[Array.IndexOf(eventParams, mappedParam)]);
         }
 
         var callExpr = Expression.Call(bindingMethod.IsStatic ? null : Expression.Constant(instance), bindingMethod, arguments);
 
-        var eventReturn = eventInvoke.ReturnType;
+        var eventReturn = invokeMethod.ReturnType;
         var bindingReturn = bindingMethod.ReturnType;
 
         Expression bodyExpr;
@@ -74,19 +105,22 @@ public static class HookSubscriber
             }
             else
             {
-                var origExpr = eventParameterExpressions[0];
-                var origInvoke = eventParameters[0].ParameterType.GetMethod("Invoke")
-                              ?? throw new InvalidOperationException("Could not get Invoke method of orig");
-                var origCall = Expression.Call(origExpr, origInvoke, eventParameterExpressions.Skip(2));
+                if (bindingReturn.GetCustomAttribute<AbstractPermitsVoidAttribute>() is not { } permitsVoidHandler)
+                {
+                    throw new InvalidOperationException("Incompatible hook-binding return type");
+                }
 
-                bodyExpr = Expression.Block(
-                    callExpr,
-                    origCall
+                bodyExpr = permitsVoidHandler.ModifyExpression(
+                    new ReturnExpressionContext(
+                        eventParams,
+                        eventParamExprs,
+                        callExpr
+                    )
                 );
             }
         }
 
-        var lambda = Expression.Lambda(delegateType, bodyExpr, eventParameterExpressions);
+        var lambda = Expression.Lambda(delegateType, bodyExpr, eventParamExprs);
         return lambda.Compile();
     }
 }

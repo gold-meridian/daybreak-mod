@@ -88,7 +88,7 @@ public static partial class GlobalBuffHooks
             int buffIndex
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalBuff self,
@@ -118,7 +118,7 @@ public static partial class GlobalBuffHooks
             int buffIndex
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalBuff self,
@@ -231,7 +231,7 @@ public static partial class GlobalBuffHooks
             ref Terraria.DataStructures.BuffDrawParams drawParams
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalBuff self,
@@ -288,7 +288,7 @@ public static partial class GlobalBuffHooks
             int buffIndex
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalBuff self,

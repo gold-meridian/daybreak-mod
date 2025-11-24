@@ -1010,7 +1010,7 @@ public static partial class ModSystemHooks
             Terraria.IO.WorldFileData worldFileData
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.ModSystem self,
@@ -1036,7 +1036,7 @@ public static partial class ModSystemHooks
             Terraria.IO.WorldFileData worldData
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate string Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.ModSystem self,
@@ -1063,7 +1063,7 @@ public static partial class ModSystemHooks
             int playerNumber
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.ModSystem self,
@@ -1100,7 +1100,7 @@ public static partial class ModSystemHooks
             int number7
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.ModSystem self,

@@ -185,7 +185,7 @@ public static partial class GlobalItemHooks
             Terraria.Utilities.UnifiedRandom rand
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate int Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -212,7 +212,7 @@ public static partial class GlobalItemHooks
             Terraria.Utilities.UnifiedRandom rand
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -239,7 +239,7 @@ public static partial class GlobalItemHooks
             int pre
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -265,7 +265,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -291,7 +291,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -396,7 +396,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate float Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -422,7 +422,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate float Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -448,7 +448,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate float Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -643,7 +643,7 @@ public static partial class GlobalItemHooks
             int potionDelay
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -722,7 +722,7 @@ public static partial class GlobalItemHooks
             Terraria.Item bait
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -747,7 +747,7 @@ public static partial class GlobalItemHooks
             Terraria.Item item
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -851,7 +851,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -913,7 +913,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -941,7 +941,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -969,7 +969,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -997,7 +997,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1078,7 +1078,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1145,7 +1145,7 @@ public static partial class GlobalItemHooks
             float knockback
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1234,7 +1234,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1318,7 +1318,7 @@ public static partial class GlobalItemHooks
             Terraria.NPC target
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1347,7 +1347,7 @@ public static partial class GlobalItemHooks
             Terraria.NPC target
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1436,7 +1436,7 @@ public static partial class GlobalItemHooks
             Terraria.Player target
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1521,7 +1521,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1572,7 +1572,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1673,7 +1673,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1883,7 +1883,7 @@ public static partial class GlobalItemHooks
             Terraria.Item legs
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate string Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -1936,7 +1936,7 @@ public static partial class GlobalItemHooks
             int legs
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate string Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2068,7 +2068,7 @@ public static partial class GlobalItemHooks
             Terraria.Item item
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2143,7 +2143,7 @@ public static partial class GlobalItemHooks
             Terraria.Item source
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2169,7 +2169,7 @@ public static partial class GlobalItemHooks
             Terraria.Item source
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2250,7 +2250,7 @@ public static partial class GlobalItemHooks
             ref bool canApplyDiscount
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2276,7 +2276,7 @@ public static partial class GlobalItemHooks
             Terraria.Item item
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2478,7 +2478,7 @@ public static partial class GlobalItemHooks
             bool inUse
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2582,7 +2582,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2608,7 +2608,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2634,7 +2634,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2660,7 +2660,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2686,7 +2686,7 @@ public static partial class GlobalItemHooks
             Microsoft.Xna.Framework.Color lightColor
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate Microsoft.Xna.Framework.Color? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2717,7 +2717,7 @@ public static partial class GlobalItemHooks
             int whoAmI
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2789,7 +2789,7 @@ public static partial class GlobalItemHooks
             float scale
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2857,7 +2857,7 @@ public static partial class GlobalItemHooks
             int type
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate Microsoft.Xna.Framework.Vector2? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2881,7 +2881,7 @@ public static partial class GlobalItemHooks
             int type
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate Microsoft.Xna.Framework.Vector2? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2908,7 +2908,7 @@ public static partial class GlobalItemHooks
             bool modded
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -2937,7 +2937,7 @@ public static partial class GlobalItemHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -3017,7 +3017,7 @@ public static partial class GlobalItemHooks
             int type
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -3091,7 +3091,7 @@ public static partial class GlobalItemHooks
             ref int y
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
@@ -3145,7 +3145,7 @@ public static partial class GlobalItemHooks
             ref int yOffset
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,

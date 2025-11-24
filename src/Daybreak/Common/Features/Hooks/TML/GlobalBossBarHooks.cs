@@ -25,7 +25,7 @@ public static partial class GlobalBossBarHooks
             ref Terraria.DataStructures.BossBarDrawParams drawParams
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalBossBar self,

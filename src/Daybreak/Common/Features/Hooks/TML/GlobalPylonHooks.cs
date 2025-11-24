@@ -33,7 +33,7 @@ public static partial class GlobalPylonHooks
             ref float selectedScale
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalPylon self,
@@ -66,7 +66,7 @@ public static partial class GlobalPylonHooks
             Terraria.GameContent.TeleportPylonType pylonType
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalPylon self,
@@ -94,7 +94,7 @@ public static partial class GlobalPylonHooks
             ref int defaultNecessaryNPCCount
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalPylon self,
@@ -119,7 +119,7 @@ public static partial class GlobalPylonHooks
             Terraria.GameContent.TeleportPylonInfo pylonInfo
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalPylon self,
@@ -144,7 +144,7 @@ public static partial class GlobalPylonHooks
             Terraria.SceneMetrics sceneData
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalPylon self,

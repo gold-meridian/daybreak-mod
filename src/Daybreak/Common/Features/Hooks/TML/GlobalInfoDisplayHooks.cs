@@ -23,7 +23,7 @@ public static partial class GlobalInfoDisplayHooks
             Terraria.ModLoader.InfoDisplay currentDisplay
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalInfoDisplay self,

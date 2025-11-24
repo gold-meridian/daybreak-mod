@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
 using Terraria.ModLoader;
@@ -34,12 +37,58 @@ public sealed class OriginalNameAttribute(string name) : Attribute
 ///     
 /// </summary>
 [AttributeUsage(AttributeTargets.ReturnValue)]
-public abstract class AbstractPermitsVoidAttribute : Attribute;
+public abstract class AbstractPermitsVoidAttribute : Attribute
+{
+    /// <summary>
+    ///     Modifies the expression to permit void returns.
+    /// </summary>
+    public abstract Expression ModifyExpression(
+        HookSubscriber.ReturnExpressionContext ctx
+    );
+}
 
 [AttributeUsage(AttributeTargets.ReturnValue)]
-internal sealed class SpeciallyPermitsVoidForGeneratedHooksAttribute : Attribute
+internal sealed class PermitsVoidInvokeParameterWithParametersAttribute(string parameterName) : AbstractPermitsVoidAttribute
 {
-    
+    public string ParameterName => parameterName;
+
+    public override Expression ModifyExpression(HookSubscriber.ReturnExpressionContext ctx)
+    {
+        var handlerParam = ctx.EventParameters
+                              .FirstOrDefault(x => x.Name == parameterName);
+
+        if (handlerParam is null)
+        {
+            throw new InvalidOperationException($"Cannot handle void return because handler parameter {parameterName} was not found");
+        }
+
+        var handlerExpr = ctx.EventParameterExpressions[Array.IndexOf(ctx.EventParameters, handlerParam)];
+
+        var origInvoke = handlerParam.ParameterType.GetMethod("Invoke")
+                      ?? throw new InvalidOperationException($"Cannot handle void return; could not get Invoke method of {parameterName}");
+
+        var origParameters = origInvoke.GetParameters();
+
+        var origArguments = new List<Expression>();
+        foreach (var origParameter in origParameters)
+        {
+            var name = origParameter.Name;
+            var mappedParam = ctx.EventParameters.FirstOrDefault(x => x.Name == name);
+            if (mappedParam is null || mappedParam.ParameterType != origParameter.ParameterType)
+            {
+                throw new InvalidOperationException("Incompatible return handler signature");
+            }
+
+            origArguments.Add(ctx.EventParameterExpressions[Array.IndexOf(ctx.EventParameters, mappedParam)]);
+        }
+
+        var origCall = Expression.Call(handlerExpr, origInvoke, origArguments);
+
+        return Expression.Block(
+            ctx.CallExpression,
+            origCall
+        );
+    }
 }
 
 /// <summary>

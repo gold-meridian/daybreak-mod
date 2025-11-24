@@ -82,7 +82,7 @@ public static partial class GlobalProjectileHooks
             Terraria.Projectile projectile
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -152,7 +152,7 @@ public static partial class GlobalProjectileHooks
             Terraria.Projectile projectile
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -180,7 +180,7 @@ public static partial class GlobalProjectileHooks
             ref Microsoft.Xna.Framework.Vector2 hitboxCenterFrac
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -209,7 +209,7 @@ public static partial class GlobalProjectileHooks
             Microsoft.Xna.Framework.Vector2 oldVelocity
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -235,7 +235,7 @@ public static partial class GlobalProjectileHooks
             int timeLeft
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -285,7 +285,7 @@ public static partial class GlobalProjectileHooks
             Terraria.Projectile projectile
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -332,7 +332,7 @@ public static partial class GlobalProjectileHooks
             Terraria.Projectile projectile
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -356,7 +356,7 @@ public static partial class GlobalProjectileHooks
             Terraria.Projectile projectile
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -406,7 +406,7 @@ public static partial class GlobalProjectileHooks
             Terraria.NPC target
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -488,7 +488,7 @@ public static partial class GlobalProjectileHooks
             Terraria.Player target
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -514,7 +514,7 @@ public static partial class GlobalProjectileHooks
             Terraria.Player target
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -595,7 +595,7 @@ public static partial class GlobalProjectileHooks
             Microsoft.Xna.Framework.Rectangle targetHitbox
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -622,7 +622,7 @@ public static partial class GlobalProjectileHooks
             Microsoft.Xna.Framework.Color lightColor
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate Microsoft.Xna.Framework.Color? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -647,7 +647,7 @@ public static partial class GlobalProjectileHooks
             Terraria.Projectile projectile
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -672,7 +672,7 @@ public static partial class GlobalProjectileHooks
             ref Microsoft.Xna.Framework.Color lightColor
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -758,7 +758,7 @@ public static partial class GlobalProjectileHooks
             Terraria.Player player
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
@@ -921,7 +921,7 @@ public static partial class GlobalProjectileHooks
             int y
         );
 
-        [return: SpeciallyPermitsVoidForGeneratedHooks]
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool? Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
