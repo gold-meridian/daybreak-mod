@@ -23,7 +23,7 @@ internal abstract class SharedLoadDefinition(string name, string typeName) : Hoo
     {
         return new InvalidHookParametersAnalyzer.SignatureInfo(
             HookTypeName: typeName,
-            HookParameters: ImmutableArray<ParameterInfo>.Empty,
+            HookParameters: ImmutableArray<IParameterSymbol>.Empty,
             HookReturnType: ctx.VoidSymbol,
             ReturnTypeCanAlsoBeVoid: false
         );

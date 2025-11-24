@@ -29,7 +29,7 @@ public sealed class InvalidHookParametersAnalyzer() :
 
     public readonly record struct SignatureInfo(
         string HookTypeName,
-        ImmutableArray<ParameterInfo> HookParameters,
+        ImmutableArray<IParameterSymbol> HookParameters,
         INamedTypeSymbol HookReturnType,
         bool ReturnTypeCanAlsoBeVoid
     );
