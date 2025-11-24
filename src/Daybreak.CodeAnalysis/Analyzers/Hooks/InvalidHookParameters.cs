@@ -35,7 +35,7 @@ public static class InvalidHookParameters
     public readonly record struct SignatureInfo(
         string HookTypeName,
         ImmutableArray<IParameterSymbol> HookParameters,
-        INamedTypeSymbol HookReturnType,
+        ITypeSymbol HookReturnType,
         bool ReturnTypeCanAlsoBeVoid
     );
 
@@ -88,7 +88,7 @@ public static class InvalidHookParameters
                             {
                                 return;
                             }
-                            
+
                             CheckReturnType(ctx, sigInfo.Value);
                             CheckParameters(ctx, sigInfo.Value);
                         },
@@ -168,12 +168,12 @@ public static class InvalidHookParameters
             }
 
             var method = semantic.GetDeclaredSymbol(methodDecl);
-            if (method is null)
+            if (method is not IMethodSymbol symbol)
             {
                 return Task.CompletedTask;
             }
 
-            var attributes = method.GetAttributes();
+            var attributes = symbol.GetAttributes();
             if (attributes.Length == 0)
             {
                 return Task.CompletedTask;
@@ -194,29 +194,94 @@ public static class InvalidHookParameters
                 return Task.CompletedTask;
             }
 
-            var relatedDiagnostics = ctx.Diagnostics
-                                        .Concat(GetValidDiagnostics(semantic, methodDecl))
-                                        .Distinct()
-                                        .ToArray();
-
-            ctx.RegisterCodeFix(
-                CodeAction.Create(
-                    $"Fix hook signature {ctx.Diagnostics.Length}",
-                    ct => ApplyFixAsync(
-                        doc,
-                        methodDecl,
-                        sigInfo.Value,
-                        ct
+            var permitsVoid = sigInfo.Value.ReturnTypeCanAlsoBeVoid && !SymbolEqualityComparer.Default.Equals(sigInfo.Value.HookReturnType, voidSymbol);
+            if (diagnostic.Id == Diagnostics.InvalidHookReturnType.Id || diagnostic.Id == Diagnostics.InvalidHookReturnTypeOrVoid.Id)
+            {
+                if (!SymbolEqualityComparer.Default.Equals(symbol.ReturnType, sigInfo.Value.HookReturnType))
+                {
+                    ctx.RegisterCodeFix(
+                        CodeAction.Create(
+                            "Change return type to hook return type",
+                            ct => FixReturnTypeVoidAsync(
+                                doc,
+                                methodDecl,
+                                sigInfo.Value,
+                                ct
+                            ),
+                            nameof(InvalidHookParameters) + "Return"
+                        ),
+                        diagnostic
+                    );
+                }
+                
+                if (permitsVoid && !SymbolEqualityComparer.Default.Equals(symbol.ReturnType, voidSymbol))
+                {
+                    ctx.RegisterCodeFix(
+                        CodeAction.Create(
+                            "Change return type to hook-permitted void",
+                            ct => FixReturnTypeVoidAsync(
+                                doc,
+                                methodDecl,
+                                sigInfo.Value,
+                                ct
+                            ),
+                            nameof(InvalidHookParameters) + "ReturnPermissiveVoid"
+                        ),
+                        diagnostic
+                    );
+                }
+            }
+            else if (diagnostic.Id == Diagnostics.InvalidHookParameters.Id || diagnostic.Id == Diagnostics.InvalidHookParametersNone.Id)
+            {
+                ctx.RegisterCodeFix(
+                    CodeAction.Create(
+                        "Fix hook parameters",
+                        ct => FixParametersAsync(
+                            doc,
+                            methodDecl,
+                            sigInfo.Value,
+                            ct
+                        ),
+                        nameof(InvalidHookParameters)
                     ),
-                    nameof(InvalidHookParameters)
-                ),
-                relatedDiagnostics
-            );
+                    diagnostic
+                );
+            }
 
             return Task.CompletedTask;
         }
-        
-        private static async Task<Document> ApplyFixAsync(
+
+        private static async Task<Document> FixReturnTypeAsync(
+            Document doc,
+            MethodDeclarationSyntax decl,
+            SignatureInfo sigInfo,
+            CancellationToken ct
+        )
+        {
+            return doc;
+        }
+
+        private static async Task<Document> FixReturnTypeVoidAsync(
+            Document doc,
+            MethodDeclarationSyntax decl,
+            SignatureInfo sigInfo,
+            CancellationToken ct
+        )
+        {
+            return doc;
+        }
+
+        private static async Task<Document> FixParametersAsync(
+            Document doc,
+            MethodDeclarationSyntax decl,
+            SignatureInfo sigInfo,
+            CancellationToken ct
+        )
+        {
+            return doc;
+        }
+
+        private static async Task<Document> FixParametersNoneAsync(
             Document doc,
             MethodDeclarationSyntax decl,
             SignatureInfo sigInfo,

@@ -29,7 +29,7 @@ internal sealed class SubscriberDefinition() : HookDefinition("Subscriber")
         return new InvalidHookParameters.SignatureInfo(
             HookTypeName: $"event subscriber: {hookType.Name}",
             HookParameters: invoke.Parameters,
-            HookReturnType: ctx.VoidSymbol,
+            HookReturnType: invoke.ReturnType,
             ReturnTypeCanAlsoBeVoid: !SymbolEqualityComparer.Default.Equals(invoke.ReturnType, ctx.VoidSymbol)
         );
     }

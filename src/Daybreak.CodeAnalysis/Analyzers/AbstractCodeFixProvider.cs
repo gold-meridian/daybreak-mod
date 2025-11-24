@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -48,9 +47,4 @@ public abstract class AbstractCodeFixProvider(params string[] diagnosticIds) : C
     }
 
     protected abstract Task RegisterAsync(CodeFixContext ctx, Parameters parameters);
-
-    protected IEnumerable<Diagnostic> GetValidDiagnostics(SemanticModel semantic, SyntaxNode node)
-    {
-        return semantic.GetDiagnostics(node.Span).Where(x => FixableDiagnosticIds.Contains(x.Id));
-    }
 }
