@@ -13,28 +13,6 @@ namespace Daybreak.CodeAnalysis;
 
 public static class InvalidHookParameters
 {
-    public readonly record struct Properties(
-        HookDefinition HookDefinition
-    )
-    {
-        public static Properties FromImmutable(ImmutableDictionary<string, string?> properties)
-        {
-            return new Properties(
-                HookDefinition.FromName(properties[nameof(HookDefinition)] ?? string.Empty)
-            );
-        }
-
-        public ImmutableDictionary<string, string?> ToImmutable()
-        {
-            var properties = ImmutableDictionary.CreateBuilder<string, string?>();
-            {
-                properties[nameof(HookDefinition)] = HookDefinition.Name;
-            }
-
-            return properties.ToImmutable();
-        }
-    }
-
     public readonly record struct HookContext(
         INamedTypeSymbol VoidSymbol,
         HookAttributes Attributes,
@@ -110,13 +88,9 @@ public static class InvalidHookParameters
                             {
                                 return;
                             }
-
-                            var properties = new Properties(
-                                ctx.HookDefinition
-                            );
-
-                            CheckReturnType(ctx, sigInfo.Value, properties);
-                            CheckParameters(ctx, sigInfo.Value, properties);
+                            
+                            CheckReturnType(ctx, sigInfo.Value);
+                            CheckParameters(ctx, sigInfo.Value);
                         },
                         SymbolKind.Method
                     );
@@ -124,7 +98,7 @@ public static class InvalidHookParameters
             );
         }
 
-        private static void CheckReturnType(Context ctx, SignatureInfo sigInfo, Properties properties)
+        private static void CheckReturnType(Context ctx, SignatureInfo sigInfo)
         {
             if ((sigInfo.ReturnTypeCanAlsoBeVoid || SymbolEqualityComparer.Default.Equals(sigInfo.HookReturnType, ctx.VoidSymbol)) && SymbolEqualityComparer.Default.Equals(ctx.Symbol.ReturnType, ctx.VoidSymbol))
             {
@@ -141,7 +115,6 @@ public static class InvalidHookParameters
                     Diagnostic.Create(
                         diagnostic,
                         ctx.Symbol.Locations[0],
-                        properties.ToImmutable(),
                         ctx.Symbol.ReturnType.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                         ctx.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                         sigInfo.HookTypeName,
@@ -151,13 +124,12 @@ public static class InvalidHookParameters
             }
         }
 
-        private static void CheckParameters(Context ctx, SignatureInfo sigInfo, Properties properties)
+        private static void CheckParameters(Context ctx, SignatureInfo sigInfo)
         {
             if (ctx.HookDefinition.ValidateTargetParameters(
                     ctx,
                     sigInfo,
-                    ctx.Symbol.Parameters,
-                    properties
+                    ctx.Symbol.Parameters
                 ) is not { } diag)
             {
                 return;
@@ -178,7 +150,6 @@ public static class InvalidHookParameters
         protected override Task RegisterAsync(CodeFixContext ctx, Parameters parameters)
         {
             var diagnostic = parameters.Diagnostic;
-            var properties = Properties.FromImmutable(diagnostic.Properties);
 
             if (parameters.Root.FindNode(diagnostic.Location.SourceSpan) is not MethodDeclarationSyntax methodDecl)
             {
@@ -217,7 +188,7 @@ public static class InvalidHookParameters
             }
 
             var hookCtx = new HookContext(voidSymbol, attrs, attrPair.AttributeClass);
-            var sigInfo = properties.HookDefinition.GetSignatureInfo(hookCtx);
+            var sigInfo = attrPair.HookDefinition.GetSignatureInfo(hookCtx);
             if (!sigInfo.HasValue)
             {
                 return Task.CompletedTask;

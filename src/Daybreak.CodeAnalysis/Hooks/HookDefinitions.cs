@@ -65,8 +65,7 @@ public abstract class HookDefinition(string name) : IEquatable<HookDefinition>, 
     public abstract Diagnostic? ValidateTargetParameters(
         InvalidHookParameters.Context ctx,
         InvalidHookParameters.SignatureInfo sigInfo,
-        ImmutableArray<IParameterSymbol> targetParameters,
-        InvalidHookParameters.Properties properties
+        ImmutableArray<IParameterSymbol> targetParameters
     );
 
 #region Comparisons

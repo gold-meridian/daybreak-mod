@@ -23,8 +23,7 @@ internal sealed class DefaultDefinition() : HookDefinition("Default")
     public override Diagnostic? ValidateTargetParameters(
         InvalidHookParameters.Context ctx,
         InvalidHookParameters.SignatureInfo sigInfo,
-        ImmutableArray<IParameterSymbol> targetParameters,
-        InvalidHookParameters.Properties properties
+        ImmutableArray<IParameterSymbol> targetParameters
     )
     {
         return null;
