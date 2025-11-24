@@ -23,9 +23,10 @@ public static partial class GlobalInfoDisplayHooks
             Terraria.ModLoader.InfoDisplay currentDisplay
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalInfoDisplay self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalInfoDisplay self,
             Terraria.ModLoader.InfoDisplay currentDisplay
         );
 
@@ -51,8 +52,8 @@ public static partial class GlobalInfoDisplayHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalInfoDisplay self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalInfoDisplay self,
             Terraria.ModLoader.InfoDisplay currentDisplay,
             ref string displayValue,
             ref string displayName,

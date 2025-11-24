@@ -78,8 +78,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -98,8 +98,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -118,8 +118,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -138,8 +138,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -158,8 +158,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -178,8 +178,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -198,8 +198,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -218,8 +218,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -238,8 +238,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -258,8 +258,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -278,8 +278,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -298,8 +298,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -318,8 +318,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -338,8 +338,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -360,8 +360,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             ref Terraria.Graphics.SpriteViewMatrix Transform
         );
 
@@ -383,8 +383,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             Microsoft.Xna.Framework.GameTime gameTime
         );
 
@@ -404,8 +404,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -424,8 +424,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -444,8 +444,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -464,8 +464,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -484,8 +484,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -504,8 +504,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -524,8 +524,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -544,8 +544,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -564,8 +564,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -584,8 +584,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -604,8 +604,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -624,8 +624,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -644,8 +644,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -664,8 +664,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -684,8 +684,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -704,8 +704,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -724,8 +724,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -744,8 +744,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -764,8 +764,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -784,8 +784,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -806,8 +806,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers
         );
 
@@ -829,8 +829,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             System.Collections.Generic.IReadOnlyList<Terraria.ModLoader.GameTipData> gameTips
         );
 
@@ -852,8 +852,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch
         );
 
@@ -876,8 +876,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             System.Collections.Generic.IReadOnlyList<Terraria.Map.IMapLayer> layers,
             Terraria.Map.MapOverlayDrawContext mapOverlayDrawContext
         );
@@ -900,8 +900,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             ref string mouseText
         );
 
@@ -921,8 +921,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -941,8 +941,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -961,8 +961,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -985,8 +985,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             ref double timeRate,
             ref double tileUpdateRate,
             ref double eventUpdateRate
@@ -1010,9 +1010,10 @@ public static partial class ModSystemHooks
             Terraria.IO.WorldFileData worldFileData
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             Terraria.IO.PlayerFileData playerData,
             Terraria.IO.WorldFileData worldFileData
         );
@@ -1035,9 +1036,10 @@ public static partial class ModSystemHooks
             Terraria.IO.WorldFileData worldData
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate string Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             Terraria.IO.PlayerFileData playerData,
             Terraria.IO.WorldFileData worldData
         );
@@ -1061,9 +1063,10 @@ public static partial class ModSystemHooks
             int playerNumber
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             ref byte messageType,
             ref System.IO.BinaryReader reader,
             int playerNumber
@@ -1097,9 +1100,10 @@ public static partial class ModSystemHooks
             int number7
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             int whoAmI,
             int msgType,
             int remoteClient,
@@ -1130,8 +1134,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -1153,8 +1157,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks,
             ref double totalWeight
         );
@@ -1175,8 +1179,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -1195,8 +1199,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event
@@ -1217,8 +1221,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> list
         );
 
@@ -1241,8 +1245,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             ref Microsoft.Xna.Framework.Color tileColor,
             ref Microsoft.Xna.Framework.Color backgroundColor
         );
@@ -1265,8 +1269,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             ref float scale
         );
 
@@ -1288,8 +1292,8 @@ public static partial class ModSystemHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self,
             System.ReadOnlySpan<int> tileCounts
         );
 
@@ -1309,8 +1313,8 @@ public static partial class ModSystemHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.ModSystem self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModSystem self
         );
 
         public static event Definition? Event

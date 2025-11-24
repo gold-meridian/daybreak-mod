@@ -102,8 +102,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -126,8 +126,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.DataStructures.IEntitySource source
         );
@@ -153,8 +153,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             int numPlayers,
             float balance,
@@ -181,8 +181,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.GameContent.Bestiary.BestiaryDatabase database,
             Terraria.GameContent.Bestiary.BestiaryEntry bestiaryEntry
@@ -207,8 +207,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref string typeName
         );
@@ -232,8 +232,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Microsoft.Xna.Framework.Rectangle boundingBox
         );
@@ -256,9 +256,10 @@ public static partial class GlobalNPCHooks
             bool mouseIntersects
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             bool mouseIntersects
         );
@@ -280,9 +281,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC npc
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate Terraria.GameContent.ITownNPCProfile Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -305,8 +307,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             System.Collections.Generic.List<string> nameList
         );
@@ -329,8 +331,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -351,9 +353,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC npc
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -375,8 +378,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -398,8 +401,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -422,8 +425,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             int frameHeight
         );
@@ -447,8 +450,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.NPC.HitInfo hit
         );
@@ -472,8 +475,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref int damage
         );
@@ -495,9 +498,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC npc
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -518,9 +522,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC npc
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -541,9 +546,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC npc
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -564,9 +570,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC npc
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -588,8 +595,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -610,9 +617,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC npc
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -635,9 +643,10 @@ public static partial class GlobalNPCHooks
             Terraria.Player player
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Item item,
             Terraria.Player player
@@ -664,8 +673,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Player player,
             Terraria.Item item,
@@ -691,8 +700,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.ModLoader.NPCLoot npcLoot
         );
@@ -715,8 +724,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.ModLoader.GlobalLoot globalLoot
         );
 
@@ -739,9 +748,10 @@ public static partial class GlobalNPCHooks
             ref int cooldownSlot
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Player target,
             ref int cooldownSlot
@@ -767,8 +777,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Player target,
             ref Terraria.Player.HurtModifiers modifiers
@@ -794,8 +804,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Player target,
             Terraria.Player.HurtInfo hurtInfo
@@ -819,9 +829,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC target
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.NPC target
         );
@@ -844,9 +855,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC attacker
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.NPC attacker
         );
@@ -871,8 +883,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.NPC target,
             ref Terraria.NPC.HitModifiers modifiers
@@ -898,8 +910,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.NPC target,
             Terraria.NPC.HitInfo hit
@@ -924,9 +936,10 @@ public static partial class GlobalNPCHooks
             Terraria.Item item
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Player player,
             Terraria.Item item
@@ -952,9 +965,10 @@ public static partial class GlobalNPCHooks
             Microsoft.Xna.Framework.Rectangle meleeAttackHitbox
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Player player,
             Terraria.Item item,
@@ -982,8 +996,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Player player,
             Terraria.Item item,
@@ -1012,8 +1026,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Player player,
             Terraria.Item item,
@@ -1039,9 +1053,10 @@ public static partial class GlobalNPCHooks
             Terraria.Projectile projectile
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Projectile projectile
         );
@@ -1066,8 +1081,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Projectile projectile,
             ref Terraria.NPC.HitModifiers modifiers
@@ -1094,8 +1109,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Projectile projectile,
             Terraria.NPC.HitInfo hit,
@@ -1121,8 +1136,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Terraria.NPC.HitModifiers modifiers
         );
@@ -1146,8 +1161,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref int index
         );
@@ -1171,8 +1186,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref float rotation
         );
@@ -1196,8 +1211,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
         );
@@ -1220,9 +1235,10 @@ public static partial class GlobalNPCHooks
             Microsoft.Xna.Framework.Color drawColor
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate Microsoft.Xna.Framework.Color? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Microsoft.Xna.Framework.Color drawColor
         );
@@ -1246,8 +1262,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Microsoft.Xna.Framework.Color drawColor
         );
@@ -1272,9 +1288,10 @@ public static partial class GlobalNPCHooks
             Microsoft.Xna.Framework.Color drawColor
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Microsoft.Xna.Framework.Vector2 screenPos,
@@ -1302,8 +1319,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Microsoft.Xna.Framework.Vector2 screenPos,
@@ -1329,8 +1346,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             int index
         );
@@ -1355,9 +1372,10 @@ public static partial class GlobalNPCHooks
             ref Microsoft.Xna.Framework.Vector2 position
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             byte hbPosition,
             ref float scale,
@@ -1384,8 +1402,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.Player player,
             ref int spawnRate,
             ref int maxSpawns
@@ -1413,8 +1431,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.Player player,
             ref int spawnRangeX,
             ref int spawnRangeY,
@@ -1441,8 +1459,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             System.Collections.Generic.IDictionary<int, float> pool,
             Terraria.ModLoader.NPCSpawnInfo spawnInfo
         );
@@ -1467,8 +1485,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             int npc,
             int tileX,
             int tileY
@@ -1491,9 +1509,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC npc
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -1516,8 +1535,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref string chat
         );
@@ -1540,9 +1559,10 @@ public static partial class GlobalNPCHooks
             bool firstButton
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             bool firstButton
         );
@@ -1566,8 +1586,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             bool firstButton
         );
@@ -1590,8 +1610,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.ModLoader.NPCShop shop
         );
 
@@ -1615,8 +1635,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             string shopName,
             Terraria.Item[] items
@@ -1641,8 +1661,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             int[] shop,
             ref int nextSlot
         );
@@ -1665,9 +1685,10 @@ public static partial class GlobalNPCHooks
             bool toKingStatue
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             bool toKingStatue
         );
@@ -1691,8 +1712,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             bool toKingStatue
         );
@@ -1716,8 +1737,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             ref float damageMult,
             ref int defense
         );
@@ -1741,9 +1762,10 @@ public static partial class GlobalNPCHooks
             ref Microsoft.Xna.Framework.Color color
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Terraria.Localization.NetworkText customText,
             ref Microsoft.Xna.Framework.Color color
@@ -1769,8 +1791,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref int damage,
             ref float knockback
@@ -1796,8 +1818,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref int cooldown,
             ref int randExtraCooldown
@@ -1823,8 +1845,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref int projType,
             ref int attackDelay
@@ -1851,8 +1873,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref float multiplier,
             ref float gravityCorrection,
@@ -1878,8 +1900,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref bool inBetweenShots
         );
@@ -1903,8 +1925,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref float auraLightMultiplier
         );
@@ -1929,8 +1951,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref int itemWidth,
             ref int itemHeight
@@ -1958,8 +1980,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Microsoft.Xna.Framework.Graphics.Texture2D item,
             ref Microsoft.Xna.Framework.Rectangle itemFrame,
@@ -1990,8 +2012,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Microsoft.Xna.Framework.Graphics.Texture2D item,
             ref Microsoft.Xna.Framework.Rectangle itemFrame,
@@ -2021,9 +2043,10 @@ public static partial class GlobalNPCHooks
             ref Microsoft.Xna.Framework.Rectangle npcHitbox
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Microsoft.Xna.Framework.Rectangle victimHitbox,
             ref int immunityCooldownSlot,
@@ -2048,9 +2071,10 @@ public static partial class GlobalNPCHooks
             Terraria.NPC npc
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc
         );
 
@@ -2074,9 +2098,10 @@ public static partial class GlobalNPCHooks
             Terraria.GameContent.UI.WorldUIAnchor otherAnchor
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate int? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             Terraria.Player closestPlayer,
             System.Collections.Generic.List<int> emoteList,
@@ -2103,8 +2128,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Microsoft.Xna.Framework.Vector2 position,
             ref Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
@@ -2130,8 +2155,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Microsoft.Xna.Framework.Vector2 position,
             ref Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
@@ -2157,8 +2182,8 @@ public static partial class GlobalNPCHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalNPC self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
             ref Microsoft.Xna.Framework.Vector2 position,
             ref Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects

@@ -357,6 +357,12 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         var sb = new StringBuilder();
 
         var name = original ? "Original" : "Definition";
+
+        if (!original && method.ReturnType.FullName != typeof(void).FullName)
+        {
+            sb.AppendLine($"        [return: SpeciallyPermitsVoidForGeneratedHooks]");
+        }
+
         sb.Append($"        public delegate {GetFullTypeNameOrCSharpKeyword(method.ReturnType, includeRefPrefix: true)} {name}(");
 
         var parameters = method.Parameters;
@@ -365,8 +371,8 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         {
             sb.AppendLine();
 
-            sb.AppendLine("            Original orig,");
-            sb.Append($"            {GetFullTypeNameOrCSharpKeyword(method.DeclaringType, includeRefPrefix: false)} self");
+            sb.AppendLine("            [Omittable] Original orig,");
+            sb.Append($"            [Omittable] {GetFullTypeNameOrCSharpKeyword(method.DeclaringType, includeRefPrefix: false)} self");
         }
 
         if (parameters.Count > 0)

@@ -30,8 +30,7 @@ public class SubscribesToAttribute(
     eventName: eventName,
     delegateName: delegateName,
     supportsInstancedMethods: true,
-    supportsStaticMethods: true,
-    supportsVoidOverload: true
+    supportsStaticMethods: true
 )
 {
     /// <inheritdoc />

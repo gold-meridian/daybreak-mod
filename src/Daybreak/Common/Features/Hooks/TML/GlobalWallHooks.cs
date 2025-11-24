@@ -38,9 +38,10 @@ public static partial class GlobalWallHooks
             ref int dropType
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalWall self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalWall self,
             int i,
             int j,
             int type,
@@ -68,8 +69,8 @@ public static partial class GlobalWallHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalWall self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalWall self,
             int i,
             int j,
             int type,
@@ -98,9 +99,10 @@ public static partial class GlobalWallHooks
             ref int frameNumber
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalWall self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalWall self,
             int i,
             int j,
             int type,
@@ -130,9 +132,10 @@ public static partial class GlobalWallHooks
             string context
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalWall self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalWall self,
             int i,
             int j,
             int type,
@@ -160,9 +163,10 @@ public static partial class GlobalWallHooks
             bool fail
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -191,8 +195,8 @@ public static partial class GlobalWallHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -220,9 +224,10 @@ public static partial class GlobalWallHooks
             ref int dustType
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -248,9 +253,10 @@ public static partial class GlobalWallHooks
             int type
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type
@@ -275,9 +281,10 @@ public static partial class GlobalWallHooks
             int type
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type
@@ -303,9 +310,10 @@ public static partial class GlobalWallHooks
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -333,8 +341,8 @@ public static partial class GlobalWallHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -361,8 +369,8 @@ public static partial class GlobalWallHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type
@@ -389,8 +397,8 @@ public static partial class GlobalWallHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -420,8 +428,8 @@ public static partial class GlobalWallHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,

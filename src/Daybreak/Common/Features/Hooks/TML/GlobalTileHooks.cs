@@ -69,8 +69,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -98,9 +98,10 @@ public static partial class GlobalTileHooks
             int type
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type
@@ -126,8 +127,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type
@@ -153,9 +154,10 @@ public static partial class GlobalTileHooks
             ref bool blockDamaged
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -185,8 +187,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -216,8 +218,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -244,9 +246,10 @@ public static partial class GlobalTileHooks
             Terraria.Player player
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -273,9 +276,10 @@ public static partial class GlobalTileHooks
             ref Microsoft.Xna.Framework.Color sightColor
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -301,9 +305,10 @@ public static partial class GlobalTileHooks
             int type
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type
@@ -330,8 +335,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -354,8 +359,8 @@ public static partial class GlobalTileHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self
         );
 
         public static event Definition? Event
@@ -380,8 +385,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -414,8 +419,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             Terraria.Tile tileCache,
@@ -447,8 +452,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -480,9 +485,10 @@ public static partial class GlobalTileHooks
             ref Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -520,8 +526,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -554,9 +560,10 @@ public static partial class GlobalTileHooks
             ref bool noBreak
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -581,9 +588,10 @@ public static partial class GlobalTileHooks
             int type
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate int[] Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int type
         );
 
@@ -607,8 +615,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type
@@ -634,8 +642,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type
@@ -661,8 +669,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type
@@ -688,9 +696,10 @@ public static partial class GlobalTileHooks
             Terraria.Item item
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -716,9 +725,10 @@ public static partial class GlobalTileHooks
             int type
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type
@@ -744,8 +754,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type
@@ -770,9 +780,10 @@ public static partial class GlobalTileHooks
             int type
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type
@@ -797,8 +808,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int type,
             Terraria.Player player
         );
@@ -822,8 +833,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int type,
             ref int style
         );
@@ -848,9 +859,10 @@ public static partial class GlobalTileHooks
             int tileTypeBeingPlaced
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -879,8 +891,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int i,
             int j,
             int type,
@@ -904,8 +916,8 @@ public static partial class GlobalTileHooks
         public delegate void Original();
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self
         );
 
         public static event Definition? Event
@@ -928,8 +940,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int x,
             int y,
             Terraria.Enums.TreeTypes treeType
@@ -954,9 +966,10 @@ public static partial class GlobalTileHooks
             Terraria.Enums.TreeTypes treeType
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalTile self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
             int x,
             int y,
             Terraria.Enums.TreeTypes treeType
@@ -982,9 +995,10 @@ public static partial class GlobalTileHooks
             bool fail
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -1013,8 +1027,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -1042,9 +1056,10 @@ public static partial class GlobalTileHooks
             ref int dustType
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -1070,9 +1085,10 @@ public static partial class GlobalTileHooks
             int type
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type
@@ -1097,9 +1113,10 @@ public static partial class GlobalTileHooks
             int type
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type
@@ -1125,9 +1142,10 @@ public static partial class GlobalTileHooks
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -1155,8 +1173,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -1183,8 +1201,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type
@@ -1211,8 +1229,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,
@@ -1242,8 +1260,8 @@ public static partial class GlobalTileHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBlockType self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
             int type,

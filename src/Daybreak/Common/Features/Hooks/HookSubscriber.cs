@@ -28,40 +28,8 @@ public static class HookSubscriber
         var invokeMethod = handlerType.GetMethod("Invoke")
                         ?? throw new InvalidOperationException("The event handler type could not resolve an Invoke method.");
 
-        // If we can bind directly then we don't need to build a wrapper.
-        if (TryDirectBind(eventInfo, handlerType, bindingMethod, instance))
-        {
-            return;
-        }
-
         var wrapper = BuildWrapper(handlerType, invokeMethod, bindingMethod, instance);
         eventInfo.AddEventHandler(null, wrapper);
-
-        return;
-
-        static bool TryDirectBind(
-            EventInfo eventInfo,
-            Type handlerType,
-            MethodInfo bindingMethod,
-            object? instance
-        )
-        {
-            try
-            {
-                var handler = Delegate.CreateDelegate(handlerType, instance, bindingMethod, throwOnBindFailure: false);
-                if (handler is null)
-                {
-                    return false;
-                }
-
-                eventInfo.AddEventHandler(null, handler);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
     }
 
     public static Delegate BuildWrapper(

@@ -11,15 +11,36 @@ internal interface IHasSide
 }
 
 /// <summary>
-///     Indicates a parameter in a delegate is omittable.  This is a convenience
-///     attribute used when building wrappers through
-///     <see cref="HookSubscriber"/>.  Each omittable attribute is expected to
-///     decorate a parameter with a unique type, and these parameters should
-///     only be at the start (that is, they can't be broken up or appear after
-///     non-omittable parameters).
+///     Indicates a parameter in a delegate is omittable.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class OmittableAttribute : Attribute;
+
+/// <summary>
+///     Indicates a parameter has been renamed.  Required for dynamic binding to
+///     support <see cref="OmittableAttribute"/>-annotated parameters.
+/// </summary>
+/// <param name="name">The original parameter name.</param>
+[AttributeUsage(AttributeTargets.Parameter)]
+public sealed class OriginalNameAttribute(string name) : Attribute
+{
+    /// <summary>
+    ///     The original parameter name.
+    /// </summary>
+    public string Name => name;
+}
+
+/// <summary>
+///     
+/// </summary>
+[AttributeUsage(AttributeTargets.ReturnValue)]
+public abstract class AbstractPermitsVoidAttribute : Attribute;
+
+[AttributeUsage(AttributeTargets.ReturnValue)]
+internal sealed class SpeciallyPermitsVoidForGeneratedHooksAttribute : Attribute
+{
+    
+}
 
 /// <summary>
 ///     Shared between all hooking attributes to provide a common base for
@@ -35,8 +56,7 @@ public abstract class BaseHookAttribute(
     string? eventName = null,
     string? delegateName = null,
     bool supportsInstancedMethods = true,
-    bool supportsStaticMethods = true,
-    bool supportsVoidOverload = false
+    bool supportsStaticMethods = true
 ) : Attribute, IHasSide
 {
     /// <summary>
@@ -76,12 +96,6 @@ public abstract class BaseHookAttribute(
     ///     Whether methods annotated with this hook attribute may be static.
     /// </summary>
     public bool SupportsStaticMethods => supportsStaticMethods;
-
-    /// <summary>
-    ///     Whether the hook may return void instead of the expected return
-    ///     type.
-    /// </summary>
-    public bool SupportsVoidOverload => supportsVoidOverload;
 
     /// <summary>
     ///     The side to load this on.

@@ -31,8 +31,8 @@ public static partial class GlobalEmoteBubbleHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalEmoteBubble self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble
         );
 
@@ -53,9 +53,10 @@ public static partial class GlobalEmoteBubbleHooks
             Terraria.GameContent.UI.EmoteBubble emoteBubble
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalEmoteBubble self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble
         );
 
@@ -77,9 +78,10 @@ public static partial class GlobalEmoteBubbleHooks
             ref int frameCounter
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalEmoteBubble self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalEmoteBubble self,
             int emoteType,
             ref int frameCounter
         );
@@ -107,9 +109,10 @@ public static partial class GlobalEmoteBubbleHooks
             Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffects
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalEmoteBubble self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Microsoft.Xna.Framework.Graphics.Texture2D texture,
@@ -143,8 +146,8 @@ public static partial class GlobalEmoteBubbleHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalEmoteBubble self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Microsoft.Xna.Framework.Graphics.Texture2D texture,
@@ -176,9 +179,10 @@ public static partial class GlobalEmoteBubbleHooks
             Microsoft.Xna.Framework.Vector2 origin
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalEmoteBubble self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalEmoteBubble self,
             int emoteType,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Terraria.GameContent.UI.Elements.EmoteButton uiEmoteButton,
@@ -210,8 +214,8 @@ public static partial class GlobalEmoteBubbleHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalEmoteBubble self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalEmoteBubble self,
             int emoteType,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Terraria.GameContent.UI.Elements.EmoteButton uiEmoteButton,
@@ -237,9 +241,10 @@ public static partial class GlobalEmoteBubbleHooks
             Terraria.GameContent.UI.EmoteBubble emoteBubble
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate Microsoft.Xna.Framework.Rectangle? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalEmoteBubble self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalEmoteBubble self,
             Terraria.GameContent.UI.EmoteBubble emoteBubble
         );
 
@@ -262,9 +267,10 @@ public static partial class GlobalEmoteBubbleHooks
             int frameCounter
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate Microsoft.Xna.Framework.Rectangle? Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalEmoteBubble self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalEmoteBubble self,
             int emoteType,
             int frame,
             int frameCounter

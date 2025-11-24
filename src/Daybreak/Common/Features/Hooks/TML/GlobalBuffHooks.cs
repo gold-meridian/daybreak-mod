@@ -34,8 +34,8 @@ public static partial class GlobalBuffHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             int type,
             Terraria.Player player,
             ref int buffIndex
@@ -61,8 +61,8 @@ public static partial class GlobalBuffHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             int type,
             Terraria.NPC npc,
             ref int buffIndex
@@ -88,9 +88,10 @@ public static partial class GlobalBuffHooks
             int buffIndex
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             int type,
             Terraria.Player player,
             int time,
@@ -117,9 +118,10 @@ public static partial class GlobalBuffHooks
             int buffIndex
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             int type,
             Terraria.NPC npc,
             int time,
@@ -147,8 +149,8 @@ public static partial class GlobalBuffHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             int type,
             ref string buffName,
             ref string tip,
@@ -174,8 +176,8 @@ public static partial class GlobalBuffHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             string buffTip,
             System.Collections.Generic.List<Microsoft.Xna.Framework.Vector2> sizes
         );
@@ -201,8 +203,8 @@ public static partial class GlobalBuffHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             string buffTip,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             int originX,
@@ -229,9 +231,10 @@ public static partial class GlobalBuffHooks
             ref Terraria.DataStructures.BuffDrawParams drawParams
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             int type,
             int buffIndex,
@@ -259,8 +262,8 @@ public static partial class GlobalBuffHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             int type,
             int buffIndex,
@@ -285,9 +288,10 @@ public static partial class GlobalBuffHooks
             int buffIndex
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBuff self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBuff self,
             int type,
             int buffIndex
         );

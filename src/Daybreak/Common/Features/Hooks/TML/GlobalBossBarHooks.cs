@@ -25,9 +25,10 @@ public static partial class GlobalBossBarHooks
             ref Terraria.DataStructures.BossBarDrawParams drawParams
         );
 
+        [return: SpeciallyPermitsVoidForGeneratedHooks]
         public delegate bool Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBossBar self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBossBar self,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Terraria.NPC npc,
             ref Terraria.DataStructures.BossBarDrawParams drawParams
@@ -53,8 +54,8 @@ public static partial class GlobalBossBarHooks
         );
 
         public delegate void Definition(
-            Original orig,
-            Terraria.ModLoader.GlobalBossBar self,
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalBossBar self,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Terraria.NPC npc,
             Terraria.DataStructures.BossBarDrawParams drawParams
