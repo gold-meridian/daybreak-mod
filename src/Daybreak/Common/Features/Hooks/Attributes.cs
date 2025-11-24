@@ -129,14 +129,38 @@ public class SubscribesToAttribute<T> : SubscribesToAttribute
 }
 #endregion
 
+#region Generic event subscription
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public abstract class EventAttribute : BaseHookAttribute;
+
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public class EventAttribute<T> : EventAttribute;
+#endregion
+
 #region IL edit hooks
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public abstract class IlEditAttribute : BaseHookAttribute;
 
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class IlEditAttribute<T> : IlEditAttribute;
 #endregion
 
 #region Detour hooks
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public abstract class DetourAttribute : BaseHookAttribute;
 
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class DetourAttribute<T> : BaseHookAttribute;
 #endregion
