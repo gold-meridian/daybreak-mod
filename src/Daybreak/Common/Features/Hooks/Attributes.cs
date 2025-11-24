@@ -121,6 +121,11 @@ public sealed class HookMetadataAttribute : Attribute
     ///     <see cref="DelegateType"/> is unspecified.
     /// </summary>
     public string? DelegateName { get; init; }
+
+    /// <summary>
+    ///     Whether multiple of this kind of hook can be applied at once.
+    /// </summary>
+    public bool CanStack { get; init; }
 }
 
 /// <summary>

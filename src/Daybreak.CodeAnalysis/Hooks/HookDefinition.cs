@@ -1,25 +1,35 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 
 namespace Daybreak.CodeAnalysis;
 
 public sealed class HookDefinition(
+    INamedTypeSymbol hookAttribute,
     INamedTypeSymbol? delegateType,
     INamedTypeSymbol? typeContainingEvent,
     string? eventName,
-    string? delegateName
+    string? delegateName,
+    bool canStack
 )
 {
-    public string Name { get; } = "stub";
-
-    public HookInstancing Instancing { get; } = HookInstancing.Both;
-
-    public bool ValidateMultiple(IEnumerable<HookDefinition> hooks)
+    public string Name
     {
-        // TODO
-        return true;
+        get
+        {
+            var name = hookAttribute.ToDisplayString(SymbolDisplayFormat.CSharpShortErrorMessageFormat);
+            if (!name.EndsWith("Attribute"))
+            {
+                return name;
+            }
+            
+            return name[..^"Attribute".Length];
+        }
     }
+
+    public bool CanStack => canStack;
+
+    // TODO: bring this back later
+    public HookInstancing Instancing => HookInstancing.Both;
 
     public InvalidHookParameters.SignatureInfo? GetSignatureInfo(
         InvalidHookParameters.HookContext ctx

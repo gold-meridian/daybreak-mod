@@ -57,11 +57,17 @@ internal static class Extensions
                                   .FirstOrDefault(x => x.Key == "DelegateName")
                                   .Value.Value as string;
 
+                var canStack = arguments
+                              .FirstOrDefault(x => x.Key == "CanStack")
+                              .Value.Value is true;
+
                 return new HookDefinition(
+                    symbol,
                     delegateType,
                     typeContainingEvent,
                     eventName,
-                    delegateName
+                    delegateName,
+                    canStack
                 );
             }
 

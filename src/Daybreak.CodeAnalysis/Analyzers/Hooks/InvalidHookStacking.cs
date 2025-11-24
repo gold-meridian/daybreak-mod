@@ -39,7 +39,8 @@ public static class InvalidHookStacking
                                 return;
                             }
 
-                            var legal = hookDefinitions.Distinct().All(x => x.ValidateMultiple(hookDefinitions));
+                            // TODO: More robust logic?
+                            var legal = hookDefinitions.All(x => x.CanStack);
                             if (legal)
                             {
                                 return;
