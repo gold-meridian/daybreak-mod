@@ -15,16 +15,16 @@ internal sealed class DefaultDefinition() : HookDefinition("Default")
         return true;
     }
 
-    public override InvalidHookParametersAnalyzer.SignatureInfo? GetSignatureInfo(
-        InvalidHookParametersAnalyzer.Context ctx
+    public override InvalidHookParameters.SignatureInfo? GetSignatureInfo(
+        InvalidHookParameters.Context ctx
     )
     {
         return null;
     }
 
     public override Diagnostic? ValidateTargetParameters(
-        InvalidHookParametersAnalyzer.Context ctx,
-        InvalidHookParametersAnalyzer.SignatureInfo sigInfo,
+        InvalidHookParameters.Context ctx,
+        InvalidHookParameters.SignatureInfo sigInfo,
         ImmutableArray<IParameterSymbol> targetParameters
     )
     {

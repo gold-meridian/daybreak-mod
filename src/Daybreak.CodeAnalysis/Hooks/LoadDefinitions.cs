@@ -17,11 +17,11 @@ internal abstract class SharedLoadDefinition(string name, string typeName) : Hoo
         return false;
     }
 
-    public override InvalidHookParametersAnalyzer.SignatureInfo? GetSignatureInfo(
-        InvalidHookParametersAnalyzer.Context ctx
+    public override InvalidHookParameters.SignatureInfo? GetSignatureInfo(
+        InvalidHookParameters.Context ctx
     )
     {
-        return new InvalidHookParametersAnalyzer.SignatureInfo(
+        return new InvalidHookParameters.SignatureInfo(
             HookTypeName: typeName,
             HookParameters: ImmutableArray<IParameterSymbol>.Empty,
             HookReturnType: ctx.VoidSymbol,
@@ -30,8 +30,8 @@ internal abstract class SharedLoadDefinition(string name, string typeName) : Hoo
     }
 
     public override Diagnostic? ValidateTargetParameters(
-        InvalidHookParametersAnalyzer.Context ctx,
-        InvalidHookParametersAnalyzer.SignatureInfo sigInfo,
+        InvalidHookParameters.Context ctx,
+        InvalidHookParameters.SignatureInfo sigInfo,
         ImmutableArray<IParameterSymbol> targetParameters
     )
     {

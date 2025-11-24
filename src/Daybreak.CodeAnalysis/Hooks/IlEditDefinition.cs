@@ -17,8 +17,8 @@ internal sealed class IlEditDefinition() : HookDefinition("IlEdit")
         return hooks.All(x => x == IlEdit);
     }
 
-    public override InvalidHookParametersAnalyzer.SignatureInfo? GetSignatureInfo(
-        InvalidHookParametersAnalyzer.Context ctx
+    public override InvalidHookParameters.SignatureInfo? GetSignatureInfo(
+        InvalidHookParameters.Context ctx
     )
     {
         // TODO
@@ -30,7 +30,7 @@ internal sealed class IlEditDefinition() : HookDefinition("IlEdit")
             return null;
         }
 
-        return new InvalidHookParametersAnalyzer.SignatureInfo(
+        return new InvalidHookParameters.SignatureInfo(
             HookTypeName: $"IL edit hook: {hookType.Name}",
             HookParameters: ImmutableArray<ParameterInfo>.Empty,
             HookReturnType: ctx.VoidSymbol,
@@ -41,8 +41,8 @@ internal sealed class IlEditDefinition() : HookDefinition("IlEdit")
     }
 
     public override Diagnostic? ValidateTargetParameters(
-        InvalidHookParametersAnalyzer.Context ctx,
-        InvalidHookParametersAnalyzer.SignatureInfo sigInfo,
+        InvalidHookParameters.Context ctx,
+        InvalidHookParameters.SignatureInfo sigInfo,
         ImmutableArray<IParameterSymbol> targetParameters
     )
     {

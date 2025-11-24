@@ -15,8 +15,8 @@ internal sealed class DetourDefinition() : HookDefinition("Detour")
         return false;
     }
 
-    public override InvalidHookParametersAnalyzer.SignatureInfo? GetSignatureInfo(
-        InvalidHookParametersAnalyzer.Context ctx
+    public override InvalidHookParameters.SignatureInfo? GetSignatureInfo(
+        InvalidHookParameters.Context ctx
     )
     {
         // TODO
@@ -28,7 +28,7 @@ internal sealed class DetourDefinition() : HookDefinition("Detour")
             return null;
         }
 
-        return new InvalidHookParametersAnalyzer.SignatureInfo(
+        return new InvalidHookParameters.SignatureInfo(
             HookTypeName: $"detour hook: {hookType.Name}",
             HookParameters: ImmutableArray<ParameterInfo>.Empty,
             HookReturnType: ctx.VoidSymbol,
@@ -38,8 +38,8 @@ internal sealed class DetourDefinition() : HookDefinition("Detour")
     }
 
     public override Diagnostic? ValidateTargetParameters(
-        InvalidHookParametersAnalyzer.Context ctx,
-        InvalidHookParametersAnalyzer.SignatureInfo sigInfo,
+        InvalidHookParameters.Context ctx,
+        InvalidHookParameters.SignatureInfo sigInfo,
         ImmutableArray<IParameterSymbol> targetParameters
     )
     {

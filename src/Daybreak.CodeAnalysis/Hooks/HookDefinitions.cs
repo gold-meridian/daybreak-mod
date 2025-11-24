@@ -58,13 +58,13 @@ public abstract class HookDefinition(string name) : IEquatable<HookDefinition>, 
 
     public abstract bool ValidateMultiple(IEnumerable<HookDefinition> hooks);
 
-    public abstract InvalidHookParametersAnalyzer.SignatureInfo? GetSignatureInfo(
-        InvalidHookParametersAnalyzer.Context ctx
+    public abstract InvalidHookParameters.SignatureInfo? GetSignatureInfo(
+        InvalidHookParameters.Context ctx
     );
 
     public abstract Diagnostic? ValidateTargetParameters(
-        InvalidHookParametersAnalyzer.Context ctx,
-        InvalidHookParametersAnalyzer.SignatureInfo sigInfo,
+        InvalidHookParameters.Context ctx,
+        InvalidHookParameters.SignatureInfo sigInfo,
         ImmutableArray<IParameterSymbol> targetParameters
     );
 
