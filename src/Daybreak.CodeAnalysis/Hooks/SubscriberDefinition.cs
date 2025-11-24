@@ -17,9 +17,7 @@ internal sealed class SubscriberDefinition() : HookDefinition("Subscriber")
         return false;
     }
 
-    public override InvalidHookParameters.SignatureInfo? GetSignatureInfo(
-        InvalidHookParameters.Context ctx
-    )
+    public override InvalidHookParameters.SignatureInfo? GetSignatureInfo(InvalidHookParameters.HookContext ctx)
     {
         var closedGeneric = ctx.Attribute.GetClosedGenericAttribute(ctx.Attributes);
         var hookType = closedGeneric?.TypeArguments.First();
@@ -39,7 +37,8 @@ internal sealed class SubscriberDefinition() : HookDefinition("Subscriber")
     public override Diagnostic? ValidateTargetParameters(
         InvalidHookParameters.Context ctx,
         InvalidHookParameters.SignatureInfo sigInfo,
-        ImmutableArray<IParameterSymbol> targetParameters
+        ImmutableArray<IParameterSymbol> targetParameters,
+        InvalidHookParameters.Properties properties
     )
     {
         var closedGeneric = ctx.Attribute.GetClosedGenericAttribute(ctx.Attributes);
@@ -67,6 +66,7 @@ internal sealed class SubscriberDefinition() : HookDefinition("Subscriber")
         return Diagnostic.Create(
             Diagnostics.InvalidHookParameters,
             ctx.Symbol.Locations.First(),
+            properties.ToImmutable(),
             ctx.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
             $"event subscriber: {hookType.Name}"
         );

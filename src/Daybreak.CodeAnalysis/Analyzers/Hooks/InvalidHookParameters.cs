@@ -1,14 +1,46 @@
 ﻿using System.Collections.Immutable;
 using System.Composition;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Daybreak.CodeAnalysis;
 
 public static class InvalidHookParameters
 {
+    public readonly record struct Properties(
+        HookDefinition HookDefinition
+    )
+    {
+        public static Properties FromImmutable(ImmutableDictionary<string, string?> properties)
+        {
+            return new Properties(
+                HookDefinition.FromName(properties[nameof(HookDefinition)] ?? string.Empty)
+            );
+        }
+
+        public ImmutableDictionary<string, string?> ToImmutable()
+        {
+            var properties = ImmutableDictionary.CreateBuilder<string, string?>();
+            {
+                properties[nameof(HookDefinition)] = HookDefinition.Name;
+            }
+
+            return properties.ToImmutable();
+        }
+    }
+
+    public readonly record struct HookContext(
+        INamedTypeSymbol VoidSymbol,
+        HookAttributes Attributes,
+        INamedTypeSymbol Attribute
+    );
+
     public readonly record struct Context(
         SymbolAnalysisContext SymbolCtx,
         IMethodSymbol Symbol,
@@ -72,14 +104,19 @@ public static class InvalidHookParameters
                             }
 
                             var ctx = new Context(symbolCtx, symbol, voidSymbol, attrs, attrHookPair);
-                            var sigInfo = ctx.HookDefinition.GetSignatureInfo(ctx);
+                            var hookCtx = new HookContext(voidSymbol, attrs, attrHookPair.AttributeClass);
+                            var sigInfo = ctx.HookDefinition.GetSignatureInfo(hookCtx);
                             if (!sigInfo.HasValue)
                             {
                                 return;
                             }
 
-                            CheckReturnType(ctx, sigInfo.Value);
-                            CheckParameters(ctx, sigInfo.Value);
+                            var properties = new Properties(
+                                ctx.HookDefinition
+                            );
+
+                            CheckReturnType(ctx, sigInfo.Value, properties);
+                            CheckParameters(ctx, sigInfo.Value, properties);
                         },
                         SymbolKind.Method
                     );
@@ -87,7 +124,7 @@ public static class InvalidHookParameters
             );
         }
 
-        private static void CheckReturnType(Context ctx, SignatureInfo sigInfo)
+        private static void CheckReturnType(Context ctx, SignatureInfo sigInfo, Properties properties)
         {
             if ((sigInfo.ReturnTypeCanAlsoBeVoid || SymbolEqualityComparer.Default.Equals(sigInfo.HookReturnType, ctx.VoidSymbol)) && SymbolEqualityComparer.Default.Equals(ctx.Symbol.ReturnType, ctx.VoidSymbol))
             {
@@ -104,6 +141,7 @@ public static class InvalidHookParameters
                     Diagnostic.Create(
                         diagnostic,
                         ctx.Symbol.Locations[0],
+                        properties.ToImmutable(),
                         ctx.Symbol.ReturnType.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                         ctx.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                         sigInfo.HookTypeName,
@@ -113,9 +151,14 @@ public static class InvalidHookParameters
             }
         }
 
-        private static void CheckParameters(Context ctx, SignatureInfo sigInfo)
+        private static void CheckParameters(Context ctx, SignatureInfo sigInfo, Properties properties)
         {
-            if (ctx.HookDefinition.ValidateTargetParameters(ctx, sigInfo, ctx.Symbol.Parameters) is not { } diag)
+            if (ctx.HookDefinition.ValidateTargetParameters(
+                    ctx,
+                    sigInfo,
+                    ctx.Symbol.Parameters,
+                    properties
+                ) is not { } diag)
             {
                 return;
             }
@@ -134,7 +177,82 @@ public static class InvalidHookParameters
     {
         protected override Task RegisterAsync(CodeFixContext ctx, Parameters parameters)
         {
-            throw new System.NotImplementedException();
+            var diagnostic = parameters.Diagnostic;
+            var properties = Properties.FromImmutable(diagnostic.Properties);
+
+            if (parameters.Root.FindNode(diagnostic.Location.SourceSpan) is not MethodDeclarationSyntax methodDecl)
+            {
+                return Task.CompletedTask;
+            }
+
+            var doc = ctx.Document;
+            var semantic = parameters.SemanticModel;
+            var compilation = parameters.SemanticModel.Compilation;
+
+            var voidSymbol = compilation.GetSpecialType(SpecialType.System_Void);
+
+            if (!compilation.TryGetHookAttributes(out var attrs))
+            {
+                return Task.CompletedTask;
+            }
+
+            var method = semantic.GetDeclaredSymbol(methodDecl);
+            if (method is null)
+            {
+                return Task.CompletedTask;
+            }
+
+            var attributes = method.GetAttributes();
+            if (attributes.Length == 0)
+            {
+                return Task.CompletedTask;
+            }
+
+            // Find the first valid one.  Other analyzers will error
+            // if there are multiple and they're incompatible.
+            var attrPair = attributes.GetFirstHookAttribute(attrs);
+            if (attrPair == AttributeHookPair.Null)
+            {
+                return Task.CompletedTask;
+            }
+
+            var hookCtx = new HookContext(voidSymbol, attrs, attrPair.AttributeClass);
+            var sigInfo = properties.HookDefinition.GetSignatureInfo(hookCtx);
+            if (!sigInfo.HasValue)
+            {
+                return Task.CompletedTask;
+            }
+
+            var relatedDiagnostics = ctx.Diagnostics
+                                        .Concat(GetValidDiagnostics(semantic, methodDecl))
+                                        .Distinct()
+                                        .ToArray();
+
+            ctx.RegisterCodeFix(
+                CodeAction.Create(
+                    $"Fix hook signature {ctx.Diagnostics.Length}",
+                    ct => ApplyFixAsync(
+                        doc,
+                        methodDecl,
+                        sigInfo.Value,
+                        ct
+                    ),
+                    nameof(InvalidHookParameters)
+                ),
+                relatedDiagnostics
+            );
+
+            return Task.CompletedTask;
+        }
+        
+        private static async Task<Document> ApplyFixAsync(
+            Document doc,
+            MethodDeclarationSyntax decl,
+            SignatureInfo sigInfo,
+            CancellationToken ct
+        )
+        {
+            return doc;
         }
     }
 }

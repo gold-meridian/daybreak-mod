@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -11,6 +12,7 @@ public abstract class AbstractCodeFixProvider(params string[] diagnosticIds) : C
 {
     protected readonly record struct Parameters(
         SyntaxNode Root,
+        SemanticModel SemanticModel,
         Diagnostic Diagnostic
     )
     {
@@ -31,13 +33,24 @@ public abstract class AbstractCodeFixProvider(params string[] diagnosticIds) : C
         {
             return;
         }
-        
-        var diagnostic = context.Diagnostics.First();
-        
-        var parameters = new Parameters(root, diagnostic);
 
-        await RegisterAsync(context, parameters);
+        var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+        if (semanticModel is null)
+        {
+            return;
+        }
+
+        var diagnostic = context.Diagnostics.First();
+        var parameters = new Parameters(root, semanticModel, diagnostic);
+        {
+            await RegisterAsync(context, parameters);
+        }
     }
 
     protected abstract Task RegisterAsync(CodeFixContext ctx, Parameters parameters);
+
+    protected IEnumerable<Diagnostic> GetValidDiagnostics(SemanticModel semantic, SyntaxNode node)
+    {
+        return semantic.GetDiagnostics(node.Span).Where(x => FixableDiagnosticIds.Contains(x.Id));
+    }
 }

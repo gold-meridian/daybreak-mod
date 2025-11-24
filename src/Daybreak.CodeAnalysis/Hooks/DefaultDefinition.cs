@@ -15,9 +15,7 @@ internal sealed class DefaultDefinition() : HookDefinition("Default")
         return true;
     }
 
-    public override InvalidHookParameters.SignatureInfo? GetSignatureInfo(
-        InvalidHookParameters.Context ctx
-    )
+    public override InvalidHookParameters.SignatureInfo? GetSignatureInfo(InvalidHookParameters.HookContext ctx)
     {
         return null;
     }
@@ -25,7 +23,8 @@ internal sealed class DefaultDefinition() : HookDefinition("Default")
     public override Diagnostic? ValidateTargetParameters(
         InvalidHookParameters.Context ctx,
         InvalidHookParameters.SignatureInfo sigInfo,
-        ImmutableArray<IParameterSymbol> targetParameters
+        ImmutableArray<IParameterSymbol> targetParameters,
+        InvalidHookParameters.Properties properties
     )
     {
         return null;

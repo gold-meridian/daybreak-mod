@@ -16,7 +16,9 @@ namespace Daybreak.CodeAnalysis;
 
 public static class HookInstanceMismatch
 {
-    public readonly record struct Properties(HookInstancing RequiredInstancing)
+    public readonly record struct Properties(
+        HookInstancing RequiredInstancing
+    )
     {
         public static Properties FromImmutable(ImmutableDictionary<string, string?> properties)
         {
