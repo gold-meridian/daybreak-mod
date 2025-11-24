@@ -71,7 +71,7 @@ internal sealed class SubscriberDefinition() : HookDefinition("Subscriber")
             Diagnostics.InvalidHookParameters,
             ctx.Symbol.Locations.First(),
             ctx.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
-            $"event subscriber: ${delegateType.Name}"
+            $"event subscriber: {hookType.Name}"
         );
     }
 }

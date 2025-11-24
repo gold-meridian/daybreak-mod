@@ -8,6 +8,8 @@ public readonly record struct HookAttributes(
     INamedTypeSymbol SubscribesTo1,
     INamedTypeSymbol OnLoad,
     INamedTypeSymbol OnUnload,
+    INamedTypeSymbol Event,
+    INamedTypeSymbol Event1,
     INamedTypeSymbol IlEdit,
     INamedTypeSymbol IlEdit1,
     INamedTypeSymbol Detour,

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Reflection;
 using Microsoft.CodeAnalysis;
 
 namespace Daybreak.CodeAnalysis;
@@ -17,20 +15,29 @@ public enum HookInstancing
 public abstract class HookDefinition(string name) : IEquatable<HookDefinition>, IComparable<HookDefinition>
 {
 #region Well-known definitions
-    public static HookDefinition Default { get; } = Register(new DefaultDefinition());
+    public static HookDefinition Default { get; }
 
-    public static HookDefinition IlEdit { get; } = Register(new IlEditDefinition());
+    public static HookDefinition IlEdit { get; }
 
-    public static HookDefinition Detour { get; } = Register(new DetourDefinition());
+    public static HookDefinition Detour { get; }
 
-    public static HookDefinition Subscriber { get; } = Register(new SubscriberDefinition());
+    public static HookDefinition Subscriber { get; }
 
-    public static HookDefinition OnLoad { get; } = Register(new OnLoadDefinition());
+    public static HookDefinition OnLoad { get; }
 
-    public static HookDefinition OnUnload { get; } = Register(new OnUnloadDefinition());
+    public static HookDefinition OnUnload { get; }
 
-#region Lookup
     private static readonly Dictionary<string, HookDefinition> name_map = [];
+
+    static HookDefinition()
+    {
+        Default = Register(new DefaultDefinition());
+        IlEdit = Register(new IlEditDefinition());
+        Detour = Register(new DetourDefinition());
+        Subscriber = Register(new SubscriberDefinition());
+        OnLoad = Register(new OnLoadDefinition());
+        OnUnload = Register(new OnUnloadDefinition());
+    }
 
     public static HookDefinition FromName(string name)
     {
@@ -41,7 +48,6 @@ public abstract class HookDefinition(string name) : IEquatable<HookDefinition>, 
     {
         return name_map[definition.Name] = definition;
     }
-#endregion
 #endregion
 
     public string Name { get; } = name;
@@ -83,14 +89,14 @@ public abstract class HookDefinition(string name) : IEquatable<HookDefinition>, 
         return string.Compare(Name, other?.Name, StringComparison.Ordinal);
     }
 
-    public static bool operator ==(HookDefinition left, HookDefinition right)
+    public static bool operator ==(HookDefinition? left, HookDefinition? right)
     {
-        return left.Name == right.Name;
+        return left?.Name == right?.Name;
     }
 
-    public static bool operator !=(HookDefinition left, HookDefinition right)
+    public static bool operator !=(HookDefinition? left, HookDefinition? right)
     {
-        return left.Name != right.Name;
+        return left?.Name != right?.Name;
     }
 #endregion
 }

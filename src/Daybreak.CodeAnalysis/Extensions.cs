@@ -96,6 +96,10 @@ internal static class Extensions
 
         public INamedTypeSymbol? OnUnload => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.OnUnloadAttribute");
 
+        public INamedTypeSymbol? Event => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.EventAttribute");
+
+        public INamedTypeSymbol? Event1 => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.EventAttribute`1");
+
         public INamedTypeSymbol? IlEdit => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.IlEditAttribute");
 
         public INamedTypeSymbol? IlEdit1 => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.IlEditAttribute`1");
@@ -112,6 +116,8 @@ internal static class Extensions
              || compilation.SubscribesTo1 is not { } subscribesTo1
              || compilation.OnLoad is not { } onLoad
              || compilation.OnUnload is not { } onUnload
+             || compilation.Event is not { } @event
+             || compilation.Event1 is not { } event1
              || compilation.IlEdit is not { } ilEdit
              || compilation.IlEdit1 is not { } ilEdit1
              || compilation.Detour is not { } detour
@@ -128,6 +134,8 @@ internal static class Extensions
                 subscribesTo1,
                 onLoad,
                 onUnload,
+                @event,
+                event1,
                 ilEdit,
                 ilEdit1,
                 detour,
@@ -141,11 +149,9 @@ internal static class Extensions
     {
         public IEnumerable<HookDefinition> GetHooks(HookAttributes attrs)
         {
-            return attributes.Where(x => x.AttributeClass is not null)
-                             .Select(x => x.AttributeClass)
-                             .Cast<INamedTypeSymbol>()
-                             .Select(x => x.GetHookDefinition(attrs))
-                             .Where(x => x != HookDefinition.Default);
+            return attributes.Select(x => x.AttributeClass?.GetHookDefinition(attrs))
+                             .Where(x => x is not null && x != HookDefinition.Default)
+                             .Cast<HookDefinition>();
         }
 
         public AttributeHookPair GetFirstHookAttribute(HookAttributes attrs)
