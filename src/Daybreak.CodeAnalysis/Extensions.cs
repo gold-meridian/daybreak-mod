@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -38,39 +39,39 @@ internal static class Extensions
             return null;
         }
 
-        public HookKind GetHookKind(HookAttributes attrs)
+        public HookDefinition GetHookDefinition(HookAttributes attrs)
         {
             if (symbol is null)
             {
-                return HookKind.None;
+                return HookDefinition.Default;
             }
 
             if (symbol.InheritsFrom(attrs.OnLoad))
             {
-                return HookKind.OnLoad;
+                return HookDefinition.OnLoad;
             }
 
             if (symbol.InheritsFrom(attrs.OnUnload))
             {
-                return HookKind.OnUnload;
+                return HookDefinition.OnUnload;
             }
 
             if (symbol.InheritsFrom(attrs.SubscribesTo))
             {
-                return HookKind.Subscriber;
+                return HookDefinition.Subscriber;
             }
 
             if (symbol.InheritsFrom(attrs.IlEdit))
             {
-                return HookKind.IlEdit;
+                return HookDefinition.IlEdit;
             }
 
             if (symbol.InheritsFrom(attrs.Detour))
             {
-                return HookKind.Detour;
+                return HookDefinition.Detour;
             }
 
-            return HookKind.None;
+            return HookDefinition.Default;
         }
 
         public INamedTypeSymbol? GetClosedGenericAttribute(HookAttributes attributes)
@@ -138,9 +139,22 @@ internal static class Extensions
 
     extension(ImmutableArray<AttributeData> attributes)
     {
-        public (INamedTypeSymbol? AttributeClass, HookKind hookKind) GetFirstHookAttribute(HookAttributes attrs)
+        public IEnumerable<HookDefinition> GetHooks(HookAttributes attrs)
         {
-            return attributes.Select(x => (x.AttributeClass, hookKind: x.AttributeClass.GetHookKind(attrs))).FirstOrDefault(x => x.AttributeClass is not null && x.hookKind != HookKind.None);
+            return attributes.Where(x => x.AttributeClass is not null)
+                             .Select(x => x.AttributeClass)
+                             .Cast<INamedTypeSymbol>()
+                             .Select(x => x.GetHookDefinition(attrs))
+                             .Where(x => x != HookDefinition.Default);
+        }
+
+        public AttributeHookPair GetFirstHookAttribute(HookAttributes attrs)
+        {
+            return attributes.Where(x => x.AttributeClass is not null)
+                             .Select(x => x.AttributeClass)
+                             .Cast<INamedTypeSymbol>()
+                             .Select(x => new AttributeHookPair(x, x.GetHookDefinition(attrs)))
+                             .FirstOrDefault(x => x.HookDefinition != HookDefinition.Default);
         }
     }
 }

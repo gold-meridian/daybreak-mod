@@ -31,17 +31,13 @@ public sealed class InvalidHookStackingAnalyzer() : AbstractDiagnosticAnalyzer(D
                             return;
                         }
 
-                        var hookKinds = attributes
-                                       .Select(x => x.AttributeClass.GetHookKind(attrs))
-                                       .Where(x => x != HookKind.None)
-                                       .ToArray();
-
-                        if (hookKinds.Length < 2)
+                        var hookDefinitions = attributes.GetHooks(attrs).ToArray();
+                        if (hookDefinitions.Length < 2)
                         {
                             return;
                         }
 
-                        var legal = hookKinds.Distinct().All(x => x.ValidateMultiple(hookKinds));
+                        var legal = hookDefinitions.Distinct().All(x => x.ValidateMultiple(hookDefinitions));
                         if (legal)
                         {
                             return;

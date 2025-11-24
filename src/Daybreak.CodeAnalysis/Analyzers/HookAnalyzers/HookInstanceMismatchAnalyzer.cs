@@ -56,8 +56,8 @@ public sealed class HookInstanceMismatchAnalyzer() : AbstractDiagnosticAnalyzer(
                         // Only the first hook needs to be matched.  If a method
                         // has more than one hook, they must all be compatible
                         // or of the same type.
-                        var hookKind = attributes.Select(x => x.AttributeClass.GetHookKind(attrs)).FirstOrDefault(x => x != HookKind.None);
-                        if (hookKind == HookKind.None)
+                        var hookKind = attributes.GetHooks(attrs).FirstOrDefault();
+                        if (hookKind is null)
                         {
                             return;
                         }
