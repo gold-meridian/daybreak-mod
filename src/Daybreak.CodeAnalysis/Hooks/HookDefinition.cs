@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 
 namespace Daybreak.CodeAnalysis;
@@ -21,7 +22,7 @@ public sealed class HookDefinition(
             {
                 return name;
             }
-            
+
             return name[..^"Attribute".Length];
         }
     }
@@ -35,8 +36,53 @@ public sealed class HookDefinition(
         InvalidHookParameters.HookContext ctx
     )
     {
-        // TODO
+        var delegateSymbol = GetDelegateType();
+        if (delegateSymbol is not INamedTypeSymbol { DelegateInvokeMethod: { } invoke })
+        {
+            return null;
+        }
+
+        return new InvalidHookParameters.SignatureInfo(
+            HookTypeName: Name,
+            HookParameters: invoke.Parameters,
+            HookReturnType: invoke.ReturnType,
+            ReturnTypeCanAlsoBeVoid: !SymbolEqualityComparer.Default.Equals(invoke.ReturnType, ctx.VoidSymbol)
+        );
+    }
+
+    private ITypeSymbol? GetDelegateType()
+    {
+        if (delegateType is not null)
+        {
+            return delegateType;
+        }
+
+        if (typeContainingEvent is null)
+        {
+            return null;
+        }
+
+        if (delegateName is not null)
+        {
+            return typeContainingEvent.GetTypeMembers(delegateName).FirstOrDefault();
+        }
+
+        if (GetEvent() is { } eventSymbol)
+        {
+            return eventSymbol.Type.OriginalDefinition;
+        }
+
         return null;
+    }
+
+    private IEventSymbol? GetEvent()
+    {
+        if (typeContainingEvent is null || eventName is null)
+        {
+            return null;
+        }
+
+        return typeContainingEvent.GetMembers(eventName).Where(x => x is IEventSymbol).Cast<IEventSymbol>().FirstOrDefault();
     }
 
     public Diagnostic? ValidateTargetParameters(
