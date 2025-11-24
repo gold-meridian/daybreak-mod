@@ -23,7 +23,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class GlobalBuffHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class Update_int_Player_intAttribute : SubscribesToAttribute<Update_int_Player_int>;
+    [HookMetadata(TypeContainingEvent = typeof(Update_int_Player_int), EventName = "Event", DelegateName = "Definition")]
+    public sealed class Update_int_Player_intAttribute : SubscribesToAttribute;
 
     public sealed partial class Update_int_Player_int
     {
@@ -50,7 +51,8 @@ public static partial class GlobalBuffHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class Update_int_NPC_intAttribute : SubscribesToAttribute<Update_int_NPC_int>;
+    [HookMetadata(TypeContainingEvent = typeof(Update_int_NPC_int), EventName = "Event", DelegateName = "Definition")]
+    public sealed class Update_int_NPC_intAttribute : SubscribesToAttribute;
 
     public sealed partial class Update_int_NPC_int
     {
@@ -77,7 +79,8 @@ public static partial class GlobalBuffHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ReApply_int_Player_int_intAttribute : SubscribesToAttribute<ReApply_int_Player_int_int>;
+    [HookMetadata(TypeContainingEvent = typeof(ReApply_int_Player_int_int), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ReApply_int_Player_int_intAttribute : SubscribesToAttribute;
 
     public sealed partial class ReApply_int_Player_int_int
     {
@@ -107,7 +110,8 @@ public static partial class GlobalBuffHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ReApply_int_NPC_int_intAttribute : SubscribesToAttribute<ReApply_int_NPC_int_int>;
+    [HookMetadata(TypeContainingEvent = typeof(ReApply_int_NPC_int_int), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ReApply_int_NPC_int_intAttribute : SubscribesToAttribute;
 
     public sealed partial class ReApply_int_NPC_int_int
     {
@@ -137,7 +141,8 @@ public static partial class GlobalBuffHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyBuffTextAttribute : SubscribesToAttribute<ModifyBuffText>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyBuffText), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyBuffTextAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyBuffText
     {
@@ -166,7 +171,8 @@ public static partial class GlobalBuffHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CustomBuffTipSizeAttribute : SubscribesToAttribute<CustomBuffTipSize>;
+    [HookMetadata(TypeContainingEvent = typeof(CustomBuffTipSize), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CustomBuffTipSizeAttribute : SubscribesToAttribute;
 
     public sealed partial class CustomBuffTipSize
     {
@@ -191,7 +197,8 @@ public static partial class GlobalBuffHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DrawCustomBuffTipAttribute : SubscribesToAttribute<DrawCustomBuffTip>;
+    [HookMetadata(TypeContainingEvent = typeof(DrawCustomBuffTip), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DrawCustomBuffTipAttribute : SubscribesToAttribute;
 
     public sealed partial class DrawCustomBuffTip
     {
@@ -220,7 +227,8 @@ public static partial class GlobalBuffHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDraw
     {
@@ -250,7 +258,8 @@ public static partial class GlobalBuffHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDraw
     {
@@ -279,7 +288,8 @@ public static partial class GlobalBuffHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class RightClickAttribute : SubscribesToAttribute<RightClick>;
+    [HookMetadata(TypeContainingEvent = typeof(RightClick), EventName = "Event", DelegateName = "Definition")]
+    public sealed class RightClickAttribute : SubscribesToAttribute;
 
     public sealed partial class RightClick
     {

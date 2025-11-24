@@ -27,7 +27,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class GlobalWallHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DropAttribute : SubscribesToAttribute<Drop>;
+    [HookMetadata(TypeContainingEvent = typeof(Drop), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DropAttribute : SubscribesToAttribute;
 
     public sealed partial class Drop
     {
@@ -57,7 +58,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class KillWallAttribute : SubscribesToAttribute<KillWall>;
+    [HookMetadata(TypeContainingEvent = typeof(KillWall), EventName = "Event", DelegateName = "Definition")]
+    public sealed class KillWallAttribute : SubscribesToAttribute;
 
     public sealed partial class KillWall
     {
@@ -86,7 +88,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class WallFrameAttribute : SubscribesToAttribute<WallFrame>;
+    [HookMetadata(TypeContainingEvent = typeof(WallFrame), EventName = "Event", DelegateName = "Definition")]
+    public sealed class WallFrameAttribute : SubscribesToAttribute;
 
     public sealed partial class WallFrame
     {
@@ -120,7 +123,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanBeTeleportedToAttribute : SubscribesToAttribute<CanBeTeleportedTo>;
+    [HookMetadata(TypeContainingEvent = typeof(CanBeTeleportedTo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanBeTeleportedToAttribute : SubscribesToAttribute;
 
     public sealed partial class CanBeTeleportedTo
     {
@@ -152,7 +156,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class KillSoundAttribute : SubscribesToAttribute<KillSound>;
+    [HookMetadata(TypeContainingEvent = typeof(KillSound), EventName = "Event", DelegateName = "Definition")]
+    public sealed class KillSoundAttribute : SubscribesToAttribute;
 
     public sealed partial class KillSound
     {
@@ -182,7 +187,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class NumDustAttribute : SubscribesToAttribute<NumDust>;
+    [HookMetadata(TypeContainingEvent = typeof(NumDust), EventName = "Event", DelegateName = "Definition")]
+    public sealed class NumDustAttribute : SubscribesToAttribute;
 
     public sealed partial class NumDust
     {
@@ -213,7 +219,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CreateDustAttribute : SubscribesToAttribute<CreateDust>;
+    [HookMetadata(TypeContainingEvent = typeof(CreateDust), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CreateDustAttribute : SubscribesToAttribute;
 
     public sealed partial class CreateDust
     {
@@ -243,7 +250,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanPlaceAttribute : SubscribesToAttribute<CanPlace>;
+    [HookMetadata(TypeContainingEvent = typeof(CanPlace), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanPlaceAttribute : SubscribesToAttribute;
 
     public sealed partial class CanPlace
     {
@@ -271,7 +279,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanExplodeAttribute : SubscribesToAttribute<CanExplode>;
+    [HookMetadata(TypeContainingEvent = typeof(CanExplode), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanExplodeAttribute : SubscribesToAttribute;
 
     public sealed partial class CanExplode
     {
@@ -299,7 +308,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDraw
     {
@@ -329,7 +339,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDraw
     {
@@ -358,7 +369,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class RandomUpdateAttribute : SubscribesToAttribute<RandomUpdate>;
+    [HookMetadata(TypeContainingEvent = typeof(RandomUpdate), EventName = "Event", DelegateName = "Definition")]
+    public sealed class RandomUpdateAttribute : SubscribesToAttribute;
 
     public sealed partial class RandomUpdate
     {
@@ -385,7 +397,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PlaceInWorldAttribute : SubscribesToAttribute<PlaceInWorld>;
+    [HookMetadata(TypeContainingEvent = typeof(PlaceInWorld), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PlaceInWorldAttribute : SubscribesToAttribute;
 
     public sealed partial class PlaceInWorld
     {
@@ -414,7 +427,8 @@ public static partial class GlobalWallHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyLightAttribute : SubscribesToAttribute<ModifyLight>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyLight), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyLightAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyLight
     {

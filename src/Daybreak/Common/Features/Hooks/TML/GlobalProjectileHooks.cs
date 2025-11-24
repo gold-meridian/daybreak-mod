@@ -49,7 +49,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class GlobalProjectileHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnSpawnAttribute : SubscribesToAttribute<OnSpawn>;
+    [HookMetadata(TypeContainingEvent = typeof(OnSpawn), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnSpawnAttribute : SubscribesToAttribute;
 
     public sealed partial class OnSpawn
     {
@@ -74,7 +75,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreAIAttribute : SubscribesToAttribute<PreAI>;
+    [HookMetadata(TypeContainingEvent = typeof(PreAI), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreAIAttribute : SubscribesToAttribute;
 
     public sealed partial class PreAI
     {
@@ -98,7 +100,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class AIAttribute : SubscribesToAttribute<AI>;
+    [HookMetadata(TypeContainingEvent = typeof(AI), EventName = "Event", DelegateName = "Definition")]
+    public sealed class AIAttribute : SubscribesToAttribute;
 
     public sealed partial class AI
     {
@@ -121,7 +124,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostAIAttribute : SubscribesToAttribute<PostAI>;
+    [HookMetadata(TypeContainingEvent = typeof(PostAI), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostAIAttribute : SubscribesToAttribute;
 
     public sealed partial class PostAI
     {
@@ -144,7 +148,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ShouldUpdatePositionAttribute : SubscribesToAttribute<ShouldUpdatePosition>;
+    [HookMetadata(TypeContainingEvent = typeof(ShouldUpdatePosition), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ShouldUpdatePositionAttribute : SubscribesToAttribute;
 
     public sealed partial class ShouldUpdatePosition
     {
@@ -168,7 +173,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class TileCollideStyleAttribute : SubscribesToAttribute<TileCollideStyle>;
+    [HookMetadata(TypeContainingEvent = typeof(TileCollideStyle), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TileCollideStyleAttribute : SubscribesToAttribute;
 
     public sealed partial class TileCollideStyle
     {
@@ -200,7 +206,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnTileCollideAttribute : SubscribesToAttribute<OnTileCollide>;
+    [HookMetadata(TypeContainingEvent = typeof(OnTileCollide), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnTileCollideAttribute : SubscribesToAttribute;
 
     public sealed partial class OnTileCollide
     {
@@ -226,7 +233,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreKillAttribute : SubscribesToAttribute<PreKill>;
+    [HookMetadata(TypeContainingEvent = typeof(PreKill), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreKillAttribute : SubscribesToAttribute;
 
     public sealed partial class PreKill
     {
@@ -252,7 +260,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnKillAttribute : SubscribesToAttribute<OnKill>;
+    [HookMetadata(TypeContainingEvent = typeof(OnKill), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnKillAttribute : SubscribesToAttribute;
 
     public sealed partial class OnKill
     {
@@ -277,7 +286,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanCutTilesAttribute : SubscribesToAttribute<CanCutTiles>;
+    [HookMetadata(TypeContainingEvent = typeof(CanCutTiles), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanCutTilesAttribute : SubscribesToAttribute;
 
     public sealed partial class CanCutTiles
     {
@@ -301,7 +311,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CutTilesAttribute : SubscribesToAttribute<CutTiles>;
+    [HookMetadata(TypeContainingEvent = typeof(CutTiles), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CutTilesAttribute : SubscribesToAttribute;
 
     public sealed partial class CutTiles
     {
@@ -324,7 +335,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanDamageAttribute : SubscribesToAttribute<CanDamage>;
+    [HookMetadata(TypeContainingEvent = typeof(CanDamage), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanDamageAttribute : SubscribesToAttribute;
 
     public sealed partial class CanDamage
     {
@@ -348,7 +360,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class MinionContactDamageAttribute : SubscribesToAttribute<MinionContactDamage>;
+    [HookMetadata(TypeContainingEvent = typeof(MinionContactDamage), EventName = "Event", DelegateName = "Definition")]
+    public sealed class MinionContactDamageAttribute : SubscribesToAttribute;
 
     public sealed partial class MinionContactDamage
     {
@@ -372,7 +385,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyDamageHitboxAttribute : SubscribesToAttribute<ModifyDamageHitbox>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyDamageHitbox), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyDamageHitboxAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyDamageHitbox
     {
@@ -397,7 +411,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanHitNPCAttribute : SubscribesToAttribute<CanHitNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(CanHitNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanHitNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class CanHitNPC
     {
@@ -423,7 +438,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute<ModifyHitNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHitNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHitNPC
     {
@@ -450,7 +466,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnHitNPCAttribute : SubscribesToAttribute<OnHitNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(OnHitNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnHitNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class OnHitNPC
     {
@@ -479,7 +496,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanHitPvpAttribute : SubscribesToAttribute<CanHitPvp>;
+    [HookMetadata(TypeContainingEvent = typeof(CanHitPvp), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanHitPvpAttribute : SubscribesToAttribute;
 
     public sealed partial class CanHitPvp
     {
@@ -505,7 +523,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanHitPlayerAttribute : SubscribesToAttribute<CanHitPlayer>;
+    [HookMetadata(TypeContainingEvent = typeof(CanHitPlayer), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanHitPlayerAttribute : SubscribesToAttribute;
 
     public sealed partial class CanHitPlayer
     {
@@ -531,7 +550,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHitPlayerAttribute : SubscribesToAttribute<ModifyHitPlayer>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHitPlayer), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHitPlayerAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHitPlayer
     {
@@ -558,7 +578,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnHitPlayerAttribute : SubscribesToAttribute<OnHitPlayer>;
+    [HookMetadata(TypeContainingEvent = typeof(OnHitPlayer), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnHitPlayerAttribute : SubscribesToAttribute;
 
     public sealed partial class OnHitPlayer
     {
@@ -585,7 +606,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CollidingAttribute : SubscribesToAttribute<Colliding>;
+    [HookMetadata(TypeContainingEvent = typeof(Colliding), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CollidingAttribute : SubscribesToAttribute;
 
     public sealed partial class Colliding
     {
@@ -613,7 +635,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GetAlphaAttribute : SubscribesToAttribute<GetAlpha>;
+    [HookMetadata(TypeContainingEvent = typeof(GetAlpha), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GetAlphaAttribute : SubscribesToAttribute;
 
     public sealed partial class GetAlpha
     {
@@ -639,7 +662,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawExtrasAttribute : SubscribesToAttribute<PreDrawExtras>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDrawExtras), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawExtrasAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDrawExtras
     {
@@ -663,7 +687,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDraw
     {
@@ -689,7 +714,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDraw
     {
@@ -714,7 +740,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DrawBehindAttribute : SubscribesToAttribute<DrawBehind>;
+    [HookMetadata(TypeContainingEvent = typeof(DrawBehind), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DrawBehindAttribute : SubscribesToAttribute;
 
     public sealed partial class DrawBehind
     {
@@ -749,7 +776,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanUseGrappleAttribute : SubscribesToAttribute<CanUseGrapple>;
+    [HookMetadata(TypeContainingEvent = typeof(CanUseGrapple), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanUseGrappleAttribute : SubscribesToAttribute;
 
     public sealed partial class CanUseGrapple
     {
@@ -775,7 +803,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UseGrappleAttribute : SubscribesToAttribute<UseGrapple>;
+    [HookMetadata(TypeContainingEvent = typeof(UseGrapple), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UseGrappleAttribute : SubscribesToAttribute;
 
     public sealed partial class UseGrapple
     {
@@ -800,7 +829,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class NumGrappleHooksAttribute : SubscribesToAttribute<NumGrappleHooks>;
+    [HookMetadata(TypeContainingEvent = typeof(NumGrappleHooks), EventName = "Event", DelegateName = "Definition")]
+    public sealed class NumGrappleHooksAttribute : SubscribesToAttribute;
 
     public sealed partial class NumGrappleHooks
     {
@@ -827,7 +857,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GrappleRetreatSpeedAttribute : SubscribesToAttribute<GrappleRetreatSpeed>;
+    [HookMetadata(TypeContainingEvent = typeof(GrappleRetreatSpeed), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GrappleRetreatSpeedAttribute : SubscribesToAttribute;
 
     public sealed partial class GrappleRetreatSpeed
     {
@@ -854,7 +885,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GrapplePullSpeedAttribute : SubscribesToAttribute<GrapplePullSpeed>;
+    [HookMetadata(TypeContainingEvent = typeof(GrapplePullSpeed), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GrapplePullSpeedAttribute : SubscribesToAttribute;
 
     public sealed partial class GrapplePullSpeed
     {
@@ -881,7 +913,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GrappleTargetPointAttribute : SubscribesToAttribute<GrappleTargetPoint>;
+    [HookMetadata(TypeContainingEvent = typeof(GrappleTargetPoint), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GrappleTargetPointAttribute : SubscribesToAttribute;
 
     public sealed partial class GrappleTargetPoint
     {
@@ -910,7 +943,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GrappleCanLatchOnToAttribute : SubscribesToAttribute<GrappleCanLatchOnTo>;
+    [HookMetadata(TypeContainingEvent = typeof(GrappleCanLatchOnTo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GrappleCanLatchOnToAttribute : SubscribesToAttribute;
 
     public sealed partial class GrappleCanLatchOnTo
     {
@@ -940,7 +974,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PrepareBombToBlowAttribute : SubscribesToAttribute<PrepareBombToBlow>;
+    [HookMetadata(TypeContainingEvent = typeof(PrepareBombToBlow), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PrepareBombToBlowAttribute : SubscribesToAttribute;
 
     public sealed partial class PrepareBombToBlow
     {
@@ -963,7 +998,8 @@ public static partial class GlobalProjectileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class EmitEnchantmentVisualsAtAttribute : SubscribesToAttribute<EmitEnchantmentVisualsAt>;
+    [HookMetadata(TypeContainingEvent = typeof(EmitEnchantmentVisualsAt), EventName = "Event", DelegateName = "Definition")]
+    public sealed class EmitEnchantmentVisualsAtAttribute : SubscribesToAttribute;
 
     public sealed partial class EmitEnchantmentVisualsAt
     {

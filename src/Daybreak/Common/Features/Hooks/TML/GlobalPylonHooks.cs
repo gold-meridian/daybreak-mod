@@ -19,7 +19,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class GlobalPylonHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawMapIconAttribute : SubscribesToAttribute<PreDrawMapIcon>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDrawMapIcon), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawMapIconAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDrawMapIcon
     {
@@ -55,7 +56,8 @@ public static partial class GlobalPylonHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreCanPlacePylonAttribute : SubscribesToAttribute<PreCanPlacePylon>;
+    [HookMetadata(TypeContainingEvent = typeof(PreCanPlacePylon), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreCanPlacePylonAttribute : SubscribesToAttribute;
 
     public sealed partial class PreCanPlacePylon
     {
@@ -85,7 +87,8 @@ public static partial class GlobalPylonHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ValidTeleportCheck_PreNPCCountAttribute : SubscribesToAttribute<ValidTeleportCheck_PreNPCCount>;
+    [HookMetadata(TypeContainingEvent = typeof(ValidTeleportCheck_PreNPCCount), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ValidTeleportCheck_PreNPCCountAttribute : SubscribesToAttribute;
 
     public sealed partial class ValidTeleportCheck_PreNPCCount
     {
@@ -111,7 +114,8 @@ public static partial class GlobalPylonHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ValidTeleportCheck_PreAnyDangerAttribute : SubscribesToAttribute<ValidTeleportCheck_PreAnyDanger>;
+    [HookMetadata(TypeContainingEvent = typeof(ValidTeleportCheck_PreAnyDanger), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ValidTeleportCheck_PreAnyDangerAttribute : SubscribesToAttribute;
 
     public sealed partial class ValidTeleportCheck_PreAnyDanger
     {
@@ -135,7 +139,8 @@ public static partial class GlobalPylonHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ValidTeleportCheck_PreBiomeRequirementsAttribute : SubscribesToAttribute<ValidTeleportCheck_PreBiomeRequirements>;
+    [HookMetadata(TypeContainingEvent = typeof(ValidTeleportCheck_PreBiomeRequirements), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ValidTeleportCheck_PreBiomeRequirementsAttribute : SubscribesToAttribute;
 
     public sealed partial class ValidTeleportCheck_PreBiomeRequirements
     {
@@ -161,7 +166,8 @@ public static partial class GlobalPylonHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostValidTeleportCheckAttribute : SubscribesToAttribute<PostValidTeleportCheck>;
+    [HookMetadata(TypeContainingEvent = typeof(PostValidTeleportCheck), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostValidTeleportCheckAttribute : SubscribesToAttribute;
 
     public sealed partial class PostValidTeleportCheck
     {

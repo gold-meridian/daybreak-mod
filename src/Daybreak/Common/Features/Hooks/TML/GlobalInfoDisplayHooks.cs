@@ -15,7 +15,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class GlobalInfoDisplayHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ActiveAttribute : SubscribesToAttribute<Active>;
+    [HookMetadata(TypeContainingEvent = typeof(Active), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ActiveAttribute : SubscribesToAttribute;
 
     public sealed partial class Active
     {
@@ -39,7 +40,8 @@ public static partial class GlobalInfoDisplayHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyDisplayParametersAttribute : SubscribesToAttribute<ModifyDisplayParameters>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyDisplayParameters), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyDisplayParametersAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyDisplayParameters
     {

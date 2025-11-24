@@ -22,18 +22,7 @@ public class EventAttribute<T> : EventAttribute;
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class SubscribesToAttribute(
-    Type typeWithEvent,
-    string eventName = "Event",
-    string delegateName = "Definition"
-) : BaseHookAttribute(
-    delegateSignatureType: null,
-    typeWithEvent: typeWithEvent,
-    eventName: eventName,
-    delegateName: delegateName,
-    supportsInstancedMethods: true,
-    supportsStaticMethods: true
-)
+public abstract class SubscribesToAttribute : BaseHookAttribute
 {
     /// <inheritdoc />
     public override void Apply(MethodInfo bindingMethod, object? instance)
@@ -67,11 +56,18 @@ public class SubscribesToAttribute(
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class SubscribesToAttribute<T>(
-    string eventName = "Event",
-    string delegateName = "Definition"
-) : SubscribesToAttribute(
-    typeof(T),
-    eventName,
-    delegateName
-);
+[Obsolete("Replace [SubscribesTo<X>] with [X] directly; attribute-based hooks have been rewritten", error: true)]
+public class SubscribesToAttribute<T> : SubscribesToAttribute
+{
+    /// <inheritdoc />
+    public override Type? DelegateType => null;
+
+    /// <inheritdoc />
+    public override Type TypeContainingEvent => typeof(T);
+
+    /// <inheritdoc />
+    public override string EventName => "Event";
+
+    /// <inheritdoc />
+    public override string DelegateName => "Definition";
+}

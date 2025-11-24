@@ -22,7 +22,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class GlobalEmoteBubbleHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnSpawnAttribute : SubscribesToAttribute<OnSpawn>;
+    [HookMetadata(TypeContainingEvent = typeof(OnSpawn), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnSpawnAttribute : SubscribesToAttribute;
 
     public sealed partial class OnSpawn
     {
@@ -45,7 +46,8 @@ public static partial class GlobalEmoteBubbleHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateFrameAttribute : SubscribesToAttribute<UpdateFrame>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateFrame), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateFrameAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateFrame
     {
@@ -69,7 +71,8 @@ public static partial class GlobalEmoteBubbleHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateFrameInEmoteMenuAttribute : SubscribesToAttribute<UpdateFrameInEmoteMenu>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateFrameInEmoteMenu), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateFrameInEmoteMenuAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateFrameInEmoteMenu
     {
@@ -95,7 +98,8 @@ public static partial class GlobalEmoteBubbleHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDraw
     {
@@ -131,7 +135,8 @@ public static partial class GlobalEmoteBubbleHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDraw
     {
@@ -166,7 +171,8 @@ public static partial class GlobalEmoteBubbleHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawInEmoteMenuAttribute : SubscribesToAttribute<PreDrawInEmoteMenu>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDrawInEmoteMenu), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawInEmoteMenuAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDrawInEmoteMenu
     {
@@ -200,7 +206,8 @@ public static partial class GlobalEmoteBubbleHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawInEmoteMenuAttribute : SubscribesToAttribute<PostDrawInEmoteMenu>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDrawInEmoteMenu), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawInEmoteMenuAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDrawInEmoteMenu
     {
@@ -233,7 +240,8 @@ public static partial class GlobalEmoteBubbleHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GetFrameAttribute : SubscribesToAttribute<GetFrame>;
+    [HookMetadata(TypeContainingEvent = typeof(GetFrame), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GetFrameAttribute : SubscribesToAttribute;
 
     public sealed partial class GetFrame
     {
@@ -257,7 +265,8 @@ public static partial class GlobalEmoteBubbleHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GetFrameInEmoteMenuAttribute : SubscribesToAttribute<GetFrameInEmoteMenu>;
+    [HookMetadata(TypeContainingEvent = typeof(GetFrameInEmoteMenu), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GetFrameInEmoteMenuAttribute : SubscribesToAttribute;
 
     public sealed partial class GetFrameInEmoteMenu
     {

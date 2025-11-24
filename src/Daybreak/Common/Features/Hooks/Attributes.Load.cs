@@ -24,9 +24,8 @@ namespace Daybreak.Common.Features.Hooks;
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class OnLoadAttribute() : BaseHookAttribute(
-    delegateSignatureType: typeof(OnLoadHook.Definition)
-)
+[HookMetadata(DelegateType = typeof(OnLoadHook.Definition))]
+public sealed class OnLoadAttribute : BaseHookAttribute
 {
     /// <inheritdoc />
     public override void Apply(MethodInfo bindingMethod, object? instance)
@@ -54,9 +53,8 @@ public sealed class OnLoadAttribute() : BaseHookAttribute(
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class OnUnloadAttribute() : BaseHookAttribute(
-    delegateSignatureType: typeof(OnUnloadHook.Definition)
-)
+[HookMetadata(DelegateType = typeof(OnUnloadHook.Definition))]
+public sealed class OnUnloadAttribute : BaseHookAttribute
 {
     /// <inheritdoc />
     public override void Apply(MethodInfo bindingMethod, object? instance)

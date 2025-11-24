@@ -92,14 +92,10 @@ internal sealed class PermitsVoidInvokeParameterWithParametersAttribute(string p
 }
 
 /// <summary>
-///     Shared between all hooking attributes to provide a common base for
-///     code analysis and code fixes.  Provides relevant information for parsing
-///     out how to handle a given type.
+///     Describes the data of a <see cref="BaseHookAttribute"/>.
 /// </summary>
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public abstract class BaseHookAttribute : Attribute, IHasSide
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public sealed class HookMetadataAttribute : Attribute
 {
     /// <summary>
     ///     The delegate type representing the signature of the event.  If not
@@ -125,19 +121,42 @@ public abstract class BaseHookAttribute : Attribute, IHasSide
     ///     <see cref="DelegateType"/> is unspecified.
     /// </summary>
     public string? DelegateName { get; init; }
+}
+
+/// <summary>
+///     Shared between all hooking attributes to provide a common base for
+///     code analysis and code fixes.  Provides relevant information for parsing
+///     out how to handle a given type.
+/// </summary>
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public abstract class BaseHookAttribute : Attribute, IHasSide
+{
+    /// <summary>
+    ///     The delegate type representing the signature of the event.  If not
+    ///     specified, it will attempt to be resolved from
+    ///     <see cref="TypeContainingEvent"/> using <see cref="DelegateName"/>.
+    ///     If still not resolved, it will use the event's type (assuming it was
+    ///     resolved).
+    /// </summary>
+    public virtual Type? DelegateType => GetType().GetCustomAttribute<HookMetadataAttribute>()?.DelegateType;
 
     /// <summary>
-    ///     Whether methods annotated with this hook attribute may be instanced.
-    ///     <br />
-    ///     Relies on them implementing <see cref="ILoadable"/>, as it uses the
-    ///     autloaded singleton/template instance.
+    ///     The type containing the event.
     /// </summary>
-    public bool SupportsInstancedMethods { get; init; } = true;
+    public virtual Type? TypeContainingEvent => GetType().GetCustomAttribute<HookMetadataAttribute>()?.TypeContainingEvent;
 
     /// <summary>
-    ///     Whether methods annotated with this hook attribute may be static.
+    ///     The name of the event field within the type.
     /// </summary>
-    public bool SupportsStaticMethods { get; init; } = true;
+    public virtual string? EventName => GetType().GetCustomAttribute<HookMetadataAttribute>()?.EventName;
+
+    /// <summary>
+    ///     The name of the delegate within <see cref="TypeContainingEvent"/> if
+    ///     <see cref="DelegateType"/> is unspecified.
+    /// </summary>
+    public virtual string? DelegateName => GetType().GetCustomAttribute<HookMetadataAttribute>()?.DelegateName;
 
     /// <summary>
     ///     The side to load this on.

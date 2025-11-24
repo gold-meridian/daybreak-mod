@@ -15,7 +15,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class GlobalBossBarHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDraw
     {
@@ -43,7 +44,8 @@ public static partial class GlobalBossBarHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDraw
     {

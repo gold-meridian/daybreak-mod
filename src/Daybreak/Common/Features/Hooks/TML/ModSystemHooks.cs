@@ -71,7 +71,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class ModSystemHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class SetupContentAttribute : SubscribesToAttribute<SetupContent>;
+    [HookMetadata(TypeContainingEvent = typeof(SetupContent), EventName = "Event", DelegateName = "Definition")]
+    public sealed class SetupContentAttribute : SubscribesToAttribute;
 
     public sealed partial class SetupContent
     {
@@ -91,7 +92,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnModLoadAttribute : SubscribesToAttribute<OnModLoad>;
+    [HookMetadata(TypeContainingEvent = typeof(OnModLoad), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnModLoadAttribute : SubscribesToAttribute;
 
     public sealed partial class OnModLoad
     {
@@ -111,7 +113,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnModUnloadAttribute : SubscribesToAttribute<OnModUnload>;
+    [HookMetadata(TypeContainingEvent = typeof(OnModUnload), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnModUnloadAttribute : SubscribesToAttribute;
 
     public sealed partial class OnModUnload
     {
@@ -131,7 +134,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostSetupContentAttribute : SubscribesToAttribute<PostSetupContent>;
+    [HookMetadata(TypeContainingEvent = typeof(PostSetupContent), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostSetupContentAttribute : SubscribesToAttribute;
 
     public sealed partial class PostSetupContent
     {
@@ -151,7 +155,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnLocalizationsLoadedAttribute : SubscribesToAttribute<OnLocalizationsLoaded>;
+    [HookMetadata(TypeContainingEvent = typeof(OnLocalizationsLoaded), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnLocalizationsLoadedAttribute : SubscribesToAttribute;
 
     public sealed partial class OnLocalizationsLoaded
     {
@@ -171,7 +176,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class AddRecipesAttribute : SubscribesToAttribute<AddRecipes>;
+    [HookMetadata(TypeContainingEvent = typeof(AddRecipes), EventName = "Event", DelegateName = "Definition")]
+    public sealed class AddRecipesAttribute : SubscribesToAttribute;
 
     public sealed partial class AddRecipes
     {
@@ -191,7 +197,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostAddRecipesAttribute : SubscribesToAttribute<PostAddRecipes>;
+    [HookMetadata(TypeContainingEvent = typeof(PostAddRecipes), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostAddRecipesAttribute : SubscribesToAttribute;
 
     public sealed partial class PostAddRecipes
     {
@@ -211,7 +218,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostSetupRecipesAttribute : SubscribesToAttribute<PostSetupRecipes>;
+    [HookMetadata(TypeContainingEvent = typeof(PostSetupRecipes), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostSetupRecipesAttribute : SubscribesToAttribute;
 
     public sealed partial class PostSetupRecipes
     {
@@ -231,7 +239,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class AddRecipeGroupsAttribute : SubscribesToAttribute<AddRecipeGroups>;
+    [HookMetadata(TypeContainingEvent = typeof(AddRecipeGroups), EventName = "Event", DelegateName = "Definition")]
+    public sealed class AddRecipeGroupsAttribute : SubscribesToAttribute;
 
     public sealed partial class AddRecipeGroups
     {
@@ -251,7 +260,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnWorldLoadAttribute : SubscribesToAttribute<OnWorldLoad>;
+    [HookMetadata(TypeContainingEvent = typeof(OnWorldLoad), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnWorldLoadAttribute : SubscribesToAttribute;
 
     public sealed partial class OnWorldLoad
     {
@@ -271,7 +281,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostWorldLoadAttribute : SubscribesToAttribute<PostWorldLoad>;
+    [HookMetadata(TypeContainingEvent = typeof(PostWorldLoad), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostWorldLoadAttribute : SubscribesToAttribute;
 
     public sealed partial class PostWorldLoad
     {
@@ -291,7 +302,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnWorldUnloadAttribute : SubscribesToAttribute<OnWorldUnload>;
+    [HookMetadata(TypeContainingEvent = typeof(OnWorldUnload), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnWorldUnloadAttribute : SubscribesToAttribute;
 
     public sealed partial class OnWorldUnload
     {
@@ -311,7 +323,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ClearWorldAttribute : SubscribesToAttribute<ClearWorld>;
+    [HookMetadata(TypeContainingEvent = typeof(ClearWorld), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ClearWorldAttribute : SubscribesToAttribute;
 
     public sealed partial class ClearWorld
     {
@@ -331,7 +344,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyScreenPositionAttribute : SubscribesToAttribute<ModifyScreenPosition>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyScreenPosition), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyScreenPositionAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyScreenPosition
     {
@@ -351,7 +365,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyTransformMatrixAttribute : SubscribesToAttribute<ModifyTransformMatrix>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyTransformMatrix), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyTransformMatrixAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyTransformMatrix
     {
@@ -374,7 +389,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateUIAttribute : SubscribesToAttribute<UpdateUI>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateUI), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateUIAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateUI
     {
@@ -397,7 +413,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateEntitiesAttribute : SubscribesToAttribute<PreUpdateEntities>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateEntities), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateEntitiesAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateEntities
     {
@@ -417,7 +434,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdatePlayersAttribute : SubscribesToAttribute<PreUpdatePlayers>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdatePlayers), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdatePlayersAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdatePlayers
     {
@@ -437,7 +455,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdatePlayersAttribute : SubscribesToAttribute<PostUpdatePlayers>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdatePlayers), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdatePlayersAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdatePlayers
     {
@@ -457,7 +476,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateNPCsAttribute : SubscribesToAttribute<PreUpdateNPCs>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateNPCs), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateNPCsAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateNPCs
     {
@@ -477,7 +497,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateNPCsAttribute : SubscribesToAttribute<PostUpdateNPCs>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateNPCs), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateNPCsAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateNPCs
     {
@@ -497,7 +518,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateGoresAttribute : SubscribesToAttribute<PreUpdateGores>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateGores), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateGoresAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateGores
     {
@@ -517,7 +539,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateGoresAttribute : SubscribesToAttribute<PostUpdateGores>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateGores), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateGoresAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateGores
     {
@@ -537,7 +560,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateProjectilesAttribute : SubscribesToAttribute<PreUpdateProjectiles>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateProjectiles), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateProjectilesAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateProjectiles
     {
@@ -557,7 +581,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateProjectilesAttribute : SubscribesToAttribute<PostUpdateProjectiles>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateProjectiles), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateProjectilesAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateProjectiles
     {
@@ -577,7 +602,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateItemsAttribute : SubscribesToAttribute<PreUpdateItems>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateItems), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateItemsAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateItems
     {
@@ -597,7 +623,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateItemsAttribute : SubscribesToAttribute<PostUpdateItems>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateItems), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateItemsAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateItems
     {
@@ -617,7 +644,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateDustsAttribute : SubscribesToAttribute<PreUpdateDusts>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateDusts), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateDustsAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateDusts
     {
@@ -637,7 +665,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateDustsAttribute : SubscribesToAttribute<PostUpdateDusts>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateDusts), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateDustsAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateDusts
     {
@@ -657,7 +686,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateTimeAttribute : SubscribesToAttribute<PreUpdateTime>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateTime), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateTimeAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateTime
     {
@@ -677,7 +707,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateTimeAttribute : SubscribesToAttribute<PostUpdateTime>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateTime), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateTimeAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateTime
     {
@@ -697,7 +728,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateWorldAttribute : SubscribesToAttribute<PreUpdateWorld>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateWorld), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateWorldAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateWorld
     {
@@ -717,7 +749,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateWorldAttribute : SubscribesToAttribute<PostUpdateWorld>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateWorld), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateWorldAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateWorld
     {
@@ -737,7 +770,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateInvasionsAttribute : SubscribesToAttribute<PreUpdateInvasions>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateInvasions), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateInvasionsAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateInvasions
     {
@@ -757,7 +791,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateInvasionsAttribute : SubscribesToAttribute<PostUpdateInvasions>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateInvasions), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateInvasionsAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateInvasions
     {
@@ -777,7 +812,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateEverythingAttribute : SubscribesToAttribute<PostUpdateEverything>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateEverything), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateEverythingAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateEverything
     {
@@ -797,7 +833,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyInterfaceLayersAttribute : SubscribesToAttribute<ModifyInterfaceLayers>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyInterfaceLayers), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyInterfaceLayersAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyInterfaceLayers
     {
@@ -820,7 +857,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyGameTipVisibilityAttribute : SubscribesToAttribute<ModifyGameTipVisibility>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyGameTipVisibility), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyGameTipVisibilityAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyGameTipVisibility
     {
@@ -843,7 +881,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawInterfaceAttribute : SubscribesToAttribute<PostDrawInterface>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDrawInterface), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawInterfaceAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDrawInterface
     {
@@ -866,7 +905,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawMapIconOverlayAttribute : SubscribesToAttribute<PreDrawMapIconOverlay>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDrawMapIconOverlay), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawMapIconOverlayAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDrawMapIconOverlay
     {
@@ -891,7 +931,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawFullscreenMapAttribute : SubscribesToAttribute<PostDrawFullscreenMap>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDrawFullscreenMap), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawFullscreenMapAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDrawFullscreenMap
     {
@@ -914,7 +955,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateInputAttribute : SubscribesToAttribute<PostUpdateInput>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdateInput), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateInputAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdateInput
     {
@@ -934,7 +976,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreSaveAndQuitAttribute : SubscribesToAttribute<PreSaveAndQuit>;
+    [HookMetadata(TypeContainingEvent = typeof(PreSaveAndQuit), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreSaveAndQuitAttribute : SubscribesToAttribute;
 
     public sealed partial class PreSaveAndQuit
     {
@@ -954,7 +997,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawTilesAttribute : SubscribesToAttribute<PostDrawTiles>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDrawTiles), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawTilesAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDrawTiles
     {
@@ -974,7 +1018,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyTimeRateAttribute : SubscribesToAttribute<ModifyTimeRate>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyTimeRate), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyTimeRateAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyTimeRate
     {
@@ -1001,7 +1046,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanWorldBePlayedAttribute : SubscribesToAttribute<CanWorldBePlayed>;
+    [HookMetadata(TypeContainingEvent = typeof(CanWorldBePlayed), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanWorldBePlayedAttribute : SubscribesToAttribute;
 
     public sealed partial class CanWorldBePlayed
     {
@@ -1027,7 +1073,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class WorldCanBePlayedRejectionMessageAttribute : SubscribesToAttribute<WorldCanBePlayedRejectionMessage>;
+    [HookMetadata(TypeContainingEvent = typeof(WorldCanBePlayedRejectionMessage), EventName = "Event", DelegateName = "Definition")]
+    public sealed class WorldCanBePlayedRejectionMessageAttribute : SubscribesToAttribute;
 
     public sealed partial class WorldCanBePlayedRejectionMessage
     {
@@ -1053,7 +1100,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class HijackGetDataAttribute : SubscribesToAttribute<HijackGetData>;
+    [HookMetadata(TypeContainingEvent = typeof(HijackGetData), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HijackGetDataAttribute : SubscribesToAttribute;
 
     public sealed partial class HijackGetData
     {
@@ -1081,7 +1129,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class HijackSendDataAttribute : SubscribesToAttribute<HijackSendData>;
+    [HookMetadata(TypeContainingEvent = typeof(HijackSendData), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HijackSendDataAttribute : SubscribesToAttribute;
 
     public sealed partial class HijackSendData
     {
@@ -1127,7 +1176,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreWorldGenAttribute : SubscribesToAttribute<PreWorldGen>;
+    [HookMetadata(TypeContainingEvent = typeof(PreWorldGen), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreWorldGenAttribute : SubscribesToAttribute;
 
     public sealed partial class PreWorldGen
     {
@@ -1147,7 +1197,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyWorldGenTasksAttribute : SubscribesToAttribute<ModifyWorldGenTasks>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyWorldGenTasks), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyWorldGenTasksAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyWorldGenTasks
     {
@@ -1172,7 +1223,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostWorldGenAttribute : SubscribesToAttribute<PostWorldGen>;
+    [HookMetadata(TypeContainingEvent = typeof(PostWorldGen), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostWorldGenAttribute : SubscribesToAttribute;
 
     public sealed partial class PostWorldGen
     {
@@ -1192,7 +1244,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ResetNearbyTileEffectsAttribute : SubscribesToAttribute<ResetNearbyTileEffects>;
+    [HookMetadata(TypeContainingEvent = typeof(ResetNearbyTileEffects), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ResetNearbyTileEffectsAttribute : SubscribesToAttribute;
 
     public sealed partial class ResetNearbyTileEffects
     {
@@ -1212,7 +1265,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHardmodeTasksAttribute : SubscribesToAttribute<ModifyHardmodeTasks>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHardmodeTasks), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHardmodeTasksAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHardmodeTasks
     {
@@ -1235,7 +1289,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifySunLightColorAttribute : SubscribesToAttribute<ModifySunLightColor>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifySunLightColor), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifySunLightColorAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifySunLightColor
     {
@@ -1260,7 +1315,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyLightingBrightnessAttribute : SubscribesToAttribute<ModifyLightingBrightness>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyLightingBrightness), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyLightingBrightnessAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyLightingBrightness
     {
@@ -1283,7 +1339,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class TileCountsAvailableAttribute : SubscribesToAttribute<TileCountsAvailable>;
+    [HookMetadata(TypeContainingEvent = typeof(TileCountsAvailable), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TileCountsAvailableAttribute : SubscribesToAttribute;
 
     public sealed partial class TileCountsAvailable
     {
@@ -1306,7 +1363,8 @@ public static partial class ModSystemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ResizeArraysAttribute : SubscribesToAttribute<ResizeArrays>;
+    [HookMetadata(TypeContainingEvent = typeof(ResizeArrays), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ResizeArraysAttribute : SubscribesToAttribute;
 
     public sealed partial class ResizeArrays
     {

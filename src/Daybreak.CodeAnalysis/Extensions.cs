@@ -26,7 +26,7 @@ internal static class Extensions
 
         public HookDefinition? GetHookDefinition(HookAttributes attrs)
         {
-            if (symbol?.InheritsFrom(attrs.BaseHook) ?? false)
+            if (!symbol?.InheritsFrom(attrs.BaseHook) ?? false)
             {
                 return null;
             }
@@ -40,10 +40,13 @@ internal static class Extensions
     {
         public INamedTypeSymbol? BaseHook => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.BaseHookAttribute");
 
+        public INamedTypeSymbol? HookMetadata => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.HookMetadataAttribute");
+
         public bool TryGetHookAttributes(out HookAttributes attributes)
         {
             if (
                 compilation.BaseHook is not { } baseHook
+             || compilation.HookMetadata is not { } hookMetadata
             )
             {
                 attributes = default(HookAttributes);
@@ -51,7 +54,8 @@ internal static class Extensions
             }
 
             attributes = new HookAttributes(
-                baseHook
+                baseHook,
+                hookMetadata
             );
             return true;
         }

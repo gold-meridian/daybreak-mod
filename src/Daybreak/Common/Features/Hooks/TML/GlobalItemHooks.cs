@@ -126,7 +126,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class GlobalItemHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnCreatedAttribute : SubscribesToAttribute<OnCreated>;
+    [HookMetadata(TypeContainingEvent = typeof(OnCreated), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnCreatedAttribute : SubscribesToAttribute;
 
     public sealed partial class OnCreated
     {
@@ -151,7 +152,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnSpawnAttribute : SubscribesToAttribute<OnSpawn>;
+    [HookMetadata(TypeContainingEvent = typeof(OnSpawn), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnSpawnAttribute : SubscribesToAttribute;
 
     public sealed partial class OnSpawn
     {
@@ -176,7 +178,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ChoosePrefixAttribute : SubscribesToAttribute<ChoosePrefix>;
+    [HookMetadata(TypeContainingEvent = typeof(ChoosePrefix), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ChoosePrefixAttribute : SubscribesToAttribute;
 
     public sealed partial class ChoosePrefix
     {
@@ -202,7 +205,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PrefixChanceAttribute : SubscribesToAttribute<PrefixChance>;
+    [HookMetadata(TypeContainingEvent = typeof(PrefixChance), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PrefixChanceAttribute : SubscribesToAttribute;
 
     public sealed partial class PrefixChance
     {
@@ -230,7 +234,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class AllowPrefixAttribute : SubscribesToAttribute<AllowPrefix>;
+    [HookMetadata(TypeContainingEvent = typeof(AllowPrefix), EventName = "Event", DelegateName = "Definition")]
+    public sealed class AllowPrefixAttribute : SubscribesToAttribute;
 
     public sealed partial class AllowPrefix
     {
@@ -256,7 +261,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanUseItemAttribute : SubscribesToAttribute<CanUseItem>;
+    [HookMetadata(TypeContainingEvent = typeof(CanUseItem), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanUseItemAttribute : SubscribesToAttribute;
 
     public sealed partial class CanUseItem
     {
@@ -282,7 +288,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanAutoReuseItemAttribute : SubscribesToAttribute<CanAutoReuseItem>;
+    [HookMetadata(TypeContainingEvent = typeof(CanAutoReuseItem), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanAutoReuseItemAttribute : SubscribesToAttribute;
 
     public sealed partial class CanAutoReuseItem
     {
@@ -308,7 +315,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UseStyleAttribute : SubscribesToAttribute<UseStyle>;
+    [HookMetadata(TypeContainingEvent = typeof(UseStyle), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UseStyleAttribute : SubscribesToAttribute;
 
     public sealed partial class UseStyle
     {
@@ -335,7 +343,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class HoldStyleAttribute : SubscribesToAttribute<HoldStyle>;
+    [HookMetadata(TypeContainingEvent = typeof(HoldStyle), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HoldStyleAttribute : SubscribesToAttribute;
 
     public sealed partial class HoldStyle
     {
@@ -362,7 +371,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class HoldItemAttribute : SubscribesToAttribute<HoldItem>;
+    [HookMetadata(TypeContainingEvent = typeof(HoldItem), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HoldItemAttribute : SubscribesToAttribute;
 
     public sealed partial class HoldItem
     {
@@ -387,7 +397,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UseTimeMultiplierAttribute : SubscribesToAttribute<UseTimeMultiplier>;
+    [HookMetadata(TypeContainingEvent = typeof(UseTimeMultiplier), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UseTimeMultiplierAttribute : SubscribesToAttribute;
 
     public sealed partial class UseTimeMultiplier
     {
@@ -413,7 +424,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UseAnimationMultiplierAttribute : SubscribesToAttribute<UseAnimationMultiplier>;
+    [HookMetadata(TypeContainingEvent = typeof(UseAnimationMultiplier), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UseAnimationMultiplierAttribute : SubscribesToAttribute;
 
     public sealed partial class UseAnimationMultiplier
     {
@@ -439,7 +451,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UseSpeedMultiplierAttribute : SubscribesToAttribute<UseSpeedMultiplier>;
+    [HookMetadata(TypeContainingEvent = typeof(UseSpeedMultiplier), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UseSpeedMultiplierAttribute : SubscribesToAttribute;
 
     public sealed partial class UseSpeedMultiplier
     {
@@ -465,7 +478,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GetHealLifeAttribute : SubscribesToAttribute<GetHealLife>;
+    [HookMetadata(TypeContainingEvent = typeof(GetHealLife), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GetHealLifeAttribute : SubscribesToAttribute;
 
     public sealed partial class GetHealLife
     {
@@ -494,7 +508,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GetHealManaAttribute : SubscribesToAttribute<GetHealMana>;
+    [HookMetadata(TypeContainingEvent = typeof(GetHealMana), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GetHealManaAttribute : SubscribesToAttribute;
 
     public sealed partial class GetHealMana
     {
@@ -523,7 +538,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyManaCostAttribute : SubscribesToAttribute<ModifyManaCost>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyManaCost), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyManaCostAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyManaCost
     {
@@ -552,7 +568,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnMissingManaAttribute : SubscribesToAttribute<OnMissingMana>;
+    [HookMetadata(TypeContainingEvent = typeof(OnMissingMana), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnMissingManaAttribute : SubscribesToAttribute;
 
     public sealed partial class OnMissingMana
     {
@@ -579,7 +596,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnConsumeManaAttribute : SubscribesToAttribute<OnConsumeMana>;
+    [HookMetadata(TypeContainingEvent = typeof(OnConsumeMana), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnConsumeManaAttribute : SubscribesToAttribute;
 
     public sealed partial class OnConsumeMana
     {
@@ -606,7 +624,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyPotionDelayAttribute : SubscribesToAttribute<ModifyPotionDelay>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyPotionDelay), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyPotionDelayAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyPotionDelay
     {
@@ -633,7 +652,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ApplyPotionDelayAttribute : SubscribesToAttribute<ApplyPotionDelay>;
+    [HookMetadata(TypeContainingEvent = typeof(ApplyPotionDelay), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ApplyPotionDelayAttribute : SubscribesToAttribute;
 
     public sealed partial class ApplyPotionDelay
     {
@@ -661,7 +681,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyWeaponDamageAttribute : SubscribesToAttribute<ModifyWeaponDamage>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyWeaponDamage), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyWeaponDamageAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyWeaponDamage
     {
@@ -688,7 +709,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyResearchSortingAttribute : SubscribesToAttribute<ModifyResearchSorting>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyResearchSorting), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyResearchSortingAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyResearchSorting
     {
@@ -713,7 +735,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanConsumeBaitAttribute : SubscribesToAttribute<CanConsumeBait>;
+    [HookMetadata(TypeContainingEvent = typeof(CanConsumeBait), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanConsumeBaitAttribute : SubscribesToAttribute;
 
     public sealed partial class CanConsumeBait
     {
@@ -739,7 +762,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanResearchAttribute : SubscribesToAttribute<CanResearch>;
+    [HookMetadata(TypeContainingEvent = typeof(CanResearch), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanResearchAttribute : SubscribesToAttribute;
 
     public sealed partial class CanResearch
     {
@@ -763,7 +787,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnResearchedAttribute : SubscribesToAttribute<OnResearched>;
+    [HookMetadata(TypeContainingEvent = typeof(OnResearched), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnResearchedAttribute : SubscribesToAttribute;
 
     public sealed partial class OnResearched
     {
@@ -788,7 +813,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyWeaponKnockbackAttribute : SubscribesToAttribute<ModifyWeaponKnockback>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyWeaponKnockback), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyWeaponKnockbackAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyWeaponKnockback
     {
@@ -815,7 +841,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyWeaponCritAttribute : SubscribesToAttribute<ModifyWeaponCrit>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyWeaponCrit), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyWeaponCritAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyWeaponCrit
     {
@@ -842,7 +869,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class NeedsAmmoAttribute : SubscribesToAttribute<NeedsAmmo>;
+    [HookMetadata(TypeContainingEvent = typeof(NeedsAmmo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class NeedsAmmoAttribute : SubscribesToAttribute;
 
     public sealed partial class NeedsAmmo
     {
@@ -868,7 +896,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PickAmmoAttribute : SubscribesToAttribute<PickAmmo>;
+    [HookMetadata(TypeContainingEvent = typeof(PickAmmo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PickAmmoAttribute : SubscribesToAttribute;
 
     public sealed partial class PickAmmo
     {
@@ -903,7 +932,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanChooseAmmoAttribute : SubscribesToAttribute<CanChooseAmmo>;
+    [HookMetadata(TypeContainingEvent = typeof(CanChooseAmmo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanChooseAmmoAttribute : SubscribesToAttribute;
 
     public sealed partial class CanChooseAmmo
     {
@@ -931,7 +961,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanBeChosenAsAmmoAttribute : SubscribesToAttribute<CanBeChosenAsAmmo>;
+    [HookMetadata(TypeContainingEvent = typeof(CanBeChosenAsAmmo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanBeChosenAsAmmoAttribute : SubscribesToAttribute;
 
     public sealed partial class CanBeChosenAsAmmo
     {
@@ -959,7 +990,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanConsumeAmmoAttribute : SubscribesToAttribute<CanConsumeAmmo>;
+    [HookMetadata(TypeContainingEvent = typeof(CanConsumeAmmo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanConsumeAmmoAttribute : SubscribesToAttribute;
 
     public sealed partial class CanConsumeAmmo
     {
@@ -987,7 +1019,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanBeConsumedAsAmmoAttribute : SubscribesToAttribute<CanBeConsumedAsAmmo>;
+    [HookMetadata(TypeContainingEvent = typeof(CanBeConsumedAsAmmo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanBeConsumedAsAmmoAttribute : SubscribesToAttribute;
 
     public sealed partial class CanBeConsumedAsAmmo
     {
@@ -1015,7 +1048,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnConsumeAmmoAttribute : SubscribesToAttribute<OnConsumeAmmo>;
+    [HookMetadata(TypeContainingEvent = typeof(OnConsumeAmmo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnConsumeAmmoAttribute : SubscribesToAttribute;
 
     public sealed partial class OnConsumeAmmo
     {
@@ -1042,7 +1076,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnConsumedAsAmmoAttribute : SubscribesToAttribute<OnConsumedAsAmmo>;
+    [HookMetadata(TypeContainingEvent = typeof(OnConsumedAsAmmo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnConsumedAsAmmoAttribute : SubscribesToAttribute;
 
     public sealed partial class OnConsumedAsAmmo
     {
@@ -1069,7 +1104,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanShootAttribute : SubscribesToAttribute<CanShoot>;
+    [HookMetadata(TypeContainingEvent = typeof(CanShoot), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanShootAttribute : SubscribesToAttribute;
 
     public sealed partial class CanShoot
     {
@@ -1095,7 +1131,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyShootStatsAttribute : SubscribesToAttribute<ModifyShootStats>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyShootStats), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyShootStatsAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyShootStats
     {
@@ -1130,7 +1167,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ShootAttribute : SubscribesToAttribute<Shoot>;
+    [HookMetadata(TypeContainingEvent = typeof(Shoot), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ShootAttribute : SubscribesToAttribute;
 
     public sealed partial class Shoot
     {
@@ -1168,7 +1206,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UseItemHitboxAttribute : SubscribesToAttribute<UseItemHitbox>;
+    [HookMetadata(TypeContainingEvent = typeof(UseItemHitbox), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UseItemHitboxAttribute : SubscribesToAttribute;
 
     public sealed partial class UseItemHitbox
     {
@@ -1197,7 +1236,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class MeleeEffectsAttribute : SubscribesToAttribute<MeleeEffects>;
+    [HookMetadata(TypeContainingEvent = typeof(MeleeEffects), EventName = "Event", DelegateName = "Definition")]
+    public sealed class MeleeEffectsAttribute : SubscribesToAttribute;
 
     public sealed partial class MeleeEffects
     {
@@ -1224,7 +1264,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanCatchNPCAttribute : SubscribesToAttribute<CanCatchNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(CanCatchNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanCatchNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class CanCatchNPC
     {
@@ -1252,7 +1293,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnCatchNPCAttribute : SubscribesToAttribute<OnCatchNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(OnCatchNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnCatchNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class OnCatchNPC
     {
@@ -1281,7 +1323,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyItemScaleAttribute : SubscribesToAttribute<ModifyItemScale>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyItemScale), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyItemScaleAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyItemScale
     {
@@ -1308,7 +1351,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanHitNPCAttribute : SubscribesToAttribute<CanHitNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(CanHitNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanHitNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class CanHitNPC
     {
@@ -1336,7 +1380,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanMeleeAttackCollideWithNPCAttribute : SubscribesToAttribute<CanMeleeAttackCollideWithNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(CanMeleeAttackCollideWithNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanMeleeAttackCollideWithNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class CanMeleeAttackCollideWithNPC
     {
@@ -1366,7 +1411,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute<ModifyHitNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHitNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHitNPC
     {
@@ -1395,7 +1441,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnHitNPCAttribute : SubscribesToAttribute<OnHitNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(OnHitNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnHitNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class OnHitNPC
     {
@@ -1426,7 +1473,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanHitPvpAttribute : SubscribesToAttribute<CanHitPvp>;
+    [HookMetadata(TypeContainingEvent = typeof(CanHitPvp), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanHitPvpAttribute : SubscribesToAttribute;
 
     public sealed partial class CanHitPvp
     {
@@ -1454,7 +1502,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHitPvpAttribute : SubscribesToAttribute<ModifyHitPvp>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHitPvp), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHitPvpAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHitPvp
     {
@@ -1483,7 +1532,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnHitPvpAttribute : SubscribesToAttribute<OnHitPvp>;
+    [HookMetadata(TypeContainingEvent = typeof(OnHitPvp), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnHitPvpAttribute : SubscribesToAttribute;
 
     public sealed partial class OnHitPvp
     {
@@ -1512,7 +1562,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UseItemAttribute : SubscribesToAttribute<UseItem>;
+    [HookMetadata(TypeContainingEvent = typeof(UseItem), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UseItemAttribute : SubscribesToAttribute;
 
     public sealed partial class UseItem
     {
@@ -1538,7 +1589,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UseAnimationAttribute : SubscribesToAttribute<UseAnimation>;
+    [HookMetadata(TypeContainingEvent = typeof(UseAnimation), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UseAnimationAttribute : SubscribesToAttribute;
 
     public sealed partial class UseAnimation
     {
@@ -1563,7 +1615,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ConsumeItemAttribute : SubscribesToAttribute<ConsumeItem>;
+    [HookMetadata(TypeContainingEvent = typeof(ConsumeItem), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ConsumeItemAttribute : SubscribesToAttribute;
 
     public sealed partial class ConsumeItem
     {
@@ -1589,7 +1642,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnConsumeItemAttribute : SubscribesToAttribute<OnConsumeItem>;
+    [HookMetadata(TypeContainingEvent = typeof(OnConsumeItem), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnConsumeItemAttribute : SubscribesToAttribute;
 
     public sealed partial class OnConsumeItem
     {
@@ -1614,7 +1668,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UseItemFrameAttribute : SubscribesToAttribute<UseItemFrame>;
+    [HookMetadata(TypeContainingEvent = typeof(UseItemFrame), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UseItemFrameAttribute : SubscribesToAttribute;
 
     public sealed partial class UseItemFrame
     {
@@ -1639,7 +1694,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class HoldItemFrameAttribute : SubscribesToAttribute<HoldItemFrame>;
+    [HookMetadata(TypeContainingEvent = typeof(HoldItemFrame), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HoldItemFrameAttribute : SubscribesToAttribute;
 
     public sealed partial class HoldItemFrame
     {
@@ -1664,7 +1720,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class AltFunctionUseAttribute : SubscribesToAttribute<AltFunctionUse>;
+    [HookMetadata(TypeContainingEvent = typeof(AltFunctionUse), EventName = "Event", DelegateName = "Definition")]
+    public sealed class AltFunctionUseAttribute : SubscribesToAttribute;
 
     public sealed partial class AltFunctionUse
     {
@@ -1690,7 +1747,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateInventoryAttribute : SubscribesToAttribute<UpdateInventory>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateInventory), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateInventoryAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateInventory
     {
@@ -1715,7 +1773,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateInfoAccessoryAttribute : SubscribesToAttribute<UpdateInfoAccessory>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateInfoAccessory), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateInfoAccessoryAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateInfoAccessory
     {
@@ -1740,7 +1799,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateEquipAttribute : SubscribesToAttribute<UpdateEquip>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateEquip), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateEquipAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateEquip
     {
@@ -1765,7 +1825,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateAccessoryAttribute : SubscribesToAttribute<UpdateAccessory>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateAccessory), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateAccessoryAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateAccessory
     {
@@ -1792,7 +1853,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateVanityAttribute : SubscribesToAttribute<UpdateVanity>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateVanity), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateVanityAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateVanity
     {
@@ -1817,7 +1879,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateVisibleAccessoryAttribute : SubscribesToAttribute<UpdateVisibleAccessory>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateVisibleAccessory), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateVisibleAccessoryAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateVisibleAccessory
     {
@@ -1844,7 +1907,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateItemDyeAttribute : SubscribesToAttribute<UpdateItemDye>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateItemDye), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateItemDyeAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateItemDye
     {
@@ -1873,7 +1937,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class IsArmorSetAttribute : SubscribesToAttribute<IsArmorSet>;
+    [HookMetadata(TypeContainingEvent = typeof(IsArmorSet), EventName = "Event", DelegateName = "Definition")]
+    public sealed class IsArmorSetAttribute : SubscribesToAttribute;
 
     public sealed partial class IsArmorSet
     {
@@ -1901,7 +1966,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateArmorSetAttribute : SubscribesToAttribute<UpdateArmorSet>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateArmorSet), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateArmorSetAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateArmorSet
     {
@@ -1926,7 +1992,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class IsVanitySetAttribute : SubscribesToAttribute<IsVanitySet>;
+    [HookMetadata(TypeContainingEvent = typeof(IsVanitySet), EventName = "Event", DelegateName = "Definition")]
+    public sealed class IsVanitySetAttribute : SubscribesToAttribute;
 
     public sealed partial class IsVanitySet
     {
@@ -1954,7 +2021,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreUpdateVanitySetAttribute : SubscribesToAttribute<PreUpdateVanitySet>;
+    [HookMetadata(TypeContainingEvent = typeof(PreUpdateVanitySet), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreUpdateVanitySetAttribute : SubscribesToAttribute;
 
     public sealed partial class PreUpdateVanitySet
     {
@@ -1979,7 +2047,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateVanitySetAttribute : SubscribesToAttribute<UpdateVanitySet>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateVanitySet), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateVanitySetAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateVanitySet
     {
@@ -2004,7 +2073,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ArmorSetShadowsAttribute : SubscribesToAttribute<ArmorSetShadows>;
+    [HookMetadata(TypeContainingEvent = typeof(ArmorSetShadows), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ArmorSetShadowsAttribute : SubscribesToAttribute;
 
     public sealed partial class ArmorSetShadows
     {
@@ -2029,7 +2099,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class SetMatchAttribute : SubscribesToAttribute<SetMatch>;
+    [HookMetadata(TypeContainingEvent = typeof(SetMatch), EventName = "Event", DelegateName = "Definition")]
+    public sealed class SetMatchAttribute : SubscribesToAttribute;
 
     public sealed partial class SetMatch
     {
@@ -2060,7 +2131,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanRightClickAttribute : SubscribesToAttribute<CanRightClick>;
+    [HookMetadata(TypeContainingEvent = typeof(CanRightClick), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanRightClickAttribute : SubscribesToAttribute;
 
     public sealed partial class CanRightClick
     {
@@ -2084,7 +2156,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class RightClickAttribute : SubscribesToAttribute<RightClick>;
+    [HookMetadata(TypeContainingEvent = typeof(RightClick), EventName = "Event", DelegateName = "Definition")]
+    public sealed class RightClickAttribute : SubscribesToAttribute;
 
     public sealed partial class RightClick
     {
@@ -2109,7 +2182,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyItemLootAttribute : SubscribesToAttribute<ModifyItemLoot>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyItemLoot), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyItemLootAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyItemLoot
     {
@@ -2134,7 +2208,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanStackAttribute : SubscribesToAttribute<CanStack>;
+    [HookMetadata(TypeContainingEvent = typeof(CanStack), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanStackAttribute : SubscribesToAttribute;
 
     public sealed partial class CanStack
     {
@@ -2160,7 +2235,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanStackInWorldAttribute : SubscribesToAttribute<CanStackInWorld>;
+    [HookMetadata(TypeContainingEvent = typeof(CanStackInWorld), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanStackInWorldAttribute : SubscribesToAttribute;
 
     public sealed partial class CanStackInWorld
     {
@@ -2186,7 +2262,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnStackAttribute : SubscribesToAttribute<OnStack>;
+    [HookMetadata(TypeContainingEvent = typeof(OnStack), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnStackAttribute : SubscribesToAttribute;
 
     public sealed partial class OnStack
     {
@@ -2213,7 +2290,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class SplitStackAttribute : SubscribesToAttribute<SplitStack>;
+    [HookMetadata(TypeContainingEvent = typeof(SplitStack), EventName = "Event", DelegateName = "Definition")]
+    public sealed class SplitStackAttribute : SubscribesToAttribute;
 
     public sealed partial class SplitStack
     {
@@ -2240,7 +2318,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ReforgePriceAttribute : SubscribesToAttribute<ReforgePrice>;
+    [HookMetadata(TypeContainingEvent = typeof(ReforgePrice), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ReforgePriceAttribute : SubscribesToAttribute;
 
     public sealed partial class ReforgePrice
     {
@@ -2268,7 +2347,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanReforgeAttribute : SubscribesToAttribute<CanReforge>;
+    [HookMetadata(TypeContainingEvent = typeof(CanReforge), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanReforgeAttribute : SubscribesToAttribute;
 
     public sealed partial class CanReforge
     {
@@ -2292,7 +2372,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreReforgeAttribute : SubscribesToAttribute<PreReforge>;
+    [HookMetadata(TypeContainingEvent = typeof(PreReforge), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreReforgeAttribute : SubscribesToAttribute;
 
     public sealed partial class PreReforge
     {
@@ -2315,7 +2396,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostReforgeAttribute : SubscribesToAttribute<PostReforge>;
+    [HookMetadata(TypeContainingEvent = typeof(PostReforge), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostReforgeAttribute : SubscribesToAttribute;
 
     public sealed partial class PostReforge
     {
@@ -2338,7 +2420,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DrawArmorColorAttribute : SubscribesToAttribute<DrawArmorColor>;
+    [HookMetadata(TypeContainingEvent = typeof(DrawArmorColor), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DrawArmorColorAttribute : SubscribesToAttribute;
 
     public sealed partial class DrawArmorColor
     {
@@ -2373,7 +2456,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ArmorArmGlowMaskAttribute : SubscribesToAttribute<ArmorArmGlowMask>;
+    [HookMetadata(TypeContainingEvent = typeof(ArmorArmGlowMask), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ArmorArmGlowMaskAttribute : SubscribesToAttribute;
 
     public sealed partial class ArmorArmGlowMask
     {
@@ -2404,7 +2488,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class VerticalWingSpeedsAttribute : SubscribesToAttribute<VerticalWingSpeeds>;
+    [HookMetadata(TypeContainingEvent = typeof(VerticalWingSpeeds), EventName = "Event", DelegateName = "Definition")]
+    public sealed class VerticalWingSpeedsAttribute : SubscribesToAttribute;
 
     public sealed partial class VerticalWingSpeeds
     {
@@ -2439,7 +2524,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class HorizontalWingSpeedsAttribute : SubscribesToAttribute<HorizontalWingSpeeds>;
+    [HookMetadata(TypeContainingEvent = typeof(HorizontalWingSpeeds), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HorizontalWingSpeedsAttribute : SubscribesToAttribute;
 
     public sealed partial class HorizontalWingSpeeds
     {
@@ -2468,7 +2554,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class WingUpdateAttribute : SubscribesToAttribute<WingUpdate>;
+    [HookMetadata(TypeContainingEvent = typeof(WingUpdate), EventName = "Event", DelegateName = "Definition")]
+    public sealed class WingUpdateAttribute : SubscribesToAttribute;
 
     public sealed partial class WingUpdate
     {
@@ -2496,7 +2583,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateAttribute : SubscribesToAttribute<Update>;
+    [HookMetadata(TypeContainingEvent = typeof(Update), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateAttribute : SubscribesToAttribute;
 
     public sealed partial class Update
     {
@@ -2523,7 +2611,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostUpdateAttribute : SubscribesToAttribute<PostUpdate>;
+    [HookMetadata(TypeContainingEvent = typeof(PostUpdate), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostUpdateAttribute : SubscribesToAttribute;
 
     public sealed partial class PostUpdate
     {
@@ -2546,7 +2635,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GrabRangeAttribute : SubscribesToAttribute<GrabRange>;
+    [HookMetadata(TypeContainingEvent = typeof(GrabRange), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GrabRangeAttribute : SubscribesToAttribute;
 
     public sealed partial class GrabRange
     {
@@ -2573,7 +2663,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GrabStyleAttribute : SubscribesToAttribute<GrabStyle>;
+    [HookMetadata(TypeContainingEvent = typeof(GrabStyle), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GrabStyleAttribute : SubscribesToAttribute;
 
     public sealed partial class GrabStyle
     {
@@ -2599,7 +2690,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanPickupAttribute : SubscribesToAttribute<CanPickup>;
+    [HookMetadata(TypeContainingEvent = typeof(CanPickup), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanPickupAttribute : SubscribesToAttribute;
 
     public sealed partial class CanPickup
     {
@@ -2625,7 +2717,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnPickupAttribute : SubscribesToAttribute<OnPickup>;
+    [HookMetadata(TypeContainingEvent = typeof(OnPickup), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnPickupAttribute : SubscribesToAttribute;
 
     public sealed partial class OnPickup
     {
@@ -2651,7 +2744,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ItemSpaceAttribute : SubscribesToAttribute<ItemSpace>;
+    [HookMetadata(TypeContainingEvent = typeof(ItemSpace), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ItemSpaceAttribute : SubscribesToAttribute;
 
     public sealed partial class ItemSpace
     {
@@ -2677,7 +2771,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GetAlphaAttribute : SubscribesToAttribute<GetAlpha>;
+    [HookMetadata(TypeContainingEvent = typeof(GetAlpha), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GetAlphaAttribute : SubscribesToAttribute;
 
     public sealed partial class GetAlpha
     {
@@ -2703,7 +2798,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawInWorldAttribute : SubscribesToAttribute<PreDrawInWorld>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDrawInWorld), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawInWorldAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDrawInWorld
     {
@@ -2739,7 +2835,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawInWorldAttribute : SubscribesToAttribute<PostDrawInWorld>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDrawInWorld), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawInWorldAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDrawInWorld
     {
@@ -2774,7 +2871,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawInInventoryAttribute : SubscribesToAttribute<PreDrawInInventory>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDrawInInventory), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawInInventoryAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDrawInInventory
     {
@@ -2812,7 +2910,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawInInventoryAttribute : SubscribesToAttribute<PostDrawInInventory>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDrawInInventory), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawInInventoryAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDrawInInventory
     {
@@ -2849,7 +2948,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class HoldoutOffsetAttribute : SubscribesToAttribute<HoldoutOffset>;
+    [HookMetadata(TypeContainingEvent = typeof(HoldoutOffset), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HoldoutOffsetAttribute : SubscribesToAttribute;
 
     public sealed partial class HoldoutOffset
     {
@@ -2873,7 +2973,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class HoldoutOriginAttribute : SubscribesToAttribute<HoldoutOrigin>;
+    [HookMetadata(TypeContainingEvent = typeof(HoldoutOrigin), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HoldoutOriginAttribute : SubscribesToAttribute;
 
     public sealed partial class HoldoutOrigin
     {
@@ -2897,7 +2998,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanEquipAccessoryAttribute : SubscribesToAttribute<CanEquipAccessory>;
+    [HookMetadata(TypeContainingEvent = typeof(CanEquipAccessory), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanEquipAccessoryAttribute : SubscribesToAttribute;
 
     public sealed partial class CanEquipAccessory
     {
@@ -2927,7 +3029,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanAccessoryBeEquippedWithAttribute : SubscribesToAttribute<CanAccessoryBeEquippedWith>;
+    [HookMetadata(TypeContainingEvent = typeof(CanAccessoryBeEquippedWith), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanAccessoryBeEquippedWithAttribute : SubscribesToAttribute;
 
     public sealed partial class CanAccessoryBeEquippedWith
     {
@@ -2955,7 +3058,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ExtractinatorUseAttribute : SubscribesToAttribute<ExtractinatorUse>;
+    [HookMetadata(TypeContainingEvent = typeof(ExtractinatorUse), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ExtractinatorUseAttribute : SubscribesToAttribute;
 
     public sealed partial class ExtractinatorUse
     {
@@ -2984,7 +3088,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CaughtFishStackAttribute : SubscribesToAttribute<CaughtFishStack>;
+    [HookMetadata(TypeContainingEvent = typeof(CaughtFishStack), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CaughtFishStackAttribute : SubscribesToAttribute;
 
     public sealed partial class CaughtFishStack
     {
@@ -3009,7 +3114,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class IsAnglerQuestAvailableAttribute : SubscribesToAttribute<IsAnglerQuestAvailable>;
+    [HookMetadata(TypeContainingEvent = typeof(IsAnglerQuestAvailable), EventName = "Event", DelegateName = "Definition")]
+    public sealed class IsAnglerQuestAvailableAttribute : SubscribesToAttribute;
 
     public sealed partial class IsAnglerQuestAvailable
     {
@@ -3033,7 +3139,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class AnglerChatAttribute : SubscribesToAttribute<AnglerChat>;
+    [HookMetadata(TypeContainingEvent = typeof(AnglerChat), EventName = "Event", DelegateName = "Definition")]
+    public sealed class AnglerChatAttribute : SubscribesToAttribute;
 
     public sealed partial class AnglerChat
     {
@@ -3060,7 +3167,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class AddRecipesAttribute : SubscribesToAttribute<AddRecipes>;
+    [HookMetadata(TypeContainingEvent = typeof(AddRecipes), EventName = "Event", DelegateName = "Definition")]
+    public sealed class AddRecipesAttribute : SubscribesToAttribute;
 
     public sealed partial class AddRecipes
     {
@@ -3080,7 +3188,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawTooltipAttribute : SubscribesToAttribute<PreDrawTooltip>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDrawTooltip), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawTooltipAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDrawTooltip
     {
@@ -3110,7 +3219,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawTooltipAttribute : SubscribesToAttribute<PostDrawTooltip>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDrawTooltip), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawTooltipAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDrawTooltip
     {
@@ -3135,7 +3245,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawTooltipLineAttribute : SubscribesToAttribute<PreDrawTooltipLine>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDrawTooltipLine), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawTooltipLineAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDrawTooltipLine
     {
@@ -3163,7 +3274,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawTooltipLineAttribute : SubscribesToAttribute<PostDrawTooltipLine>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDrawTooltipLine), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawTooltipLineAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDrawTooltipLine
     {
@@ -3188,7 +3300,8 @@ public static partial class GlobalItemHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyTooltipsAttribute : SubscribesToAttribute<ModifyTooltips>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyTooltips), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyTooltipsAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyTooltips
     {

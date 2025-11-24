@@ -297,7 +297,8 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         var typeName = type.Name;
 
         sb.AppendLine("    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]");
-        sb.AppendLine($"    public sealed class {name}Attribute : SubscribesToAttribute<{name}>;");
+        sb.AppendLine($"    [HookMetadata(TypeContainingEvent = typeof({name}), EventName = \"Event\", DelegateName = \"Definition\")]");
+        sb.AppendLine($"    public sealed class {name}Attribute : SubscribesToAttribute;");
         sb.AppendLine();
         sb.AppendLine($"    public sealed partial class {name}");
         sb.AppendLine("    {");

@@ -3,5 +3,6 @@
 namespace Daybreak.CodeAnalysis;
 
 public readonly record struct HookAttributes(
-    INamedTypeSymbol BaseHook
+    INamedTypeSymbol BaseHook,
+    INamedTypeSymbol HookMetadata
 );

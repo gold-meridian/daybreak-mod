@@ -93,7 +93,8 @@ namespace Daybreak.Common.Features.Hooks;
 public static partial class GlobalNPCHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class SetDefaultsFromNetIdAttribute : SubscribesToAttribute<SetDefaultsFromNetId>;
+    [HookMetadata(TypeContainingEvent = typeof(SetDefaultsFromNetId), EventName = "Event", DelegateName = "Definition")]
+    public sealed class SetDefaultsFromNetIdAttribute : SubscribesToAttribute;
 
     public sealed partial class SetDefaultsFromNetId
     {
@@ -116,7 +117,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnSpawnAttribute : SubscribesToAttribute<OnSpawn>;
+    [HookMetadata(TypeContainingEvent = typeof(OnSpawn), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnSpawnAttribute : SubscribesToAttribute;
 
     public sealed partial class OnSpawn
     {
@@ -141,7 +143,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ApplyDifficultyAndPlayerScalingAttribute : SubscribesToAttribute<ApplyDifficultyAndPlayerScaling>;
+    [HookMetadata(TypeContainingEvent = typeof(ApplyDifficultyAndPlayerScaling), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ApplyDifficultyAndPlayerScalingAttribute : SubscribesToAttribute;
 
     public sealed partial class ApplyDifficultyAndPlayerScaling
     {
@@ -170,7 +173,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class SetBestiaryAttribute : SubscribesToAttribute<SetBestiary>;
+    [HookMetadata(TypeContainingEvent = typeof(SetBestiary), EventName = "Event", DelegateName = "Definition")]
+    public sealed class SetBestiaryAttribute : SubscribesToAttribute;
 
     public sealed partial class SetBestiary
     {
@@ -197,7 +201,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyTypeNameAttribute : SubscribesToAttribute<ModifyTypeName>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyTypeName), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyTypeNameAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyTypeName
     {
@@ -222,7 +227,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHoverBoundingBoxAttribute : SubscribesToAttribute<ModifyHoverBoundingBox>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHoverBoundingBox), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHoverBoundingBoxAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHoverBoundingBox
     {
@@ -247,7 +253,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreHoverInteractAttribute : SubscribesToAttribute<PreHoverInteract>;
+    [HookMetadata(TypeContainingEvent = typeof(PreHoverInteract), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreHoverInteractAttribute : SubscribesToAttribute;
 
     public sealed partial class PreHoverInteract
     {
@@ -273,7 +280,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyTownNPCProfileAttribute : SubscribesToAttribute<ModifyTownNPCProfile>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyTownNPCProfile), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyTownNPCProfileAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyTownNPCProfile
     {
@@ -297,7 +305,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyNPCNameListAttribute : SubscribesToAttribute<ModifyNPCNameList>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyNPCNameList), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyNPCNameListAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyNPCNameList
     {
@@ -322,7 +331,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ResetEffectsAttribute : SubscribesToAttribute<ResetEffects>;
+    [HookMetadata(TypeContainingEvent = typeof(ResetEffects), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ResetEffectsAttribute : SubscribesToAttribute;
 
     public sealed partial class ResetEffects
     {
@@ -345,7 +355,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreAIAttribute : SubscribesToAttribute<PreAI>;
+    [HookMetadata(TypeContainingEvent = typeof(PreAI), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreAIAttribute : SubscribesToAttribute;
 
     public sealed partial class PreAI
     {
@@ -369,7 +380,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class AIAttribute : SubscribesToAttribute<AI>;
+    [HookMetadata(TypeContainingEvent = typeof(AI), EventName = "Event", DelegateName = "Definition")]
+    public sealed class AIAttribute : SubscribesToAttribute;
 
     public sealed partial class AI
     {
@@ -392,7 +404,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostAIAttribute : SubscribesToAttribute<PostAI>;
+    [HookMetadata(TypeContainingEvent = typeof(PostAI), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostAIAttribute : SubscribesToAttribute;
 
     public sealed partial class PostAI
     {
@@ -415,7 +428,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class FindFrameAttribute : SubscribesToAttribute<FindFrame>;
+    [HookMetadata(TypeContainingEvent = typeof(FindFrame), EventName = "Event", DelegateName = "Definition")]
+    public sealed class FindFrameAttribute : SubscribesToAttribute;
 
     public sealed partial class FindFrame
     {
@@ -440,7 +454,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class HitEffectAttribute : SubscribesToAttribute<HitEffect>;
+    [HookMetadata(TypeContainingEvent = typeof(HitEffect), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HitEffectAttribute : SubscribesToAttribute;
 
     public sealed partial class HitEffect
     {
@@ -465,7 +480,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class UpdateLifeRegenAttribute : SubscribesToAttribute<UpdateLifeRegen>;
+    [HookMetadata(TypeContainingEvent = typeof(UpdateLifeRegen), EventName = "Event", DelegateName = "Definition")]
+    public sealed class UpdateLifeRegenAttribute : SubscribesToAttribute;
 
     public sealed partial class UpdateLifeRegen
     {
@@ -490,7 +506,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CheckActiveAttribute : SubscribesToAttribute<CheckActive>;
+    [HookMetadata(TypeContainingEvent = typeof(CheckActive), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CheckActiveAttribute : SubscribesToAttribute;
 
     public sealed partial class CheckActive
     {
@@ -514,7 +531,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CheckDeadAttribute : SubscribesToAttribute<CheckDead>;
+    [HookMetadata(TypeContainingEvent = typeof(CheckDead), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CheckDeadAttribute : SubscribesToAttribute;
 
     public sealed partial class CheckDead
     {
@@ -538,7 +556,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class SpecialOnKillAttribute : SubscribesToAttribute<SpecialOnKill>;
+    [HookMetadata(TypeContainingEvent = typeof(SpecialOnKill), EventName = "Event", DelegateName = "Definition")]
+    public sealed class SpecialOnKillAttribute : SubscribesToAttribute;
 
     public sealed partial class SpecialOnKill
     {
@@ -562,7 +581,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreKillAttribute : SubscribesToAttribute<PreKill>;
+    [HookMetadata(TypeContainingEvent = typeof(PreKill), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreKillAttribute : SubscribesToAttribute;
 
     public sealed partial class PreKill
     {
@@ -586,7 +606,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnKillAttribute : SubscribesToAttribute<OnKill>;
+    [HookMetadata(TypeContainingEvent = typeof(OnKill), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnKillAttribute : SubscribesToAttribute;
 
     public sealed partial class OnKill
     {
@@ -609,7 +630,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanFallThroughPlatformsAttribute : SubscribesToAttribute<CanFallThroughPlatforms>;
+    [HookMetadata(TypeContainingEvent = typeof(CanFallThroughPlatforms), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanFallThroughPlatformsAttribute : SubscribesToAttribute;
 
     public sealed partial class CanFallThroughPlatforms
     {
@@ -633,7 +655,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanBeCaughtByAttribute : SubscribesToAttribute<CanBeCaughtBy>;
+    [HookMetadata(TypeContainingEvent = typeof(CanBeCaughtBy), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanBeCaughtByAttribute : SubscribesToAttribute;
 
     public sealed partial class CanBeCaughtBy
     {
@@ -661,7 +684,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnCaughtByAttribute : SubscribesToAttribute<OnCaughtBy>;
+    [HookMetadata(TypeContainingEvent = typeof(OnCaughtBy), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnCaughtByAttribute : SubscribesToAttribute;
 
     public sealed partial class OnCaughtBy
     {
@@ -690,7 +714,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyNPCLootAttribute : SubscribesToAttribute<ModifyNPCLoot>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyNPCLoot), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyNPCLootAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyNPCLoot
     {
@@ -715,7 +740,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyGlobalLootAttribute : SubscribesToAttribute<ModifyGlobalLoot>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyGlobalLoot), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyGlobalLootAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyGlobalLoot
     {
@@ -738,7 +764,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanHitPlayerAttribute : SubscribesToAttribute<CanHitPlayer>;
+    [HookMetadata(TypeContainingEvent = typeof(CanHitPlayer), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanHitPlayerAttribute : SubscribesToAttribute;
 
     public sealed partial class CanHitPlayer
     {
@@ -766,7 +793,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHitPlayerAttribute : SubscribesToAttribute<ModifyHitPlayer>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHitPlayer), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHitPlayerAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHitPlayer
     {
@@ -793,7 +821,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnHitPlayerAttribute : SubscribesToAttribute<OnHitPlayer>;
+    [HookMetadata(TypeContainingEvent = typeof(OnHitPlayer), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnHitPlayerAttribute : SubscribesToAttribute;
 
     public sealed partial class OnHitPlayer
     {
@@ -820,7 +849,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanHitNPCAttribute : SubscribesToAttribute<CanHitNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(CanHitNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanHitNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class CanHitNPC
     {
@@ -846,7 +876,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanBeHitByNPCAttribute : SubscribesToAttribute<CanBeHitByNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(CanBeHitByNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanBeHitByNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class CanBeHitByNPC
     {
@@ -872,7 +903,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute<ModifyHitNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHitNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHitNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHitNPC
     {
@@ -899,7 +931,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnHitNPCAttribute : SubscribesToAttribute<OnHitNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(OnHitNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnHitNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class OnHitNPC
     {
@@ -926,7 +959,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanBeHitByItemAttribute : SubscribesToAttribute<CanBeHitByItem>;
+    [HookMetadata(TypeContainingEvent = typeof(CanBeHitByItem), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanBeHitByItemAttribute : SubscribesToAttribute;
 
     public sealed partial class CanBeHitByItem
     {
@@ -954,7 +988,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanCollideWithPlayerMeleeAttackAttribute : SubscribesToAttribute<CanCollideWithPlayerMeleeAttack>;
+    [HookMetadata(TypeContainingEvent = typeof(CanCollideWithPlayerMeleeAttack), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanCollideWithPlayerMeleeAttackAttribute : SubscribesToAttribute;
 
     public sealed partial class CanCollideWithPlayerMeleeAttack
     {
@@ -984,7 +1019,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHitByItemAttribute : SubscribesToAttribute<ModifyHitByItem>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHitByItem), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHitByItemAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHitByItem
     {
@@ -1013,7 +1049,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnHitByItemAttribute : SubscribesToAttribute<OnHitByItem>;
+    [HookMetadata(TypeContainingEvent = typeof(OnHitByItem), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnHitByItemAttribute : SubscribesToAttribute;
 
     public sealed partial class OnHitByItem
     {
@@ -1044,7 +1081,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanBeHitByProjectileAttribute : SubscribesToAttribute<CanBeHitByProjectile>;
+    [HookMetadata(TypeContainingEvent = typeof(CanBeHitByProjectile), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanBeHitByProjectileAttribute : SubscribesToAttribute;
 
     public sealed partial class CanBeHitByProjectile
     {
@@ -1070,7 +1108,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyHitByProjectileAttribute : SubscribesToAttribute<ModifyHitByProjectile>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyHitByProjectile), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyHitByProjectileAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyHitByProjectile
     {
@@ -1097,7 +1136,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnHitByProjectileAttribute : SubscribesToAttribute<OnHitByProjectile>;
+    [HookMetadata(TypeContainingEvent = typeof(OnHitByProjectile), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnHitByProjectileAttribute : SubscribesToAttribute;
 
     public sealed partial class OnHitByProjectile
     {
@@ -1126,7 +1166,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyIncomingHitAttribute : SubscribesToAttribute<ModifyIncomingHit>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyIncomingHit), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyIncomingHitAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyIncomingHit
     {
@@ -1151,7 +1192,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class BossHeadSlotAttribute : SubscribesToAttribute<BossHeadSlot>;
+    [HookMetadata(TypeContainingEvent = typeof(BossHeadSlot), EventName = "Event", DelegateName = "Definition")]
+    public sealed class BossHeadSlotAttribute : SubscribesToAttribute;
 
     public sealed partial class BossHeadSlot
     {
@@ -1176,7 +1218,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class BossHeadRotationAttribute : SubscribesToAttribute<BossHeadRotation>;
+    [HookMetadata(TypeContainingEvent = typeof(BossHeadRotation), EventName = "Event", DelegateName = "Definition")]
+    public sealed class BossHeadRotationAttribute : SubscribesToAttribute;
 
     public sealed partial class BossHeadRotation
     {
@@ -1201,7 +1244,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class BossHeadSpriteEffectsAttribute : SubscribesToAttribute<BossHeadSpriteEffects>;
+    [HookMetadata(TypeContainingEvent = typeof(BossHeadSpriteEffects), EventName = "Event", DelegateName = "Definition")]
+    public sealed class BossHeadSpriteEffectsAttribute : SubscribesToAttribute;
 
     public sealed partial class BossHeadSpriteEffects
     {
@@ -1226,7 +1270,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GetAlphaAttribute : SubscribesToAttribute<GetAlpha>;
+    [HookMetadata(TypeContainingEvent = typeof(GetAlpha), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GetAlphaAttribute : SubscribesToAttribute;
 
     public sealed partial class GetAlpha
     {
@@ -1252,7 +1297,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DrawEffectsAttribute : SubscribesToAttribute<DrawEffects>;
+    [HookMetadata(TypeContainingEvent = typeof(DrawEffects), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DrawEffectsAttribute : SubscribesToAttribute;
 
     public sealed partial class DrawEffects
     {
@@ -1277,7 +1323,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreDrawAttribute : SubscribesToAttribute<PreDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PreDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PreDraw
     {
@@ -1307,7 +1354,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PostDrawAttribute : SubscribesToAttribute<PostDraw>;
+    [HookMetadata(TypeContainingEvent = typeof(PostDraw), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PostDrawAttribute : SubscribesToAttribute;
 
     public sealed partial class PostDraw
     {
@@ -1336,7 +1384,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DrawBehindAttribute : SubscribesToAttribute<DrawBehind>;
+    [HookMetadata(TypeContainingEvent = typeof(DrawBehind), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DrawBehindAttribute : SubscribesToAttribute;
 
     public sealed partial class DrawBehind
     {
@@ -1361,7 +1410,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DrawHealthBarAttribute : SubscribesToAttribute<DrawHealthBar>;
+    [HookMetadata(TypeContainingEvent = typeof(DrawHealthBar), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DrawHealthBarAttribute : SubscribesToAttribute;
 
     public sealed partial class DrawHealthBar
     {
@@ -1391,7 +1441,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class EditSpawnRateAttribute : SubscribesToAttribute<EditSpawnRate>;
+    [HookMetadata(TypeContainingEvent = typeof(EditSpawnRate), EventName = "Event", DelegateName = "Definition")]
+    public sealed class EditSpawnRateAttribute : SubscribesToAttribute;
 
     public sealed partial class EditSpawnRate
     {
@@ -1418,7 +1469,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class EditSpawnRangeAttribute : SubscribesToAttribute<EditSpawnRange>;
+    [HookMetadata(TypeContainingEvent = typeof(EditSpawnRange), EventName = "Event", DelegateName = "Definition")]
+    public sealed class EditSpawnRangeAttribute : SubscribesToAttribute;
 
     public sealed partial class EditSpawnRange
     {
@@ -1449,7 +1501,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class EditSpawnPoolAttribute : SubscribesToAttribute<EditSpawnPool>;
+    [HookMetadata(TypeContainingEvent = typeof(EditSpawnPool), EventName = "Event", DelegateName = "Definition")]
+    public sealed class EditSpawnPoolAttribute : SubscribesToAttribute;
 
     public sealed partial class EditSpawnPool
     {
@@ -1474,7 +1527,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class SpawnNPCAttribute : SubscribesToAttribute<SpawnNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(SpawnNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class SpawnNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class SpawnNPC
     {
@@ -1501,7 +1555,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanChatAttribute : SubscribesToAttribute<CanChat>;
+    [HookMetadata(TypeContainingEvent = typeof(CanChat), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanChatAttribute : SubscribesToAttribute;
 
     public sealed partial class CanChat
     {
@@ -1525,7 +1580,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class GetChatAttribute : SubscribesToAttribute<GetChat>;
+    [HookMetadata(TypeContainingEvent = typeof(GetChat), EventName = "Event", DelegateName = "Definition")]
+    public sealed class GetChatAttribute : SubscribesToAttribute;
 
     public sealed partial class GetChat
     {
@@ -1550,7 +1606,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PreChatButtonClickedAttribute : SubscribesToAttribute<PreChatButtonClicked>;
+    [HookMetadata(TypeContainingEvent = typeof(PreChatButtonClicked), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PreChatButtonClickedAttribute : SubscribesToAttribute;
 
     public sealed partial class PreChatButtonClicked
     {
@@ -1576,7 +1633,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnChatButtonClickedAttribute : SubscribesToAttribute<OnChatButtonClicked>;
+    [HookMetadata(TypeContainingEvent = typeof(OnChatButtonClicked), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnChatButtonClickedAttribute : SubscribesToAttribute;
 
     public sealed partial class OnChatButtonClicked
     {
@@ -1601,7 +1659,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyShopAttribute : SubscribesToAttribute<ModifyShop>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyShop), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyShopAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyShop
     {
@@ -1624,7 +1683,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyActiveShopAttribute : SubscribesToAttribute<ModifyActiveShop>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyActiveShop), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyActiveShopAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyActiveShop
     {
@@ -1651,7 +1711,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class SetupTravelShopAttribute : SubscribesToAttribute<SetupTravelShop>;
+    [HookMetadata(TypeContainingEvent = typeof(SetupTravelShop), EventName = "Event", DelegateName = "Definition")]
+    public sealed class SetupTravelShopAttribute : SubscribesToAttribute;
 
     public sealed partial class SetupTravelShop
     {
@@ -1676,7 +1737,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class CanGoToStatueAttribute : SubscribesToAttribute<CanGoToStatue>;
+    [HookMetadata(TypeContainingEvent = typeof(CanGoToStatue), EventName = "Event", DelegateName = "Definition")]
+    public sealed class CanGoToStatueAttribute : SubscribesToAttribute;
 
     public sealed partial class CanGoToStatue
     {
@@ -1702,7 +1764,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class OnGoToStatueAttribute : SubscribesToAttribute<OnGoToStatue>;
+    [HookMetadata(TypeContainingEvent = typeof(OnGoToStatue), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnGoToStatueAttribute : SubscribesToAttribute;
 
     public sealed partial class OnGoToStatue
     {
@@ -1727,7 +1790,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class BuffTownNPCAttribute : SubscribesToAttribute<BuffTownNPC>;
+    [HookMetadata(TypeContainingEvent = typeof(BuffTownNPC), EventName = "Event", DelegateName = "Definition")]
+    public sealed class BuffTownNPCAttribute : SubscribesToAttribute;
 
     public sealed partial class BuffTownNPC
     {
@@ -1752,7 +1816,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyDeathMessageAttribute : SubscribesToAttribute<ModifyDeathMessage>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyDeathMessage), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyDeathMessageAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyDeathMessage
     {
@@ -1780,7 +1845,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class TownNPCAttackStrengthAttribute : SubscribesToAttribute<TownNPCAttackStrength>;
+    [HookMetadata(TypeContainingEvent = typeof(TownNPCAttackStrength), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TownNPCAttackStrengthAttribute : SubscribesToAttribute;
 
     public sealed partial class TownNPCAttackStrength
     {
@@ -1807,7 +1873,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class TownNPCAttackCooldownAttribute : SubscribesToAttribute<TownNPCAttackCooldown>;
+    [HookMetadata(TypeContainingEvent = typeof(TownNPCAttackCooldown), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TownNPCAttackCooldownAttribute : SubscribesToAttribute;
 
     public sealed partial class TownNPCAttackCooldown
     {
@@ -1834,7 +1901,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class TownNPCAttackProjAttribute : SubscribesToAttribute<TownNPCAttackProj>;
+    [HookMetadata(TypeContainingEvent = typeof(TownNPCAttackProj), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TownNPCAttackProjAttribute : SubscribesToAttribute;
 
     public sealed partial class TownNPCAttackProj
     {
@@ -1861,7 +1929,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class TownNPCAttackProjSpeedAttribute : SubscribesToAttribute<TownNPCAttackProjSpeed>;
+    [HookMetadata(TypeContainingEvent = typeof(TownNPCAttackProjSpeed), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TownNPCAttackProjSpeedAttribute : SubscribesToAttribute;
 
     public sealed partial class TownNPCAttackProjSpeed
     {
@@ -1890,7 +1959,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class TownNPCAttackShootAttribute : SubscribesToAttribute<TownNPCAttackShoot>;
+    [HookMetadata(TypeContainingEvent = typeof(TownNPCAttackShoot), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TownNPCAttackShootAttribute : SubscribesToAttribute;
 
     public sealed partial class TownNPCAttackShoot
     {
@@ -1915,7 +1985,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class TownNPCAttackMagicAttribute : SubscribesToAttribute<TownNPCAttackMagic>;
+    [HookMetadata(TypeContainingEvent = typeof(TownNPCAttackMagic), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TownNPCAttackMagicAttribute : SubscribesToAttribute;
 
     public sealed partial class TownNPCAttackMagic
     {
@@ -1940,7 +2011,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class TownNPCAttackSwingAttribute : SubscribesToAttribute<TownNPCAttackSwing>;
+    [HookMetadata(TypeContainingEvent = typeof(TownNPCAttackSwing), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TownNPCAttackSwingAttribute : SubscribesToAttribute;
 
     public sealed partial class TownNPCAttackSwing
     {
@@ -1967,7 +2039,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DrawTownAttackGunAttribute : SubscribesToAttribute<DrawTownAttackGun>;
+    [HookMetadata(TypeContainingEvent = typeof(DrawTownAttackGun), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DrawTownAttackGunAttribute : SubscribesToAttribute;
 
     public sealed partial class DrawTownAttackGun
     {
@@ -1998,7 +2071,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DrawTownAttackSwingAttribute : SubscribesToAttribute<DrawTownAttackSwing>;
+    [HookMetadata(TypeContainingEvent = typeof(DrawTownAttackSwing), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DrawTownAttackSwingAttribute : SubscribesToAttribute;
 
     public sealed partial class DrawTownAttackSwing
     {
@@ -2031,7 +2105,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ModifyCollisionDataAttribute : SubscribesToAttribute<ModifyCollisionData>;
+    [HookMetadata(TypeContainingEvent = typeof(ModifyCollisionData), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ModifyCollisionDataAttribute : SubscribesToAttribute;
 
     public sealed partial class ModifyCollisionData
     {
@@ -2063,7 +2138,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class NeedSavingAttribute : SubscribesToAttribute<NeedSaving>;
+    [HookMetadata(TypeContainingEvent = typeof(NeedSaving), EventName = "Event", DelegateName = "Definition")]
+    public sealed class NeedSavingAttribute : SubscribesToAttribute;
 
     public sealed partial class NeedSaving
     {
@@ -2087,7 +2163,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PickEmoteAttribute : SubscribesToAttribute<PickEmote>;
+    [HookMetadata(TypeContainingEvent = typeof(PickEmote), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PickEmoteAttribute : SubscribesToAttribute;
 
     public sealed partial class PickEmote
     {
@@ -2117,7 +2194,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class ChatBubblePositionAttribute : SubscribesToAttribute<ChatBubblePosition>;
+    [HookMetadata(TypeContainingEvent = typeof(ChatBubblePosition), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ChatBubblePositionAttribute : SubscribesToAttribute;
 
     public sealed partial class ChatBubblePosition
     {
@@ -2144,7 +2222,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class PartyHatPositionAttribute : SubscribesToAttribute<PartyHatPosition>;
+    [HookMetadata(TypeContainingEvent = typeof(PartyHatPosition), EventName = "Event", DelegateName = "Definition")]
+    public sealed class PartyHatPositionAttribute : SubscribesToAttribute;
 
     public sealed partial class PartyHatPosition
     {
@@ -2171,7 +2250,8 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class EmoteBubblePositionAttribute : SubscribesToAttribute<EmoteBubblePosition>;
+    [HookMetadata(TypeContainingEvent = typeof(EmoteBubblePosition), EventName = "Event", DelegateName = "Definition")]
+    public sealed class EmoteBubblePositionAttribute : SubscribesToAttribute;
 
     public sealed partial class EmoteBubblePosition
     {
