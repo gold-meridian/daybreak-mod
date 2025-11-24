@@ -31,8 +31,41 @@ internal static class Extensions
                 return null;
             }
 
-            // TODO
-            return new HookDefinition();
+            var candidates = symbol!.GetAttributes();
+            foreach (var candidate in candidates)
+            {
+                if (!candidate.AttributeClass?.InheritsFrom(attrs.HookMetadata) ?? false)
+                {
+                    continue;
+                }
+
+                var arguments = candidate.NamedArguments;
+
+                var delegateType = arguments
+                                  .FirstOrDefault(x => x.Key == "DelegateType")
+                                  .Value.Value as INamedTypeSymbol;
+
+                var typeContainingEvent = arguments
+                                         .FirstOrDefault(x => x.Key == "TypeContainingEvent")
+                                         .Value.Value as INamedTypeSymbol;
+
+                var eventName = arguments
+                               .FirstOrDefault(x => x.Key == "EventName")
+                               .Value.Value as string;
+
+                var delegateName = arguments
+                                  .FirstOrDefault(x => x.Key == "DelegateName")
+                                  .Value.Value as string;
+
+                return new HookDefinition(
+                    delegateType,
+                    typeContainingEvent,
+                    eventName,
+                    delegateName
+                );
+            }
+
+            return null;
         }
     }
 

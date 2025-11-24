@@ -4,7 +4,12 @@ using Microsoft.CodeAnalysis;
 
 namespace Daybreak.CodeAnalysis;
 
-public record HookDefinition
+public sealed class HookDefinition(
+    INamedTypeSymbol? delegateType,
+    INamedTypeSymbol? typeContainingEvent,
+    string? eventName,
+    string? delegateName
+)
 {
     public string Name { get; } = "stub";
 
