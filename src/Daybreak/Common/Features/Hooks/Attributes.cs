@@ -13,10 +13,13 @@ internal interface IHasSide
 
 /// <summary>
 ///     Shared between all hooking attributes to provide a common base for
-///     analysis.
+///     code analysis and code fixes.  Does not actually do anything functional,
+///     just serves as an indicator that inheriting attributes are related to
+///     hooking APIs.
 /// </summary>
 public abstract class BaseHookAttribute : Attribute;
 
+#region Load hooks
 /// <summary>
 ///     Automatically calls the decorated function on load.
 ///     <br />
@@ -70,7 +73,9 @@ public sealed class OnUnloadAttribute : BaseHookAttribute, IHasSide
     /// </summary>
     public ModSide Side { get; set; } = ModSide.Both;
 }
+#endregion
 
+#region tModLoader event hooks
 /// <inheritdoc cref="SubscribesToAttribute{T}"/>
 [PublicAPI]
 [MeansImplicitUse]
@@ -91,7 +96,8 @@ public abstract class SubscribesToAttribute : BaseHookAttribute, IHasSide
 
 /// <summary>
 ///     Automatically subscribes the decorated method to the hook of type
-///     <typeparamref name="T" /> if applicable.
+///     <typeparamref name="T" /> if applicable.  This variant is intended for
+///     specially-generated hooks wrapping tModLoader hooks.
 ///     <br />
 ///     If this decorates an instance method, the hook will be subscribed when
 ///     <see cref="Mod.AddContent" /> is called on the instance.  This means
@@ -121,11 +127,16 @@ public class SubscribesToAttribute<T> : SubscribesToAttribute
         return typeof(T);
     }
 }
+#endregion
 
+#region IL edit hooks
 public abstract class IlEditAttribute : BaseHookAttribute;
 
 public class IlEditAttribute<T> : IlEditAttribute;
+#endregion
 
+#region Detour hooks
 public abstract class DetourAttribute : BaseHookAttribute;
 
 public class DetourAttribute<T> : BaseHookAttribute;
+#endregion
