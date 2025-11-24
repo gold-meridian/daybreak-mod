@@ -1,12 +1,34 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Daybreak.CodeAnalysis;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class HookMustBeStaticAnalyzer() : AbstractDiagnosticAnalyzer(Diagnostics.HookInstanceMismatch)
+public sealed class HookInstanceMismatchAnalyzer() : AbstractDiagnosticAnalyzer(Diagnostics.HookInstanceMismatch)
 {
+    public readonly record struct Properties(HookInstancing RequiredInstancing)
+    {
+        public static Properties FromImmutable(ImmutableDictionary<string, string?> properties)
+        {
+            return new Properties(
+                (HookInstancing)Enum.Parse(typeof(HookInstancing), properties[nameof(RequiredInstancing)] ?? nameof(HookInstancing.Both))
+            );
+        }
+
+        public ImmutableDictionary<string, string?> ToImmutable()
+        {
+            var properties = ImmutableDictionary.CreateBuilder<string, string?>();
+            {
+                properties[nameof(RequiredInstancing)] = RequiredInstancing.ToString();
+            }
+
+            return properties.ToImmutable();
+        }
+    }
+
     protected override void InitializeWorker(AnalysisContext ctx)
     {
         ctx.RegisterCompilationStartAction(
@@ -40,7 +62,10 @@ public sealed class HookMustBeStaticAnalyzer() : AbstractDiagnosticAnalyzer(Diag
                             return;
                         }
 
-                        switch (hookKind.Instancing)
+                        var instancing = hookKind.Instancing;
+                        var properties = new Properties(instancing);
+
+                        switch (instancing)
                         {
                             case HookInstancing.Both:
                                 return;
@@ -50,6 +75,7 @@ public sealed class HookMustBeStaticAnalyzer() : AbstractDiagnosticAnalyzer(Diag
                                     Diagnostic.Create(
                                         Diagnostics.HookInstanceMismatch,
                                         symbol.Locations[0],
+                                        properties.ToImmutable(),
                                         symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                                         "static"
                                     )
@@ -61,6 +87,7 @@ public sealed class HookMustBeStaticAnalyzer() : AbstractDiagnosticAnalyzer(Diag
                                     Diagnostic.Create(
                                         Diagnostics.HookInstanceMismatch,
                                         symbol.Locations[0],
+                                        properties.ToImmutable(),
                                         symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                                         "instanced"
                                     )

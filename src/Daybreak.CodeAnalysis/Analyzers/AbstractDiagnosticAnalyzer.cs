@@ -10,7 +10,7 @@ public abstract class AbstractDiagnosticAnalyzer(params DiagnosticDescriptor[] d
 
     protected virtual GeneratedCodeAnalysisFlags GeneratedCodeAnalysisFlags => GeneratedCodeAnalysisFlags.None;
 
-    public override void Initialize(AnalysisContext context)
+    public sealed override void Initialize(AnalysisContext context)
     {
         context.EnableConcurrentExecution();
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags);
