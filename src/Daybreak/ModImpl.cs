@@ -21,13 +21,13 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
     }
 
     [ModSystemHooks.AddRecipeGroups]
-    private void A(ModSystemHooks.AddRecipeGroups.Original orig)
+    private static void A(ModSystemHooks.AddRecipeGroups.Original orig)
     {
         
     }
     
     [ModSystemHooks.AddRecipeGroups]
-    void A(ModSystem self)
+    static void A(ModSystem self)
     {
         
     }

@@ -91,8 +91,8 @@ public sealed class HookInstanceMismatchCodeFixProvider() : AbstractCodeFixProvi
             if (staticIndex >= 0)
             {
                 var staticToken = modifiers[staticIndex];
-                var leadingTrivia = staticToken.LeadingTrivia;
-                // var trailingTrivia = staticToken.TrailingTrivia;
+                var leadingTrivia = staticIndex == 0 ? staticToken.LeadingTrivia : FilterWhitespace(staticToken.LeadingTrivia);
+                var trailingTrivia = FilterWhitespace(staticToken.TrailingTrivia);
 
                 SyntaxToken replacementTarget;
                 if (staticIndex + 1 < modifiers.Count)
@@ -100,7 +100,8 @@ public sealed class HookInstanceMismatchCodeFixProvider() : AbstractCodeFixProvi
                     replacementTarget = modifiers[staticIndex + 1];
 
                     var newTarget = replacementTarget
-                       .WithLeadingTrivia(leadingTrivia);
+                                   .WithLeadingTrivia(leadingTrivia)
+                                   .WithTrailingTrivia(trailingTrivia.AddRange(replacementTarget.TrailingTrivia));
 
                     modifiers = modifiers.Replace(replacementTarget, newTarget);
                 }
@@ -109,7 +110,8 @@ public sealed class HookInstanceMismatchCodeFixProvider() : AbstractCodeFixProvi
                     replacementTarget = methodDecl.ReturnType.GetFirstToken();
 
                     var newTarget = replacementTarget
-                       .WithLeadingTrivia(leadingTrivia);
+                                   .WithLeadingTrivia(leadingTrivia)
+                                   .WithTrailingTrivia(trailingTrivia.AddRange(replacementTarget.TrailingTrivia));
 
                     var newReturnType = methodDecl.ReturnType.ReplaceToken(replacementTarget, newTarget);
                     newDecl = methodDecl.WithReturnType(newReturnType);
@@ -125,5 +127,12 @@ public sealed class HookInstanceMismatchCodeFixProvider() : AbstractCodeFixProvi
 
         editor.ReplaceNode(methodDecl, newDecl);
         return editor.GetChangedDocument();
+    }
+
+    private static SyntaxTriviaList FilterWhitespace(SyntaxTriviaList trivia)
+    {
+        return SyntaxFactory.TriviaList(
+            trivia.Where(x => !x.IsKind(SyntaxKind.WhitespaceTrivia))
+        );
     }
 }
