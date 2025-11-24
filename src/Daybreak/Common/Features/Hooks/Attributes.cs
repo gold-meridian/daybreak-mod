@@ -11,6 +11,12 @@ internal interface IHasSide
 }
 
 /// <summary>
+///     Indicates a parameter in a delegate is omittable.
+/// </summary>
+[AttributeUsage(AttributeTargets.Parameter)]
+public sealed class OmittableAttribute : Attribute;
+
+/// <summary>
 ///     Shared between all hooking attributes to provide a common base for
 ///     code analysis and code fixes.  Provides relevant information for parsing
 ///     out how to handle a given type.
@@ -25,8 +31,7 @@ public class BaseHookAttribute(
     string? delegateName = null,
     bool supportsInstancedMethods = true,
     bool supportsStaticMethods = true,
-    bool supportsVoidOverload = false,
-    params int[] omittableArgumentIndices
+    bool supportsVoidOverload = false
 ) : Attribute, IHasSide
 {
     /// <summary>
@@ -72,19 +77,11 @@ public class BaseHookAttribute(
     public bool SupportsVoidOverload => supportsVoidOverload;
 
     /// <summary>
-    ///     The indices of parameters of the event that may be freely omitted.
-    /// </summary>
-    public int[] OmittableArgumentIndices => omittableArgumentIndices;
-
-    /// <summary>
     ///     The side to load this on.
     /// </summary>
     public ModSide Side { get; set; } = ModSide.Both;
 
-    public virtual void Apply()
-    {
-        
-    }
+    public virtual void Apply() { }
 
     /// <summary>
     ///     Attempts to resolve the delegate type from the outlined rules.
@@ -129,8 +126,7 @@ public class BaseHookAttribute<TDelegate>(
     string? delegateName = null,
     bool supportsInstancedMethods = true,
     bool supportsStaticMethods = true,
-    bool supportsVoidOverload = false,
-    params int[] omittableArgumentIndices
+    bool supportsVoidOverload = false
 ) : BaseHookAttribute(
     delegateSignatureType: typeof(TDelegate),
     typeWithEvent: typeWithEvent,
@@ -138,6 +134,5 @@ public class BaseHookAttribute<TDelegate>(
     delegateName: delegateName,
     supportsInstancedMethods: supportsInstancedMethods,
     supportsStaticMethods: supportsStaticMethods,
-    supportsVoidOverload: supportsVoidOverload,
-    omittableArgumentIndices: omittableArgumentIndices
+    supportsVoidOverload: supportsVoidOverload
 );

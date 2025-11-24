@@ -24,8 +24,7 @@ namespace Daybreak.Common.Features.Hooks;
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public sealed class OnLoadAttribute() : BaseHookAttribute(
-    delegateSignatureType: typeof(OnLoadHook.Definition),
-    omittableArgumentIndices: 0
+    delegateSignatureType: typeof(OnLoadHook.Definition)
 )
 {
     /// <inheritdoc />
@@ -55,8 +54,7 @@ public sealed class OnLoadAttribute() : BaseHookAttribute(
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public sealed class OnUnloadAttribute() : BaseHookAttribute(
-    delegateSignatureType: typeof(OnUnloadHook.Definition),
-    omittableArgumentIndices: 0
+    delegateSignatureType: typeof(OnUnloadHook.Definition)
 )
 {
     /// <inheritdoc />
@@ -68,10 +66,14 @@ public sealed class OnUnloadAttribute() : BaseHookAttribute(
 
 internal static class OnLoadHook
 {
-    public delegate void Definition(Mod mod);
+    public delegate void Definition(
+        [Omittable] Mod mod
+    );
 }
 
 internal static class OnUnloadHook
 {
-    public delegate void Definition(Mod mod);
+    public delegate void Definition(
+        [Omittable] Mod mod
+    );
 }
