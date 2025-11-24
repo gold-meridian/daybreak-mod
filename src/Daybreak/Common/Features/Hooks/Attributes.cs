@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using JetBrains.Annotations;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Core;
 
 namespace Daybreak.Common.Features.Hooks;
 
@@ -13,154 +12,132 @@ internal interface IHasSide
 
 /// <summary>
 ///     Shared between all hooking attributes to provide a common base for
-///     code analysis and code fixes.  Does not actually do anything functional,
-///     just serves as an indicator that inheriting attributes are related to
-///     hooking APIs.
+///     code analysis and code fixes.  Provides relevant information for parsing
+///     out how to handle a given type.
 /// </summary>
-public abstract class BaseHookAttribute : Attribute;
-
-#region Load hooks
-/// <summary>
-///     Automatically calls the decorated function on load.
-///     <br />
-///     If the method is instanced, it expects to be part of a parent type
-///     implementing <see cref="ILoadable" /> (in which case it is called
-///     directly after <see cref="ILoadable.Load" />).
-///     <br />
-///     If the method is static, it will just be called at the end of
-///     <see cref="Mod.Autoload" />.
-/// </summary>
-/// <remarks>
-///     If the type is annotated with <see cref="AutoloadAttribute"/>, whether
-///     the type is autoload-able is also taken into account.  This means it
-///     takes into account the Sided-ness of the containing type and whether
-///     autoloading is enabled for it.
-/// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class OnLoadAttribute : BaseHookAttribute, IHasSide
+public class BaseHookAttribute(
+    Type? delegateSignatureType = null,
+    Type? typeWithEvent = null,
+    string? eventName = null,
+    string? delegateName = null,
+    bool supportsInstancedMethods = true,
+    bool supportsStaticMethods = true,
+    bool supportsVoidOverload = false,
+    params int[] omittableArgumentIndices
+) : Attribute, IHasSide
 {
     /// <summary>
-    ///     The side to load this on.
+    ///     The delegate type representing the signature of the event.  If not
+    ///     specified, it will attempt to be resolved from
+    ///     <see cref="TypeContainingEvent"/> using <see cref="DelegateName"/>.
     /// </summary>
-    public ModSide Side { get; set; } = ModSide.Both;
-}
+    public Type? DelegateType => delegateSignatureType;
 
-/// <summary>
-///     Automatically calls the decorated function on unload.
-///     <br />
-///     If the method is instanced, it expects to be part of a parent type
-///     implementing <see cref="ILoadable" />.
-///     <br />
-///     All methods will be run in reverse order at the start of
-///     <see cref="ModContent.UnloadModContent" />
-///     (before <see cref="MenuLoader.Unload" />).
-/// </summary>
-/// <remarks>
-///     If the type is annotated with <see cref="AutoloadAttribute"/>, whether
-///     the type is autoload-able is also taken into account.  This means it
-///     takes into account the Sided-ness of the containing type and whether
-///     autoloading is enabled for it.
-/// </remarks>
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class OnUnloadAttribute : BaseHookAttribute, IHasSide
-{
     /// <summary>
-    ///     The side to load this on.
+    ///     The type containing the event.
     /// </summary>
-    public ModSide Side { get; set; } = ModSide.Both;
-}
-#endregion
+    public Type? TypeContainingEvent => typeWithEvent;
 
-#region tModLoader event hooks
-/// <inheritdoc cref="SubscribesToAttribute{T}"/>
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public abstract class SubscribesToAttribute : BaseHookAttribute, IHasSide
-{
+    /// <summary>
+    ///     The name of the event field within the type.
+    /// </summary>
+    public string? EventName => eventName;
+
+    /// <summary>
+    ///     The name of the delegate within <see cref="TypeContainingEvent"/> if
+    ///     <see cref="DelegateType"/> is unspecified.
+    /// </summary>
+    public string? DelegateName => delegateName;
+
+    /// <summary>
+    ///     Whether methods annotated with this hook attribute may be instanced.
+    ///     <br />
+    ///     Relies on them implementing <see cref="ILoadable"/>, as it uses the
+    ///     autloaded singleton/template instance.
+    /// </summary>
+    public bool SupportsInstancedMethods => supportsInstancedMethods;
+
+    /// <summary>
+    ///     Whether methods annotated with this hook attribute may be static.
+    /// </summary>
+    public bool SupportsStaticMethods => supportsStaticMethods;
+
+    /// <summary>
+    ///     Whether the hook may return void instead of the expected return
+    ///     type.
+    /// </summary>
+    public bool SupportsVoidOverload => supportsVoidOverload;
+
+    /// <summary>
+    ///     The indices of parameters of the event that may be freely omitted.
+    /// </summary>
+    public int[] OmittableArgumentIndices => omittableArgumentIndices;
+
     /// <summary>
     ///     The side to load this on.
     /// </summary>
     public ModSide Side { get; set; } = ModSide.Both;
 
+    public virtual void Apply()
+    {
+        
+    }
+
     /// <summary>
-    ///     The type containing the hook definition.
+    ///     Attempts to resolve the delegate type from the outlined rules.
+    /// </summary>
+    protected Type? GetDelegateType()
+    {
+        if (DelegateType is not null)
+        {
+            return DelegateType;
+        }
+
+        if (TypeContainingEvent is not null && DelegateName is not null)
+        {
+            return TypeContainingEvent.GetNestedType(DelegateName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    ///     Attempts to resolve the event from the outlined rules.
     /// </summary>
     /// <returns></returns>
-    public abstract Type GetHookType();
-}
-
-/// <summary>
-///     Automatically subscribes the decorated method to the hook of type
-///     <typeparamref name="T" /> if applicable.  This variant is intended for
-///     specially-generated hooks wrapping tModLoader hooks.
-///     <br />
-///     If this decorates an instance method, the hook will be subscribed when
-///     <see cref="Mod.AddContent" /> is called on the instance.  This means
-///     instance hooks can only automatically be subscribed if the parent class
-///     is an <see cref="ILoadable" /> and the instance has actually been loaded.
-///     <br />
-///     If this decorates a static method, the hook will be subscribed so long
-///     as the parent type is visible under
-///     <see cref="AssemblyManager.GetLoadableTypes(Assembly)" /> and the type
-///     does not have any generic parameters (technical limitation).
-/// </summary>
-/// <typeparam name="T">The hook type to subscribe the method to.</typeparam>
-/// <remarks>
-///     If the type is annotated with <see cref="AutoloadAttribute"/>, whether
-///     the type is autoload-able is also taken into account.  This means it
-///     takes into account the Sided-ness of the containing type and whether
-///     autoloading is enabled for it.
-/// </remarks>
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class SubscribesToAttribute<T> : SubscribesToAttribute
-{
-    /// <inheritdoc />
-    public override Type GetHookType()
+    protected EventInfo? GetEventInfo()
     {
-        return typeof(T);
+        if (TypeContainingEvent is null || EventName is null)
+        {
+            return null;
+        }
+
+        return TypeContainingEvent.GetEvent(EventName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
     }
 }
-#endregion
 
-#region Generic event subscription
+/// <inheritdoc/>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public abstract class EventAttribute : BaseHookAttribute;
-
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class EventAttribute<T> : EventAttribute;
-#endregion
-
-#region IL edit hooks
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public abstract class IlEditAttribute : BaseHookAttribute;
-
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class IlEditAttribute<T> : IlEditAttribute;
-#endregion
-
-#region Detour hooks
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public abstract class DetourAttribute : BaseHookAttribute;
-
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class DetourAttribute<T> : BaseHookAttribute;
-#endregion
+public class BaseHookAttribute<TDelegate>(
+    Type? typeWithEvent = null,
+    string? eventName = null,
+    string? delegateName = null,
+    bool supportsInstancedMethods = true,
+    bool supportsStaticMethods = true,
+    bool supportsVoidOverload = false,
+    params int[] omittableArgumentIndices
+) : BaseHookAttribute(
+    delegateSignatureType: typeof(TDelegate),
+    typeWithEvent: typeWithEvent,
+    eventName: eventName,
+    delegateName: delegateName,
+    supportsInstancedMethods: supportsInstancedMethods,
+    supportsStaticMethods: supportsStaticMethods,
+    supportsVoidOverload: supportsVoidOverload,
+    omittableArgumentIndices: omittableArgumentIndices
+);
