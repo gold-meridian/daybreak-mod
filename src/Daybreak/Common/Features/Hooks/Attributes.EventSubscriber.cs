@@ -6,6 +6,7 @@ using Terraria.ModLoader.Core;
 
 namespace Daybreak.Common.Features.Hooks;
 
+/*
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
@@ -15,6 +16,7 @@ public class EventAttribute : BaseHookAttribute;
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class EventAttribute<T> : EventAttribute;
+*/
 
 /// <inheritdoc cref="SubscribesToAttribute{T}"/>
 [PublicAPI]

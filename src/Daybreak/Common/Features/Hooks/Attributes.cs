@@ -99,14 +99,7 @@ internal sealed class PermitsVoidInvokeParameterWithParametersAttribute(string p
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public abstract class BaseHookAttribute(
-    Type? delegateSignatureType = null,
-    Type? typeWithEvent = null,
-    string? eventName = null,
-    string? delegateName = null,
-    bool supportsInstancedMethods = true,
-    bool supportsStaticMethods = true
-) : Attribute, IHasSide
+public abstract class BaseHookAttribute : Attribute, IHasSide
 {
     /// <summary>
     ///     The delegate type representing the signature of the event.  If not
@@ -115,23 +108,23 @@ public abstract class BaseHookAttribute(
     ///     If still not resolved, it will use the event's type (assuming it was
     ///     resolved).
     /// </summary>
-    public Type? DelegateType => delegateSignatureType;
+    public Type? DelegateType { get; init; }
 
     /// <summary>
     ///     The type containing the event.
     /// </summary>
-    public Type? TypeContainingEvent => typeWithEvent;
+    public Type? TypeContainingEvent { get; init; }
 
     /// <summary>
     ///     The name of the event field within the type.
     /// </summary>
-    public string? EventName => eventName;
+    public string? EventName { get; init; }
 
     /// <summary>
     ///     The name of the delegate within <see cref="TypeContainingEvent"/> if
     ///     <see cref="DelegateType"/> is unspecified.
     /// </summary>
-    public string? DelegateName => delegateName;
+    public string? DelegateName { get; init; }
 
     /// <summary>
     ///     Whether methods annotated with this hook attribute may be instanced.
@@ -139,12 +132,12 @@ public abstract class BaseHookAttribute(
     ///     Relies on them implementing <see cref="ILoadable"/>, as it uses the
     ///     autloaded singleton/template instance.
     /// </summary>
-    public bool SupportsInstancedMethods => supportsInstancedMethods;
+    public bool SupportsInstancedMethods { get; init; } = true;
 
     /// <summary>
     ///     Whether methods annotated with this hook attribute may be static.
     /// </summary>
-    public bool SupportsStaticMethods => supportsStaticMethods;
+    public bool SupportsStaticMethods { get; init; } = true;
 
     /// <summary>
     ///     The side to load this on.

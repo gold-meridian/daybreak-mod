@@ -51,7 +51,7 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
     }
 
     [ModSystemHooks.CanWorldBePlayed]
-    int B()
+    void B()
     {
         
     }
