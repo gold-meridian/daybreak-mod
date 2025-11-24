@@ -11,7 +11,12 @@ internal interface IHasSide
 }
 
 /// <summary>
-///     Indicates a parameter in a delegate is omittable.
+///     Indicates a parameter in a delegate is omittable.  This is a convenience
+///     attribute used when building wrappers through
+///     <see cref="HookSubscriber"/>.  Each omittable attribute is expected to
+///     decorate a parameter with a unique type, and these parameters should
+///     only be at the start (that is, they can't be broken up or appear after
+///     non-omittable parameters).
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class OmittableAttribute : Attribute;
@@ -24,7 +29,7 @@ public sealed class OmittableAttribute : Attribute;
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class BaseHookAttribute(
+public abstract class BaseHookAttribute(
     Type? delegateSignatureType = null,
     Type? typeWithEvent = null,
     string? eventName = null,
@@ -38,6 +43,8 @@ public class BaseHookAttribute(
     ///     The delegate type representing the signature of the event.  If not
     ///     specified, it will attempt to be resolved from
     ///     <see cref="TypeContainingEvent"/> using <see cref="DelegateName"/>.
+    ///     If still not resolved, it will use the event's type (assuming it was
+    ///     resolved).
     /// </summary>
     public Type? DelegateType => delegateSignatureType;
 
@@ -81,21 +88,34 @@ public class BaseHookAttribute(
     /// </summary>
     public ModSide Side { get; set; } = ModSide.Both;
 
-    public virtual void Apply() { }
+    /// <summary>
+    ///     Applies this hook to the instance.
+    /// </summary>
+    public abstract void Apply(MethodInfo bindingMethod, object? instance);
 
     /// <summary>
     ///     Attempts to resolve the delegate type from the outlined rules.
     /// </summary>
-    protected Type? GetDelegateType()
+    public Type? GetDelegateType()
     {
         if (DelegateType is not null)
         {
             return DelegateType;
         }
 
-        if (TypeContainingEvent is not null && DelegateName is not null)
+        if (TypeContainingEvent is null)
+        {
+            return null;
+        }
+
+        if (DelegateName is not null)
         {
             return TypeContainingEvent.GetNestedType(DelegateName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        }
+
+        if (GetEventInfo() is { } eventInfo)
+        {
+            return eventInfo.EventHandlerType;
         }
 
         return null;
@@ -105,7 +125,7 @@ public class BaseHookAttribute(
     ///     Attempts to resolve the event from the outlined rules.
     /// </summary>
     /// <returns></returns>
-    protected EventInfo? GetEventInfo()
+    public EventInfo? GetEventInfo()
     {
         if (TypeContainingEvent is null || EventName is null)
         {
@@ -115,24 +135,3 @@ public class BaseHookAttribute(
         return TypeContainingEvent.GetEvent(EventName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
     }
 }
-
-/// <inheritdoc/>
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class BaseHookAttribute<TDelegate>(
-    Type? typeWithEvent = null,
-    string? eventName = null,
-    string? delegateName = null,
-    bool supportsInstancedMethods = true,
-    bool supportsStaticMethods = true,
-    bool supportsVoidOverload = false
-) : BaseHookAttribute(
-    delegateSignatureType: typeof(TDelegate),
-    typeWithEvent: typeWithEvent,
-    eventName: eventName,
-    delegateName: delegateName,
-    supportsInstancedMethods: supportsInstancedMethods,
-    supportsStaticMethods: supportsStaticMethods,
-    supportsVoidOverload: supportsVoidOverload
-);

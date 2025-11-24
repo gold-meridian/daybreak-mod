@@ -20,7 +20,26 @@ public class EventAttribute<T> : EventAttribute;
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public abstract class SubscribesToAttribute : BaseHookAttribute;
+public class SubscribesToAttribute(
+    Type typeWithEvent,
+    string eventName = "Event",
+    string delegateName = "Definition"
+) : BaseHookAttribute(
+    delegateSignatureType: null,
+    typeWithEvent: typeWithEvent,
+    eventName: eventName,
+    delegateName: delegateName,
+    supportsInstancedMethods: true,
+    supportsStaticMethods: true,
+    supportsVoidOverload: true
+)
+{
+    /// <inheritdoc />
+    public override void Apply(MethodInfo bindingMethod, object? instance)
+    {
+        HookSubscriber.HandleSubscriber(this, bindingMethod, instance);
+    }
+}
 
 /// <summary>
 ///     Automatically subscribes the decorated method to the hook of type
@@ -47,4 +66,11 @@ public abstract class SubscribesToAttribute : BaseHookAttribute;
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public class SubscribesToAttribute<T> : SubscribesToAttribute;
+public class SubscribesToAttribute<T>(
+    string eventName = "Event",
+    string delegateName = "Definition"
+) : SubscribesToAttribute(
+    typeof(T),
+    eventName,
+    delegateName
+);

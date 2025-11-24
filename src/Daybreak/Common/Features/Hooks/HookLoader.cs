@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Daybreak.Common.CodeAnalysis;
 using MonoMod.Cil;
-using MonoMod.RuntimeDetour;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.ModLoader.Default;
@@ -356,7 +353,7 @@ internal static class HookLoader
     {
         foreach (var method in methods)
         {
-            var attributes = method.GetCustomAttributes<SubscribesToAttribute>(inherit: false);
+            var attributes = method.GetCustomAttributes<BaseHookAttribute>(inherit: false);
 
             foreach (var attribute in attributes)
             {
@@ -365,240 +362,7 @@ internal static class HookLoader
                     continue;
                 }
 
-                var hookType = attribute.GetHookType();
-                Subscribe(hookType, method, instance);
-            }
-        }
-    }
-
-    /// <summary>
-    ///     Binds the <paramref name="bindingMethod"/> to the hook contained
-    ///     within the <paramref name="hookType"/>. Looks for a public, static
-    ///     event named <c>Event</c> within the <paramref name="hookType"/> to
-    ///     bind to.  <paramref name="instance"/> to used as part of the binding
-    ///     if it's available (must be provided if the
-    ///     <paramref name="bindingMethod"/> is instanced, otherwise must be
-    ///     <see langword="null"/>).
-    ///     <br />
-    ///     This supports flexibly binding <paramref name="bindingMethod"/>s
-    ///     whose signature is not directly compatible with the target event.
-    ///     <br />
-    ///     A signature may omit a return type (instead returning
-    ///     <see langword="void"/>) to implicitly invoke the <c>orig</c>
-    ///     callback.  This implicit invocation is used to consume the return
-    ///     value without using a user-provided value (particularly useful if
-    ///     you intend to execute some code in a given step without much care
-    ///     for the hook itself).
-    ///     <br />
-    ///     Furthermore, the initial <c>orig</c> and <c>self</c> parameters may
-    ///     be omitted if they are not used.  Additional parameters must always
-    ///     be provided.
-    /// </summary>
-    /// <param name="hookType">
-    ///     The <see cref="Type"/> containing the event to bind to.
-    /// </param>
-    /// <param name="bindingMethod">
-    ///     The <see cref="MethodInfo"/> being bound.
-    /// </param>
-    /// <param name="instance">
-    ///     The instance of type containing the <paramref name="bindingMethod"/>
-    ///     if the <paramref name="bindingMethod"/> is instanced, otherwise
-    ///     <see langword="null"/>.
-    /// </param>
-    /// <exception cref="InvalidOperationException"></exception>
-    private static void Subscribe(
-        Type hookType,
-        MethodInfo bindingMethod,
-        object? instance
-    )
-    {
-        var eventInfo = hookType.GetEvent("Event", BindingFlags.Public | BindingFlags.Static)
-                     ?? throw new InvalidOperationException($"The type {hookType} does not have an event named Event.");
-
-        var handlerType = eventInfo.EventHandlerType
-                       ?? throw new InvalidOperationException($"The event {eventInfo} did not have an EventHandlerType.");
-
-        var invokeMethod = handlerType.GetMethod("Invoke")
-                        ?? throw new InvalidOperationException("The event handler type could not resolve an Invoke method.");
-
-        // If we can bind directly then we don't need to build a wrapper.
-        if (TryDirectBind(eventInfo, handlerType, bindingMethod, instance))
-        {
-            return;
-        }
-
-        var wrapper = BuildWrapper(handlerType, invokeMethod, bindingMethod, instance);
-        eventInfo.AddEventHandler(null, wrapper);
-
-        return;
-
-        static bool TryDirectBind(
-            EventInfo eventInfo,
-            Type handlerType,
-            MethodInfo bindingMethod,
-            object? instance
-        )
-        {
-            try
-            {
-                var handler = Delegate.CreateDelegate(handlerType, instance, bindingMethod, throwOnBindFailure: false);
-                if (handler is null)
-                {
-                    return false;
-                }
-
-                eventInfo.AddEventHandler(null, handler);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-    }
-
-    private static Delegate BuildWrapper(
-        Type handlerType,
-        MethodInfo invokeMethod,
-        MethodInfo bindingMethod,
-        object? instance
-    )
-    {
-        var eventParameters = invokeMethod.GetParameters();
-        var eventParameterExpressions = eventParameters
-                                       .Select((x, i) => Expression.Parameter(x.ParameterType, "arg" + i))
-                                       .ToArray();
-
-        var targetParameters = bindingMethod.GetParameters();
-
-        // Find the orig and self parameters, if present.  If orig is present,
-        // it will always be the first parameter.  If self is present, it may be
-        // the first parameter (if no orig parameter is present) or the second
-        // (if an orig parameter is present).
-        FindSpecialParameters(
-            eventParameters,
-            targetParameters,
-            out var origParameter,
-            out var selfParameter
-        );
-
-        var arguments = new List<Expression>();
-        for (var i = 0; i < eventParameterExpressions.Length; i++)
-        {
-            var argExpr = eventParameterExpressions[i];
-
-            switch (i)
-            {
-                case 0:
-                {
-                    if (origParameter is not null)
-                    {
-                        arguments.Add(argExpr);
-                    }
-
-                    break;
-                }
-
-                case 1:
-                {
-                    if (selfParameter is not null)
-                    {
-                        arguments.Add(argExpr);
-                    }
-
-                    break;
-                }
-
-                default:
-                    arguments.Add(argExpr);
-                    break;
-            }
-        }
-
-        var callExpr = Expression.Call(bindingMethod.IsStatic ? null : Expression.Constant(instance), bindingMethod, arguments);
-
-        var eventReturn = invokeMethod.ReturnType;
-        var bindingReturn = bindingMethod.ReturnType;
-
-        Expression bodyExpr;
-        if (eventReturn == typeof(void))
-        {
-            // Simplest case is that the event returns void, meaning we can omit
-            // handling return values entirely.
-            bodyExpr = callExpr;
-        }
-        else
-        {
-            if (bindingReturn == eventReturn)
-            {
-                bodyExpr = Expression.Convert(callExpr, eventReturn);
-            }
-            else
-            {
-                var origExpr = eventParameterExpressions[0];
-                var origInvoke = eventParameters[0].ParameterType.GetMethod("Invoke")
-                              ?? throw new InvalidOperationException("Could not get Invoke method of orig");
-                var origCall = Expression.Call(origExpr, origInvoke, eventParameterExpressions.Skip(2));
-
-                bodyExpr = Expression.Block(
-                    callExpr,
-                    origCall
-                );
-            }
-        }
-
-        var lambda = Expression.Lambda(handlerType, bodyExpr, eventParameterExpressions);
-        return lambda.Compile();
-
-        static void FindSpecialParameters(
-            ParameterInfo[] eventParameters,
-            ParameterInfo[] targetParameters,
-            out ParameterInfo? origParameter,
-            out ParameterInfo? selfParameter
-        )
-        {
-            origParameter = null;
-            selfParameter = null;
-
-            var origType = eventParameters[0].ParameterType;
-            var selfType = eventParameters[1].ParameterType;
-
-            for (var i = 0; i < Math.Min(targetParameters.Length, 2); i++)
-            {
-                var currParameter = targetParameters[i];
-                var currType = currParameter.ParameterType;
-
-                if (i == 0)
-                {
-                    // Handle the first parameter.  Can either be orig or self.
-                    // If it's neither, abort and act as if none were found.
-
-                    if (currType == origType)
-                    {
-                        origParameter = currParameter;
-                        continue;
-                    }
-
-                    if (currType == selfType)
-                    {
-                        selfParameter = currParameter;
-                    }
-
-                    break;
-                }
-
-                if (i == 1)
-                {
-                    // Handle the second parameter.  Can only be self if orig is
-                    // set.
-
-                    if (currType == selfType)
-                    {
-                        selfParameter = currParameter;
-                    }
-                }
-
-                break;
+                attribute.Apply(method, instance);
             }
         }
     }

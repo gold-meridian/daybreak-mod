@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using JetBrains.Annotations;
 using Terraria.ModLoader;
 
@@ -28,7 +29,7 @@ public sealed class OnLoadAttribute() : BaseHookAttribute(
 )
 {
     /// <inheritdoc />
-    public override void Apply()
+    public override void Apply(MethodInfo bindingMethod, object? instance)
     {
         // Handled in HookLoader
     }
@@ -58,7 +59,7 @@ public sealed class OnUnloadAttribute() : BaseHookAttribute(
 )
 {
     /// <inheritdoc />
-    public override void Apply()
+    public override void Apply(MethodInfo bindingMethod, object? instance)
     {
         // Handled in HookLoader
     }
