@@ -2,10 +2,7 @@
 
 namespace Daybreak.CodeAnalysis;
 
-public readonly record struct AttributeHookPair(
+public sealed record AttributeHookPair(
     INamedTypeSymbol AttributeClass,
     HookDefinition HookDefinition
-)
-{
-    public static AttributeHookPair Null { get; } = default;
-}
+);

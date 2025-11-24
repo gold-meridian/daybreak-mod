@@ -76,7 +76,7 @@ public static class InvalidHookParameters
                             // Find the first valid one.  Other analyzers will error
                             // if there are multiple and they're incompatible.
                             var attrHookPair = attributes.GetFirstHookAttribute(attrs);
-                            if (attrHookPair == AttributeHookPair.Null)
+                            if (attrHookPair is null)
                             {
                                 return;
                             }
@@ -182,7 +182,7 @@ public static class InvalidHookParameters
             // Find the first valid one.  Other analyzers will error
             // if there are multiple and they're incompatible.
             var attrPair = attributes.GetFirstHookAttribute(attrs);
-            if (attrPair == AttributeHookPair.Null)
+            if (attrPair is null)
             {
                 return Task.CompletedTask;
             }
