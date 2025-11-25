@@ -42,11 +42,13 @@ public sealed class HookDefinition(
             return null;
         }
 
+        var hasReturnHandler = invoke.GetReturnTypeAttributes().Any(x => x.AttributeClass?.InheritsFrom(ctx.Attributes.AbstractPermitsVoid) ?? false);
+
         return new InvalidHookParameters.SignatureInfo(
             HookTypeName: Name,
             HookParameters: invoke.Parameters,
             HookReturnType: invoke.ReturnType,
-            ReturnTypeCanAlsoBeVoid: !SymbolEqualityComparer.Default.Equals(invoke.ReturnType, ctx.VoidSymbol)
+            ReturnTypeCanAlsoBeVoid: hasReturnHandler && !SymbolEqualityComparer.Default.Equals(invoke.ReturnType, ctx.VoidSymbol)
         );
     }
 
