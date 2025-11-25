@@ -14,6 +14,7 @@ namespace Daybreak.Common.Features.Hooks;
 internal static class HookLoader
 {
     private static Mod? currentlyLoadingMod;
+    private static Mod? currentlyUnloadingMod;
 
     /// <summary>
     ///     Internally used to hook into the start of mod loading; useful for
@@ -58,6 +59,11 @@ internal static class HookLoader
         MonoModHooks.Modify(
             typeof(Mod).GetMethod(nameof(Mod.UnloadContent), BindingFlags.NonPublic | BindingFlags.Instance)!,
             UnloadContent_CallOnUnloads
+        );
+
+        MonoModHooks.Add(
+            typeof(Mod).GetMethod(nameof(Mod.UnloadContent), BindingFlags.NonPublic | BindingFlags.Instance)!,
+            UnloadContent_WrapToMarkUnloadingMod
         );
 
         // AutoloadConfig and EnsureResizeArraysAttributeStaticCtorsRun are the
@@ -193,9 +199,16 @@ internal static class HookLoader
         );
     }
 
+    private static void UnloadContent_WrapToMarkUnloadingMod(Action<Mod> orig, Mod mod)
+    {
+        currentlyUnloadingMod = mod;
+        orig(mod);
+        currentlyUnloadingMod = null;
+    }
+
     private static void CallOnUnloads(ILoadable instance)
     {
-        Debug.Assert(currentlyLoadingMod is not null);
+        Debug.Assert(currentlyUnloadingMod is not null);
 
         var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         foreach (var method in Enumerable.Reverse(methods))
@@ -222,13 +235,13 @@ internal static class HookLoader
             }
 
             HookSubscriber.BuildWrapper<OnUnloadHook.Definition>(method, instance)
-                          .Invoke(currentlyLoadingMod);
+                          .Invoke(currentlyUnloadingMod);
         }
     }
 
     private static void CallOnUnloads(Type type)
     {
-        Debug.Assert(currentlyLoadingMod is not null);
+        Debug.Assert(currentlyUnloadingMod is not null);
 
         var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
         foreach (var method in Enumerable.Reverse(methods))
@@ -255,7 +268,7 @@ internal static class HookLoader
             }
 
             HookSubscriber.BuildWrapper<OnUnloadHook.Definition>(method, null)
-                          .Invoke(currentlyLoadingMod);
+                          .Invoke(currentlyUnloadingMod);
         }
     }
 
