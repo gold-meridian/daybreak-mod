@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using System.Composition;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -42,9 +41,7 @@ public static class InvalidHookParameters
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class Analyzer() : AbstractDiagnosticAnalyzer(
         Diagnostics.InvalidHookParameters,
-        Diagnostics.InvalidHookParametersNone,
-        Diagnostics.InvalidHookReturnType,
-        Diagnostics.InvalidHookReturnTypeOrVoid
+        Diagnostics.InvalidHookReturnType
     )
     {
         protected override void InitializeWorker(AnalysisContext ctx)
@@ -105,15 +102,11 @@ public static class InvalidHookParameters
                 return;
             }
 
-            var diagnostic = sigInfo.ReturnTypeCanAlsoBeVoid
-                ? Diagnostics.InvalidHookReturnTypeOrVoid
-                : Diagnostics.InvalidHookReturnType;
-
             if (!SymbolEqualityComparer.Default.Equals(ctx.Symbol.ReturnType, sigInfo.HookReturnType))
             {
                 ctx.SymbolCtx.ReportDiagnostic(
                     Diagnostic.Create(
-                        diagnostic,
+                        Diagnostics.InvalidHookReturnType,
                         ctx.Symbol.Locations[0],
                         ctx.Symbol.ReturnType.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                         ctx.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
@@ -142,9 +135,7 @@ public static class InvalidHookParameters
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(InvalidHookParameters)), Shared]
     public sealed class CodeFixProvider() : AbstractCodeFixProvider(
         Diagnostics.InvalidHookParameters.Id,
-        Diagnostics.InvalidHookParametersNone.Id,
-        Diagnostics.InvalidHookReturnType.Id,
-        Diagnostics.InvalidHookReturnTypeOrVoid.Id
+        Diagnostics.InvalidHookReturnType.Id
     )
     {
         protected override Task RegisterAsync(CodeFixContext ctx, Parameters parameters)
@@ -195,7 +186,7 @@ public static class InvalidHookParameters
             }
 
             var permitsVoid = sigInfo.Value.ReturnTypeCanAlsoBeVoid && !SymbolEqualityComparer.Default.Equals(sigInfo.Value.HookReturnType, voidSymbol);
-            if (diagnostic.Id == Diagnostics.InvalidHookReturnType.Id || diagnostic.Id == Diagnostics.InvalidHookReturnTypeOrVoid.Id)
+            if (diagnostic.Id == Diagnostics.InvalidHookReturnType.Id)
             {
                 if (!SymbolEqualityComparer.Default.Equals(symbol.ReturnType, sigInfo.Value.HookReturnType))
                 {
@@ -231,7 +222,7 @@ public static class InvalidHookParameters
                     );
                 }
             }
-            else if (diagnostic.Id == Diagnostics.InvalidHookParameters.Id || diagnostic.Id == Diagnostics.InvalidHookParametersNone.Id)
+            else if (diagnostic.Id == Diagnostics.InvalidHookParameters.Id)
             {
                 ctx.RegisterCodeFix(
                     CodeAction.Create(

@@ -39,30 +39,10 @@ public static class Diagnostics
         isEnabledByDefault: true
     );
 
-    public static DiagnosticDescriptor InvalidHookParametersNone { get; } = new(
-        id: "DB1004",
-        title: "Target method should have no parameters",
-        messageFormat: "The signature of the target method '{0}' is incompatible with the target hook '{1}'; it should have no parameters",
-        description: "Errors when the the target is bound to an <c>OnLoad</c> or an <c>OnUnload</c> hook and attempts to include parameters",
-        category: Categories.MAINTAINABILITY,
-        defaultSeverity: DiagnosticSeverity.Error,
-        isEnabledByDefault: true
-    );
-
     public static DiagnosticDescriptor InvalidHookReturnType { get; } = new(
-        id: "DB1005",
+        id: "DB1004",
         title: "Target return type is invalid for the hook",
         messageFormat: "The return type '{0}' of target method '{1}' is incompatible with the hook '{2}', expected '{3}'",
-        description: "Errors when the target method's return type is incompatible with the hook type; IL edits and detours must match while DAYBREAK-style mod loader return the type or <c>void</c>",
-        category: Categories.MAINTAINABILITY,
-        defaultSeverity: DiagnosticSeverity.Error,
-        isEnabledByDefault: true
-    );
-
-    public static DiagnosticDescriptor InvalidHookReturnTypeOrVoid { get; } = new(
-        id: "DB1006",
-        title: "Target return type is invalid for the hook (permits void)",
-        messageFormat: "The return type '{0}' of target method '{1}' is incompatible with the hook '{2}', expected '{3}' (permits void)",
         description: "Errors when the target method's return type is incompatible with the hook type; IL edits and detours must match while DAYBREAK-style mod loader return the type or <c>void</c>",
         category: Categories.MAINTAINABILITY,
         defaultSeverity: DiagnosticSeverity.Error,

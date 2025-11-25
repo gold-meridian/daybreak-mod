@@ -81,11 +81,20 @@ internal static class Extensions
 
         public INamedTypeSymbol? HookMetadata => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.HookMetadataAttribute");
 
+        public INamedTypeSymbol? Omittable => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.OmittableAttribute");
+
+        public INamedTypeSymbol? OriginalName => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.OriginalNameAttribute");
+
+        public INamedTypeSymbol? AbstractPermitsVoid => compilation.GetTypeByMetadataName("Daybreak.Common.Features.Hooks.AbstractPermitsVoidAttribute");
+
         public bool TryGetHookAttributes(out HookAttributes attributes)
         {
             if (
                 compilation.BaseHook is not { } baseHook
              || compilation.HookMetadata is not { } hookMetadata
+             || compilation.Omittable is not { } omittable
+             || compilation.OriginalName is not { } originalName
+             || compilation.AbstractPermitsVoid is not { } abstractPermitsVoid
             )
             {
                 attributes = default(HookAttributes);
@@ -94,7 +103,10 @@ internal static class Extensions
 
             attributes = new HookAttributes(
                 baseHook,
-                hookMetadata
+                hookMetadata,
+                omittable,
+                originalName,
+                abstractPermitsVoid
             );
             return true;
         }
