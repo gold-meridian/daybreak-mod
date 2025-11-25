@@ -221,11 +221,6 @@ internal static class HookLoader
                 throw new InvalidOperationException($"The method {method} must return void.");
             }
 
-            if (method.GetParameters().Length != 0)
-            {
-                throw new InvalidOperationException($"The method {method} must not have any parameters.");
-            }
-
             HookSubscriber.BuildWrapper<OnUnloadHook.Definition>(method, instance)
                           .Invoke(currentlyLoadingMod);
         }
@@ -257,11 +252,6 @@ internal static class HookLoader
             if (method.ReturnType != typeof(void))
             {
                 throw new InvalidOperationException($"The method {method} must return void.");
-            }
-
-            if (method.GetParameters().Length != 0)
-            {
-                throw new InvalidOperationException($"The method {method} must not have any parameters.");
             }
 
             HookSubscriber.BuildWrapper<OnUnloadHook.Definition>(method, null)
@@ -313,11 +303,6 @@ internal static class HookLoader
                 throw new InvalidOperationException($"The method {method} must return void.");
             }
 
-            if (method.GetParameters().Length != 0)
-            {
-                throw new InvalidOperationException($"The method {method} must not have any parameters.");
-            }
-
             HookSubscriber.BuildWrapper<OnLoadHook.Definition>(method, instance)
                           .Invoke(currentlyLoadingMod);
         }
@@ -349,11 +334,6 @@ internal static class HookLoader
             if (method.ReturnType != typeof(void))
             {
                 throw new InvalidOperationException($"The method {method} must return void.");
-            }
-
-            if (method.GetParameters().Length != 0)
-            {
-                throw new InvalidOperationException($"The method {method} must not have any parameters.");
             }
 
             HookSubscriber.BuildWrapper<OnLoadHook.Definition>(method, null)

@@ -114,7 +114,7 @@ public static class HookSubscriber
             }
             else
             {
-                if (bindingReturn.GetCustomAttribute<AbstractPermitsVoidAttribute>() is not { } permitsVoidHandler)
+                if (invokeMethod.ReturnTypeCustomAttributes.GetCustomAttributes(typeof(AbstractPermitsVoidAttribute), inherit: false).FirstOrDefault() is not AbstractPermitsVoidAttribute permitsVoidHandler)
                 {
                     throw new InvalidOperationException("Incompatible hook-binding return type");
                 }
