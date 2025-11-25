@@ -1,5 +1,7 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -119,16 +121,103 @@ public static class InvalidHookParameters
 
         private static void CheckParameters(Context ctx, SignatureInfo sigInfo)
         {
-            if (ctx.HookDefinition.ValidateTargetParameters(
-                    ctx,
-                    sigInfo,
-                    ctx.Symbol.Parameters
-                ) is not { } diag)
+            var parameters = ctx.Symbol.Parameters;
+            var hookParameters = sigInfo.HookParameters;
+
+            var originalNameMap = new Dictionary<string, IParameterSymbol>();
+            foreach (var parameter in parameters)
             {
+                var name = parameter.Name;
+
+                if (parameter.GetAttributes() is { Length: > 0 } parameterAttributes)
+                {
+                    foreach (var attr in parameterAttributes)
+                    {
+                        if (!attr.AttributeClass.InheritsFrom(ctx.Attributes.OriginalName))
+                        {
+                            continue;
+                        }
+
+                        if (attr.ConstructorArguments.FirstOrDefault().Value is not string attrName)
+                        {
+                            continue;
+                        }
+
+                        name = attrName;
+                        break;
+                    }
+                }
+
+                originalNameMap[name] = parameter;
+            }
+
+            var hookParameterNames = new HashSet<string>();
+            var omittable = new HashSet<string>();
+            foreach (var hookParameter in hookParameters)
+            {
+                hookParameterNames.Add(hookParameter.Name);
+                
+                if (hookParameter.GetAttributes() is not { Length: > 0 } parameterAttributes)
+                {
+                    continue;
+                }
+
+                foreach (var attr in parameterAttributes)
+                {
+                    if (!attr.AttributeClass.InheritsFrom(ctx.Attributes.Omittable))
+                    {
+                        continue;
+                    }
+
+                    omittable.Add(hookParameter.Name);
+                    break;
+                }
+            }
+
+            // Verify all non-omittable parameters are present (checks by name,
+            // not index; uses OriginalNameAttribute).
+            foreach (var hookParameter in hookParameters)
+            {
+                if (omittable.Contains(hookParameter.Name))
+                {
+                    continue;
+                }
+
+                if (originalNameMap.ContainsKey(hookParameter.Name))
+                {
+                    continue;
+                }
+
+                ctx.SymbolCtx.ReportDiagnostic(
+                    Diagnostic.Create(
+                        Diagnostics.InvalidHookParameters,
+                        ctx.Symbol.Locations[0],
+                        ctx.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
+                        sigInfo.HookTypeName
+                    )
+                );
                 return;
             }
 
-            ctx.SymbolCtx.ReportDiagnostic(diag);
+            // Verify all present parameters are actually part of the hook
+            // signature.
+            foreach (var parameterNames in originalNameMap.Keys)
+            {
+                if (hookParameterNames.Contains(parameterNames))
+                {
+                    continue;
+                }
+
+                ctx.SymbolCtx.ReportDiagnostic(
+                    Diagnostic.Create(
+                        Diagnostics.InvalidHookParameters,
+                        ctx.Symbol.Locations[0],
+                        ctx.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
+                        sigInfo.HookTypeName
+                    )
+                );
+                return;
+            }
         }
     }
 
@@ -204,7 +293,7 @@ public static class InvalidHookParameters
                         diagnostic
                     );
                 }
-                
+
                 if (permitsVoid && !SymbolEqualityComparer.Default.Equals(symbol.ReturnType, voidSymbol))
                 {
                     ctx.RegisterCodeFix(

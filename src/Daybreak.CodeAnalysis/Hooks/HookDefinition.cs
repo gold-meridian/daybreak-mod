@@ -52,7 +52,7 @@ public sealed class HookDefinition(
         );
     }
 
-    private ITypeSymbol? GetDelegateType()
+    public ITypeSymbol? GetDelegateType()
     {
         if (delegateType is not null)
         {
@@ -85,15 +85,5 @@ public sealed class HookDefinition(
         }
 
         return typeContainingEvent.GetMembers(eventName).Where(x => x is IEventSymbol).Cast<IEventSymbol>().FirstOrDefault();
-    }
-
-    public Diagnostic? ValidateTargetParameters(
-        InvalidHookParameters.Context ctx,
-        InvalidHookParameters.SignatureInfo sigInfo,
-        ImmutableArray<IParameterSymbol> targetParameters
-    )
-    {
-        // TODO
-        return null;
     }
 }

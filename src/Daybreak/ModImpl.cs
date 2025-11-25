@@ -21,42 +21,26 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
     }
 
     [ModSystemHooks.AddRecipeGroups]
-    private static void A(ModSystemHooks.AddRecipeGroups.Original orig)
-    {
-        
-    }
-    
+    private static void A(ModSystemHooks.AddRecipeGroups.Original orig) { }
+
     [ModSystemHooks.AddRecipeGroups]
-    static void A(ModSystem self)
-    {
-        
-    }
-    
+    static void A(ModSystem self) { }
+
     [ModSystemHooks.AddRecipeGroups]
-    static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self)
-    {
-        
-    }
-    
+    static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self) { }
+
     [ModSystemHooks.AddRecipeGroups]
-    static void A(ModSystem self, ModSystemHooks.AddRecipeGroups.Original orig)
-    {
-        
-    }
-    
+    static void A(ModSystem self, ModSystemHooks.AddRecipeGroups.Original orig) { }
+
     [ModSystemHooks.AddRecipeGroups]
-    static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self, int invalid)
-    {
-        
-    }
+    static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self, [OriginalName("test")] int invalid) { }
 
     [ModSystemHooks.CanWorldBePlayed]
-    void B()
-    {
-        
-    }
+    void B(
+        Terraria.IO.PlayerFileData playerData,
+        Terraria.IO.WorldFileData worldFileData
+    ) { }
 
-    
     UIButton<string> IHasCustomModConfigButton.CreateModConfigButton(UIButton<string> button)
     {
         var originalText = button.Text;
