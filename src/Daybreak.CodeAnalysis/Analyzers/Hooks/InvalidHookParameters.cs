@@ -156,7 +156,7 @@ public static class InvalidHookParameters
             foreach (var hookParameter in hookParameters)
             {
                 hookParameterNames.Add(hookParameter.Name);
-                
+
                 if (hookParameter.GetAttributes() is not { Length: > 0 } parameterAttributes)
                 {
                     continue;
@@ -175,12 +175,26 @@ public static class InvalidHookParameters
             }
 
             // Verify all non-omittable parameters are present (checks by name,
-            // not index; uses OriginalNameAttribute).
+            // not index; uses OriginalNameAttribute) and verify they're of the
+            // same type.
             foreach (var hookParameter in hookParameters)
             {
-                if (omittable.Contains(hookParameter.Name))
+                if (omittable.Contains(hookParameter.Name) && !originalNameMap.ContainsKey(hookParameter.Name))
                 {
                     continue;
+                }
+
+                if (!SymbolEqualityComparer.Default.Equals(hookParameter.Type, originalNameMap[hookParameter.Name].Type))
+                {
+                    ctx.SymbolCtx.ReportDiagnostic(
+                        Diagnostic.Create(
+                            Diagnostics.InvalidHookParameters,
+                            ctx.Symbol.Locations[0],
+                            ctx.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
+                            sigInfo.HookTypeName
+                        )
+                    );
+                    return;
                 }
 
                 if (originalNameMap.ContainsKey(hookParameter.Name))

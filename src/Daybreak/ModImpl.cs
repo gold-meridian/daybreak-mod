@@ -35,6 +35,9 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
     [ModSystemHooks.AddRecipeGroups]
     static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self, [OriginalName("test")] int invalid) { }
 
+    [ModSystemHooks.AddRecipeGroups]
+    static void A(ModSystemHooks.AddRecipeGroups.Original orig, int self, [OriginalName("test")] int invalid) { }
+
     [ModSystemHooks.CanWorldBePlayed]
     void B(
         Terraria.IO.PlayerFileData playerData,
