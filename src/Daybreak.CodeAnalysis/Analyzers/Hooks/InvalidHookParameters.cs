@@ -394,9 +394,8 @@ public static class InvalidHookParameters
             }
             else
             {
-                newReturnType = SyntaxFactory.ParseTypeName(
-                    sigInfo.HookReturnType.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
-                );
+                
+                newReturnType = (TypeSyntax)editor.Generator.TypeExpression(sigInfo.HookReturnType);
             }
 
             newReturnType = newReturnType
@@ -469,9 +468,7 @@ public static class InvalidHookParameters
                               .FirstOrDefault()
                             ?? hookParam.Name;
 
-                var newType = SyntaxFactory.ParseTypeName(
-                    hookParam.Type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
-                );
+                var newType = (TypeSyntax)editor.Generator.TypeExpression(hookParam.Type);
 
                 var oldParamSyntax = decl.ParameterList.Parameters
                                          .FirstOrDefault(x => x.Identifier.Text == userName);

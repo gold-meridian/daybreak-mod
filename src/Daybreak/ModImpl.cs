@@ -38,7 +38,7 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
     */
 
     [ModSystemHooks.AddRecipeGroups]
-    private static void A(Daybreak.Common.Features.Hooks.ModSystemHooks.AddRecipeGroups.Original orig) { }
+    private static void A([OriginalName("orig")] ModSystemHooks.AddRecipeGroups.Original original, int self, [OriginalName("test")] int invalid) { }
 
     /*
     [ModSystemHooks.CanWorldBePlayed]
