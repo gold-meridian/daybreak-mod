@@ -296,10 +296,11 @@ public static class InvalidHookParameters
                     ctx.RegisterCodeFix(
                         CodeAction.Create(
                             "Change return type to hook return type",
-                            ct => FixReturnTypeVoidAsync(
+                            ct => FixReturnTypeAsync(
                                 doc,
                                 methodDecl,
                                 sigInfo.Value,
+                                useVoid: false,
                                 ct
                             ),
                             nameof(InvalidHookParameters) + "Return"
@@ -312,11 +313,12 @@ public static class InvalidHookParameters
                 {
                     ctx.RegisterCodeFix(
                         CodeAction.Create(
-                            "Change return type to hook-permitted void",
-                            ct => FixReturnTypeVoidAsync(
+                            "Change return type to void (hook-permitted)",
+                            ct => FixReturnTypeAsync(
                                 doc,
                                 methodDecl,
                                 sigInfo.Value,
+                                useVoid: true,
                                 ct
                             ),
                             nameof(InvalidHookParameters) + "ReturnPermissiveVoid"
@@ -327,19 +329,45 @@ public static class InvalidHookParameters
             }
             else if (diagnostic.Id == Diagnostics.InvalidHookParameters.Id)
             {
-                ctx.RegisterCodeFix(
-                    CodeAction.Create(
-                        "Fix hook parameters",
-                        ct => FixParametersAsync(
-                            doc,
-                            methodDecl,
-                            sigInfo.Value,
-                            ct
+                var omittable = new List<string>();
+                foreach (var hookParameter in sigInfo.Value.HookParameters)
+                {
+                    if (hookParameter.GetAttributes() is not { Length: > 0 } parameterAttributes)
+                    {
+                        continue;
+                    }
+
+                    foreach (var attr in parameterAttributes)
+                    {
+                        if (!attr.AttributeClass.InheritsFrom(attrs.Omittable))
+                        {
+                            continue;
+                        }
+
+                        omittable.Add(hookParameter.Name);
+                        break;
+                    }
+                }
+
+                foreach (var omissionSet in omittable.PowerSet())
+                {
+                    var omitText = omissionSet.Length > 0 ? $" (omit {string.Join(", ", omissionSet)})" : "";
+
+                    ctx.RegisterCodeFix(
+                        CodeAction.Create(
+                            $"Fix hook parameters{omitText}",
+                            ct => FixParametersAsync(
+                                doc,
+                                methodDecl,
+                                sigInfo.Value,
+                                omissionSet,
+                                ct
+                            ),
+                            nameof(InvalidHookParameters) + string.Join(",", omissionSet)
                         ),
-                        nameof(InvalidHookParameters)
-                    ),
-                    diagnostic
-                );
+                        diagnostic
+                    );
+                }
             }
 
             return Task.CompletedTask;
@@ -349,16 +377,7 @@ public static class InvalidHookParameters
             Document doc,
             MethodDeclarationSyntax decl,
             SignatureInfo sigInfo,
-            CancellationToken ct
-        )
-        {
-            return doc;
-        }
-
-        private static async Task<Document> FixReturnTypeVoidAsync(
-            Document doc,
-            MethodDeclarationSyntax decl,
-            SignatureInfo sigInfo,
+            bool useVoid,
             CancellationToken ct
         )
         {
@@ -369,16 +388,7 @@ public static class InvalidHookParameters
             Document doc,
             MethodDeclarationSyntax decl,
             SignatureInfo sigInfo,
-            CancellationToken ct
-        )
-        {
-            return doc;
-        }
-
-        private static async Task<Document> FixParametersNoneAsync(
-            Document doc,
-            MethodDeclarationSyntax decl,
-            SignatureInfo sigInfo,
+            string[] omittedParams,
             CancellationToken ct
         )
         {

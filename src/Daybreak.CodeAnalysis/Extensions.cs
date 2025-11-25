@@ -135,4 +135,26 @@ internal static class Extensions
             return null;
         }
     }
+
+    extension<T>(IReadOnlyList<T> items)
+    {
+        // https://stackoverflow.com/questions/19890781/creating-a-power-set-of-a-sequence
+        public IEnumerable<T[]> PowerSet()
+        {
+            var count = 1 << items.Count;
+            for (var mask = 0; mask < count; mask++)
+            {
+                var subset = new List<T>();
+                for (var i = 0; i < items.Count; i++)
+                {
+                    if ((mask & (1 << i)) != 0)
+                    {
+                        subset.Add(items[i]);
+                    }
+                }
+
+                yield return subset.ToArray();
+            }
+        }
+    }
 }
