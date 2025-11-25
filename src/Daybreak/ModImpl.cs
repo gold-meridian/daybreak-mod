@@ -20,33 +20,97 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
         MusicAutoloadingEnabled = false;
     }
 
-    /*
     [ModSystemHooks.AddRecipeGroups]
-    private static void A(ModSystemHooks.AddRecipeGroups.Original orig) { }
+    private static void A(ModSystemHooks.AddRecipeGroups.Original orig)
+    {
+        ;
+    }
 
     [ModSystemHooks.AddRecipeGroups]
-    static void A(ModSystem self) { }
+    private static void A(ModSystem self)
+    {
+        ;
+    }
 
     [ModSystemHooks.AddRecipeGroups]
-    static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self) { }
+    private static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self)
+    {
+        ;
+    }
 
     [ModSystemHooks.AddRecipeGroups]
-    static void A(ModSystem self, ModSystemHooks.AddRecipeGroups.Original orig) { }
+    private static void A(ModSystem self, ModSystemHooks.AddRecipeGroups.Original orig)
+    {
+        ;
+    }
 
     [ModSystemHooks.AddRecipeGroups]
-    static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self, [OriginalName("test")] int invalid) { }
-    */
+    private static void B([OriginalName("orig")] ModSystemHooks.AddRecipeGroups.Original original, ModSystem self)
+    {
+        ;
+    }
 
     [ModSystemHooks.AddRecipeGroups]
-    private static void A([OriginalName("orig")] ModSystemHooks.AddRecipeGroups.Original original, int self, [OriginalName("test")] int invalid) { }
+    private static void C([OriginalName("orig")] ModSystemHooks.AddRecipeGroups.Original original, [OriginalName("self")] ModSystem @this)
+    {
+        ;
+    }
 
-    /*
     [ModSystemHooks.CanWorldBePlayed]
-    bool B(
+    private static void B(
         Terraria.IO.PlayerFileData playerData,
         Terraria.IO.WorldFileData worldFileData
-    ) { }
-    */
+    )
+    {
+        ;
+    }
+
+    [ModSystemHooks.CanWorldBePlayed]
+    private static bool B(
+        [OriginalName("orig")] ModSystemHooks.CanWorldBePlayed.Original original,
+        ModSystem self,
+        Terraria.IO.PlayerFileData playerData,
+        Terraria.IO.WorldFileData worldFileData
+    )
+    {
+        return original(playerData, worldFileData);
+    }
+
+    [OnLoad]
+    private static void OnLoad()
+    {
+        ;
+    }
+
+    [OnLoad]
+    private static void OnLoad(Mod mod)
+    {
+        ;
+    }
+
+    [OnLoad]
+    private static void OnLoad2([OriginalName("mod")] Mod theMod)
+    {
+        ;
+    }
+
+    [OnUnload]
+    private static void OnUnoad()
+    {
+        ;
+    }
+
+    [OnUnload]
+    private static void OnUnoad(Mod mod)
+    {
+        ;
+    }
+
+    [OnUnload]
+    private static void OnUnoad2([OriginalName("mod")] Mod theMod)
+    {
+        ;
+    }
 
     UIButton<string> IHasCustomModConfigButton.CreateModConfigButton(UIButton<string> button)
     {

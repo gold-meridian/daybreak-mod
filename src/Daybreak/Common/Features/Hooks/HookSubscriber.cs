@@ -39,11 +39,18 @@ public static class HookSubscriber
         var handlerType = hookDefinition.GetDelegateType()
                        ?? throw new InvalidOperationException($"Could not resolve delegate type for bindingMethod={bindingMethod.Name}.");
 
-        var invokeMethod = handlerType.GetMethod("Invoke")
-                        ?? throw new InvalidOperationException("The event handler type could not resolve an Invoke method.");
-
-        var wrapper = BuildWrapper(handlerType, invokeMethod, bindingMethod, instance);
+        var wrapper = BuildWrapper(handlerType, bindingMethod, instance);
         eventInfo.AddEventHandler(null, wrapper);
+    }
+
+    /// <inheritdoc cref="BuildWrapper{T}"/>
+    public static T BuildWrapper<T>(
+        MethodInfo bindingMethod,
+        object? instance
+    )
+        where T : Delegate
+    {
+        return (T)BuildWrapper(typeof(T), bindingMethod, instance);
     }
 
     /// <summary>
@@ -52,16 +59,18 @@ public static class HookSubscriber
     ///     <see cref="OmittableAttribute"/>,
     ///     <see cref="OriginalNameAttribute"/>, and
     ///     <see cref="AbstractPermitsVoidAttribute"/> to build a new delegate
-    ///     which can be invoked with the parameters of
-    ///     <see cref="invokeMethod"/>.
+    ///     which can be invoked with the parameters of the
+    ///     <paramref name="delegateType"/>.
     /// </summary>
     public static Delegate BuildWrapper(
         Type delegateType,
-        MethodInfo invokeMethod,
         MethodInfo bindingMethod,
         object? instance
     )
     {
+        var invokeMethod = delegateType.GetMethod("Invoke")
+                        ?? throw new InvalidOperationException("The event handler type could not resolve an Invoke method.");
+
         var eventParams = invokeMethod.GetParameters();
         var eventParamExprs = eventParams
                              .Select(x => Expression.Parameter(x.ParameterType, x.Name))

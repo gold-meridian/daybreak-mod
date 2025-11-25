@@ -195,6 +195,8 @@ internal static class HookLoader
 
     private static void CallOnUnloads(ILoadable instance)
     {
+        Debug.Assert(currentlyLoadingMod is not null);
+
         var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         foreach (var method in Enumerable.Reverse(methods))
         {
@@ -224,12 +226,15 @@ internal static class HookLoader
                 throw new InvalidOperationException($"The method {method} must not have any parameters.");
             }
 
-            method.Invoke(instance, null);
+            HookSubscriber.BuildWrapper<OnUnloadHook.Definition>(method, instance)
+                          .Invoke(currentlyLoadingMod);
         }
     }
 
     private static void CallOnUnloads(Type type)
     {
+        Debug.Assert(currentlyLoadingMod is not null);
+
         var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
         foreach (var method in Enumerable.Reverse(methods))
         {
@@ -259,7 +264,8 @@ internal static class HookLoader
                 throw new InvalidOperationException($"The method {method} must not have any parameters.");
             }
 
-            method.Invoke(null, null);
+            HookSubscriber.BuildWrapper<OnUnloadHook.Definition>(method, null)
+                          .Invoke(currentlyLoadingMod);
         }
     }
 
@@ -281,6 +287,8 @@ internal static class HookLoader
 
     private static void CallOnLoads(ILoadable instance)
     {
+        Debug.Assert(currentlyLoadingMod is not null);
+
         var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         foreach (var method in methods)
         {
@@ -310,12 +318,15 @@ internal static class HookLoader
                 throw new InvalidOperationException($"The method {method} must not have any parameters.");
             }
 
-            method.Invoke(instance, null);
+            HookSubscriber.BuildWrapper<OnLoadHook.Definition>(method, instance)
+                          .Invoke(currentlyLoadingMod);
         }
     }
 
     private static void CallOnLoads(Type type)
     {
+        Debug.Assert(currentlyLoadingMod is not null);
+
         var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
         foreach (var method in methods)
         {
@@ -345,7 +356,8 @@ internal static class HookLoader
                 throw new InvalidOperationException($"The method {method} must not have any parameters.");
             }
 
-            method.Invoke(null, null);
+            HookSubscriber.BuildWrapper<OnLoadHook.Definition>(method, null)
+                          .Invoke(currentlyLoadingMod);
         }
     }
 
