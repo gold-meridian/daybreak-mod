@@ -416,7 +416,88 @@ public static class InvalidHookParameters
             CancellationToken ct
         )
         {
-            return doc;
+            var editor = await DocumentEditor.CreateAsync(doc, ct).ConfigureAwait(false);
+
+            var semantic = await doc.GetSemanticModelAsync(ct).ConfigureAwait(false);
+            if (semantic is null)
+            {
+                return doc;
+            }
+
+            var methodSymbol = semantic.GetDeclaredSymbol(decl, ct);
+            if (methodSymbol is null)
+            {
+                return doc;
+            }
+
+            var hookParamMap = sigInfo.HookParameters.ToDictionary(x => x.Name);
+
+            var originalNames = new Dictionary<string, string>();
+            foreach (var parameter in methodSymbol.Parameters)
+            {
+                var name = parameter.Name;
+
+                foreach (var attr in parameter.GetAttributes())
+                {
+                    if (attr.AttributeClass?.Name != "OriginalNameAttribute"
+                     || attr.ConstructorArguments is not [{ Value: string originalName }])
+                    {
+                        continue;
+                    }
+
+                    name = originalName;
+                    break;
+                }
+
+                originalNames[parameter.Name] = name;
+            }
+
+            var newParameters = new List<ParameterSyntax>();
+
+            foreach (var hookParam in sigInfo.HookParameters)
+            {
+                if (omittedParams.Contains(hookParam.Name))
+                {
+                    continue;
+                }
+
+                // See if the user already had the name, just aliased.  We want
+                // to preserve that.
+                var userName = originalNames
+                              .Where(x => x.Value == hookParam.Name)
+                              .Select(x => x.Key)
+                              .FirstOrDefault()
+                            ?? hookParam.Name;
+
+                var newType = SyntaxFactory.ParseTypeName(
+                    hookParam.Type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
+                );
+
+                var oldParamSyntax = decl.ParameterList.Parameters
+                                         .FirstOrDefault(x => x.Identifier.Text == userName);
+
+                var newParamSyntax = SyntaxFactory.Parameter(
+                    SyntaxFactory.Identifier(userName)
+                ).WithType(newType);
+
+                if (oldParamSyntax is not null)
+                {
+                    newParamSyntax = newParamSyntax
+                                    .WithLeadingTrivia(oldParamSyntax.GetLeadingTrivia())
+                                    .WithTrailingTrivia(oldParamSyntax.GetTrailingTrivia())
+                                    .WithAttributeLists(oldParamSyntax.AttributeLists);
+                }
+
+                newParameters.Add(newParamSyntax);
+            }
+
+            var newParamList = SyntaxFactory.ParameterList(
+                SyntaxFactory.SeparatedList(newParameters)
+            ).WithTrailingTrivia(decl.ParameterList.GetTrailingTrivia());
+
+            editor.ReplaceNode(decl.ParameterList, newParamList);
+
+            return editor.GetChangedDocument();
         }
     }
 }

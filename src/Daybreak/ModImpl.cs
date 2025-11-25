@@ -20,6 +20,7 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
         MusicAutoloadingEnabled = false;
     }
 
+    /*
     [ModSystemHooks.AddRecipeGroups]
     private static void A(ModSystemHooks.AddRecipeGroups.Original orig) { }
 
@@ -34,15 +35,18 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
 
     [ModSystemHooks.AddRecipeGroups]
     static void A(ModSystemHooks.AddRecipeGroups.Original orig, ModSystem self, [OriginalName("test")] int invalid) { }
+    */
 
     [ModSystemHooks.AddRecipeGroups]
-    static void A(ModSystemHooks.AddRecipeGroups.Original orig, int self, [OriginalName("test")] int invalid) { }
+    private static void A(Daybreak.Common.Features.Hooks.ModSystemHooks.AddRecipeGroups.Original orig) { }
 
+    /*
     [ModSystemHooks.CanWorldBePlayed]
     bool B(
         Terraria.IO.PlayerFileData playerData,
         Terraria.IO.WorldFileData worldFileData
     ) { }
+    */
 
     UIButton<string> IHasCustomModConfigButton.CreateModConfigButton(UIButton<string> button)
     {
