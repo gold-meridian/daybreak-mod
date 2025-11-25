@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Editing;
 
 namespace Daybreak.CodeAnalysis;
 
@@ -261,7 +263,7 @@ public static class InvalidHookParameters
                 return Task.CompletedTask;
             }
 
-            var method = semantic.GetDeclaredSymbol(methodDecl);
+            var method = ModelExtensions.GetDeclaredSymbol(semantic, methodDecl);
             if (method is not IMethodSymbol symbol)
             {
                 return Task.CompletedTask;
@@ -381,7 +383,29 @@ public static class InvalidHookParameters
             CancellationToken ct
         )
         {
-            return doc;
+            var editor = await DocumentEditor.CreateAsync(doc, ct).ConfigureAwait(false);
+
+            TypeSyntax newReturnType;
+            if (useVoid)
+            {
+                newReturnType = SyntaxFactory.PredefinedType(
+                    SyntaxFactory.Token(SyntaxKind.VoidKeyword)
+                );
+            }
+            else
+            {
+                newReturnType = SyntaxFactory.ParseTypeName(
+                    sigInfo.HookReturnType.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
+                );
+            }
+
+            newReturnType = newReturnType
+                           .WithLeadingTrivia(decl.ReturnType.GetLeadingTrivia())
+                           .WithTrailingTrivia(decl.ReturnType.GetTrailingTrivia());
+
+            editor.ReplaceNode(decl.ReturnType, newReturnType);
+
+            return editor.GetChangedDocument();
         }
 
         private static async Task<Document> FixParametersAsync(

@@ -39,7 +39,7 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage
     static void A(ModSystemHooks.AddRecipeGroups.Original orig, int self, [OriginalName("test")] int invalid) { }
 
     [ModSystemHooks.CanWorldBePlayed]
-    void B(
+    bool B(
         Terraria.IO.PlayerFileData playerData,
         Terraria.IO.WorldFileData worldFileData
     ) { }
