@@ -241,7 +241,7 @@ public abstract class RenderTargetPool : IDisposable
                     orig(self, time);
                 };
             }
-        )
+        );
     }
 
     [OnUnload(Side = ModSide.Client)]
