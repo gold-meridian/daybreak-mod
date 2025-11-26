@@ -226,17 +226,22 @@ public abstract class RenderTargetPool : IDisposable
     [OnLoad(Side = ModSide.Client)]
     private static void RegisterFrameLeaseDisposal()
     {
-        On_Main.DoDraw += (orig, self, time) =>
-        {
-            foreach (var lease in leases_to_clear)
+        Main.RunOnMainThread(
+            () =>
             {
-                lease.Dispose();
+                On_Main.DoDraw += (orig, self, time) =>
+                {
+                    foreach (var lease in leases_to_clear)
+                    {
+                        lease.Dispose();
+                    }
+
+                    leases_to_clear.Clear();
+
+                    orig(self, time);
+                };
             }
-
-            leases_to_clear.Clear();
-
-            orig(self, time);
-        };
+        )
     }
 
     [OnUnload(Side = ModSide.Client)]

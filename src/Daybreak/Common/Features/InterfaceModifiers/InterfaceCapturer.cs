@@ -27,7 +27,12 @@ public sealed class InterfaceCapturer : ModSystem
             }
         );
 
-        IL_Main.DoDraw += DoDraw_CaptureUserInterfaces;
+        Main.RunOnMainThread(
+            () =>
+            {
+                IL_Main.DoDraw += DoDraw_CaptureUserInterfaces;
+            }
+        );
     }
 
     private static void DoDraw_CaptureUserInterfaces(ILContext il)
