@@ -77,16 +77,9 @@ public abstract class BoundDataProvider<TProvider> : IBoundDataProvider, ILoadab
     /// </summary>
     public Mod Mod => ownedMod;
 
-    /// <summary>
-    ///     Initializes the <see cref="Name"/> based on any providers.
-    /// </summary>
-    protected BoundDataProvider()
-    {
-        name = NameProvider.ForType(GetType());
-    }
-
     void ILoadable.Load(Mod mod)
     {
+        name = NameProvider.GetName(mod, GetType());
         ownedMod = mod;
         propertyMap = GetType()
                      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
