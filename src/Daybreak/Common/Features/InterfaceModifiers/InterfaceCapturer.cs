@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Daybreak.Common.Rendering;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
@@ -24,12 +25,7 @@ public sealed class InterfaceCapturer : ModSystem
             () =>
             {
                 rtLease = ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice);
-            }
-        );
 
-        Main.RunOnMainThread(
-            () =>
-            {
                 IL_Main.DoDraw += DoDraw_CaptureUserInterfaces;
             }
         );
@@ -64,32 +60,47 @@ public sealed class InterfaceCapturer : ModSystem
         c.EmitDelegate(
             static () =>
             {
-                if (!rtScope.HasValue)
+                try
                 {
-                    return;
+                    if (!rtScope.HasValue)
+                    {
+                        return;
+                    }
+
+                    rtScope.Value.Dispose();
+                    rtScope = null;
+
+                    Debug.Assert(rtLease is not null);
+
+                    var uiInfo = new UserInterfaceInfo(Vector2.Zero, rtLease.Target);
+                    UserInterfaceModifier.ApplyTo(ref uiInfo);
+
+                    Main.spriteBatch.Begin();
+                    Main.spriteBatch.Draw(
+                        uiInfo.Texture,
+                        uiInfo.Position,
+                        null,
+                        uiInfo.Color,
+                        uiInfo.Rotation,
+                        Vector2.Zero,
+                        uiInfo.Scale,
+                        uiInfo.SpriteEffects,
+                        0f
+                    );
+                    Main.spriteBatch.End();
                 }
+                finally
+                {
+                    foreach (var layer in UserInterfaceModifier.PostDrawLayers)
+                    {
+                        if (!layer.Draw())
+                        {
+                            break;
+                        }
+                    }
 
-                rtScope.Value.Dispose();
-                rtScope = null;
-
-                Debug.Assert(rtLease is not null);
-
-                var uiInfo = new UserInterfaceInfo(Vector2.Zero, rtLease.Target);
-                UserInterfaceModifier.ApplyTo(ref uiInfo);
-
-                Main.spriteBatch.Begin();
-                Main.spriteBatch.Draw(
-                    uiInfo.Texture,
-                    uiInfo.Position,
-                    null,
-                    uiInfo.Color,
-                    uiInfo.Rotation,
-                    Vector2.Zero,
-                    uiInfo.Scale,
-                    uiInfo.SpriteEffects,
-                    0f
-                );
-                Main.spriteBatch.End();
+                    UserInterfaceModifier.PostDrawLayers.Clear();
+                }
             }
         );
     }
@@ -98,6 +109,7 @@ public sealed class InterfaceCapturer : ModSystem
     ///     Pauses the capture, rendering it to the screen rather than the UI
     ///     target.
     /// </summary>
+    [Obsolete("This API is still not finalized and may not be kept, use at your own risk")]
     public static void PauseCapture()
     {
         if (!rtScope.HasValue)
@@ -115,6 +127,7 @@ public sealed class InterfaceCapturer : ModSystem
     /// <summary>
     ///     Resumes capture.
     /// </summary>
+    [Obsolete("This API is still not finalized and may not be kept, use at your own risk")]
     public static void ResumeCapture()
     {
         if (rtLease is null)

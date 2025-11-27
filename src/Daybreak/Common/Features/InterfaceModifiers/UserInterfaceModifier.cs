@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Daybreak.Common.Features.InterfaceModifiers;
 
@@ -19,6 +22,17 @@ public static class UserInterfaceModifier
     ///     rendering modifiers.
     /// </summary>
     public static bool ShouldCaptureThisFrame => Modifiers.Any();
+
+    /// <summary>
+    ///     Layers to be rendered after the regular interfaces, drawn outside
+    ///     the target.  This renders over the cursor!
+    ///     <br />
+    ///     This is cleared every frame and should be modified in
+    ///     <see cref="ModSystem.ModifyInterfaceLayers"/>.
+    ///     <br />
+    ///     This is still subject to <see cref="Main.hideUI"/>.
+    /// </summary>
+    public static List<GameInterfaceLayer> PostDrawLayers { get; } = [];
 
     private static readonly List<IUserInterfaceModifier> singleton_modifiers =
     [
