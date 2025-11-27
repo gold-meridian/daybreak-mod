@@ -15,6 +15,8 @@ internal sealed class HideUserInterfaceModifier : IUserInterfaceModifier
 
     public void Update(ref UserInterfaceInfo uiInfo)
     {
+        uiInfo.InventoryButtonOpensSettings = true;
+        
         // If there's a delta, subtract it, otherwise start trying to show the
         // UI.  Always set to zero after since Hide should be getting called
         // every frame.

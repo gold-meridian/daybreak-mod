@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Rendering;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using Terraria;
+using Terraria.GameInput;
 using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.InterfaceModifiers;
@@ -13,6 +15,7 @@ namespace Daybreak.Common.Features.InterfaceModifiers;
 /// </summary>
 public sealed class InterfaceCapturer : ModSystem
 {
+    private static bool openSettingsWithEsc;
     private static RenderTargetLease? rtLease;
     private static RenderTargetScope? rtScope;
 
@@ -29,6 +32,29 @@ public sealed class InterfaceCapturer : ModSystem
                 IL_Main.DoDraw += DoDraw_CaptureUserInterfaces;
             }
         );
+    }
+
+    [ModSystemHooks.UpdateUI]
+    private static void OpenInventoryIfExpected(GameTime gameTime)
+    {
+        if (!openSettingsWithEsc)
+        {
+            return;
+        }
+
+        if (PlayerInput.Triggers.JustPressed.Inventory)
+        {
+            if (Main.ingameOptionsWindow)
+            {
+                Main.ingameOptionsWindow = false;
+                IngameOptions.Close();
+            }
+            else
+            {
+                Main.ingameOptionsWindow = true;
+                IngameOptions.Open();
+            }   
+        }
     }
 
     private static void DoDraw_CaptureUserInterfaces(ILContext il)
@@ -64,6 +90,7 @@ public sealed class InterfaceCapturer : ModSystem
                 {
                     if (!rtScope.HasValue)
                     {
+                        openSettingsWithEsc = false;
                         return;
                     }
 
@@ -74,6 +101,8 @@ public sealed class InterfaceCapturer : ModSystem
 
                     var uiInfo = new UserInterfaceInfo(Vector2.Zero, rtLease.Target);
                     UserInterfaceModifier.ApplyTo(ref uiInfo);
+
+                    openSettingsWithEsc = uiInfo.InventoryButtonOpensSettings;
 
                     Main.spriteBatch.Begin();
                     Main.spriteBatch.Draw(
