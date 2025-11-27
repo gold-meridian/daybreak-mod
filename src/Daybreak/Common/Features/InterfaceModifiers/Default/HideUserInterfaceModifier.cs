@@ -1,11 +1,13 @@
-﻿namespace Daybreak.Common.Features.InterfaceModifiers;
+﻿using Terraria;
+
+namespace Daybreak.Common.Features.InterfaceModifiers;
 
 /// <summary>
 ///     A special modifier which can fade the UI in and out.
 /// </summary>
 internal sealed class HideUserInterfaceModifier : IUserInterfaceModifier
 {
-    public bool Finished => DeltaAlpha <= 0f && alpha >= 1f;
+    public bool Finished => DeltaAlpha <= 0f && alpha >= 1f && !valueBeforePause.HasValue;
 
     public static float DeltaAlpha { get; set; }
 
@@ -13,10 +15,22 @@ internal sealed class HideUserInterfaceModifier : IUserInterfaceModifier
 
     private const float show_rate = 1f / 30f;
 
+    private static float? valueBeforePause;
+
     public void Update(ref UserInterfaceInfo uiInfo)
     {
         uiInfo.InventoryButtonOpensSettings = true;
-        
+
+        if (Main.ingameOptionsWindow)
+        {
+            valueBeforePause ??= alpha;
+        }
+        else if (valueBeforePause.HasValue)
+        {
+            alpha = valueBeforePause.Value;
+            valueBeforePause = null;
+        }
+
         // If there's a delta, subtract it, otherwise start trying to show the
         // UI.  Always set to zero after since Hide should be getting called
         // every frame.

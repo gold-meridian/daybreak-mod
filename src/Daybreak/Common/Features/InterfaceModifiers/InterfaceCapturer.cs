@@ -34,6 +34,18 @@ public sealed class InterfaceCapturer : ModSystem
         );
     }
 
+    [ModSystemHooks.PostUpdatePlayers]
+    private static void BlockPlayerInput()
+    {
+        if (!openSettingsWithEsc)
+        {
+            return;
+        }
+
+        Main.blockInput = true;
+        Main.LocalPlayer.isControlledByFilm = true;
+    }
+
     [ModSystemHooks.UpdateUI]
     private static void OpenInventoryIfExpected(GameTime gameTime)
     {
@@ -52,8 +64,8 @@ public sealed class InterfaceCapturer : ModSystem
             else
             {
                 Main.ingameOptionsWindow = true;
-                IngameOptions.Open();
-            }   
+                IngameOptions.Open();   
+            }
         }
     }
 
