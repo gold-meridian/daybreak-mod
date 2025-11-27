@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.IDs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,6 +25,8 @@ internal sealed class ItemPreRenderer : ModSystem
     private static readonly Dictionary<int, IPreRenderedItem> pre_rendered_items = [];
     private static readonly Dictionary<int, RenderTarget2D> render_targets = [];
 
+    private static bool unloading;
+
     /// <inheritdoc />
     public override void Load()
     {
@@ -35,6 +38,11 @@ internal sealed class ItemPreRenderer : ModSystem
                 On_Main.DoDraw += UpdateItemRenders;
             }
         );
+
+        HookLoader.OnEarlyModUnload += _ =>
+        {
+            unloading = true;
+        };
     }
 
     /// <inheritdoc />
@@ -101,6 +109,12 @@ internal sealed class ItemPreRenderer : ModSystem
 
     private static void UpdateItemRenders(On_Main.orig_DoDraw orig, Main self, GameTime gameTime)
     {
+        if (unloading)
+        {
+            orig(self, gameTime);
+            return;
+        }
+
         foreach (var (itemType, preRenderedItem) in pre_rendered_items)
         {
             if (!render_targets.ContainsKey(itemType))

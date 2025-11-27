@@ -22,6 +22,12 @@ internal static class HookLoader
     /// </summary>
     public static event Action<Mod>? OnEarlyModLoad;
 
+    /// <summary>
+    ///     Internally used to hook into the start of mod unloading; useful for
+    ///     terminating certain systems early.
+    /// </summary>
+    public static event Action<Mod>? OnEarlyModUnload;
+
     public static Mod GetModOrThrow()
     {
         return currentlyLoadingMod ?? throw new InvalidOperationException("Cannot continue with operation as no mod is currently applicable to load content through Mod::AddContent");
@@ -202,6 +208,7 @@ internal static class HookLoader
     private static void UnloadContent_WrapToMarkUnloadingMod(Action<Mod> orig, Mod mod)
     {
         currentlyUnloadingMod = mod;
+        OnEarlyModUnload?.Invoke(mod);
         orig(mod);
         currentlyUnloadingMod = null;
     }

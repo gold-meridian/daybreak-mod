@@ -13,6 +13,7 @@ namespace Daybreak.Common.Features.InterfaceModifiers;
 /// <summary>
 ///     Responsible for capturing the UI.
 /// </summary>
+[Autoload(Side = ModSide.Client)]
 public sealed class InterfaceCapturer : ModSystem
 {
     private static bool openSettingsWithEsc;
