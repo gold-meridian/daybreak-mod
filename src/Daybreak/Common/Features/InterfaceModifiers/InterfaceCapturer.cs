@@ -19,6 +19,8 @@ public sealed class InterfaceCapturer : ModSystem
     private static RenderTargetLease? rtLease;
     private static RenderTargetScope? rtScope;
 
+    private static bool blockInventory;
+
     /// <inheritdoc />
     public override void Load()
     {
@@ -30,8 +32,17 @@ public sealed class InterfaceCapturer : ModSystem
                 rtLease = ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice);
 
                 IL_Main.DoDraw += DoDraw_CaptureUserInterfaces;
+                On_Main.DoUpdate_WhilePaused += BlockMenuInput;
             }
         );
+    }
+
+    private static void BlockMenuInput(On_Main.orig_DoUpdate_WhilePaused orig)
+    {
+        var blockInputOrig = Main.blockInput;
+        Main.blockInput |= blockInventory;
+        orig();
+        Main.blockInput = blockInputOrig;
     }
 
     [ModSystemHooks.PostUpdatePlayers]
@@ -42,8 +53,7 @@ public sealed class InterfaceCapturer : ModSystem
             return;
         }
 
-        Main.blockInput = true;
-        Main.LocalPlayer.isControlledByFilm = true;
+        blockInventory = true;
     }
 
     [ModSystemHooks.UpdateUI]
@@ -51,6 +61,7 @@ public sealed class InterfaceCapturer : ModSystem
     {
         if (!openSettingsWithEsc)
         {
+            blockInventory = false;
             return;
         }
 
