@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Daybreak.Common.Rendering;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
@@ -12,6 +13,8 @@ namespace Daybreak.Common.Features.InterfaceModifiers;
 /// </summary>
 public sealed class InterfaceCapturer : ModSystem
 {
+    private static readonly List<RenderTargetLease> targets = [];
+    
     private static RenderTargetLease? rtLease;
     private static RenderTargetScope? rtScope;
 
@@ -19,13 +22,6 @@ public sealed class InterfaceCapturer : ModSystem
     public override void Load()
     {
         base.Load();
-
-        Main.RunOnMainThread(
-            () =>
-            {
-                rtLease = ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice);
-            }
-        );
 
         Main.RunOnMainThread(
             () =>
@@ -51,7 +47,8 @@ public sealed class InterfaceCapturer : ModSystem
                     return;
                 }
 
-                Debug.Assert(rtLease is not null);
+                rtLease ??= ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice);
+                targets.Add(rtLease);
 
                 rtScope = rtLease.Scope(clearColor: Color.Transparent);
             }
@@ -90,6 +87,15 @@ public sealed class InterfaceCapturer : ModSystem
                     0f
                 );
                 Main.spriteBatch.End();
+
+                foreach (var target in targets)
+                {
+                    target.Dispose();
+                }
+
+                targets.Clear();
+
+                rtLease = null;
             }
         );
     }
@@ -124,6 +130,9 @@ public sealed class InterfaceCapturer : ModSystem
 
         Main.spriteBatch.End(out var ss);
 
+        rtLease = ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice);
+        targets.Add(rtLease);
+        
         rtScope = rtLease.Scope(clearColor: Color.Transparent);
 
         Main.spriteBatch.Begin(ss);
