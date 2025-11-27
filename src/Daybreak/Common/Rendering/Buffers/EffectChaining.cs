@@ -12,7 +12,7 @@ namespace Daybreak.Common.Rendering;
 /* Credit to Verminoid Creature for the original implementation, based on:
  * <https://github.com/JasperDawg/Cataphract/blob/f33541642d1f2aec575b2a4f580afe13a2de2cfa/Common/Buffers.cs>.
  *
- * Generously leased to us under AGPL v3.0.
+ * Generously licensed to us under AGPL v3.0.
  */
 
 /// <summary>

@@ -12,7 +12,7 @@ namespace Daybreak.Common.Rendering;
 /* Credit to Verminoid Creature for the original implementation, based on:
  * <https://github.com/JasperDawg/Cataphract/blob/f33541642d1f2aec575b2a4f580afe13a2de2cfa/Common/Buffers.cs>.
  *
- * Generously leased to us under AGPL v3.0.
+ * Generously licensed to us under AGPL v3.0.
  */
 
 /// <summary>
@@ -218,6 +218,11 @@ public abstract class RenderTargetPool : IDisposable
     /// <param name="lease">
     ///     The lease to dispose of at the start of the next frame.
     /// </param>
+    /// <remarks>
+    ///     This API should generally be avoided when possible.  It's a
+    ///     last-resort option for when you cannot guarantee ownership over a
+    ///     target.
+    /// </remarks>
     public static void ReturnNextFrame(RenderTargetLease lease)
     {
         leases_to_clear.Add(lease);
@@ -355,7 +360,22 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         }
     }
 
-    private readonly Dictionary<Key, Stack<RenderTarget2D>> cache = [];
+    private sealed class Entry
+    {
+        public Stack<RenderTarget2D> Targets { get; } = [];
+
+        public DateTime LastUsed { get; set; } = DateTime.UtcNow;
+    }
+
+    // TODO: We can tweak these later for performance?
+    private const int max_per_key = 4;         // Max identical targets.
+    private const int max_total_targets = 128; // Max targets stored.
+    private static readonly TimeSpan max_idle_time = TimeSpan.FromSeconds(5);
+    private static readonly TimeSpan minimum_trim_time = TimeSpan.FromSeconds(1);
+
+    private readonly Dictionary<Key, Entry> cache = [];
+    private DateTime lastTrimmed = DateTime.UtcNow;
+    private int totalCached;
     private bool disposed;
 
     public override RenderTargetLease Rent(GraphicsDevice device, int width, int height, RenderTargetDescriptor descriptor)
@@ -365,17 +385,35 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(height, 0);
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        var key = new Key(width, height, descriptor);
-        if (!cache.TryGetValue(key, out var stack))
+        try
         {
-            cache[key] = stack = [];
+            var key = new Key(width, height, descriptor);
+            if (!cache.TryGetValue(key, out var entry))
+            {
+                cache[key] = entry = new Entry();
+            }
+            else
+            {
+                entry.LastUsed = DateTime.UtcNow;
+            }
+
+            RenderTarget2D target;
+            if (entry.Targets.Count > 0)
+            {
+                target = entry.Targets.Pop();
+                totalCached--;
+            }
+            else
+            {
+                target = descriptor.Create(device, width, height);
+            }
+
+            return new RenderTargetLease(target, this);
         }
-
-        var target = stack.Count > 0
-            ? stack.Pop()
-            : descriptor.Create(device, width, height);
-
-        return new RenderTargetLease(target, this);
+        finally
+        {
+            TrimAged();
+        }
     }
 
     public override void Return(RenderTargetLease lease)
@@ -384,12 +422,32 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         ObjectDisposedException.ThrowIf(disposed, this);
 
         var key = Key.From(lease.Target);
-        if (!cache.TryGetValue(key, out var stack))
+        if (!cache.TryGetValue(key, out var entry))
         {
-            cache[key] = stack = [];
+            cache[key] = entry = new Entry();
+        }
+        else
+        {
+            // Mark it as used on return because that's realistically where the
+            // countdown should begin.
+            entry.LastUsed = DateTime.UtcNow;
         }
 
-        stack.Push(lease.Target);
+        if (entry.Targets.Count < max_per_key)
+        {
+            if (totalCached >= max_total_targets)
+            {
+                lease.Target.Dispose();
+                return;
+            }
+
+            entry.Targets.Push(lease.Target);
+            totalCached++;
+        }
+        else
+        {
+            lease.Target.Dispose();
+        }
     }
 
     public override void Dispose()
@@ -405,14 +463,43 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
 
     private void Trim()
     {
-        foreach (var stack in cache.Values)
+        foreach (var entry in cache.Values)
         {
-            while (stack.Count > 0)
+            while (entry.Targets.Count > 0)
             {
-                stack.Pop().Dispose();
+                entry.Targets.Pop().Dispose();
+                totalCached--;
             }
         }
 
         cache.Clear();
+    }
+
+    private void TrimAged()
+    {
+        var now = DateTime.UtcNow;
+
+        if (now - lastTrimmed < minimum_trim_time)
+        {
+            return;
+        }
+
+        lastTrimmed = now;
+
+        foreach (var (key, entry) in cache)
+        {
+            if (now - entry.LastUsed <= max_idle_time)
+            {
+                continue;
+            }
+
+            while (entry.Targets.Count > 0)
+            {
+                entry.Targets.Pop().Dispose();
+                totalCached--;
+            }
+
+            cache.Remove(key);
+        }
     }
 }
