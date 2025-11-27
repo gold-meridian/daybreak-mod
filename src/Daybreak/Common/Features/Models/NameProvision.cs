@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terraria.ModLoader;
 
@@ -44,7 +45,7 @@ public static class NameProvider
     }
 
     /// <summary>
-    ///     The default name for this type, which is <see cref="Type.Name"/>.
+    ///     The default name for this type, which is <see cref="MemberInfo.Name"/>.
     /// </summary>
     public static string GetDefaultName(Type type)
     {
