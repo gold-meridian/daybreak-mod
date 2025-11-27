@@ -140,7 +140,7 @@ public static class DownedFlagHandler
             // we don't run any code ourselves, the presence of a system will
             // write data automatically -- which causes de-syncs -- this
             // circumvents that.
-            if (Main.netMode != NetmodeID.SinglePlayer && !ModContent.GetInstance<ModImpl>().IsNetSynced)
+            if (Main.netMode == NetmodeID.MultiplayerClient && !ModContent.GetInstance<ModImpl>().IsNetSynced)
             {
                 throw new InvalidOperationException($"Cannot register default handle: \"{mod.Name}/{name}\"; DAYBREAK needs to be present on both the client and server!");
             }
