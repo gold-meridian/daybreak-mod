@@ -81,7 +81,7 @@ public static class HookSubscriber
         var arguments = new List<Expression>(targetParams.Length);
         foreach (var targetParam in targetParams)
         {
-            var name = targetParam.GetCustomAttribute<OriginalNameAttribute>() is { } origName
+            var name = targetParam.GetCustomAttribute<OriginalNameAttribute>(inherit: false) is { } origName
                 ? origName.Name
                 : targetParam.Name;
 

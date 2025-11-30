@@ -145,23 +145,23 @@ public abstract class BaseHookAttribute : Attribute, IHasSide
     ///     If still not resolved, it will use the event's type (assuming it was
     ///     resolved).
     /// </summary>
-    public virtual Type? DelegateType => GetType().GetCustomAttribute<HookMetadataAttribute>()?.DelegateType;
+    public virtual Type? DelegateType => metadataAttribute?.DelegateType;
 
     /// <summary>
     ///     The type containing the event.
     /// </summary>
-    public virtual Type? TypeContainingEvent => GetType().GetCustomAttribute<HookMetadataAttribute>()?.TypeContainingEvent;
+    public virtual Type? TypeContainingEvent => metadataAttribute?.TypeContainingEvent;
 
     /// <summary>
     ///     The name of the event field within the type.
     /// </summary>
-    public virtual string? EventName => GetType().GetCustomAttribute<HookMetadataAttribute>()?.EventName;
+    public virtual string? EventName => metadataAttribute?.EventName;
 
     /// <summary>
     ///     The name of the delegate within <see cref="TypeContainingEvent"/> if
     ///     <see cref="DelegateType"/> is unspecified.
     /// </summary>
-    public virtual string? DelegateName => GetType().GetCustomAttribute<HookMetadataAttribute>()?.DelegateName;
+    public virtual string? DelegateName => metadataAttribute?.DelegateName;
 
     /// <summary>
     ///     The side to load this on.
@@ -172,6 +172,14 @@ public abstract class BaseHookAttribute : Attribute, IHasSide
     ///     Applies this hook to the instance.
     /// </summary>
     public abstract void Apply(MethodInfo bindingMethod, object? instance);
+
+    private readonly HookMetadataAttribute? metadataAttribute;
+
+    /// <summary/>
+    protected BaseHookAttribute()
+    {
+        metadataAttribute = GetType().GetCustomAttribute<HookMetadataAttribute>(inherit: false);
+    }
 
     /// <summary>
     ///     Attempts to resolve the delegate type from the outlined rules.
