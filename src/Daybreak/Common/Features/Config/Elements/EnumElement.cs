@@ -1,11 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Daybreak.Common.Features.UI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader.Config;
@@ -14,6 +10,7 @@ using Terraria.UI.Chat;
 
 namespace Daybreak.Common.Features.Config.Elements;
 
+// May potentially want to move away from a generics impl.
 public class EnumElement<T> : ConfigElement<T> where T : struct
 {
     private string[]? enumNames;
@@ -46,7 +43,7 @@ public class EnumElement<T> : ConfigElement<T> where T : struct
     {
         base.DrawSelf(spriteBatch);
 
-        var dims = GetDimensions().ToRectangle();
+        var dims = this.Dimensions;
 
         var values = (T[])Enum.GetValues(typeof(T));
         var index = Array.IndexOf(values, Value);
