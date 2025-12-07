@@ -3,6 +3,7 @@ using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -78,7 +79,7 @@ internal static class WrappedTypeLoader
 
         var attribute = attributes.First();
 
-        typesByElementType.Add(type, attribute.Type);
+        typesByElementType.Add(attribute.Type, type);
     }
 
     private static void ILWrapIt(ILContext il)
@@ -104,13 +105,13 @@ internal static class WrappedTypeLoader
             c.MoveAfterLabels();
 
             c.EmitLdloc(typeIndex);
-            c.EmitLdloc(elementIndex);
+            c.EmitLdloca(elementIndex);
 
-            c.EmitDelegate((Type type, UIElement element) =>
+            c.EmitDelegate((Type type, ref UIElement element) =>
             {
-                if (typesByElementType.TryGetValue(type, out var value))
+                if (GetConfigElement(type, out var instance))
                 {
-                    element = (UIElement)Activator.CreateInstance(value)!;
+                    element = instance;
 
                     return true;
                 }
@@ -124,5 +125,22 @@ internal static class WrappedTypeLoader
         {
             throw new ILPatchFailureException(ModContent.GetInstance<ModImpl>(), il, e);
         }
+    }
+
+    private static bool GetConfigElement(Type type, [NotNullWhen(true)] out UIElement? instance)
+    {
+        instance = null;
+
+        foreach (var item in typesByElementType)
+        {
+            if (type.IsAssignableTo(item.Key))
+            {
+                instance = (UIElement)Activator.CreateInstance(item.Value)!;
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

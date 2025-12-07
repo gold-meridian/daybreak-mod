@@ -1,23 +1,69 @@
 ﻿using Daybreak.Common.Features.Config.Types;
 using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Features.UI;
+using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
+using Newtonsoft.Json;
+using ReLogic.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
+using Terraria.ModLoader.Core;
+using Terraria.ModLoader.UI;
+using Terraria.Net.Sockets;
 using Terraria.UI;
+using Terraria.UI.Chat;
 
 namespace Daybreak.Common.Features.Config.Elements;
 
-// TODO: Potential generic impl for more than bool wrappers.
+// TODO: Potential generic impl for more than bool containers.
+// TODO: Generalized public ExpandableElement impl.
+// TODO: Better name for 'containers.'
 [WrappedType<BooleanContainer>]
-internal class BooleanContainerElement : BooleanElement
+internal class BooleanContainerElement : ConfigElement<BooleanContainer>
 {
+    private const int defaultHeight = 30;
+
+    private NestedUIList? list;
+
+    public bool Enabled
+    {
+        get => Value.Enabled;
+        set
+        {
+            if (Locked)
+            {
+                return;
+            }
+
+            Value.Enabled = value;
+            Interface.modConfig.SetPendingChanges();
+
+            if (value)
+            {
+                OnExpand();
+            }
+            else
+            {
+                OnContract();
+            }
+
+            Recalculate();
+        }
+    }
+
+    public bool Locked => Value.Locked;
+
+    public bool HoveringTop { get; private set; }
 
 #region Highlight Edit
 
@@ -119,5 +165,115 @@ internal class BooleanContainerElement : BooleanElement
 
 #endregion
 
+    public override void OnBind()
+    {
+        if (Enabled && !Locked)
+        {
+            OnExpand();
+        }
+    }
 
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        Rectangle rectangle = this.Dimensions;
+
+        HoveringTop = IsMouseHovering && Main.mouseY < rectangle.Y + defaultHeight;
+
+        if (Locked)
+        {
+            OnContract();
+        }
+    }
+
+    public override void LeftClick(UIMouseEvent evt)
+    {
+        if (HoveringTop)
+        {
+            Enabled = !Enabled;
+        }
+    }
+
+    protected virtual void OnExpand()
+    {
+        const float margin = 5f;
+
+        list = [];
+
+        list.Left.Set(margin, 0f);
+        list.Top.Set(defaultHeight + margin, 0f);
+
+        list.Width.Set(-(margin * 2), 1f);
+        list.Height.Set(-(defaultHeight + (margin * 2)), 1f);
+
+        list.ListPadding = 5f;
+
+        Append(list);
+
+        int order = 0;
+
+        var members = GetFieldsAndProperties(Value.GetType(), BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+
+        foreach (PropertyFieldWrapper member in members)
+        {
+            if (Attribute.IsDefined(member.MemberInfo, typeof(JsonIgnoreAttribute)) &&
+                !Attribute.IsDefined(member.MemberInfo, typeof(ShowDespiteJsonIgnoreAttribute)))
+            {
+                continue;
+            }
+
+            int top = 0;
+
+            UIModConfig.HandleHeader(list, ref top, ref order, member);
+
+            Tuple<UIElement, UIElement> wrapped = UIModConfig.WrapIt(list, ref top, member, Value, order++);
+        }
+
+        float height = list.GetTotalHeight() + defaultHeight + (margin * 2);
+
+        Height.Set(height, 0f);
+        Parent.Height.Set(height, 0f);
+    }
+
+    protected virtual void OnContract()
+    {
+        RemoveAllChildren();
+    }
+
+    protected override void DrawSelf(SpriteBatch spriteBatch)
+    {
+        bool isMouseHovering = IsMouseHovering;
+        IsMouseHovering = HoveringTop;
+
+        const float lockedBackgroundMultiplier = 0.4f;
+
+        backgroundColor = Locked ? UICommon.DefaultUIBlue * lockedBackgroundMultiplier : UICommon.DefaultUIBlue;
+
+        base.DrawSelf(spriteBatch);
+
+        IsMouseHovering = isMouseHovering;
+
+        Texture2D texture = AssetReferences.Assets.Images.UI.LockableSettingsToggle.Asset.Value;
+
+        Rectangle dims = this.Dimensions;
+
+        string text = Enabled ? Lang.menu[126].Value : Lang.menu[124].Value;
+
+        DynamicSpriteFont font = FontAssets.ItemStack.Value;
+
+        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, text, new Vector2(dims.X + dims.Width - 60f, dims.Y + 8f), Color.White, 0f, Vector2.Zero, new(0.8f));
+
+        Vector2 position = new(dims.X + dims.Width - 28, dims.Y + 4);
+        Rectangle rectangle = texture.Frame(2, 2, Enabled.ToInt(), Locked.ToInt());
+
+        spriteBatch.Draw(texture, position, rectangle, Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+    }
+
+    public static IEnumerable<PropertyFieldWrapper> GetFieldsAndProperties(Type type, BindingFlags bindingFlags)
+    {
+        PropertyInfo[] properties = type.GetProperties(bindingFlags);
+        return (from x in type.GetFields(bindingFlags)
+                select new PropertyFieldWrapper(x)).Concat(properties.Select(x => new PropertyFieldWrapper(x)));
+    }
 }
