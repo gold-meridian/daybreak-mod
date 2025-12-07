@@ -5,40 +5,6 @@ using Terraria.ModLoader;
 namespace Daybreak.Common.Features.Configuration;
 
 /// <summary>
-///     Describes what side a config option pertains to.
-/// </summary>
-public enum ConfigSide
-{
-    /// <summary>
-    ///     The entry is only client-side and does not need syncing across the
-    ///     boundary.
-    /// </summary>
-    ClientSide,
-
-    /// <summary>
-    ///     The entry is only server-side and does not need syncing across the
-    ///     boundary.
-    /// </summary>
-    ServerSide,
-
-    /// <summary>
-    ///     The entry applies to both the client and server and needs syncing
-    ///     across the boundary.
-    /// </summary>
-    Both,
-
-    /// <summary>
-    ///     The entry may apply to both the client and server, but does not need
-    ///     syncing across the boundary.
-    /// </summary>
-    /// <remarks>
-    ///     This mode is seldom useful, but is particularly important for
-    ///     no-sync mods.
-    /// </remarks>
-    NoSync,
-}
-
-/// <summary>
 ///     Uniquely identifies a config entry.
 ///     <br />
 ///     Identities may be freely shared across mods without referencing
@@ -58,30 +24,6 @@ public enum ConfigSide
 ///     only be unique when compared against other keys in the same mod.
 /// </param>
 public readonly record struct ConfigEntryIdentity(
-    Mod? Mod,
-    string UniqueKey
-);
-
-/// <summary>
-///     Uniquely identifies a config category.
-///     <br />
-///     Identities may be freely shared across mods without referencing
-///     assemblies of other mods, and can be used to inspect the status of a
-///     category without requiring it be registered.
-/// </summary>
-/// <param name="Mod">
-///     The mod this category belongs to.  If the mod is
-///     <see langword="null"/>, then this category is considered as belonging
-///     to vanilla.
-/// </param>
-/// <param name="UniqueKey">
-///     The unique key which identifies this category (sub-categorized with
-///     <see cref="Mod"/>).
-///     <br />
-///     This key should <b>not</b> contain the mod name. The key needs to
-///     only be unique when compared against other keys in the same mod.
-/// </param>
-public readonly record struct ConfigCategoryIdentity(
     Mod? Mod,
     string UniqueKey
 );
