@@ -6,15 +6,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Publicize Include="FNA" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
-        <Publicize Include="ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
+        <Publicize Include="FNA" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false" />
+        <Publicize Include="ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Daybreak.CodeAnalysis\Daybreak.CodeAnalysis.csproj"
-                          PrivateAssets="All"
-                          ReferenceOutputAssembly="false"
-                          OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\Daybreak.CodeAnalysis\Daybreak.CodeAnalysis.csproj" PrivateAssets="All" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assets\Images\UI\" />
     </ItemGroup>
 
 </Project>
