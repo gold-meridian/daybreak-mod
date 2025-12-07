@@ -1,7 +1,7 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
+using JetBrains.Annotations;
 
-namespace Daybreak.Common.Features.Config;
+namespace Daybreak.Common.Features.TmlConfig;
 
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]

@@ -1,6 +1,5 @@
 ﻿using Daybreak.Common.Features.Config.Types;
 using Daybreak.Common.Features.Hooks;
-using Daybreak.Common.Features.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Daybreak.Common.Features.TmlConfig;
+using Daybreak.Common.UI;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
