@@ -25,7 +25,7 @@ namespace Daybreak.Common.Features.TmlConfig;
 // TODO: Potential generic impl for more than bool containers.
 // TODO: Generalized public ExpandableElement impl.
 // TODO: Better name for 'containers.'
-[WrappedType<BooleanContainer>]
+[ProvidesConfigElementFor<BooleanContainer>]
 internal class BooleanContainerElement : ConfigElement<BooleanContainer>
 {
     private const int defaultHeight = 30;
@@ -139,7 +139,9 @@ internal class BooleanContainerElement : ConfigElement<BooleanContainer>
             c.EmitDelegate((ConfigElement element, SpriteBatch sb, Color color) =>
             {
                 if (element is not BooleanContainerElement wrapper)
+                {
                     return false;
+                }
 
                 Rectangle dims = wrapper.Dimensions;
 
