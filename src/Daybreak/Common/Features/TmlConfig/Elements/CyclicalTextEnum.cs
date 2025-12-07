@@ -9,7 +9,7 @@ using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI.Chat;
 
-namespace Daybreak.Common.Features.TmlConfig.Elements;
+namespace Daybreak.Common.Features.TmlConfig;
 
 /// <summary>
 ///     An alternative enum display provider which renders closer to a boolean

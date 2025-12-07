@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace Daybreak.Common.Features.Config.Types;
+namespace Daybreak.Common.Features.TmlConfig;
 
 [PublicAPI]
 public abstract class BooleanContainer

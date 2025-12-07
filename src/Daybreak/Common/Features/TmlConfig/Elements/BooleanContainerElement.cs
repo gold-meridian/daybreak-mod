@@ -1,5 +1,9 @@
-﻿using Daybreak.Common.Features.Config.Types;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Daybreak.Common.Features.Hooks;
+using Daybreak.Common.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,12 +11,6 @@ using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using Newtonsoft.Json;
 using ReLogic.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Daybreak.Common.Features.TmlConfig;
-using Daybreak.Common.UI;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -22,7 +20,7 @@ using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace Daybreak.Common.Features.Config.Elements;
+namespace Daybreak.Common.Features.TmlConfig;
 
 // TODO: Potential generic impl for more than bool containers.
 // TODO: Generalized public ExpandableElement impl.
