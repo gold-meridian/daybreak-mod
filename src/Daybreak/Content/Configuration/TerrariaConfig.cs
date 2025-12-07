@@ -4,17 +4,38 @@ namespace Daybreak.Content.Configuration;
 
 internal static class TerrariaConfig
 {
-    public static ConfigCategoryHandle CategoryGeneral { get; } = ConfigSystem.RegisterCategory(null, "General");
+    public static class General
+    {
+        public static ConfigCategoryHandle Category { get; } = ConfigSystem.RegisterCategory(null, nameof(General));
+    }
 
-    public static ConfigCategoryHandle CategoryInterface { get; } = ConfigSystem.RegisterCategory(null, "Interface");
+    public static class Interface
+    {
+        public static ConfigCategoryHandle Category { get; } = ConfigSystem.RegisterCategory(null, nameof(Interface));
+    }
 
-    public static ConfigCategoryHandle CategoryVideo { get; } = ConfigSystem.RegisterCategory(null, "Video");
+    public static class Video
+    {
+        public static ConfigCategoryHandle Category { get; } = ConfigSystem.RegisterCategory(null, nameof(Video));
+    }
 
-    public static ConfigCategoryHandle CategoryVolume { get; } = ConfigSystem.RegisterCategory(null, "Volume");
+    public static class Volume
+    {
+        public static ConfigCategoryHandle Category { get; } = ConfigSystem.RegisterCategory(null, nameof(Volume));
+    }
 
-    public static ConfigCategoryHandle CategoryCursor { get; } = ConfigSystem.RegisterCategory(null, "Cursor");
+    public static class Cursor
+    {
+        public static ConfigCategoryHandle Category { get; } = ConfigSystem.RegisterCategory(null, nameof(Cursor));
+    }
 
-    public static ConfigCategoryHandle CategoryControls { get; } = ConfigSystem.RegisterCategory(null, "Controls");
+    public static class Controls
+    {
+        public static ConfigCategoryHandle Category { get; } = ConfigSystem.RegisterCategory(null, nameof(Controls));
+    }
 
-    public static ConfigCategoryHandle CategoryLanguage { get; } = ConfigSystem.RegisterCategory(null, "Language");
+    public static class Language
+    {
+        public static ConfigCategoryHandle Category { get; } = ConfigSystem.RegisterCategory(null, nameof(Language));
+    }
 }
