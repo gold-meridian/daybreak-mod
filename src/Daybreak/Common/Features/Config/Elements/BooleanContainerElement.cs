@@ -17,9 +17,7 @@ using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
-using Terraria.ModLoader.Core;
 using Terraria.ModLoader.UI;
-using Terraria.Net.Sockets;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
@@ -45,8 +43,26 @@ internal class BooleanContainerElement : ConfigElement<BooleanContainer>
                 return;
             }
 
+            Expanded = value;
+
             Value.Enabled = value;
             Interface.modConfig.SetPendingChanges();
+        }
+    }
+
+    public bool Locked => Value.Locked;
+
+    public bool Expanded
+    {
+        get => field;
+        set
+        {
+            if (Expanded == value)
+            {
+                return;
+            }
+
+            field = value;
 
             if (value)
             {
@@ -59,9 +75,7 @@ internal class BooleanContainerElement : ConfigElement<BooleanContainer>
 
             Recalculate();
         }
-    }
-
-    public bool Locked => Value.Locked;
+    } = false;
 
     public bool HoveringTop { get; private set; }
 
@@ -167,9 +181,11 @@ internal class BooleanContainerElement : ConfigElement<BooleanContainer>
 
     public override void OnBind()
     {
-        if (Enabled && !Locked)
+        base.OnBind();
+
+        if (!Locked)
         {
-            OnExpand();
+            Expanded = Enabled;
         }
     }
 
@@ -183,7 +199,7 @@ internal class BooleanContainerElement : ConfigElement<BooleanContainer>
 
         if (Locked)
         {
-            OnContract();
+            Expanded = false;
         }
     }
 
@@ -198,13 +214,14 @@ internal class BooleanContainerElement : ConfigElement<BooleanContainer>
     protected virtual void OnExpand()
     {
         const float margin = 5f;
+        const float horizontalMargin = 10f;
 
         list = [];
 
-        list.Left.Set(margin, 0f);
+        list.Left.Set(horizontalMargin, 0f);
         list.Top.Set(defaultHeight + margin, 0f);
 
-        list.Width.Set(-(margin * 2), 1f);
+        list.Width.Set(-(horizontalMargin * 2), 1f);
         list.Height.Set(-(defaultHeight + (margin * 2)), 1f);
 
         list.ListPadding = 5f;
@@ -230,15 +247,20 @@ internal class BooleanContainerElement : ConfigElement<BooleanContainer>
             Tuple<UIElement, UIElement> wrapped = UIModConfig.WrapIt(list, ref top, member, Value, order++);
         }
 
+        list.RecalculateChildren();
+
         float height = list.GetTotalHeight() + defaultHeight + (margin * 2);
 
         Height.Set(height, 0f);
-        Parent.Height.Set(height, 0f);
+        Parent?.Height.Set(height, 0f);
     }
 
     protected virtual void OnContract()
     {
         RemoveAllChildren();
+
+        Height.Set(defaultHeight, 0f);
+        Parent?.Height.Set(defaultHeight, 0f);
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
