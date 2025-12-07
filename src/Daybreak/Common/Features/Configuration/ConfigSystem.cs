@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -24,6 +25,22 @@ public static class ConfigSystem
     {
         return new ConfigCategoryHandle(mod, uniqueKey);
     }
+
+    /// <summary>
+    ///     Creates a category, returning the handle.
+    /// </summary>
+    public static ConfigCategoryHandle CreateCategory(Mod? mod, string uniqueKey)
+    {
+        var dict = GetModItems(mod, categories_by_mod);
+        if (dict.ContainsKey(uniqueKey))
+        {
+            throw new InvalidOperationException($"Cannot create category \"{uniqueKey}\" for mod \"{GetModName(mod)}\" because a category of the same name already exists!");
+        }
+
+        // TODO: We need to do something reasonable once categories are a real
+        //       object.
+        return dict[uniqueKey] = GetCategoryHandle(mod, uniqueKey);
+    }
 #endregion
 
 #region Entry handles
@@ -48,5 +65,10 @@ public static class ConfigSystem
         }
 
         return map[new ModKey(mod)] = items = [];
+    }
+
+    private static string GetModName(Mod? mod)
+    {
+        return mod is null ? "Terraria" : mod.Name;
     }
 }
