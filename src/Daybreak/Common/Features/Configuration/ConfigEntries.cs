@@ -39,6 +39,54 @@ public enum ConfigSide
 }
 
 /// <summary>
+///     Uniquely identifies a config entry.
+///     <br />
+///     Identities may be freely shared across mods without referencing
+///     assemblies of other mods, and can be used to inspect the status of an
+///     entry without requiring it be registered.
+/// </summary>
+/// <param name="Mod">
+///     The mod this entry belongs to.  If the mod is
+///     <see langword="null"/>, then this entry is considered as belonging
+///     to vanilla.
+/// </param>
+/// <param name="UniqueKey">
+///     The unique key which identifies this entry (sub-categorized with
+///     <see cref="Mod"/>).
+///     <br />
+///     This key should <b>not</b> contain the mod name. The key needs to
+///     only be unique when compared against other keys in the same mod.
+/// </param>
+public readonly record struct ConfigEntryIdentity(
+    Mod? Mod,
+    string UniqueKey
+);
+
+/// <summary>
+///     Uniquely identifies a config category.
+///     <br />
+///     Identities may be freely shared across mods without referencing
+///     assemblies of other mods, and can be used to inspect the status of a
+///     category without requiring it be registered.
+/// </summary>
+/// <param name="Mod">
+///     The mod this category belongs to.  If the mod is
+///     <see langword="null"/>, then this category is considered as belonging
+///     to vanilla.
+/// </param>
+/// <param name="UniqueKey">
+///     The unique key which identifies this category (sub-categorized with
+///     <see cref="Mod"/>).
+///     <br />
+///     This key should <b>not</b> contain the mod name. The key needs to
+///     only be unique when compared against other keys in the same mod.
+/// </param>
+public readonly record struct ConfigCategoryIdentity(
+    Mod? Mod,
+    string UniqueKey
+);
+
+/// <summary>
 ///     The type-safe contract over <see cref="IConfigEntry"/>.
 /// </summary>
 public interface IConfigEntry<T> : IConfigEntry
@@ -81,21 +129,10 @@ public interface IConfigEntry<T> : IConfigEntry
 public interface IConfigEntry
 {
     /// <summary>
-    ///     The unique key which identifies this entry (sub-categorized with
-    ///     <see cref="Mod"/>).
+    ///     The config entry identity which may be used to uniquely identify
+    ///     this entry and obtain it as necessary.
     /// </summary>
-    /// <remarks>
-    ///     This key should <b>not</b> contain the mod name. The key needs to
-    ///     only be unique when compared against other keys in the same mod.
-    /// </remarks>
-    string UniqueKey { get; }
-
-    /// <summary>
-    ///     The mod this entry belongs to.  If the mod is
-    ///     <see langword="null"/>, then this entry is considered as belonging
-    ///     to vanilla.
-    /// </summary>
-    Mod? Mod { get; }
+    ConfigEntryIdentity Id { get; }
 
     /// <summary>
     ///     This entry's side, which controls syncing and which version of the
@@ -133,13 +170,13 @@ public interface IConfigEntry
     /// <remarks>
     ///     There must be <b>at least 1</b> category.
     /// </remarks>
-    ReadOnlySpan<string> Categories { get; }
+    ReadOnlySpan<ConfigCategoryIdentity> Categories { get; }
 
     /// <summary>
     ///     The main category of this entry, derived from the first item in
     ///     <see cref="Categories"/>.
     /// </summary>
-    string MainCategory => Categories[0];
+    ConfigCategoryIdentity MainCategory => Categories[0];
 
     /// <summary>
     ///     Called when this entry is registered.
