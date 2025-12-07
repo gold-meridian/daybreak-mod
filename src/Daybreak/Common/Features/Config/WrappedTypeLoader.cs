@@ -71,7 +71,12 @@ internal static class WrappedTypeLoader
             return;
 
         // TODO: Allow multiple types to be under one config element.
-        var attribute = type.GetCustomAttributes<WrappedTypeAttribute>(false).First();
+        var attributes = type.GetCustomAttributes<WrappedTypeAttribute>(false);
+
+        if (!attributes.Any())
+            return;
+
+        var attribute = attributes.First();
 
         typesByElementType.Add(type, attribute.Type);
     }
