@@ -12,24 +12,9 @@ namespace Daybreak.Common.Features.Configuration;
 /// </summary>
 public static class ConfigSystem
 {
-    private sealed class ConfigCategory(ConfigCategoryHandle handle) : IConfigCategory
-    {
-        public ConfigCategoryHandle Id { get; } = handle;
-
-        public LocalizedText DisplayName => this.GetLocalization(nameof(DisplayName), () => Id.Name);
-
-        string ILocalizedModType.LocalizationCategory => "ConfigCategory";
-
-        Mod? IModType.Mod => Id.Mod;
-
-        string IModType.Name => Id.Name;
-
-        string IModType.FullName => $"{Id.Mod?.Name ?? "Terraria"}/{Id.Name}";
-    }
-
     private readonly record struct ModKey(Mod? Mod);
 
-    private static Dictionary<ModKey, Dictionary<string, IConfigCategory>> categories_by_mod = [];
+    private static Dictionary<ModKey, Dictionary<string, ConfigCategory>> categories_by_mod = [];
     private static Dictionary<ModKey, Dictionary<string, IConfigEntry>> entries_by_mod = [];
 
 #region Category handles
@@ -45,7 +30,7 @@ public static class ConfigSystem
     /// <summary>
     ///     Creates a category, returning the handle.
     /// </summary>
-    public static ConfigCategoryHandle RegisterCategory(Mod? mod, string uniqueKey, IConfigCategory? category = null)
+    public static ConfigCategoryHandle RegisterCategory(Mod? mod, string uniqueKey, LocalizedText? displayName = null)
     {
         var dict = GetModItems(mod, categories_by_mod);
         if (dict.ContainsKey(uniqueKey))
@@ -55,7 +40,7 @@ public static class ConfigSystem
 
         var handle = GetCategoryHandle(mod, uniqueKey);
         {
-            dict[uniqueKey] = category ??= new ConfigCategory(handle);
+            var category = dict[uniqueKey] = new ConfigCategory(handle, displayName);
             _ = category.DisplayName;
         }
         return handle;

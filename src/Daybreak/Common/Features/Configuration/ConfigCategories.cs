@@ -42,16 +42,30 @@ public readonly struct ConfigCategoryHandle
 ///     that serve as individual pages, and entries may be added to any number
 ///     of category pages.
 /// </summary>
-public interface IConfigCategory : ILocalizedModType
+public sealed class ConfigCategory : ILocalizedModType
 {
     /// <summary>
     ///     The config category handle which may be used to uniquely identify
     ///     this category and obtain it as necessary.
     /// </summary>
-    ConfigCategoryHandle Id { get; }
+    public ConfigCategoryHandle Id { get; }
 
     /// <summary>
     ///     The display name of this category.
     /// </summary>
-    LocalizedText DisplayName { get; }
+    public LocalizedText DisplayName { get; }
+
+    string ILocalizedModType.LocalizationCategory => "ConfigCategory";
+
+    Mod? IModType.Mod => Id.Mod;
+
+    string IModType.Name => Id.Name;
+
+    string IModType.FullName => $"{Id.Mod?.Name ?? "Terraria"}/{Id.Name}";
+
+    internal ConfigCategory(ConfigCategoryHandle handle, LocalizedText? displayName)
+    {
+        Id = handle;
+        DisplayName = displayName ?? this.GetLocalization(nameof(DisplayName), () => Id.Name);
+    }
 }
