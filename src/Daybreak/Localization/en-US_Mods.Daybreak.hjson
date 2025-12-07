@@ -39,14 +39,9 @@ Configs: {
 		AlwaysDisable.Label: Always Disable
 	}
 
-	BooleanContainer: {
+	ConditionalContainer: {
 		Enabled: {
 			Label: Enabled
-			Tooltip: ""
-		}
-
-		Locked: {
-			Label: Locked
 			Tooltip: ""
 		}
 	}
