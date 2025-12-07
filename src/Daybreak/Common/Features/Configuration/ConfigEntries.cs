@@ -7,26 +7,34 @@ namespace Daybreak.Common.Features.Configuration;
 /// <summary>
 ///     Uniquely identifies a config entry.
 ///     <br />
-///     Identities may be freely shared across mods without referencing
-///     assemblies of other mods, and can be used to inspect the status of an
-///     entry without requiring it be registered.
+///     Handles may be freely shared across mods without referencing assemblies
+///     of other mods, and can be used to inspect the status of an entry without
+///     requiring it be registered.
 /// </summary>
-/// <param name="Mod">
-///     The mod this entry belongs to.  If the mod is
-///     <see langword="null"/>, then this entry is considered as belonging
-///     to vanilla.
-/// </param>
-/// <param name="UniqueKey">
-///     The unique key which identifies this entry (sub-categorized with
-///     <see cref="Mod"/>).
-///     <br />
-///     This key should <b>not</b> contain the mod name. The key needs to
-///     only be unique when compared against other keys in the same mod.
-/// </param>
-public readonly record struct ConfigEntryIdentity(
-    Mod? Mod,
-    string UniqueKey
-);
+public readonly struct ConfigEntryHandle
+{
+    /// <summary>
+    ///     The mod this entry belongs to.  If the mod is
+    ///     <see langword="null"/>, then this entry is considered as belonging
+    ///     to vanilla.
+    /// </summary>
+    public Mod? Mod { get; private init; }
+
+    /// <summary>
+    ///     The unique key which identifies this entry (sub-categorized with
+    ///     <see cref="Mod"/>).
+    ///     <br />
+    ///     This key should <b>not</b> contain the mod name. The key needs to
+    ///     only be unique when compared against other keys in the same mod.
+    /// </summary>
+    public string FullName { get; private init; } = string.Empty;
+
+    internal ConfigEntryHandle(Mod? mod, string fullName)
+    {
+        Mod = mod;
+        FullName = fullName;
+    }
+}
 
 /// <summary>
 ///     The type-safe contract over <see cref="IConfigEntry"/>.
@@ -74,7 +82,7 @@ public interface IConfigEntry
     ///     The config entry identity which may be used to uniquely identify
     ///     this entry and obtain it as necessary.
     /// </summary>
-    ConfigEntryIdentity Id { get; }
+    ConfigEntryHandle Id { get; }
 
     /// <summary>
     ///     This entry's side, which controls syncing and which version of the
@@ -112,13 +120,13 @@ public interface IConfigEntry
     /// <remarks>
     ///     There must be <b>at least 1</b> category.
     /// </remarks>
-    ReadOnlySpan<ConfigCategoryIdentity> Categories { get; }
+    ReadOnlySpan<ConfigCategoryHandle> Categories { get; }
 
     /// <summary>
     ///     The main category of this entry, derived from the first item in
     ///     <see cref="Categories"/>.
     /// </summary>
-    ConfigCategoryIdentity MainCategory => Categories[0];
+    ConfigCategoryHandle MainCategory => Categories[0];
 
     /// <summary>
     ///     Called when this entry is registered.
