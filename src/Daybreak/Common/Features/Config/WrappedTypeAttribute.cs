@@ -4,7 +4,7 @@ using System;
 namespace Daybreak.Common.Features.Config;
 
 [PublicAPI]
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class WrappedTypeAttribute<T> : WrappedTypeAttribute
 {
     public WrappedTypeAttribute() : base(typeof(T))
@@ -12,7 +12,7 @@ public class WrappedTypeAttribute<T> : WrappedTypeAttribute
 }
 
 [PublicAPI]
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class WrappedTypeAttribute : Attribute
 {
     public WrappedTypeAttribute(Type type)

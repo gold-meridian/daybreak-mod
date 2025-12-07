@@ -71,15 +71,12 @@ internal static class WrappedTypeLoader
         if (!type.IsAssignableTo(typeof(ConfigElement)))
             return;
 
-        // TODO: Allow multiple types to be under one config element.
         var attributes = type.GetCustomAttributes<WrappedTypeAttribute>(false);
 
-        if (!attributes.Any())
-            return;
-
-        var attribute = attributes.First();
-
-        typesByElementType.Add(attribute.Type, type);
+        foreach (var attribute in attributes)
+        {
+            typesByElementType.Add(attribute.Type, type);
+        }
     }
 
     private static void ILWrapIt(ILContext il)
