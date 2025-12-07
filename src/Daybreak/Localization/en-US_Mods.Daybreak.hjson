@@ -38,4 +38,16 @@ Configs: {
 		AlwaysEnable.Label: Always Enable
 		AlwaysDisable.Label: Always Disable
 	}
+
+	BooleanContainer: {
+		Enabled: {
+			Label: Enabled
+			Tooltip: ""
+		}
+
+		Locked: {
+			Label: Locked
+			Tooltip: ""
+		}
+	}
 }
