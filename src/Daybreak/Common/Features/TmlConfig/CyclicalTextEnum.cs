@@ -24,12 +24,16 @@ internal sealed class CyclicalTextEnumElement<T> : ConfigElement<T>
     private readonly List<PropertyFieldWrapper> enumFields = [];
     private readonly T[] values = Enum.GetValues<T>();
 
-    /// <summary>
-    ///     Initializes this element while populating localizable names for enum
-    ///     values.
-    /// </summary>
-    public CyclicalTextEnumElement()
+    /// <inheritdoc />
+    public override void OnBind()
     {
+        base.OnBind();
+
+        OnLeftClick += (_, _) => Value = Value.NextEnum();
+        OnRightClick += (_, _) => Value = Value.PreviousEnum();
+        
+        enumFields.Clear();
+        
         var names = Enum.GetNames(typeof(T));
         foreach (var name in names)
         {
@@ -40,15 +44,6 @@ internal sealed class CyclicalTextEnumElement<T> : ConfigElement<T>
 
             enumFields.Add(new PropertyFieldWrapper(enumField));
         }
-    }
-
-    /// <inheritdoc />
-    public override void OnBind()
-    {
-        base.OnBind();
-
-        OnLeftClick += (_, _) => Value = Value.NextEnum();
-        OnRightClick += (_, _) => Value = Value.PreviousEnum();
     }
 
     /// <inheritdoc />
