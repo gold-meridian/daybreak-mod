@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -11,9 +12,24 @@ namespace Daybreak.Common.Features.Configuration;
 /// </summary>
 public static class ConfigSystem
 {
+    private sealed class ConfigCategory(ConfigCategoryHandle handle) : IConfigCategory
+    {
+        public ConfigCategoryHandle Id { get; } = handle;
+
+        public LocalizedText DisplayName => this.GetLocalization(nameof(DisplayName), () => Id.Name);
+
+        string ILocalizedModType.LocalizationCategory => "ConfigCategory";
+
+        Mod? IModType.Mod => Id.Mod;
+
+        string IModType.Name => Id.Name;
+
+        string IModType.FullName => $"{Id.Mod?.Name ?? "Terraria"}/{Id.Name}";
+    }
+
     private readonly record struct ModKey(Mod? Mod);
 
-    private static Dictionary<ModKey, Dictionary<string, ConfigCategoryHandle>> categories_by_mod = [];
+    private static Dictionary<ModKey, Dictionary<string, IConfigCategory>> categories_by_mod = [];
     private static Dictionary<ModKey, Dictionary<string, IConfigEntry>> entries_by_mod = [];
 
 #region Category handles
@@ -29,7 +45,7 @@ public static class ConfigSystem
     /// <summary>
     ///     Creates a category, returning the handle.
     /// </summary>
-    public static ConfigCategoryHandle CreateCategory(Mod? mod, string uniqueKey)
+    public static ConfigCategoryHandle RegisterCategory(Mod? mod, string uniqueKey, IConfigCategory? category = null)
     {
         var dict = GetModItems(mod, categories_by_mod);
         if (dict.ContainsKey(uniqueKey))
@@ -37,9 +53,12 @@ public static class ConfigSystem
             throw new InvalidOperationException($"Cannot create category \"{uniqueKey}\" for mod \"{GetModName(mod)}\" because a category of the same name already exists!");
         }
 
-        // TODO: We need to do something reasonable once categories are a real
-        //       object.
-        return dict[uniqueKey] = GetCategoryHandle(mod, uniqueKey);
+        var handle = GetCategoryHandle(mod, uniqueKey);
+        {
+            dict[uniqueKey] = category ??= new ConfigCategory(handle);
+            _ = category.DisplayName;
+        }
+        return handle;
     }
 #endregion
 
@@ -53,7 +72,7 @@ public static class ConfigSystem
         return new ConfigEntryHandle(mod, uniqueKey);
     }
 #endregion
-    
+
     private static Dictionary<TKey, TValue> GetModItems<TKey, TValue>(
         Mod? mod,
         Dictionary<ModKey, Dictionary<TKey, TValue>> map
@@ -64,7 +83,7 @@ public static class ConfigSystem
             return items;
         }
 
-        return map[new ModKey(mod)] = items = [];
+        return map[new ModKey(mod)] = [];
     }
 
     private static string GetModName(Mod? mod)

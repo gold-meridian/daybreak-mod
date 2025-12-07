@@ -27,12 +27,12 @@ public readonly struct ConfigEntryHandle
     ///     This key should <b>not</b> contain the mod name. The key needs to
     ///     only be unique when compared against other keys in the same mod.
     /// </summary>
-    public string FullName { get; private init; } = string.Empty;
+    public string Name { get; private init; } = string.Empty;
 
-    internal ConfigEntryHandle(Mod? mod, string fullName)
+    internal ConfigEntryHandle(Mod? mod, string name)
     {
         Mod = mod;
-        FullName = fullName;
+        Name = name;
     }
 }
 
@@ -76,11 +76,11 @@ public interface IConfigEntry<T> : IConfigEntry
 /// <summary>
 ///     The type-generic config entry contract.
 /// </summary>
-public interface IConfigEntry
+public interface IConfigEntry : ILocalizedModType
 {
     /// <summary>
-    ///     The config entry identity which may be used to uniquely identify
-    ///     this entry and obtain it as necessary.
+    ///     The config entry handle which may be used to uniquely identify this
+    ///     entry and obtain it as necessary.
     /// </summary>
     ConfigEntryHandle Id { get; }
 

@@ -7,5 +7,5 @@ internal static class ModLoaderConfig
 {
     private static Mod ModLoaderMod => ModLoader.GetMod("ModLoaderMod");
 
-    public static ConfigCategoryHandle CategoryGeneral { get; } = ConfigSystem.CreateCategory(ModLoaderMod, "General");
+    public static ConfigCategoryHandle CategoryGeneral { get; } = ConfigSystem.RegisterCategory(ModLoaderMod, "General");
 }
