@@ -15,8 +15,9 @@ namespace Daybreak.Common.Features.TmlConfig.Elements;
 ///     An alternative enum display provider which renders closer to a boolean
 ///     and with bidirectional cycling using the mouse buttons.
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public class EnumElement<T> : ConfigElement<T>
+public sealed class CyclicalTextEnumAttribute<T>() : CustomModConfigItemAttribute(typeof(CyclicalTextEnumAttribute<T>));
+
+internal sealed class CyclicalTextEnumElement<T> : ConfigElement<T>
     where T : struct, Enum
 {
     private readonly List<PropertyFieldWrapper> enumFields = [];
@@ -26,7 +27,7 @@ public class EnumElement<T> : ConfigElement<T>
     ///     Initializes this element while populating localizable names for enum
     ///     values.
     /// </summary>
-    public EnumElement()
+    public CyclicalTextEnumElement()
     {
         var names = Enum.GetNames(typeof(T));
         foreach (var name in names)
