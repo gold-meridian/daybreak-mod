@@ -11,8 +11,10 @@ internal static class ModLoaderConfig
 
     public static class General
     {
-        public static ConfigCategoryHandle Category { get; } = Config.RegisterCategory(Mod, nameof(General));
-        
+        public static ConfigCategoryHandle Category { get; } =
+            new ConfigCategoryDescriptor()
+               .Register(Config, Mod, nameof(General));
+
         // bool Download Mods From Servers: On/Off
         // bool Automatically Reload Required Mods When Leaving Mods Screen: On/Off
         // bool Remove Forced Minimum Zoom: On/Off

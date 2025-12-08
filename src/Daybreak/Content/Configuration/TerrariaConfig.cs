@@ -11,7 +11,9 @@ internal static class TerrariaConfig
 
     public static class General
     {
-        public static ConfigCategoryHandle Category { get; } = Config.RegisterCategory(null, nameof(General));
+        public static ConfigCategory Category { get; } =
+            new ConfigCategoryDescriptor()
+               .Register(Config, Mod, nameof(General));
 
         // bool Autosave On/Off
         // bool Autopause On/Off
@@ -21,7 +23,9 @@ internal static class TerrariaConfig
 
     public static class Interface
     {
-        public static ConfigCategoryHandle Category { get; } = Config.RegisterCategory(null, nameof(Interface));
+        public static ConfigCategory Category { get; } =
+            new ConfigCategoryDescriptor()
+               .Register(Config, Mod, nameof(Interface));
 
         // bool Pickup Text On/Off
         // bool Event Progress Bar On/Off
@@ -37,7 +41,9 @@ internal static class TerrariaConfig
 
     public static class Video
     {
-        public static ConfigCategoryHandle Category { get; } = Config.RegisterCategory(null, nameof(Video));
+        public static ConfigCategory Category { get; } =
+            new ConfigCategoryDescriptor()
+               .Register(Config, Mod, nameof(Video));
 
         // Resolution sub-menu
         // - Fullscreen resolution selection
@@ -55,7 +61,9 @@ internal static class TerrariaConfig
 
     public static class Volume
     {
-        public static ConfigCategoryHandle Category { get; } = Config.RegisterCategory(null, nameof(Volume));
+        public static ConfigCategory Category { get; } =
+            new ConfigCategoryDescriptor()
+               .Register(Config, Mod, nameof(Volume));
 
         // Music: 0%-100%
         // Sound: 0%-100%
@@ -64,7 +72,9 @@ internal static class TerrariaConfig
 
     public static class Cursor
     {
-        public static ConfigCategoryHandle Category { get; } = Config.RegisterCategory(null, nameof(Cursor));
+        public static ConfigCategory Category { get; } =
+            new ConfigCategoryDescriptor()
+               .Register(Config, Mod, nameof(Cursor));
 
         // Cursor Color sub-menu
         // - various color sliders
@@ -78,7 +88,9 @@ internal static class TerrariaConfig
 
     public static class Controls
     {
-        public static ConfigCategoryHandle Category { get; } = Config.RegisterCategory(null, nameof(Controls));
+        public static ConfigCategory Category { get; } =
+            new ConfigCategoryDescriptor()
+               .Register(Config, Mod, nameof(Controls));
 
         // ??? Activate Set Bonuses: {}
         // ??? Quick Trash: {}
@@ -88,7 +100,9 @@ internal static class TerrariaConfig
 
     public static class Language
     {
-        public static ConfigCategoryHandle Category { get; } = Config.RegisterCategory(null, nameof(Language));
+        public static ConfigCategory Category { get; } =
+            new ConfigCategoryDescriptor()
+               .Register(Config, Mod, nameof(Language));
 
         // Generic selection menu we can reimplement.
         // See about compatibility with other mods?

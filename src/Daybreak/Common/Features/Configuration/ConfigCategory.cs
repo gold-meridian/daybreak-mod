@@ -1,4 +1,5 @@
-﻿using Terraria.Localization;
+﻿using System;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -39,36 +40,53 @@ public readonly record struct ConfigCategoryHandle(
     public string Name { get; } = Name;
 }
 
+public sealed class ConfigCategoryDescriptor()
+{
+    public Func<LocalizedText>? DisplayNameProvider { get; set; }
+
+    public ConfigCategoryDescriptor WithDisplayName(Func<LocalizedText>? displayNameProvider)
+    {
+        DisplayNameProvider = displayNameProvider;
+        return this;
+    }
+
+    public ConfigCategoryDescriptor WithDisplayName(LocalizedText displayName)
+    {
+        DisplayNameProvider = () => displayName;
+        return this;
+    }
+
+    public ConfigCategory Register(ConfigRepository repository, Mod? mod, string uniqueKey)
+    {
+        return repository.CreateCategory(this, mod, uniqueKey);
+    }
+}
+
 /// <summary>
 ///     Represents a config category, which is akin to a base
 ///     <see cref="ModConfig"/> definition.  Mods may have top-level categories
 ///     that serve as individual pages, and entries may be added to any number
 ///     of category pages.
 /// </summary>
-public sealed class ConfigCategory : ILocalizedModType
+public sealed class ConfigCategory(ConfigCategoryHandle handle, ConfigCategoryDescriptor descriptor)
 {
     /// <summary>
     ///     The config category handle which may be used to uniquely identify
     ///     this category and obtain it as necessary.
     /// </summary>
-    public ConfigCategoryHandle Id { get; }
+    public ConfigCategoryHandle Handle { get; } = handle;
+
+    public ConfigCategoryDescriptor Descriptor { get; } = descriptor;
 
     /// <summary>
     ///     The display name of this category.
     /// </summary>
-    public LocalizedText DisplayName { get; }
+    public LocalizedText DisplayName { get; } =
+        descriptor.DisplayNameProvider?.Invoke()
+     ?? LanguageHelpers.GetLocalization(handle.Mod, nameof(ConfigCategory), nameof(DisplayName), () => handle.Name);
 
-    string ILocalizedModType.LocalizationCategory => "ConfigCategory";
-
-    Mod? IModType.Mod => Id.Mod;
-
-    string IModType.Name => Id.Name;
-
-    string IModType.FullName => $"{ConfigRepository.GetModName(Id.Mod)}.{Id.Name}";
-
-    internal ConfigCategory(ConfigCategoryHandle handle, LocalizedText? displayName)
+    public static implicit operator ConfigCategoryHandle(ConfigCategory category)
     {
-        Id = handle;
-        DisplayName = displayName ?? this.GetLocalization(nameof(DisplayName), () => Id.Name);
+        return category.Handle;
     }
 }

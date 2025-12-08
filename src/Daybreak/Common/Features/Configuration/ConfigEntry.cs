@@ -79,14 +79,8 @@ public interface IConfigEntry<T> : IConfigEntry
 /// <summary>
 ///     The type-generic config entry contract.
 /// </summary>
-public interface IConfigEntry : ILocalizedModType
+public interface IConfigEntry
 {
-    Mod? IModType.Mod => Id.Mod;
-
-    string IModType.Name => Id.Name;
-
-    string IModType.FullName => $"{ConfigRepository.GetModName(Id.Mod)}.{Id.Name}";
-    
     /// <summary>
     ///     The config entry handle which may be used to uniquely identify this
     ///     entry and obtain it as necessary.

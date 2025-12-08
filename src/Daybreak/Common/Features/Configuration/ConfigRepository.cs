@@ -28,24 +28,27 @@ public abstract class ConfigRepository
         return new ConfigEntryHandle(this, mod, uniqueKey);
     }
 
-    public ConfigCategoryHandle RegisterCategory(
+    public ConfigCategory CreateCategory(
+        ConfigCategoryDescriptor descriptor,
         Mod? mod,
-        string uniqueKey,
-        LocalizedText? displayName = null
+        string uniqueKey
     )
     {
         var categories = GetCategories(mod);
         if (categories.ContainsKey(uniqueKey))
         {
-            throw new InvalidOperationException($"Cannot create category \"{uniqueKey}\" for mod \"{GetModName(mod)}\" because a category of the same name already exists!");
+            throw new InvalidOperationException($"Cannot create category \"{uniqueKey}\" for mod \"{LanguageHelpers.GetModName(mod)}\" because a category of the same name already exists!");
         }
 
-        var handle = GetCategoryHandle(mod, uniqueKey);
+        var category = categories[uniqueKey] = new ConfigCategory(
+            GetCategoryHandle(mod, uniqueKey),
+            descriptor
+        );
         {
-            var category = categories[uniqueKey] = new ConfigCategory(handle, displayName);
             _ = category.DisplayName;
         }
-        return handle;
+
+        return category;
     }
 
     protected Dictionary<string, ConfigCategory> GetCategories(Mod? mod)
@@ -66,11 +69,6 @@ public abstract class ConfigRepository
         }
 
         return EntriesByCategory[categoryHandle] = [];
-    }
-
-    public static string GetModName(Mod? mod)
-    {
-        return mod is null ? "Terraria" : mod.Name;
     }
 }
 
