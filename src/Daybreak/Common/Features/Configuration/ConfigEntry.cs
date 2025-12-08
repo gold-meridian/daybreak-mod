@@ -206,18 +206,18 @@ public sealed class ConfigEntry<T>(
         set
         {
             LocalValue = value;
-            MarkDirty();
+            ;
         }
     }
 
     /// <inheritdoc cref="IConfigEntry.LocalValue"/>
     public T? LocalValue
     {
-        get => GetValue(field);
+        get => GetValue(field, Descriptor.LocalValueProvider?.Getter);
 
         set
         {
-            field = SetValue(value);
+            field = SetValue(field, value, Descriptor.LocalValueProvider?.Setter);
             MarkDirty();
         }
     }
@@ -225,11 +225,11 @@ public sealed class ConfigEntry<T>(
     /// <inheritdoc cref="IConfigEntry.RemoteValue"/>
     public T? RemoteValue
     {
-        get => GetValue(field);
+        get => GetValue(field, Descriptor.RemoteValueProvider?.Getter);
 
         set
         {
-            field = SetValue(value);
+            field = SetValue(field, value, Descriptor.RemoteValueProvider?.Setter);
             MarkDirty();
         }
     }
@@ -242,15 +242,27 @@ public sealed class ConfigEntry<T>(
             ? provider.Invoke(this)
             : default(T);
 
-    protected T? GetValue(T? value)
+    private T? GetValue(T? storedValue, ConfigEntryDescriptor<T>.Getter? getter)
     {
-        return value;
+        if (getter is not null)
+        {
+            return getter(storedValue);
+        }
+
+        return storedValue;
     }
 
-    protected T? SetValue(T? value)
+    private T? SetValue(T? storedValue, T? incomingValue, ConfigEntryDescriptor<T>.Setter? setter)
     {
-        return value;
+        if (setter is not null)
+        {
+            return setter(storedValue, incomingValue);
+        }
+
+        return incomingValue;
     }
+
+    private void MarkDirty() { }
 
     private static ConfigSide ConfigSideFromModSide(ModSide modSide)
     {
@@ -320,7 +332,7 @@ public sealed class ConfigEntryDescriptor<T>
     /// <summary>
     ///     Controls the set operation for a value.
     /// </summary>
-    public delegate void Setter(T? storedValue, T? incomingValue);
+    public delegate T? Setter(T? storedValue, T? incomingValue);
 
     /// <summary>
     ///     Controls the get and set operations for a value by providing a
