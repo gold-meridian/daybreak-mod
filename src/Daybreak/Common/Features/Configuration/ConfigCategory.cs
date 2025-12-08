@@ -66,9 +66,9 @@ public sealed class ConfigCategory(
     /// <summary>
     ///     The display name of this category.
     /// </summary>
-    public LocalizedText DisplayName { get; } =
-        descriptor.DisplayNameProvider?.Invoke()
-     ?? LanguageHelpers.GetLocalization(handle.Mod, nameof(ConfigCategory), nameof(DisplayName), () => handle.Name);
+    public LocalizedText DisplayName =>
+        Descriptor.DisplayNameProvider.Function?.Invoke(this)
+     ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigCategory), nameof(DisplayName), () => Handle.Name);
 
     /// <summary>
     ///     Derives the handle of this category.
@@ -86,25 +86,57 @@ public sealed class ConfigCategory(
 public sealed class ConfigCategoryDescriptor
 {
     /// <summary>
-    ///     Provides the display name of the category.
+    ///     Represents a value provider.
     /// </summary>
-    public Func<LocalizedText>? DisplayNameProvider { get; set; }
-
-    /// <summary>
-    ///     Provides the display name of the category.
-    /// </summary>
-    public ConfigCategoryDescriptor WithDisplayName(Func<LocalizedText>? displayNameProvider)
+    public readonly struct Provider<TValue>(Func<ConfigCategory, TValue>? provider)
     {
-        DisplayNameProvider = displayNameProvider;
-        return this;
+        /// <summary>
+        ///     The provider function.
+        /// </summary>
+        public Func<ConfigCategory, TValue>? Function { get; } = provider;
+
+        /// <inheritdoc />
+        public Provider(Func<TValue> provider) : this(_ => provider()) { }
+
+        /// <inheritdoc />
+        public Provider(TValue value) : this(_ => value) { }
+
+        /// <summary>
+        ///     Creates a value provider.
+        /// </summary>
+        public static implicit operator Provider<TValue>(Func<ConfigCategory, TValue> provider)
+        {
+            return new Provider<TValue>(provider);
+        }
+
+        /// <summary>
+        ///     Creates a value provider.
+        /// </summary>
+        public static implicit operator Provider<TValue>(Func<TValue> provider)
+        {
+            return new Provider<TValue>(provider);
+        }
+
+        /// <summary>
+        ///     Creates a value provider.
+        /// </summary>
+        public static implicit operator Provider<TValue>(TValue value)
+        {
+            return new Provider<TValue>(value);
+        }
     }
 
     /// <summary>
     ///     Provides the display name of the category.
     /// </summary>
-    public ConfigCategoryDescriptor WithDisplayName(LocalizedText displayName)
+    public Provider<LocalizedText> DisplayNameProvider { get; set; }
+
+    /// <summary>
+    ///     Provides the display name of the category.
+    /// </summary>
+    public ConfigCategoryDescriptor WithDisplayName(Provider<LocalizedText> displayNameProvider)
     {
-        DisplayNameProvider = () => displayName;
+        DisplayNameProvider = displayNameProvider;
         return this;
     }
 
