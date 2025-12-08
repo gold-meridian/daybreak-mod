@@ -54,6 +54,9 @@ public sealed class ConfigCategory(ConfigCategoryHandle handle, ConfigCategoryDe
     /// </summary>
     public ConfigCategoryHandle Handle { get; } = handle;
 
+    /// <summary>
+    ///     The descriptor which dictates the behavior of this category.
+    /// </summary>
     public ConfigCategoryDescriptor Descriptor { get; } = descriptor;
 
     /// <summary>
@@ -63,28 +66,47 @@ public sealed class ConfigCategory(ConfigCategoryHandle handle, ConfigCategoryDe
         descriptor.DisplayNameProvider?.Invoke()
      ?? LanguageHelpers.GetLocalization(handle.Mod, nameof(ConfigCategory), nameof(DisplayName), () => handle.Name);
 
+    /// <summary>
+    ///     Derives the handle of this category.
+    /// </summary>
     public static implicit operator ConfigCategoryHandle(ConfigCategory category)
     {
         return category.Handle;
     }
 }
 
+/// <summary>
+///     A descriptor for dynamically constructing a
+///     <see cref="ConfigCategory"/> with arbitrary behavior.
+/// </summary>
 public sealed class ConfigCategoryDescriptor
 {
+    /// <summary>
+    ///     Provides the display name of the category.
+    /// </summary>
     public Func<LocalizedText>? DisplayNameProvider { get; set; }
 
+    /// <summary>
+    ///     Provides the display name of the category.
+    /// </summary>
     public ConfigCategoryDescriptor WithDisplayName(Func<LocalizedText>? displayNameProvider)
     {
         DisplayNameProvider = displayNameProvider;
         return this;
     }
 
+    /// <summary>
+    ///     Provides the display name of the category.
+    /// </summary>
     public ConfigCategoryDescriptor WithDisplayName(LocalizedText displayName)
     {
         DisplayNameProvider = () => displayName;
         return this;
     }
 
+    /// <summary>
+    ///     Creates a category and registers the category to the repository.
+    /// </summary>
     public ConfigCategory Register(ConfigRepository repository, Mod? mod, string uniqueKey)
     {
         return repository.RegisterCategory(
