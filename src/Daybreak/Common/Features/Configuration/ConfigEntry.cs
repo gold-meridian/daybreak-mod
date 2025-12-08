@@ -66,12 +66,22 @@ public interface IConfigEntry
     Type ValueType { get; }
 
     /// <summary>
-    ///     The actual value being worked with.  Depending on the game context,
-    ///     we either use <see cref="LocalValue"/> or <see cref="RemoteValue"/>
-    ///     as its backing property.  Mutating this value with modify either the
-    ///     local or remote value according to the context.
+    ///     The most up-to-date value of this entry.  If this entry is synced
+    ///     to both the client and server, it will use the value the server
+    ///     provides.  If this value is not synced, it will solely use the local
+    ///     value provided by this instance.
     ///     <br />
-    ///     On servers, the remote and local value are always the same.
+    ///     Attempting to set this value will queue it to
+    ///     <see cref="PendingValue"/>, as would any modifications made by a
+    ///     user when interfacing with this entry in a config UI.
+    ///     <br />
+    ///     If a <see cref="PendingValue"/> is queued and the value being used
+    ///     is the <see cref="LocalValue"/>, <see cref="PendingValue"/> will be
+    ///     preferred.
+    ///     <br />
+    ///     This functionally allows you to override the config value as needed,
+    ///     but this change will only be reflected in serialization and
+    ///     synchronization when the config is specifically told to save itself.
     /// </summary>
     object? Value { get; set; }
 
@@ -88,8 +98,12 @@ public interface IConfigEntry
     object? RemoteValue { get; set; }
 
     /// <summary>
-    ///     If an entry is queued to be modified, this value will be populated
-    ///     with the new value.
+    ///     This is the most up-to-date representation of the local value of the
+    ///     config entry.
+    ///     <br />
+    ///     This should be kept up-to-date with <see cref="LocalValue"/> if it's
+    ///     changed, and is preferred over <see cref="LocalValue"/> when
+    ///     retrieving the current state from <see cref="Value"/>.
     /// </summary>
     object? PendingValue { get; set; }
 
@@ -223,10 +237,15 @@ public sealed class ConfigEntry<T>(
                 return RemoteValue;
             }
 
+            if (!Equals(LocalValue, PendingValue))
+            {
+                return PendingValue;
+            }
+
             return LocalValue;
         }
 
-        set => LocalValue = value;
+        set => PendingValue = value;
     }
 
     /// <inheritdoc cref="IConfigEntry.LocalValue"/>
