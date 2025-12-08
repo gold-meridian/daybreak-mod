@@ -102,7 +102,7 @@ internal static class TerrariaConfig
     {
         public static ConfigCategory Category { get; } =
             new ConfigCategoryDescriptor()
-               .Register(Config, Mod, nameof(Language));
+               .Register(Config, Mod, nameof(Language) + "Category");
 
         // Generic selection menu we can reimplement.
         // See about compatibility with other mods?

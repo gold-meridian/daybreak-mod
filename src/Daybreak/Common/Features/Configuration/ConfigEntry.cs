@@ -93,6 +93,16 @@ public interface IConfigEntry
     object? DefaultValue { get; }
 
     /// <summary>
+    ///     Whether this entry's value has been modified.
+    /// </summary>
+    bool Dirty { get; set; }
+
+    /// <summary>
+    ///     Whether a modification to this entry necessitates a reload.
+    /// </summary>
+    bool ReloadRequired { get; }
+
+    /// <summary>
     ///     The display name of this config entry.
     /// </summary>
     LocalizedText DisplayName { get; }
@@ -204,11 +214,7 @@ public sealed class ConfigEntry<T>(
             return LocalValue;
         }
 
-        set
-        {
-            LocalValue = value;
-            ;
-        }
+        set { LocalValue = value; }
     }
 
     /// <inheritdoc cref="IConfigEntry.LocalValue"/>
@@ -242,6 +248,10 @@ public sealed class ConfigEntry<T>(
         Descriptor.DefaultValueProvider.Function is { } provider
             ? provider.Invoke(this)
             : default(T);
+
+    public bool Dirty { get; set; }
+
+    public bool ReloadRequired { get; }
 
     private T? GetValue(T? storedValue, ConfigEntryDescriptor<T>.Getter? getter)
     {
@@ -386,6 +396,17 @@ public sealed class ConfigEntryDescriptor<T>
     public (Getter Getter, Setter Setter)? RemoteValueProvider { get; set; }
 
     /// <summary>
+    ///     Provides control over determining whether a value has been dirtied.
+    /// </summary>
+    public Provider<bool> DirtiedProvider { get; set; }
+
+    /// <summary>
+    ///     Provides control over whether a reload is required for the entry's
+    ///     state to properly update.
+    /// </summary>
+    public Provider<bool> ReloadRequiredProvider { get; set; }
+
+    /// <summary>
     ///     Provides the display name of the entry.
     /// </summary>
     public ConfigEntryDescriptor<T> WithDisplayName(Provider<LocalizedText> displayNameProvider)
@@ -449,6 +470,35 @@ public sealed class ConfigEntryDescriptor<T>
     )
     {
         LocalValueProvider = (getter, setter);
+        return this;
+    }
+
+    /// <summary>
+    ///     Provides control over determining whether a value has been dirtied.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithDirtied(Provider<bool> dirtiedProvider)
+    {
+        DirtiedProvider = dirtiedProvider;
+        return this;
+    }
+
+    /// <summary>
+    ///     Provides control over whether a reload is required for the entry's
+    ///     state to properly update.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithReloadRequired(Provider<bool> reloadRequiredProvider)
+    {
+        ReloadRequiredProvider = reloadRequiredProvider;
+        return this;
+    }
+
+    /// <summary>
+    ///     Provides a default implementation that necessitates a reload if the
+    ///     entry has changed.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithReloadRequired()
+    {
+        ReloadRequiredProvider = new Provider<bool>(entry => entry.Dirty);
         return this;
     }
 
