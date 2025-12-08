@@ -46,7 +46,10 @@ public readonly record struct ConfigCategoryHandle(
 ///     that serve as individual pages, and entries may be added to any number
 ///     of category pages.
 /// </summary>
-public sealed class ConfigCategory(ConfigCategoryHandle handle, ConfigCategoryDescriptor descriptor)
+public sealed class ConfigCategory(
+    ConfigCategoryHandle handle,
+    ConfigCategoryDescriptor descriptor
+)
 {
     /// <summary>
     ///     The config category handle which may be used to uniquely identify

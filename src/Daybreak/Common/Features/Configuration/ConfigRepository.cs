@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -33,26 +34,36 @@ public abstract class ConfigRepository
         /// <inheritdoc />
         public EntryKey(IConfigEntry entry) : this(entry.Handle) { }
     }
+    
+    private static readonly DefaultConfigRepository default_repository = new();
 
     /// <summary>
     ///     The default config repository.
+    ///     <br />
+    ///     This repository is what's rendered in the settings menu, and
+    ///     contains vanilla settings, tModLoader settings, and settings
+    ///     produced by the tModLoader <see cref="ModConfig"/> API.
+    ///     <br />
+    ///     Items in this repository will have serialization/deserialization and
+    ///     syncing handled automatically through the mechanisms in which
+    ///     tModLoader handles <see cref="ModConfig"/>s.
     /// </summary>
-    public static ConfigRepository Default { get; } = new DefaultConfigRepository();
+    public static ConfigRepository Default => default_repository;
 
     /// <summary>
     ///     All categories registered to this repository.
     /// </summary>
-    protected Dictionary<CategoryKey, ConfigCategory> Categories { get; } = [];
+    protected virtual Dictionary<CategoryKey, ConfigCategory> Categories { get; } = [];
 
     /// <summary>
     ///     All entries registered to this repository.
     /// </summary>
-    protected Dictionary<EntryKey, IConfigEntry> Entries { get; } = [];
+    protected virtual Dictionary<EntryKey, IConfigEntry> Entries { get; } = [];
 
     /// <summary>
     ///     Gets a category handle from this repository.
     /// </summary>
-    public ConfigCategoryHandle GetCategoryHandle(Mod? mod, string uniqueKey)
+    public virtual ConfigCategoryHandle GetCategoryHandle(Mod? mod, string uniqueKey)
     {
         return new ConfigCategoryHandle(this, mod, uniqueKey);
     }
@@ -60,7 +71,7 @@ public abstract class ConfigRepository
     /// <summary>
     ///     Gets an entry handle from this repository.
     /// </summary>
-    public ConfigEntryHandle GetEntryHandle(Mod? mod, string uniqueKey)
+    public virtual ConfigEntryHandle GetEntryHandle(Mod? mod, string uniqueKey)
     {
         return new ConfigEntryHandle(this, mod, uniqueKey);
     }
@@ -68,7 +79,7 @@ public abstract class ConfigRepository
     /// <summary>
     ///     Gets a category owned by this repository.
     /// </summary>
-    public ConfigCategory GetCategory(ConfigCategoryHandle handle)
+    public virtual ConfigCategory GetCategory(ConfigCategoryHandle handle)
     {
         if (handle.Repository != this)
         {
@@ -83,7 +94,7 @@ public abstract class ConfigRepository
     /// <summary>
     ///     Gets an entry owned by this repository.
     /// </summary>
-    public IConfigEntry GetEntry(ConfigEntryHandle handle)
+    public virtual IConfigEntry GetEntry(ConfigEntryHandle handle)
     {
         if (handle.Repository != this)
         {
@@ -98,7 +109,7 @@ public abstract class ConfigRepository
     /// <summary>
     ///     Gets an entry owned by this repository.
     /// </summary>
-    public ConfigEntry<T> GetEntry<T>(ConfigEntryHandle handle)
+    public virtual ConfigEntry<T> GetEntry<T>(ConfigEntryHandle handle)
     {
         return GetEntry(handle) as ConfigEntry<T>
             ?? throw new InvalidOperationException($"Entry does not wrap value of type {typeof(T)}: " + handle);
@@ -107,7 +118,7 @@ public abstract class ConfigRepository
     /// <summary>
     ///     Registers a category as belonging to this repository.
     /// </summary>
-    public ConfigCategory RegisterCategory(ConfigCategory category)
+    public virtual ConfigCategory RegisterCategory(ConfigCategory category)
     {
         if (Categories.ContainsKey(new CategoryKey(category.Handle)))
         {
@@ -123,7 +134,7 @@ public abstract class ConfigRepository
     /// <summary>
     ///     Registers an entry as belonging to this repository.
     /// </summary>
-    public ConfigEntry<T> RegisterEntry<T>(ConfigEntry<T> entry)
+    public virtual ConfigEntry<T> RegisterEntry<T>(ConfigEntry<T> entry)
     {
         if (Entries.ContainsKey(new EntryKey(entry.Handle)))
         {

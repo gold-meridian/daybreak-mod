@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -74,23 +76,21 @@ public interface IConfigEntry
     object? Value { get; set; }
 
     /// <summary>
-    ///     The local (client-sided) value.
-    ///     <br />
-    ///     On servers, this is the same as <see cref="RemoteValue"/>.
+    ///     The config value local to this instance.  Multiplayer clients,
+    ///     singleplayer clients, and servers all have a local value.
     /// </summary>
     object? LocalValue { get; set; }
 
     /// <summary>
-    ///     The remote (server-sided) value.
-    ///     <br />
-    ///     On servers, this is the same as <see cref="LocalValue"/>.
+    ///     The config value supplied by a remote host.  Only used when
+    ///     receiving a server-controlled value from a multiplayer client.
     /// </summary>
     object? RemoteValue { get; set; }
 
     /// <summary>
     ///     The default value.
     /// </summary>
-    object? DefaultValue { get; set; }
+    object? DefaultValue { get; }
 
     /// <summary>
     ///     The display name of this config entry.
@@ -124,17 +124,15 @@ public interface IConfigEntry
     ///     <see cref="Categories"/>.
     /// </summary>
     ConfigCategoryHandle MainCategory => Categories[0];
-
-    /// <summary>
-    ///     Called when this entry is registered.
-    /// </summary>
-    void OnRegister();
 }
 
 /// <summary>
 ///     The type-safe implementation of <see cref="IConfigEntry"/>.
 /// </summary>
-public sealed class ConfigEntry<T>(ConfigEntryHandle handle, ConfigEntryDescriptor<T> descriptor) : IConfigEntry
+public sealed class ConfigEntry<T>(
+    ConfigEntryHandle handle,
+    ConfigEntryDescriptor<T> descriptor
+) : IConfigEntry
 {
     Type IConfigEntry.ValueType => typeof(T);
 
@@ -156,11 +154,7 @@ public sealed class ConfigEntry<T>(ConfigEntryHandle handle, ConfigEntryDescript
         set => RemoteValue = (T?)value;
     }
 
-    object? IConfigEntry.DefaultValue
-    {
-        get => DefaultValue;
-        set => DefaultValue = (T?)value;
-    }
+    object? IConfigEntry.DefaultValue => DefaultValue;
 
     /// <inheritdoc />
     public ConfigEntryHandle Handle { get; } = handle;
@@ -171,64 +165,104 @@ public sealed class ConfigEntry<T>(ConfigEntryHandle handle, ConfigEntryDescript
     public ConfigEntryDescriptor<T> Descriptor { get; } = descriptor;
 
     /// <inheritdoc />
-    public ConfigSide Side { get; }
-        = descriptor.ConfigSideProvider?.Invoke()
-       ?? ConfigSide.Both;
+    public ConfigSide Side =>
+        Descriptor.ConfigSideProvider.Function?.Invoke(this)
+     ?? ConfigSideFromModSide(Handle.Mod?.Side ?? ModSide.NoSync);
 
     /// <inheritdoc />
-    public LocalizedText DisplayName { get; } =
-        descriptor.DisplayNameProvider?.Invoke()
-     ?? LanguageHelpers.GetLocalization(handle.Mod, nameof(ConfigEntry<>), nameof(DisplayName), () => handle.Name);
+    public LocalizedText DisplayName =>
+        Descriptor.DisplayNameProvider.Function?.Invoke(this)
+     ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigEntry<>), nameof(DisplayName), () => Handle.Name);
 
     /// <inheritdoc />
-    public LocalizedText Tooltip { get; } =
-        descriptor.DisplayNameProvider?.Invoke()
-     ?? LanguageHelpers.GetLocalization(handle.Mod, nameof(ConfigEntry<>), nameof(Tooltip), () => "");
+    public LocalizedText Tooltip =>
+        Descriptor.TooltipProvider.Function?.Invoke(this)
+     ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigEntry<>), nameof(Tooltip), () => "");
 
     /// <inheritdoc />
-    public LocalizedText Description { get; } =
-        descriptor.DisplayNameProvider?.Invoke()
-     ?? LanguageHelpers.GetLocalization(handle.Mod, nameof(ConfigEntry<>), nameof(Description), () => "");
+    public LocalizedText Description =>
+        Descriptor.DescriptionProvider.Function?.Invoke(this)
+     ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigEntry<>), nameof(Description), () => "");
 
     /// <inheritdoc />
-    public ConfigCategoryHandle[] Categories { get; } =
-        descriptor.CategoriesProvider?.Invoke().ToArray() is { Length: > 1 } categories
+    public ConfigCategoryHandle[] Categories =>
+        Descriptor.CategoriesProvider.Function?.Invoke(this).ToArray() is { Length: > 1 } categories
             ? categories
-            : throw new InvalidOperationException("Config entries must be supplied at least one category: " + handle);
+            : throw new InvalidOperationException("Config entries must be supplied at least one category: " + Handle);
 
-    public void OnRegister()
+    /// <inheritdoc cref="IConfigEntry.Value"/>
+    public T? Value
     {
-        throw new NotImplementedException();
+        get
+        {
+            if (Side == ConfigSide.Both && Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                return RemoteValue;
+            }
+
+            return LocalValue;
+        }
+
+        set
+        {
+            LocalValue = value;
+            MarkDirty();
+        }
     }
 
-    /// <summary>
-    ///     The actual value being worked with.  Depending on the game context,
-    ///     we either use <see cref="LocalValue"/> or <see cref="RemoteValue"/>
-    ///     as its backing property.  Mutating this value with modify either the
-    ///     local or remote value according to the context.
-    ///     <br />
-    ///     On servers, the remote and local value are always the same.
-    /// </summary>
-    public T? Value { get; set; }
+    /// <inheritdoc cref="IConfigEntry.LocalValue"/>
+    public T? LocalValue
+    {
+        get => GetValue(field);
 
-    /// <summary>
-    ///     The local (client-sided) value.
-    ///     <br />
-    ///     On servers, this is the same as <see cref="RemoteValue"/>.
-    /// </summary>
-    public T? LocalValue { get; set; }
+        set
+        {
+            field = SetValue(value);
+            MarkDirty();
+        }
+    }
 
-    /// <summary>
-    ///     The remote (server-sided) value.
-    ///     <br />
-    ///     On servers, this is the same as <see cref="LocalValue"/>.
-    /// </summary>
-    public T? RemoteValue { get; set; }
+    /// <inheritdoc cref="IConfigEntry.RemoteValue"/>
+    public T? RemoteValue
+    {
+        get => GetValue(field);
 
-    /// <summary>
-    ///     The default value.
-    /// </summary>
-    public T? DefaultValue { get; set; }
+        set
+        {
+            field = SetValue(value);
+            MarkDirty();
+        }
+    }
+
+    // The compiler doesn't know how to lift a conditional access
+    // (provider?.Invoke()) to a T? for some reason.
+    /// <inheritdoc cref="IConfigEntry.DefaultValue"/>
+    public T? DefaultValue =>
+        Descriptor.DefaultValueProvider.Function is { } provider
+            ? provider.Invoke(this)
+            : default(T);
+
+    protected T? GetValue(T? value)
+    {
+        return value;
+    }
+
+    protected T? SetValue(T? value)
+    {
+        return value;
+    }
+
+    private static ConfigSide ConfigSideFromModSide(ModSide modSide)
+    {
+        return modSide switch
+        {
+            ModSide.Both => ConfigSide.Both,
+            ModSide.Client => ConfigSide.ClientSide,
+            ModSide.Server => ConfigSide.ServerSide,
+            ModSide.NoSync => ConfigSide.NoSync,
+            _ => throw new ArgumentOutOfRangeException(nameof(modSide), modSide, null),
+        };
+    }
 }
 
 /// <summary>
@@ -238,34 +272,109 @@ public sealed class ConfigEntry<T>(ConfigEntryHandle handle, ConfigEntryDescript
 public sealed class ConfigEntryDescriptor<T>
 {
     /// <summary>
+    ///     Represents a value provider.
+    /// </summary>
+    public readonly struct Provider<TValue>(Func<ConfigEntry<T>, TValue>? provider)
+    {
+        /// <summary>
+        ///     The provider function.
+        /// </summary>
+        public Func<ConfigEntry<T>, TValue>? Function { get; } = provider;
+
+        /// <inheritdoc />
+        public Provider(Func<TValue> provider) : this(_ => provider()) { }
+
+        /// <inheritdoc />
+        public Provider(TValue value) : this(_ => value) { }
+
+        /// <summary>
+        ///     Creates a value provider.
+        /// </summary>
+        public static implicit operator Provider<TValue>(Func<ConfigEntry<T>, TValue> provider)
+        {
+            return new Provider<TValue>(provider);
+        }
+
+        /// <summary>
+        ///     Creates a value provider.
+        /// </summary>
+        public static implicit operator Provider<TValue>(Func<TValue> provider)
+        {
+            return new Provider<TValue>(provider);
+        }
+
+        /// <summary>
+        ///     Creates a value provider.
+        /// </summary>
+        public static implicit operator Provider<TValue>(TValue value)
+        {
+            return new Provider<TValue>(value);
+        }
+    }
+
+    /// <summary>
+    ///     Controls the get operation for a value.
+    /// </summary>
+    public delegate T? Getter(T? storedValue);
+
+    /// <summary>
+    ///     Controls the set operation for a value.
+    /// </summary>
+    public delegate void Setter(T? storedValue, T? incomingValue);
+
+    /// <summary>
+    ///     Controls the get and set operations for a value by providing a
+    ///     reference, convenient for completely ignoring the default,
+    ///     entry-provided value when aliasing an existing field.
+    /// </summary>
+    public delegate ref T? RefProvider();
+
+    /// <summary>
     ///     Provides the display name of the entry.
     /// </summary>
-    public Func<LocalizedText>? DisplayNameProvider { get; set; }
+    public Provider<LocalizedText> DisplayNameProvider { get; set; }
 
     /// <summary>
     ///     Provides the tooltip of the entry.
     /// </summary>
-    public Func<LocalizedText>? TooltipProvider { get; set; }
+    public Provider<LocalizedText> TooltipProvider { get; set; }
 
     /// <summary>
     ///     Provides the description of the entry.
     /// </summary>
-    public Func<LocalizedText>? DescriptionProvider { get; set; }
+    public Provider<LocalizedText> DescriptionProvider { get; set; }
 
     /// <summary>
     ///     Provides the config side of the entry.
     /// </summary>
-    public Func<ConfigSide>? ConfigSideProvider { get; set; }
+    public Provider<ConfigSide> ConfigSideProvider { get; set; }
 
     /// <summary>
     ///     Provides the categories of the entry.
     /// </summary>
-    public Func<IEnumerable<ConfigCategoryHandle>>? CategoriesProvider { get; set; }
+    public Provider<IEnumerable<ConfigCategoryHandle>> CategoriesProvider { get; set; }
+
+    /// <summary>
+    ///     Provides the default value of the entry.
+    /// </summary>
+    public Provider<T?> DefaultValueProvider { get; set; }
+
+    /// <summary>
+    ///     Provides control over getting and setting the local value of an
+    ///     entry.
+    /// </summary>
+    public (Getter Getter, Setter Setter)? LocalValueProvider { get; set; }
+
+    /// <summary>
+    ///     Provides control over getting and setting the remote value of an
+    ///     entry.
+    /// </summary>
+    public (Getter Getter, Setter Setter)? RemoteValueProvider { get; set; }
 
     /// <summary>
     ///     Provides the display name of the entry.
     /// </summary>
-    public ConfigEntryDescriptor<T> WithDisplayName(Func<LocalizedText>? displayNameProvider)
+    public ConfigEntryDescriptor<T> WithDisplayName(Provider<LocalizedText> displayNameProvider)
     {
         DisplayNameProvider = displayNameProvider;
         return this;
@@ -274,63 +383,27 @@ public sealed class ConfigEntryDescriptor<T>
     /// <summary>
     ///     Provides the display name of the entry.
     /// </summary>
-    public ConfigEntryDescriptor<T> WithDisplayName(LocalizedText displayName)
-    {
-        DisplayNameProvider = () => displayName;
-        return this;
-    }
-
-    /// <summary>
-    ///     Provides the display name of the entry.
-    /// </summary>
-    public ConfigEntryDescriptor<T> WithTooltip(Func<LocalizedText>? tooltipProvider)
+    public ConfigEntryDescriptor<T> WithTooltip(Provider<LocalizedText> tooltipProvider)
     {
         TooltipProvider = tooltipProvider;
         return this;
     }
 
     /// <summary>
-    ///     Provides the tooltip of the entry.
-    /// </summary>
-    public ConfigEntryDescriptor<T> WithTooltip(LocalizedText tooltip)
-    {
-        TooltipProvider = () => tooltip;
-        return this;
-    }
-
-    /// <summary>
     ///     Provides the description of the entry.
     /// </summary>
-    public ConfigEntryDescriptor<T> WithDescription(Func<LocalizedText>? descriptionProvider)
+    public ConfigEntryDescriptor<T> WithDescription(Provider<LocalizedText> descriptionProvider)
     {
         DescriptionProvider = descriptionProvider;
         return this;
     }
 
     /// <summary>
-    ///     Provides the description of the entry.
-    /// </summary>
-    public ConfigEntryDescriptor<T> WithDescription(LocalizedText description)
-    {
-        DescriptionProvider = () => description;
-        return this;
-    }
-
-    /// <summary>
     ///     Provides the config side of the entry.
     /// </summary>
-    public ConfigEntryDescriptor<T> WithConfigSide(Func<ConfigSide>? configSideProvider)
+    public ConfigEntryDescriptor<T> WithConfigSide(Provider<ConfigSide> configSideProvider)
     {
         ConfigSideProvider = configSideProvider;
-        return this;
-    }
-
-    /// <summary>
-    ///     Provides the config side of the entry.
-    /// </summary>
-    public ConfigEntryDescriptor<T> WithConfigSide(ConfigSide configSide)
-    {
-        ConfigSideProvider = () => configSide;
         return this;
     }
 
@@ -339,8 +412,42 @@ public sealed class ConfigEntryDescriptor<T>
     /// </summary>
     public ConfigEntryDescriptor<T> WithCategories(params ConfigCategoryHandle[] categories)
     {
-        CategoriesProvider = () => categories;
+        CategoriesProvider = new Provider<IEnumerable<ConfigCategoryHandle>>(_ => categories.AsEnumerable());
         return this;
+    }
+
+    /// <summary>
+    ///     Provides the default value of the entry.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithDefaultValue(Provider<T?> defaultValueProvider)
+    {
+        DefaultValueProvider = defaultValueProvider;
+        return this;
+    }
+
+    /// <summary>
+    ///     Provides control over getting and setting the remote value of an
+    ///     entry.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithLocalValueProvider(
+        Getter getter,
+        Setter setter
+    )
+    {
+        LocalValueProvider = (getter, setter);
+        return this;
+    }
+
+    /// <summary>
+    ///     Provides control over getting and setting the remote value of an
+    ///     entry.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithLocalValueProvider(RefProvider provider)
+    {
+        return WithLocalValueProvider(
+            getter: _ => provider(),
+            setter: (_, value) => provider() = value
+        );
     }
 
     /// <summary>
