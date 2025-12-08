@@ -88,14 +88,20 @@ public interface IConfigEntry
     object? RemoteValue { get; set; }
 
     /// <summary>
+    ///     If an entry is queued to be modified, this value will be populated
+    ///     with the new value.
+    /// </summary>
+    object? PendingValue { get; set; }
+
+    /// <summary>
     ///     The default value.
     /// </summary>
     object? DefaultValue { get; }
 
     /// <summary>
-    ///     Whether this entry's value has been modified.
+    ///     Whether this entry's value does not match its pending value.
     /// </summary>
-    bool Dirty { get; set; }
+    bool Dirty { get; }
 
     /// <summary>
     ///     Whether a modification to this entry necessitates a reload.
@@ -165,6 +171,12 @@ public sealed class ConfigEntry<T>(
         set => RemoteValue = (T?)value;
     }
 
+    object? IConfigEntry.PendingValue
+    {
+        get => PendingValue;
+        set => PendingValue = (T?)value;
+    }
+
     object? IConfigEntry.DefaultValue => DefaultValue;
 
     /// <inheritdoc />
@@ -214,31 +226,28 @@ public sealed class ConfigEntry<T>(
             return LocalValue;
         }
 
-        set { LocalValue = value; }
+        set => LocalValue = value;
     }
 
     /// <inheritdoc cref="IConfigEntry.LocalValue"/>
     public T? LocalValue
     {
         get => GetValue(field, Descriptor.LocalValueProvider?.Getter);
-
-        set
-        {
-            field = SetValue(field, value, Descriptor.LocalValueProvider?.Setter);
-            MarkDirty();
-        }
+        set => field = SetValue(field, value, Descriptor.LocalValueProvider?.Setter);
     }
 
     /// <inheritdoc cref="IConfigEntry.RemoteValue"/>
     public T? RemoteValue
     {
         get => GetValue(field, Descriptor.RemoteValueProvider?.Getter);
+        set => field = SetValue(field, value, Descriptor.RemoteValueProvider?.Setter);
+    }
 
-        set
-        {
-            field = SetValue(field, value, Descriptor.RemoteValueProvider?.Setter);
-            MarkDirty();
-        }
+    /// <inheritdoc cref="IConfigEntry.PendingValue"/>
+    public T? PendingValue
+    {
+        get => GetValue(field, Descriptor.PendingValueProvider?.Getter);
+        set => field = SetValue(field, value, Descriptor.PendingValueProvider?.Setter);
     }
 
     // The compiler doesn't know how to lift a conditional access
@@ -249,9 +258,13 @@ public sealed class ConfigEntry<T>(
             ? provider.Invoke(this)
             : default(T);
 
-    public bool Dirty { get; set; }
+    /// <inheritdoc />
+    public bool Dirty =>
+        Descriptor.DirtiedProvider.Function?.Invoke(this) ?? !Equals(LocalValue, PendingValue);
 
-    public bool ReloadRequired { get; }
+    /// <inheritdoc />
+    public bool ReloadRequired =>
+        Descriptor.ReloadRequiredProvider.Function?.Invoke(this) ?? false;
 
     private T? GetValue(T? storedValue, ConfigEntryDescriptor<T>.Getter? getter)
     {
@@ -272,8 +285,6 @@ public sealed class ConfigEntry<T>(
 
         return incomingValue;
     }
-
-    private void MarkDirty() { }
 
     private static ConfigSide ConfigSideFromModSide(ModSide modSide)
     {
@@ -396,6 +407,12 @@ public sealed class ConfigEntryDescriptor<T>
     public (Getter Getter, Setter Setter)? RemoteValueProvider { get; set; }
 
     /// <summary>
+    ///     Provides control over getting and setting the pending value of an
+    ///     entry.
+    /// </summary>
+    public (Getter Getter, Setter Setter)? PendingValueProvider { get; set; }
+
+    /// <summary>
     ///     Provides control over determining whether a value has been dirtied.
     /// </summary>
     public Provider<bool> DirtiedProvider { get; set; }
@@ -461,7 +478,7 @@ public sealed class ConfigEntryDescriptor<T>
     }
 
     /// <summary>
-    ///     Provides control over getting and setting the remote value of an
+    ///     Provides control over getting and setting the local value of an
     ///     entry.
     /// </summary>
     public ConfigEntryDescriptor<T> WithLocalValueProvider(
@@ -471,6 +488,68 @@ public sealed class ConfigEntryDescriptor<T>
     {
         LocalValueProvider = (getter, setter);
         return this;
+    }
+
+    /// <summary>
+    ///     Provides control over getting and setting the local value of an
+    ///     entry.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithLocalValueProvider(RefProvider provider)
+    {
+        return WithLocalValueProvider(
+            getter: _ => provider(),
+            setter: (_, value) => provider() = value
+        );
+    }
+
+    /// <summary>
+    ///     Provides control over getting and setting the remote value of an
+    ///     entry.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithRemoteValueProvider(
+        Getter getter,
+        Setter setter
+    )
+    {
+        RemoteValueProvider = (getter, setter);
+        return this;
+    }
+
+    /// <summary>
+    ///     Provides control over getting and setting the remote value of an
+    ///     entry.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithRemoteValueProvider(RefProvider provider)
+    {
+        return WithRemoteValueProvider(
+            getter: _ => provider(),
+            setter: (_, value) => provider() = value
+        );
+    }
+
+    /// <summary>
+    ///     Provides control over getting and setting the pending value of an
+    ///     entry.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithPendingValueProvider(
+        Getter getter,
+        Setter setter
+    )
+    {
+        PendingValueProvider = (getter, setter);
+        return this;
+    }
+
+    /// <summary>
+    ///     Provides control over getting and setting the pending value of an
+    ///     entry.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithLPendingValueProvider(RefProvider provider)
+    {
+        return WithPendingValueProvider(
+            getter: _ => provider(),
+            setter: (_, value) => provider() = value
+        );
     }
 
     /// <summary>
@@ -500,18 +579,6 @@ public sealed class ConfigEntryDescriptor<T>
     {
         ReloadRequiredProvider = new Provider<bool>(entry => entry.Dirty);
         return this;
-    }
-
-    /// <summary>
-    ///     Provides control over getting and setting the remote value of an
-    ///     entry.
-    /// </summary>
-    public ConfigEntryDescriptor<T> WithLocalValueProvider(RefProvider provider)
-    {
-        return WithLocalValueProvider(
-            getter: _ => provider(),
-            setter: (_, value) => provider() = value
-        );
     }
 
     /// <summary>
