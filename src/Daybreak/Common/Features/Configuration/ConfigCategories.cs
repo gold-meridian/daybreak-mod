@@ -11,14 +11,23 @@ namespace Daybreak.Common.Features.Configuration;
 ///     of other mods, and can be used to inspect the status of a category
 ///     without requiring it be registered.
 /// </summary>
-public readonly struct ConfigCategoryHandle
+public readonly record struct ConfigCategoryHandle(
+    ConfigRepository Repository,
+    Mod? Mod,
+    string Name
+)
 {
+    /// <summary>
+    ///     The config repository that should own this category.
+    /// </summary>
+    public ConfigRepository Repository { get; } = Repository;
+
     /// <summary>
     ///     The mod this category belongs to.  If the mod is
     ///     <see langword="null"/>, then this category is considered as belonging
     ///     to vanilla.
     /// </summary>
-    public Mod? Mod { get; private init; }
+    public Mod? Mod { get; } = Mod;
 
     /// <summary>
     ///     The unique key which identifies this category (sub-categorized with
@@ -27,13 +36,7 @@ public readonly struct ConfigCategoryHandle
     ///     This key should <b>not</b> contain the mod name. The key needs to
     ///     only be unique when compared against other keys in the same mod.
     /// </summary>
-    public string Name { get; private init; } = string.Empty;
-
-    internal ConfigCategoryHandle(Mod? mod, string name)
-    {
-        Mod = mod;
-        Name = name;
-    }
+    public string Name { get; } = Name;
 }
 
 /// <summary>
@@ -61,7 +64,7 @@ public sealed class ConfigCategory : ILocalizedModType
 
     string IModType.Name => Id.Name;
 
-    string IModType.FullName => $"{Id.Mod?.Name ?? "Terraria"}/{Id.Name}";
+    string IModType.FullName => $"{ConfigRepository.GetModName(Id.Mod)}.{Id.Name}";
 
     internal ConfigCategory(ConfigCategoryHandle handle, LocalizedText? displayName)
     {

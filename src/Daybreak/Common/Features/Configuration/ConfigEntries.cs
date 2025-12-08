@@ -11,14 +11,23 @@ namespace Daybreak.Common.Features.Configuration;
 ///     of other mods, and can be used to inspect the status of an entry without
 ///     requiring it be registered.
 /// </summary>
-public readonly struct ConfigEntryHandle
+public readonly record struct ConfigEntryHandle(
+    ConfigRepository Repository,
+    Mod? Mod,
+    string Name
+)
 {
+    /// <summary>
+    ///     The config repository that should own this entry.
+    /// </summary>
+    public ConfigRepository Repository { get; } = Repository;
+
     /// <summary>
     ///     The mod this entry belongs to.  If the mod is
     ///     <see langword="null"/>, then this entry is considered as belonging
     ///     to vanilla.
     /// </summary>
-    public Mod? Mod { get; private init; }
+    public Mod? Mod { get; } = Mod;
 
     /// <summary>
     ///     The unique key which identifies this entry (sub-categorized with
@@ -27,13 +36,7 @@ public readonly struct ConfigEntryHandle
     ///     This key should <b>not</b> contain the mod name. The key needs to
     ///     only be unique when compared against other keys in the same mod.
     /// </summary>
-    public string Name { get; private init; } = string.Empty;
-
-    internal ConfigEntryHandle(Mod? mod, string name)
-    {
-        Mod = mod;
-        Name = name;
-    }
+    public string Name { get; } = Name;
 }
 
 /// <summary>
@@ -78,6 +81,12 @@ public interface IConfigEntry<T> : IConfigEntry
 /// </summary>
 public interface IConfigEntry : ILocalizedModType
 {
+    Mod? IModType.Mod => Id.Mod;
+
+    string IModType.Name => Id.Name;
+
+    string IModType.FullName => $"{ConfigRepository.GetModName(Id.Mod)}.{Id.Name}";
+    
     /// <summary>
     ///     The config entry handle which may be used to uniquely identify this
     ///     entry and obtain it as necessary.
