@@ -40,28 +40,6 @@ public readonly record struct ConfigCategoryHandle(
     public string Name { get; } = Name;
 }
 
-public sealed class ConfigCategoryDescriptor()
-{
-    public Func<LocalizedText>? DisplayNameProvider { get; set; }
-
-    public ConfigCategoryDescriptor WithDisplayName(Func<LocalizedText>? displayNameProvider)
-    {
-        DisplayNameProvider = displayNameProvider;
-        return this;
-    }
-
-    public ConfigCategoryDescriptor WithDisplayName(LocalizedText displayName)
-    {
-        DisplayNameProvider = () => displayName;
-        return this;
-    }
-
-    public ConfigCategory Register(ConfigRepository repository, Mod? mod, string uniqueKey)
-    {
-        return repository.CreateCategory(this, mod, uniqueKey);
-    }
-}
-
 /// <summary>
 ///     Represents a config category, which is akin to a base
 ///     <see cref="ModConfig"/> definition.  Mods may have top-level categories
@@ -88,5 +66,32 @@ public sealed class ConfigCategory(ConfigCategoryHandle handle, ConfigCategoryDe
     public static implicit operator ConfigCategoryHandle(ConfigCategory category)
     {
         return category.Handle;
+    }
+}
+
+public sealed class ConfigCategoryDescriptor
+{
+    public Func<LocalizedText>? DisplayNameProvider { get; set; }
+
+    public ConfigCategoryDescriptor WithDisplayName(Func<LocalizedText>? displayNameProvider)
+    {
+        DisplayNameProvider = displayNameProvider;
+        return this;
+    }
+
+    public ConfigCategoryDescriptor WithDisplayName(LocalizedText displayName)
+    {
+        DisplayNameProvider = () => displayName;
+        return this;
+    }
+
+    public ConfigCategory Register(ConfigRepository repository, Mod? mod, string uniqueKey)
+    {
+        return repository.RegisterCategory(
+            new ConfigCategory(
+                new ConfigCategoryHandle(repository, mod, uniqueKey),
+                this
+            )
+        );
     }
 }

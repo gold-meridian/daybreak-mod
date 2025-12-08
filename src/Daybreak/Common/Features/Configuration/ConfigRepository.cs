@@ -28,25 +28,15 @@ public abstract class ConfigRepository
         return new ConfigEntryHandle(this, mod, uniqueKey);
     }
 
-    public ConfigCategory CreateCategory(
-        ConfigCategoryDescriptor descriptor,
-        Mod? mod,
-        string uniqueKey
-    )
+    public ConfigCategory RegisterCategory(ConfigCategory category)
     {
-        var categories = GetCategories(mod);
-        if (categories.ContainsKey(uniqueKey))
+        var categories = GetCategories(category.Handle.Mod);
+        if (categories.ContainsKey(category.Handle.Name))
         {
-            throw new InvalidOperationException($"Cannot create category \"{uniqueKey}\" for mod \"{LanguageHelpers.GetModName(mod)}\" because a category of the same name already exists!");
+            throw new InvalidOperationException($"Cannot create category \"{category.Handle.Name}\" for mod \"{LanguageHelpers.GetModName(category.Handle.Mod)}\" because a category of the same name already exists!");
         }
 
-        var category = categories[uniqueKey] = new ConfigCategory(
-            GetCategoryHandle(mod, uniqueKey),
-            descriptor
-        );
-        {
-            _ = category.DisplayName;
-        }
+        _ = category.DisplayName;
 
         return category;
     }
