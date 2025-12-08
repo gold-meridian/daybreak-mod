@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -71,19 +72,10 @@ public interface IConfigEntry
     ///     provides.  If this value is not synced, it will solely use the local
     ///     value provided by this instance.
     ///     <br />
-    ///     Attempting to set this value will queue it to
-    ///     <see cref="PendingValue"/>, as would any modifications made by a
-    ///     user when interfacing with this entry in a config UI.
-    ///     <br />
-    ///     If a <see cref="PendingValue"/> is queued and the value being used
-    ///     is the <see cref="LocalValue"/>, <see cref="PendingValue"/> will be
-    ///     preferred.
-    ///     <br />
-    ///     This functionally allows you to override the config value as needed,
-    ///     but this change will only be reflected in serialization and
-    ///     synchronization when the config is specifically told to save itself.
+    ///     This value cannot be directly modified, you should queue your
+    ///     changes to <see cref="PendingValue"/> and commit them.
     /// </summary>
-    object? Value { get; set; }
+    object? Value { get; }
 
     /// <summary>
     ///     The config value local to this instance.  Multiplayer clients,
@@ -98,8 +90,8 @@ public interface IConfigEntry
     object? RemoteValue { get; set; }
 
     /// <summary>
-    ///     This is the most up-to-date representation of the local value of the
-    ///     config entry.
+    ///     The pending value represents the future state of a config entry, and
+    ///     is stored until it is committed as a real value.
     ///     <br />
     ///     This should be kept up-to-date with <see cref="LocalValue"/> if it's
     ///     changed, and is preferred over <see cref="LocalValue"/> when
@@ -167,11 +159,7 @@ public sealed class ConfigEntry<T>(
 {
     Type IConfigEntry.ValueType => typeof(T);
 
-    object? IConfigEntry.Value
-    {
-        get => Value;
-        set => Value = (T?)value;
-    }
+    object? IConfigEntry.Value => Value;
 
     object? IConfigEntry.LocalValue
     {
@@ -244,8 +232,6 @@ public sealed class ConfigEntry<T>(
 
             return LocalValue;
         }
-
-        set => PendingValue = value;
     }
 
     /// <inheritdoc cref="IConfigEntry.LocalValue"/>
@@ -603,7 +589,11 @@ public sealed class ConfigEntryDescriptor<T>
     /// <summary>
     ///     Creates an entry and registers the entry to the repository.
     /// </summary>
-    public ConfigEntry<T> Register(ConfigRepository repository, Mod? mod, string uniqueKey)
+    public ConfigEntry<T> Register(
+        ConfigRepository repository,
+        Mod? mod,
+        [CallerMemberName] string uniqueKey = ""
+    )
     {
         return repository.RegisterEntry(
             new ConfigEntry<T>(

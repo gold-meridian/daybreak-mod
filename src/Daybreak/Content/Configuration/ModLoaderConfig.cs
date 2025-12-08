@@ -28,42 +28,42 @@ internal static class ModLoaderConfig
         public static ConfigEntry<bool> DownloadModsFromServers { get; } =
             Define(() => ref ModNet.downloadModsFromServers)
                .WithCategories(Category)
-               .Register(Config, Mod, nameof(DownloadModsFromServers));
+               .Register(Config, Mod);
 
         // bool Automatically Reload Required Mods When Leaving Mods Screen: On/Off
         public static ConfigEntry<bool> AutoReloadRequiredModsLeavingModsScreen { get; } =
             Define(() => ref ModLoader.autoReloadRequiredModsLeavingModsScreen)
                .WithCategories(Category)
-               .Register(Config, Mod, nameof(AutoReloadRequiredModsLeavingModsScreen));
+               .Register(Config, Mod);
 
         // bool Remove Forced Minimum Zoom: On/Off
         public static ConfigEntry<bool> RemoveForcedMinimumZoom { get; } =
             Define(() => ref ModLoader.removeForcedMinimumZoom)
                .WithCategories(Category)
-               .Register(Config, Mod, nameof(RemoveForcedMinimumZoom));
+               .Register(Config, Mod);
 
         // ??? Attack Speed Effect Tooltips: {}
         public static ConfigEntry<int> AttackSpeedScalingTooltipVisibility { get; } =
             Define(() => ref ModLoader.attackSpeedScalingTooltipVisibility)
                .WithCategories(Category)
-               .Register(Config, Mod, nameof(AttackSpeedScalingTooltipVisibility));
+               .Register(Config, Mod);
 
         // bool Notify When a New Main Menu Theme Is Unlocked: On/Off
         public static ConfigEntry<bool> NotifyNewMainMenuThemes { get; } =
             Define(() => ref ModLoader.notifyNewMainMenuThemes)
                .WithCategories(Category)
-               .Register(Config, Mod, nameof(NotifyNewMainMenuThemes));
+               .Register(Config, Mod);
 
         // bool Show Which Workshop Mods Updated Since Last Launch: On/Off
         public static ConfigEntry<bool> ShowNewUpdatedModsInfo { get; } =
             Define(() => ref ModLoader.showNewUpdatedModsInfo)
                .WithCategories(Category)
-               .Register(Config, Mod, nameof(ShowNewUpdatedModsInfo));
+               .Register(Config, Mod);
 
         // bool Show Confirmation Window For Enable/Disable All Mods: On/Off
         public static ConfigEntry<bool> ShowConfirmationWindowWhenEnableDisableAllMods { get; } =
             Define(() => ref ModLoader.showConfirmationWindowWhenEnableDisableAllMods)
                .WithCategories(Category)
-               .Register(Config, Mod, nameof(ShowConfirmationWindowWhenEnableDisableAllMods));
+               .Register(Config, Mod);
     }
 }

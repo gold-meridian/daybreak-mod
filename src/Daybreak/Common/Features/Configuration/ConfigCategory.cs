@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
@@ -110,7 +111,11 @@ public sealed class ConfigCategoryDescriptor
     /// <summary>
     ///     Creates a category and registers the category to the repository.
     /// </summary>
-    public ConfigCategory Register(ConfigRepository repository, Mod? mod, string uniqueKey)
+    public ConfigCategory Register(
+        ConfigRepository repository,
+        Mod? mod,
+        [CallerMemberName] string uniqueKey = ""
+    )
     {
         return repository.RegisterCategory(
             new ConfigCategory(
