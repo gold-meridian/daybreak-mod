@@ -1,15 +1,17 @@
-﻿using Daybreak.Common.Features.Configuration;
+﻿using System;
+using Daybreak.Common.Features.Configuration;
 using Terraria.ModLoader;
 
 namespace Daybreak.Content.Configuration;
 
 internal static class ModLoaderConfig
 {
-    private static Mod Mod => ModLoader.GetMod("ModLoaderMod");
+    private static Mod Mod => ModLoader.GetMod("ModLoader");
 
     private static ConfigRepository Config => ConfigRepository.Default;
 
     private static ConfigEntryDescriptor<T> Define<T>(ConfigEntryDescriptor<T>.RefProvider value)
+        where T : IEquatable<T>
     {
         return new ConfigEntryDescriptor<T>()
               .WithConfigSide(ConfigSide.NoSync)

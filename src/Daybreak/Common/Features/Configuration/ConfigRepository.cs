@@ -34,7 +34,7 @@ public abstract class ConfigRepository
         /// <inheritdoc />
         public EntryKey(IConfigEntry entry) : this(entry.Handle) { }
     }
-    
+
     private static readonly DefaultConfigRepository default_repository = new();
 
     /// <summary>
@@ -110,6 +110,7 @@ public abstract class ConfigRepository
     ///     Gets an entry owned by this repository.
     /// </summary>
     public virtual ConfigEntry<T> GetEntry<T>(ConfigEntryHandle handle)
+        where T : IEquatable<T>
     {
         return GetEntry(handle) as ConfigEntry<T>
             ?? throw new InvalidOperationException($"Entry does not wrap value of type {typeof(T)}: " + handle);
@@ -135,6 +136,7 @@ public abstract class ConfigRepository
     ///     Registers an entry as belonging to this repository.
     /// </summary>
     public virtual ConfigEntry<T> RegisterEntry<T>(ConfigEntry<T> entry)
+        where T : IEquatable<T>
     {
         if (Entries.ContainsKey(new EntryKey(entry.Handle)))
         {

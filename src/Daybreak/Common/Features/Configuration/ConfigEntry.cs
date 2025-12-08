@@ -133,6 +133,7 @@ public sealed class ConfigEntry<T>(
     ConfigEntryHandle handle,
     ConfigEntryDescriptor<T> descriptor
 ) : IConfigEntry
+    where T : IEquatable<T>
 {
     Type IConfigEntry.ValueType => typeof(T);
 
@@ -282,6 +283,7 @@ public sealed class ConfigEntry<T>(
 ///     <see cref="ConfigEntry{T}"/> with arbitrary behavior.
 /// </summary>
 public sealed class ConfigEntryDescriptor<T>
+    where T : IEquatable<T>
 {
     /// <summary>
     ///     Represents a value provider.
