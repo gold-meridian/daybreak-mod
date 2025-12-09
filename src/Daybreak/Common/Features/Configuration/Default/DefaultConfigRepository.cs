@@ -4,9 +4,14 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
+
+internal sealed class DefaultConfigState : UIState;
 
 internal sealed class DefaultConfigRepository : ConfigRepository
 {
@@ -80,5 +85,47 @@ internal sealed class DefaultConfigRepository : ConfigRepository
 
             entryTokens[entry] = ConfigSerialization.SerializeEntry(entry, ConfigSerialization.Mode.Network);
         }
+    }
+
+    public override void ShowInterface()
+    {
+        UserInterface ui;
+        if (Main.gameMenu)
+        {
+            Main.menuMode = MenuID.FancyUI;
+            ui = Main.MenuUI;
+        }
+        else
+        {
+            /*
+            Main.ClosePlayerChat();
+            Main.chatText = "";
+            Main.playerInventory = false;
+            Main.editChest = false;
+            Main.npcChatText = "";
+            */
+            IngameFancyUI.CoverNextFrame();
+            Main.playerInventory = false;
+            Main.editChest = false;
+            Main.npcChatText = "";
+            Main.inFancyUI = true;
+            IngameFancyUI.ClearChat();
+            ui = Main.InGameUI;
+        }
+
+        SoundEngine.PlaySound(10);
+        ui.SetState(new DefaultConfigState());
+    }
+
+    public override void ShowInterface(ConfigCategoryHandle categoryHandle)
+    {
+        // TODO
+        ShowInterface();
+    }
+
+    public override void ShowInterface(ConfigEntryHandle entryHandle)
+    {
+        // TODO
+        ShowInterface();
     }
 }

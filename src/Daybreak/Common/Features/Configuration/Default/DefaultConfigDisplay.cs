@@ -6,8 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Reflection;
+using MonoMod.Cil;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -31,10 +31,11 @@ internal static class DefaultConfigDisplay
 
         public static void UnloadData(Data data) { }
     }
-
+    
     // Hardcoding this is evil, but it's our only practical choice.
     private const int text_settings_menu_y_offset = 585;
 
+    private static bool daybreakOverVanillaSettings;
     private static float hoverIntensity;
 
     [OnLoad]
@@ -44,6 +45,8 @@ internal static class DefaultConfigDisplay
             typeof(MenuLoader).GetMethod(nameof(MenuLoader.UpdateAndDrawModMenu), BindingFlags.NonPublic | BindingFlags.Static)!,
             UpdateAndDrawModMenu_DrawDaybreakSettingsIcon
         );
+
+        IL_Main.DrawMenu += DrawMenu_OpenDaybreakSettingsWhenRequestingVanillaMenu;
     }
 
     private static void UpdateAndDrawModMenu_DrawDaybreakSettingsIcon(
@@ -76,9 +79,8 @@ internal static class DefaultConfigDisplay
 
             if (Main.mouseLeft && Main.mouseLeftRelease)
             {
-                SoundEngine.PlaySound(in SoundID.MenuOpen);
-
-                ConfigInterface.OpenRepository(ConfigRepository.Default);
+                daybreakOverVanillaSettings = true;
+                ConfigRepository.Default.ShowInterface();
             }
         }
 
@@ -159,5 +161,26 @@ internal static class DefaultConfigDisplay
         );
 
         spriteBatch.Restart(ss);
+    }
+
+    private static void DrawMenu_OpenDaybreakSettingsWhenRequestingVanillaMenu(ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        c.GotoNext(
+            MoveType.After,
+            x => x.MatchLdcI4(MenuID.Settings),
+            x => x.MatchStsfld<Main>(nameof(Main.menuMode))
+        );
+
+        c.EmitDelegate(
+            () =>
+            {
+                if (daybreakOverVanillaSettings)
+                {
+                    ConfigRepository.Default.ShowInterface();
+                }
+            }
+        );
     }
 }
