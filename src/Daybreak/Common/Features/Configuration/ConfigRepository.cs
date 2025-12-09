@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Daybreak.Common.Features.Hooks;
+using JetBrains.Annotations;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -7,16 +10,27 @@ namespace Daybreak.Common.Features.Configuration;
 
 /// <summary>
 ///     A config repository manages ownership of config entries and categories.
+///     <br />
+///     Repositories are responsible for tracking entries and categories as well
+///     as responding to changes in their values
+///     (<see cref="CommitPendingChanges"/>) and serializing and synchronizing
+///     them as necessary (<see cref="SerializeCategories"/>,
+///     <see cref="SynchronizeEntries"/>).
 /// </summary>
-public abstract class ConfigRepository
+public abstract class ConfigRepository : ILocalizedModType
 {
     /// <summary>
     ///     For using a nullable mod value as a key in a hashmap.
     /// </summary>
-    protected readonly record struct ModKey(Mod? Mod);
+    protected readonly record struct ModKey(
+        [UsedImplicitly] Mod? Mod
+    );
 
     /// <inheritdoc />
-    protected readonly record struct CategoryKey(Mod? Mod, string Name)
+    protected readonly record struct CategoryKey(
+        [UsedImplicitly] Mod? Mod,
+        [UsedImplicitly] string Name
+    )
     {
         /// <inheritdoc />
         public CategoryKey(ConfigCategoryHandle handle) : this(handle.Mod, handle.Name) { }
@@ -26,7 +40,10 @@ public abstract class ConfigRepository
     }
 
     /// <inheritdoc />
-    protected readonly record struct EntryKey(Mod? Mod, string Name)
+    protected readonly record struct EntryKey(
+        [UsedImplicitly] Mod? Mod,
+        [UsedImplicitly] string Name
+    )
     {
         /// <inheritdoc />
         public EntryKey(ConfigEntryHandle handle) : this(handle.Mod, handle.Name) { }
@@ -49,6 +66,33 @@ public abstract class ConfigRepository
     ///     tModLoader handles <see cref="ModConfig"/>s.
     /// </summary>
     public static ConfigRepository Default => default_repository;
+
+    [OnLoad]
+    private static void AddDefaultRepository()
+    {
+        ConfigSystem.AddRepository(Default);
+    }
+
+    /// <summary>
+    ///     The mod that owns this repository.
+    /// </summary>
+    public abstract Mod Mod { get; }
+
+    /// <summary>
+    ///     The unique name of this repository.
+    /// </summary>
+    public abstract string Name { get; }
+
+    /// <inheritdoc />
+    public string FullName => $"{Mod.Name}/{Name}";
+
+    /// <inheritdoc />
+    public virtual string LocalizationCategory => nameof(ConfigRepository);
+
+    /// <summary>
+    ///     The display name of this repository.
+    /// </summary>
+    public virtual LocalizedText DisplayName => this.GetLocalization(nameof(DisplayName), () => "Settings");
 
     /// <summary>
     ///     All categories registered to this repository.
@@ -127,7 +171,9 @@ public abstract class ConfigRepository
         }
 
         Categories[new CategoryKey(category.Handle)] = category;
-        _ = category.DisplayName;
+        {
+            _ = category.DisplayName;
+        }
 
         return category;
     }
@@ -144,12 +190,54 @@ public abstract class ConfigRepository
         }
 
         Entries[new EntryKey(entry.Handle)] = entry;
-        _ = entry.DisplayName;
-        _ = entry.Tooltip;
-        _ = entry.Description;
+        {
+            _ = entry.DisplayName;
+            _ = entry.Tooltip;
+            _ = entry.Description;
+        }
 
         return entry;
     }
+
+    /// <summary>
+    ///     Commits any pending changes to stored <see cref="Entries"/>.
+    /// </summary>
+    /// <returns>
+    ///     A list of all entries whose <see cref="IConfigEntry.LocalValue"/>s
+    ///     were updated.
+    /// </returns>
+    public virtual List<IConfigEntry> CommitPendingChanges()
+    {
+        var modifiedEntries = new List<IConfigEntry>();
+        foreach (var entry in Entries.Values)
+        {
+            if (entry.CommitPendingChanges(bulk: true))
+            {
+                modifiedEntries.Add(entry);
+            }
+        }
+
+        return modifiedEntries;
+    }
+
+    /// <summary>
+    ///     Serializes any provided categories to their files.
+    /// </summary>
+    public abstract void SerializeCategories(params ConfigCategoryHandle[] categories);
+
+    /// <summary>
+    ///     Synchronizes the given entries over the network.
+    /// </summary>
+    public abstract void SynchronizeEntries(params ConfigEntryHandle[] entries);
 }
 
-internal sealed class DefaultConfigRepository : ConfigRepository { }
+internal sealed class DefaultConfigRepository : ConfigRepository
+{
+    public override Mod Mod => ModContent.GetInstance<ModImpl>();
+
+    public override string Name => "Settings";
+
+    public override void SerializeCategories(params ConfigCategoryHandle[] categories) { }
+
+    public override void SynchronizeEntries(params ConfigEntryHandle[] entries) { }
+}

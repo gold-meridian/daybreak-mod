@@ -146,6 +146,38 @@ public interface IConfigEntry
     ///     <see cref="Categories"/>.
     /// </summary>
     ConfigCategoryHandle MainCategory => Categories[0];
+
+    /// <summary>
+    ///     Commits pending changes from <see cref="PendingValue"/> to
+    ///     <see cref="LocalValue"/> if they are not already equal.
+    ///     <br />
+    ///     This triggers the owning <see cref="ConfigRepository"/> to save and
+    ///     synchronize itself as necessary to reflect these changes.
+    /// </summary>
+    /// <param name="bulk">
+    ///     Whether this pending commit change is part of a bulk operation over
+    ///     the entire <see cref="ConfigRepository"/>.
+    ///     <br />
+    ///     If you have made a single change to this entry and nothing else,
+    ///     <paramref name="bulk"/> should be <see langword="false"/>.  If you
+    ///     have, for example, modified many values through a UI, you should use
+    ///     <see cref="ConfigRepository.CommitPendingChanges"/>, which will call
+    ///     <see cref="CommitPendingChanges"/> on all of its entries with
+    ///     <paramref name="bulk"/> set to <see langword="true"/>.  This allows
+    ///     you to differentiate between different kinds of commit operations.
+    /// </param>
+    /// <returns>
+    ///     Whether an observable change has occured to <see cref="LocalValue"/>
+    ///     based on the value of <see cref="PendingValue"/>, necessitating this
+    ///     value to be synchronized and overwritten as necessary.
+    /// </returns>
+    /// <remarks>
+    ///     <see cref="CommitPendingChanges"/> may be called despite no changes
+    ///     between <see cref="PendingValue"/> and <see cref="LocalValue"/>.  It
+    ///     is expected in this scenario to make no observable changes and to
+    ///     return <see langword="false"/>.
+    /// </remarks>
+    bool CommitPendingChanges(bool bulk);
 }
 
 /// <summary>
@@ -220,17 +252,26 @@ public sealed class ConfigEntry<T>(
     {
         get
         {
+            T? value;
             if (Side == ConfigSide.Both && Main.netMode == NetmodeID.MultiplayerClient)
             {
-                return RemoteValue;
+                value = RemoteValue;
             }
-
-            if (!Equals(LocalValue, PendingValue))
+            else if (!Equals(LocalValue, PendingValue))
             {
-                return PendingValue;
+                value = PendingValue;
+            }
+            else
+            {
+                value = LocalValue;
             }
 
-            return LocalValue;
+            if (Descriptor.ValueProvider is { } valueProvider)
+            {
+                return valueProvider(value);
+            }
+
+            return value;
         }
     }
 
@@ -289,6 +330,23 @@ public sealed class ConfigEntry<T>(
         }
 
         return incomingValue;
+    }
+    
+    /// <inheritdoc />
+    public bool CommitPendingChanges(bool bulk)
+    {
+        var dirty = Dirty;
+        {
+            LocalValue = PendingValue;
+        }
+
+        if (dirty && !bulk)
+        {
+            Handle.Repository.SerializeCategories(((IConfigEntry)this).MainCategory);
+            Handle.Repository.SynchronizeEntries(Handle);
+        }
+        
+        return dirty;
     }
 
     private static ConfigSide ConfigSideFromModSide(ModSide modSide)
@@ -416,6 +474,12 @@ public sealed class ConfigEntryDescriptor<T>
     ///     entry.
     /// </summary>
     public (Getter Getter, Setter Setter)? PendingValueProvider { get; set; }
+
+    /// <summary>
+    ///     Provides control over the observable value of the entry (without
+    ///     modifying the underlying value).
+    /// </summary>
+    public Getter? ValueProvider { get; set; }
 
     /// <summary>
     ///     Provides control over determining whether a value has been dirtied.
@@ -549,12 +613,22 @@ public sealed class ConfigEntryDescriptor<T>
     ///     Provides control over getting and setting the pending value of an
     ///     entry.
     /// </summary>
-    public ConfigEntryDescriptor<T> WithLPendingValueProvider(RefProvider provider)
+    public ConfigEntryDescriptor<T> WithPendingValueProvider(RefProvider provider)
     {
         return WithPendingValueProvider(
             getter: _ => provider(),
             setter: (_, value) => provider() = value
         );
+    }
+
+    /// <summary>
+    ///     Provides control over the observable value of the entry (without
+    ///     modifying the underlying value).
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithValueProvider(Getter getter)
+    {
+        ValueProvider = getter;
+        return this;
     }
 
     /// <summary>
