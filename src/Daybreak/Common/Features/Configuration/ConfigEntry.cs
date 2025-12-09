@@ -149,7 +149,7 @@ public interface IConfigEntry
 
     /// <summary>
     ///     Commits pending changes from <see cref="PendingValue"/> to
-    ///     <see cref="LocalValue"/> if they are not already equal.
+    ///     <see cref="LocalValue"/>.
     ///     <br />
     ///     This triggers the owning <see cref="ConfigRepository"/> to save and
     ///     synchronize itself as necessary to reflect these changes.
@@ -158,18 +158,18 @@ public interface IConfigEntry
     ///     Whether this pending commit change is part of a bulk operation over
     ///     the entire <see cref="ConfigRepository"/>.
     ///     <br />
-    ///     If you have made a single change to this entry and nothing else,
-    ///     <paramref name="bulk"/> should be <see langword="false"/>.  If you
-    ///     have, for example, modified many values through a UI, you should use
-    ///     <see cref="ConfigRepository.CommitPendingChanges"/>, which will call
-    ///     <see cref="CommitPendingChanges"/> on all of its entries with
-    ///     <paramref name="bulk"/> set to <see langword="true"/>.  This allows
-    ///     you to differentiate between different kinds of commit operations.
+    ///     If this value is <see langword="true"/>, only values should be
+    ///     updated.
+    ///     <br />
+    ///     If this value is <see langword="false"/>, it is valid to manually
+    ///     call <see cref="ConfigRepository.SerializeCategories"/> and
+    ///     <see cref="ConfigRepository.SynchronizeEntries"/>.
     /// </param>
     /// <returns>
     ///     Whether an observable change has occured to <see cref="LocalValue"/>
     ///     based on the value of <see cref="PendingValue"/>, necessitating this
-    ///     value to be synchronized and overwritten as necessary.
+    ///     value to be synchronized and overwritten in a
+    ///     <paramref name="bulk"/> operation.
     /// </returns>
     /// <remarks>
     ///     <see cref="CommitPendingChanges"/> may be called despite no changes
