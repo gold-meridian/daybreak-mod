@@ -4,4 +4,10 @@ AuthorTags: {
 	Tomat.DisplayName: tomat
 }
 
-UI.ModIcon.ModName: DAYBREAK
+UI: {
+    ModIcon.ModName: DAYBREAK
+    
+    SwitchToDaybreak: Switch to the DAYBREAK settings UI
+    SwitchToVanilla: Switch to the Vanilla settings UI
+    SwitchToModLoader: Switch to the tModLoader settings UI
+}
