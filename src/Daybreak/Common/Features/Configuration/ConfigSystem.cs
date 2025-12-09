@@ -34,6 +34,22 @@ public static class ConfigSystem
         }
     }
 
+    public static ConfigRepository GetRepository<T>() where T : ConfigRepository
+    {
+        foreach (var item in repositories_by_mod)
+        {
+            foreach (var item1 in item.Value)
+            {
+                if (item1.Value is T)
+                {
+                    return item1.Value;
+                }
+            }
+        }
+
+        return ConfigRepository.Default;
+    }
+
     /// <summary>
     ///     Attempts to get a config repository by its owning mod and name.
     /// </summary>
