@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using Daybreak.Common.Features.Hooks;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Core;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -46,4 +51,49 @@ public static class ConfigSystem
         repository = null;
         return false;
     }
+
+    [OnLoad]
+    private static void AddDefaultRepository()
+    {
+        AddRepository(ConfigRepository.Default);
+    }
+
+#pragma warning disable CA2255
+    [ModuleInitializer]
+    internal static void InitializeConfigEntries()
+    {
+        HookLoader.OnEarlyModLoad += mod =>
+        {
+            if (mod.Code is not { } asm)
+            {
+                return;
+            }
+
+            try
+            {
+                foreach (var type in AssemblyManager.GetLoadableTypes(asm))
+                {
+                    if (type.IsEnum)
+                    {
+                        continue;
+                    }
+
+                    var hasEntries = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+                                         .Any(x => typeof(IConfigEntry).IsAssignableFrom(x.FieldType));
+                    hasEntries |= type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+                                      .Any(x => typeof(IConfigEntry).IsAssignableFrom(x.PropertyType));
+
+                    if (hasEntries)
+                    {
+                        RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"DAYBREAK: Failed to run static constructors for mod \"{mod.Name}\" to initialize config fields", e);
+            }
+        };
+    }
+#pragma warning restore CA2255
 }

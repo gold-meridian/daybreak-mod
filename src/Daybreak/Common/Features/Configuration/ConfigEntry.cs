@@ -43,7 +43,7 @@ public readonly record struct ConfigEntryHandle(
     ///     only be unique when compared against other keys in the same mod.
     /// </summary>
     public string Name { get; } = Name;
-    
+
     /// <summary>
     ///     The full name of this handle.
     /// </summary>
@@ -256,10 +256,7 @@ public sealed class ConfigEntry<T> : IConfigEntry
      ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigEntry<>), nameof(Description), () => "");
 
     /// <inheritdoc />
-    public ConfigCategoryHandle[] Categories =>
-        Descriptor.CategoriesProvider.Function?.Invoke(this).ToArray() is { Length: > 1 } categories
-            ? categories
-            : throw new InvalidOperationException("Config entries must be supplied at least one category: " + Handle);
+    public ConfigCategoryHandle[] Categories { get; }
 
     /// <inheritdoc cref="IConfigEntry.Value"/>
     public T? Value
@@ -339,6 +336,9 @@ public sealed class ConfigEntry<T> : IConfigEntry
         LocalValue = DefaultValue;
         RemoteValue = DefaultValue;
         PendingValue = DefaultValue;
+        Categories = Descriptor.CategoriesProvider.Function?.Invoke(this).ToArray() is { Length: >= 1 } categories
+            ? categories
+            : throw new InvalidOperationException("Config entries must be supplied at least one category: " + Handle);
     }
 
     private T? GetValue(T? storedValue, ConfigEntryDescriptor<T>.Getter? getter)

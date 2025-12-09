@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using Daybreak.Common.Features.Hooks;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using Terraria;
@@ -72,12 +71,6 @@ public abstract class ConfigRepository : ILocalizedModType
     ///     tModLoader handles <see cref="ModConfig"/>s.
     /// </summary>
     public static ConfigRepository Default => default_repository;
-
-    [OnLoad]
-    private static void AddDefaultRepository()
-    {
-        ConfigSystem.AddRepository(Default);
-    }
 
     /// <summary>
     ///     The mod that owns this repository.
@@ -334,6 +327,10 @@ internal sealed class DefaultConfigRepository : ConfigRepository
                 )
             );
         }
+
+        // TODO: Put this in the UI when we make it.
+        // Main.Configuration.Save();
+        // Also remember to handle dirtied ModConfigs...
     }
 
     public override void SynchronizeEntries(params ConfigEntryHandle[] entries)
