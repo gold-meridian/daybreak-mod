@@ -1,12 +1,14 @@
-﻿using System;
-using System.Reflection;
+﻿using Daybreak.Common.Features.Configuration.UI;
 using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Features.Models;
 using Daybreak.Common.Rendering;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Reflection;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -75,7 +77,9 @@ internal static class DefaultConfigDisplay
 
             if (Main.mouseLeft && Main.mouseLeftRelease)
             {
-                // TODO: here you go zoe
+                SoundEngine.PlaySound(in SoundID.MenuOpen);
+
+                ConfigInterface.EnterRepository(ConfigRepository.Default);
             }
         }
 
