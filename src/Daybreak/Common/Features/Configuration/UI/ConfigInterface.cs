@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace Daybreak.Common.Features.Configuration;
+namespace Daybreak.Common.Features.Configuration.UI;
 
 public static class ConfigInterface
 {
@@ -24,13 +24,11 @@ public static class ConfigInterface
             i => i.MatchLdcI4(MenuID.Settings),
             i => i.MatchStsfld<Main>(nameof(Main.menuMode)));
 
-        c.EmitDelegate(EnterConfigAt<DefaultConfigRepository>);
+        c.EmitDelegate(() => EnterRepository(ConfigRepository.Default));
     }
 
-    public static void EnterConfigAt<T>() where T : ConfigRepository
+    public static void EnterRepository(ConfigRepository repository)
     {
-        var repository = ConfigSystem.GetRepository<T>();
-
         Main.menuMode = MenuID.FancyUI;
 
         state.CurrentRepository = repository;
@@ -42,4 +40,6 @@ public static class ConfigInterface
 internal sealed class UIConfigInterface : UIState
 {
     public ConfigRepository? CurrentRepository;
+
+
 }
