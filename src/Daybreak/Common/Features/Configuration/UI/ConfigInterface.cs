@@ -8,8 +8,6 @@ namespace Daybreak.Common.Features.Configuration.UI;
 
 public static class ConfigInterface
 {
-    private static readonly UIConfigInterface state = new();
-
     [OnLoad]
     private static void Load()
     {
@@ -31,7 +29,7 @@ public static class ConfigInterface
     {
         Main.menuMode = MenuID.FancyUI;
 
-        state.CurrentRepository = repository;
+        var state = new UIConfigInterface(repository);
 
         Main.MenuUI.SetState(state);
     }
@@ -39,7 +37,10 @@ public static class ConfigInterface
 
 internal sealed class UIConfigInterface : UIState
 {
-    public ConfigRepository? CurrentRepository;
+    public ConfigRepository CurrentRepository;
 
-
+    public UIConfigInterface(ConfigRepository repository)
+    {
+        CurrentRepository = repository;
+    }
 }
