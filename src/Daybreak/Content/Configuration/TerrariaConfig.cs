@@ -1,4 +1,6 @@
-﻿using Daybreak.Common.Features.Configuration;
+﻿using System;
+using Daybreak.Common.Features.Configuration;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace Daybreak.Content.Configuration;
@@ -9,6 +11,14 @@ internal static class TerrariaConfig
 
     private static ConfigRepository Config => ConfigRepository.Default;
 
+    private static ConfigEntryDescriptor<T> Define<T>(ConfigEntryDescriptor<T>.RefProvider value)
+        where T : IEquatable<T>
+    {
+        return new ConfigEntryDescriptor<T>()
+              .WithConfigSide(ConfigSide.NoSync)
+              .WithLocalValueProvider(value);
+    }
+
     public static class General
     {
         public static ConfigCategory Category { get; } =
@@ -16,9 +26,90 @@ internal static class TerrariaConfig
                .Register(Config, Mod, nameof(General));
 
         // bool Autosave On/Off
+        /*
+				int num22 = 0;
+				if (autoSave)
+					array9[num22] = Lang.menu[67].Value;
+				else
+					array9[num22] = Lang.menu[68].Value;
+
+				if (selectedMenu == num22) {
+					SoundEngine.PlaySound(12);
+					if (autoSave)
+						autoSave = false;
+					else
+						autoSave = true;
+				}
+         */
+        public static ConfigEntry<bool> Autosave { get; } =
+            Define(() => ref Main.autoSave)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+        
         // bool Autopause On/Off
+        /*
+				num22++;
+				if (autoPause)
+					array9[num22] = Lang.menu[69].Value;
+				else
+					array9[num22] = Lang.menu[70].Value;
+
+				if (selectedMenu == num22) {
+					SoundEngine.PlaySound(12);
+					if (autoPause)
+						autoPause = false;
+					else
+						autoPause = true;
+				}
+         */
+        public static ConfigEntry<bool> Autopause { get; } =
+            Define(() => ref Main.autoPause)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+        
         // bool Map Enabled/Disabled
+        /*
+				num22++;
+				if (mapEnabled)
+					array9[num22] = Lang.menu[112].Value;
+				else
+					array9[num22] = Lang.menu[113].Value;
+
+				if (selectedMenu == num22) {
+					SoundEngine.PlaySound(12);
+					if (mapEnabled)
+						mapEnabled = false;
+					else
+						mapEnabled = true;
+				}
+         */
+        public static ConfigEntry<bool> MapEnabled { get; } =
+            Define(() => ref Main.mapEnabled)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+        
         // bool Passwords: Visible/Hidden
+        /*
+
+				num22++;
+				array9[num22] = (HidePassword ? Lang.menu[212].Value : Lang.menu[211].Value);
+				if (selectedMenu == num22) {
+					SoundEngine.PlaySound(12);
+					HidePassword = !HidePassword;
+				}
+
+				num22++;
+				array9[num22] = Lang.menu[5].Value;
+				if (selectedMenu == num22 || flag5) {
+					flag5 = false;
+					menuMode = 11;
+					SoundEngine.PlaySound(11);
+				}
+         */
+        public static ConfigEntry<bool> HidePassword { get; } =
+            Define(() => ref Main.HidePassword)
+               .WithCategories(Category)
+               .Register(Config, Mod);
     }
 
     public static class Interface
