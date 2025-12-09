@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
 using JetBrains.Annotations;
-using Newtonsoft.Json.Linq;
-using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
@@ -284,79 +279,20 @@ public abstract class ConfigRepository : ILocalizedModType
     ///     Synchronizes the given entries over the network.
     /// </summary>
     public abstract void SynchronizeEntries(params ConfigEntryHandle[] entries);
-}
 
-internal sealed class DefaultConfigRepository : ConfigRepository
-{
-    public override Mod Mod => ModContent.GetInstance<ModImpl>();
+    /// <summary>
+    ///     Opens the associated UI.
+    /// </summary>
+    public abstract void ShowInterface();
+    
+    /// <summary>
+    ///     Opens the associated UI and goes to the requested category.
+    /// </summary>
+    public abstract void ShowInterface(ConfigCategoryHandle categoryHandle);
 
-    public override string Name => "Settings";
-
-    private static string ConfigsDirectory => Path.Combine(Main.SavePath, "daybreak", "configs");
-
-    public override void SerializeCategories(params ConfigCategoryHandle[] categories)
-    {
-        if (categories.Length == 0)
-        {
-            return;
-        }
-
-        var dir = ConfigsDirectory;
-        {
-            Directory.CreateDirectory(dir);
-        }
-
-        foreach (var categoryHandle in categories)
-        {
-            Debug.Assert(categoryHandle.Repository == this);
-
-            if (!TryGetCategory(categoryHandle, out var category))
-            {
-                Debug.Fail($"Category was not found: repo=({FullName}) category=({categoryHandle})");
-                continue;
-            }
-
-            var fileName = $"{LanguageHelpers.GetModName(categoryHandle.Mod)}_{categoryHandle.Name}.json";
-            File.WriteAllText(
-                Path.Combine(dir, fileName),
-                ConfigSerialization.SerializeCategory(
-                    this,
-                    category,
-                    ConfigSerialization.Mode.File,
-                    Entries.Values.Where(x => x.MainCategory == categoryHandle)
-                )
-            );
-        }
-
-        // TODO: Put this in the UI when we make it.
-        // Main.Configuration.Save();
-        // Also remember to handle dirtied ModConfigs...
-    }
-
-    public override void SynchronizeEntries(params ConfigEntryHandle[] entries)
-    {
-        if (entries.Length == 0)
-        {
-            return;
-        }
-
-        var entryTokens = new Dictionary<IConfigEntry, JToken>();
-        foreach (var entryHandle in entries)
-        {
-            Debug.Assert(entryHandle.Repository == this);
-
-            if (!TryGetEntry(entryHandle, out var entry))
-            {
-                Debug.Fail($"Entry was not found: repo=({FullName}) entry=({entryHandle})");
-                continue;
-            }
-
-            if (entry.Side != ConfigSide.Both)
-            {
-                continue;
-            }
-
-            entryTokens[entry] = ConfigSerialization.SerializeEntry(entry, ConfigSerialization.Mode.Network);
-        }
-    }
+    /// <summary>
+    ///     Opens the associated UI and goe sot the requested entry with the
+    ///     page set to its main category.
+    /// </summary>
+    public abstract void ShowInterface(ConfigEntryHandle entryHandle);
 }

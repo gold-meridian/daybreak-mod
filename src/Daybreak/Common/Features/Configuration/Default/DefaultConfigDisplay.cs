@@ -1,5 +1,4 @@
-﻿using Daybreak.Common.Features.Configuration.UI;
-using Daybreak.Common.Features.Hooks;
+﻿using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Features.Models;
 using Daybreak.Common.Rendering;
 using Daybreak.Core;
@@ -61,7 +60,7 @@ internal static class DefaultConfigDisplay
         var center = new Vector2(Main.screenWidth / 2f, text_settings_menu_y_offset);
         var hitbox = new Rectangle((int)center.X - 15, (int)center.Y - 15, 30, 30);
         var isHovering = Main.menuMode == MenuID.Settings && hitbox.Contains(Main.MouseScreen.ToPoint());
-        
+
         // Keep updating intensity regardless of whether we're on the menu so it
         // doesn't keep its size when exiting.
         hoverIntensity = MathHelper.Lerp(hoverIntensity, isHovering ? 1f : 0f, 0.2f);
@@ -79,7 +78,7 @@ internal static class DefaultConfigDisplay
             {
                 SoundEngine.PlaySound(in SoundID.MenuOpen);
 
-                ConfigInterface.EnterRepository(ConfigRepository.Default);
+                ConfigInterface.OpenRepository(ConfigRepository.Default);
             }
         }
 
