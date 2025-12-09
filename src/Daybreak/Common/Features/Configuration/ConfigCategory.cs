@@ -39,6 +39,11 @@ public readonly record struct ConfigCategoryHandle(
     ///     only be unique when compared against other keys in the same mod.
     /// </summary>
     public string Name { get; } = Name;
+
+    /// <summary>
+    ///     The full name of this handle.
+    /// </summary>
+    public string FullName => $"{LanguageHelpers.GetModName(Mod)}/{Name}";
 }
 
 /// <summary>

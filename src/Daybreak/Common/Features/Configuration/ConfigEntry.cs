@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Newtonsoft.Json.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -42,6 +43,11 @@ public readonly record struct ConfigEntryHandle(
     ///     only be unique when compared against other keys in the same mod.
     /// </summary>
     public string Name { get; } = Name;
+    
+    /// <summary>
+    ///     The full name of this handle.
+    /// </summary>
+    public string FullName => $"{LanguageHelpers.GetModName(Mod)}/{Name}";
 }
 
 /// <summary>
@@ -178,16 +184,24 @@ public interface IConfigEntry
     ///     return <see langword="false"/>.
     /// </remarks>
     bool CommitPendingChanges(bool bulk);
+
+    /// <summary>
+    ///     Serializes the value to a token.  If the token is
+    ///     <see langword="null"/>, then this entry is considered as providing
+    ///     no value, and it will be skipped.
+    /// </summary>
+    JToken? Serialize(ConfigSerialization.Mode mode, object? value);
+
+    /// <summary>
+    ///     Deserializes the token to a value.
+    /// </summary>
+    object? Deserialize(ConfigSerialization.Mode mode, JToken? token);
 }
 
 /// <summary>
 ///     The type-safe implementation of <see cref="IConfigEntry"/>.
 /// </summary>
-public sealed class ConfigEntry<T>(
-    ConfigEntryHandle handle,
-    ConfigEntryDescriptor<T> descriptor
-) : IConfigEntry
-    where T : IEquatable<T>
+public sealed class ConfigEntry<T> : IConfigEntry
 {
     Type IConfigEntry.ValueType => typeof(T);
 
@@ -214,12 +228,12 @@ public sealed class ConfigEntry<T>(
     object? IConfigEntry.DefaultValue => DefaultValue;
 
     /// <inheritdoc />
-    public ConfigEntryHandle Handle { get; } = handle;
+    public ConfigEntryHandle Handle { get; }
 
     /// <summary>
     ///     The descriptor which dictates the behavior of this entry.
     /// </summary>
-    public ConfigEntryDescriptor<T> Descriptor { get; } = descriptor;
+    public ConfigEntryDescriptor<T> Descriptor { get; }
 
     /// <inheritdoc />
     public ConfigSide Side =>
@@ -312,6 +326,21 @@ public sealed class ConfigEntry<T>(
     public bool ReloadRequired =>
         Descriptor.ReloadRequiredProvider.Function?.Invoke(this) ?? false;
 
+    /// <summary>
+    ///     Initializes this entry with its default value.
+    /// </summary>
+    public ConfigEntry(
+        ConfigEntryHandle handle,
+        ConfigEntryDescriptor<T> descriptor
+    )
+    {
+        Handle = handle;
+        Descriptor = descriptor;
+        LocalValue = DefaultValue;
+        RemoteValue = DefaultValue;
+        PendingValue = DefaultValue;
+    }
+
     private T? GetValue(T? storedValue, ConfigEntryDescriptor<T>.Getter? getter)
     {
         if (getter is not null)
@@ -331,7 +360,7 @@ public sealed class ConfigEntry<T>(
 
         return incomingValue;
     }
-    
+
     /// <inheritdoc />
     public bool CommitPendingChanges(bool bulk)
     {
@@ -345,8 +374,84 @@ public sealed class ConfigEntry<T>(
             Handle.Repository.SerializeCategories(((IConfigEntry)this).MainCategory);
             Handle.Repository.SynchronizeEntries(Handle);
         }
-        
+
         return dirty;
+    }
+
+    JToken? IConfigEntry.Serialize(ConfigSerialization.Mode mode, object? value)
+    {
+        if (Descriptor.SerializationProvider is { Serializer: { } serializer })
+        {
+            return serializer(this, mode, (T?)value);
+        }
+
+        if (value is null)
+        {
+            return JValue.CreateNull();
+        }
+
+        try
+        {
+            return JToken.FromObject(value);
+        }
+        catch
+        {
+            return new JValue(value.ToString());
+        }
+    }
+
+    object? IConfigEntry.Deserialize(ConfigSerialization.Mode mode, JToken? token)
+    {
+        if (Descriptor.SerializationProvider is { Deserializer: { } deserializer })
+        {
+            return deserializer(this, mode, token);
+        }
+
+        if (token is null || token.Type == JTokenType.Null)
+        {
+            return DefaultValue;
+        }
+
+        try
+        {
+            return token.ToObject<T>();
+        }
+        catch
+        {
+            return FallbackParse();
+        }
+
+        object? FallbackParse()
+        {
+            var targetType = typeof(T);
+
+            try
+            {
+                var stringVal = token.ToString();
+
+                // Enum
+                if (targetType.IsEnum)
+                {
+                    if (Enum.TryParse(targetType, stringVal, ignoreCase: true, out var enumVal))
+                    {
+                        return enumVal;
+                    }
+
+                    if (long.TryParse(stringVal, out var num))
+                    {
+                        return Enum.ToObject(targetType, num);
+                    }
+                }
+
+                // Nullable and primitives
+                var underlying = Nullable.GetUnderlyingType(targetType);
+                return Convert.ChangeType(stringVal, underlying ?? targetType);
+            }
+            catch
+            {
+                return DefaultValue;
+            }
+        }
     }
 
     private static ConfigSide ConfigSideFromModSide(ModSide modSide)
@@ -367,7 +472,6 @@ public sealed class ConfigEntry<T>(
 ///     <see cref="ConfigEntry{T}"/> with arbitrary behavior.
 /// </summary>
 public sealed class ConfigEntryDescriptor<T>
-    where T : IEquatable<T>
 {
     /// <summary>
     ///     Represents a value provider.
@@ -474,6 +578,11 @@ public sealed class ConfigEntryDescriptor<T>
     ///     entry.
     /// </summary>
     public (Getter Getter, Setter Setter)? PendingValueProvider { get; set; }
+
+    /// <summary>
+    ///     Provides control over how the value is serialized and deserialized.
+    /// </summary>
+    public (ConfigSerialization.Serialize<T> Serializer, ConfigSerialization.Deserialize<T> Deserializer)? SerializationProvider { get; set; }
 
     /// <summary>
     ///     Provides control over the observable value of the entry (without
@@ -657,6 +766,18 @@ public sealed class ConfigEntryDescriptor<T>
     public ConfigEntryDescriptor<T> WithReloadRequired()
     {
         ReloadRequiredProvider = new Provider<bool>(entry => entry.Dirty);
+        return this;
+    }
+
+    /// <summary>
+    ///     Provides control over how the value is serialized and deserialized.
+    /// </summary>
+    public ConfigEntryDescriptor<T> WithSerialization(
+        ConfigSerialization.Serialize<T> serializer,
+        ConfigSerialization.Deserialize<T> deserializer
+    )
+    {
+        SerializationProvider = (serializer, deserializer);
         return this;
     }
 

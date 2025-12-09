@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
 using Daybreak.Common.Features.Hooks;
 using JetBrains.Annotations;
+using Newtonsoft.Json.Linq;
+using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
@@ -136,6 +142,23 @@ public abstract class ConfigRepository : ILocalizedModType
     }
 
     /// <summary>
+    ///     Gets a category owned by this repository.
+    /// </summary>
+    public virtual bool TryGetCategory(
+        ConfigCategoryHandle handle,
+        [NotNullWhen(returnValue: true)] out ConfigCategory? category
+    )
+    {
+        if (handle.Repository != this)
+        {
+            category = null;
+            return false;
+        }
+
+        return Categories.TryGetValue(new CategoryKey(handle), out category);
+    }
+
+    /// <summary>
     ///     Gets an entry owned by this repository.
     /// </summary>
     public virtual IConfigEntry GetEntry(ConfigEntryHandle handle)
@@ -153,11 +176,51 @@ public abstract class ConfigRepository : ILocalizedModType
     /// <summary>
     ///     Gets an entry owned by this repository.
     /// </summary>
+    public virtual bool TryGetEntry(
+        ConfigEntryHandle handle,
+        [NotNullWhen(returnValue: true)] out IConfigEntry? entry
+    )
+    {
+        if (handle.Repository != this)
+        {
+            entry = null;
+            return false;
+        }
+
+        return Entries.TryGetValue(new EntryKey(handle), out entry);
+    }
+
+    /// <summary>
+    ///     Gets an entry owned by this repository.
+    /// </summary>
     public virtual ConfigEntry<T> GetEntry<T>(ConfigEntryHandle handle)
-        where T : IEquatable<T>
     {
         return GetEntry(handle) as ConfigEntry<T>
             ?? throw new InvalidOperationException($"Entry does not wrap value of type {typeof(T)}: " + handle);
+    }
+
+    /// <summary>
+    ///     Gets an entry owned by this repository.
+    /// </summary>
+    public virtual bool TryGetEntry<T>(
+        ConfigEntryHandle handle,
+        [NotNullWhen(returnValue: true)] out ConfigEntry<T>? entry
+    )
+    {
+        if (!TryGetEntry(handle, out var baseEntry))
+        {
+            entry = null;
+            return false;
+        }
+
+        if (baseEntry is ConfigEntry<T> typedEntry)
+        {
+            entry = typedEntry;
+            return true;
+        }
+
+        entry = null;
+        return false;
     }
 
     /// <summary>
@@ -182,7 +245,6 @@ public abstract class ConfigRepository : ILocalizedModType
     ///     Registers an entry as belonging to this repository.
     /// </summary>
     public virtual ConfigEntry<T> RegisterEntry<T>(ConfigEntry<T> entry)
-        where T : IEquatable<T>
     {
         if (Entries.ContainsKey(new EntryKey(entry.Handle)))
         {
@@ -237,7 +299,67 @@ internal sealed class DefaultConfigRepository : ConfigRepository
 
     public override string Name => "Settings";
 
-    public override void SerializeCategories(params ConfigCategoryHandle[] categories) { }
+    private static string ConfigsDirectory => Path.Combine(Main.SavePath, "daybreak", "configs");
 
-    public override void SynchronizeEntries(params ConfigEntryHandle[] entries) { }
+    public override void SerializeCategories(params ConfigCategoryHandle[] categories)
+    {
+        if (categories.Length == 0)
+        {
+            return;
+        }
+
+        var dir = ConfigsDirectory;
+        {
+            Directory.CreateDirectory(dir);
+        }
+
+        foreach (var categoryHandle in categories)
+        {
+            Debug.Assert(categoryHandle.Repository == this);
+
+            if (!TryGetCategory(categoryHandle, out var category))
+            {
+                Debug.Fail($"Category was not found: repo=({FullName}) category=({categoryHandle})");
+                continue;
+            }
+
+            var fileName = $"{LanguageHelpers.GetModName(categoryHandle.Mod)}_{categoryHandle.Name}.json";
+            File.WriteAllText(
+                Path.Combine(dir, fileName),
+                ConfigSerialization.SerializeCategory(
+                    this,
+                    category,
+                    ConfigSerialization.Mode.File,
+                    Entries.Values.Where(x => x.MainCategory == categoryHandle)
+                )
+            );
+        }
+    }
+
+    public override void SynchronizeEntries(params ConfigEntryHandle[] entries)
+    {
+        if (entries.Length == 0)
+        {
+            return;
+        }
+
+        var entryTokens = new Dictionary<IConfigEntry, JToken>();
+        foreach (var entryHandle in entries)
+        {
+            Debug.Assert(entryHandle.Repository == this);
+
+            if (!TryGetEntry(entryHandle, out var entry))
+            {
+                Debug.Fail($"Entry was not found: repo=({FullName}) entry=({entryHandle})");
+                continue;
+            }
+
+            if (entry.Side != ConfigSide.Both)
+            {
+                continue;
+            }
+
+            entryTokens[entry] = ConfigSerialization.SerializeEntry(entry, ConfigSerialization.Mode.Network);
+        }
+    }
 }

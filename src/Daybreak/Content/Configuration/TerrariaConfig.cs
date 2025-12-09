@@ -12,99 +12,108 @@ internal static class TerrariaConfig
     private static ConfigRepository Config => ConfigRepository.Default;
 
     private static ConfigEntryDescriptor<T> Define<T>(ConfigEntryDescriptor<T>.RefProvider value)
-        where T : IEquatable<T>
     {
         return new ConfigEntryDescriptor<T>()
+               // These values are handled separately and should not be synced
+               // by us.
               .WithConfigSide(ConfigSide.NoSync)
-              .WithLocalValueProvider(value);
+               // These values already exist elsewhere, so we just need to
+               // provide a way to get and set them.
+              .WithLocalValueProvider(value)
+               // These values are saved externally, and we should never have to
+               // read or write them.
+              .WithSerialization(
+                   serializer: (_, _, _) => null,
+                   deserializer: (entry, _, _) => entry.LocalValue
+               );
     }
 
     public static class General
     {
-        public static ConfigCategory Category { get; } =
+        public static ConfigCategoryHandle Category { get; } =
             new ConfigCategoryDescriptor()
                .Register(Config, Mod, nameof(General));
 
         // bool Autosave On/Off
         /*
-				int num22 = 0;
-				if (autoSave)
-					array9[num22] = Lang.menu[67].Value;
-				else
-					array9[num22] = Lang.menu[68].Value;
+                int num22 = 0;
+                if (autoSave)
+                    array9[num22] = Lang.menu[67].Value;
+                else
+                    array9[num22] = Lang.menu[68].Value;
 
-				if (selectedMenu == num22) {
-					SoundEngine.PlaySound(12);
-					if (autoSave)
-						autoSave = false;
-					else
-						autoSave = true;
-				}
+                if (selectedMenu == num22) {
+                    SoundEngine.PlaySound(12);
+                    if (autoSave)
+                        autoSave = false;
+                    else
+                        autoSave = true;
+                }
          */
         public static ConfigEntry<bool> Autosave { get; } =
             Define(() => ref Main.autoSave)
                .WithCategories(Category)
                .Register(Config, Mod);
-        
+
         // bool Autopause On/Off
         /*
-				num22++;
-				if (autoPause)
-					array9[num22] = Lang.menu[69].Value;
-				else
-					array9[num22] = Lang.menu[70].Value;
+                num22++;
+                if (autoPause)
+                    array9[num22] = Lang.menu[69].Value;
+                else
+                    array9[num22] = Lang.menu[70].Value;
 
-				if (selectedMenu == num22) {
-					SoundEngine.PlaySound(12);
-					if (autoPause)
-						autoPause = false;
-					else
-						autoPause = true;
-				}
+                if (selectedMenu == num22) {
+                    SoundEngine.PlaySound(12);
+                    if (autoPause)
+                        autoPause = false;
+                    else
+                        autoPause = true;
+                }
          */
         public static ConfigEntry<bool> Autopause { get; } =
             Define(() => ref Main.autoPause)
                .WithCategories(Category)
                .Register(Config, Mod);
-        
+
         // bool Map Enabled/Disabled
         /*
-				num22++;
-				if (mapEnabled)
-					array9[num22] = Lang.menu[112].Value;
-				else
-					array9[num22] = Lang.menu[113].Value;
+                num22++;
+                if (mapEnabled)
+                    array9[num22] = Lang.menu[112].Value;
+                else
+                    array9[num22] = Lang.menu[113].Value;
 
-				if (selectedMenu == num22) {
-					SoundEngine.PlaySound(12);
-					if (mapEnabled)
-						mapEnabled = false;
-					else
-						mapEnabled = true;
-				}
+                if (selectedMenu == num22) {
+                    SoundEngine.PlaySound(12);
+                    if (mapEnabled)
+                        mapEnabled = false;
+                    else
+                        mapEnabled = true;
+                }
          */
         public static ConfigEntry<bool> MapEnabled { get; } =
             Define(() => ref Main.mapEnabled)
                .WithCategories(Category)
                .Register(Config, Mod);
-        
+
         // bool Passwords: Visible/Hidden
         /*
 
-				num22++;
-				array9[num22] = (HidePassword ? Lang.menu[212].Value : Lang.menu[211].Value);
-				if (selectedMenu == num22) {
-					SoundEngine.PlaySound(12);
-					HidePassword = !HidePassword;
-				}
+                num22++;
+                array9[num22] = (HidePassword ? Lang.menu[212].Value : Lang.menu[211].Value);
+                if (selectedMenu == num22) {
+                    SoundEngine.PlaySound(12);
+                    HidePassword = !HidePassword;
+                }
 
-				num22++;
-				array9[num22] = Lang.menu[5].Value;
-				if (selectedMenu == num22 || flag5) {
-					flag5 = false;
-					menuMode = 11;
-					SoundEngine.PlaySound(11);
-				}
+                num22++;
+                array9[num22] = Lang.menu[5].Value;
+                if (selectedMenu == num22 || flag5) {
+                    flag5 = false;
+                    menuMode = 11;
+                    SoundEngine.PlaySound(11);
+                }
          */
         public static ConfigEntry<bool> HidePassword { get; } =
             Define(() => ref Main.HidePassword)
@@ -114,7 +123,7 @@ internal static class TerrariaConfig
 
     public static class Interface
     {
-        public static ConfigCategory Category { get; } =
+        public static ConfigCategoryHandle Category { get; } =
             new ConfigCategoryDescriptor()
                .Register(Config, Mod, nameof(Interface));
 
@@ -132,7 +141,7 @@ internal static class TerrariaConfig
 
     public static class Video
     {
-        public static ConfigCategory Category { get; } =
+        public static ConfigCategoryHandle Category { get; } =
             new ConfigCategoryDescriptor()
                .Register(Config, Mod, nameof(Video));
 
@@ -152,7 +161,7 @@ internal static class TerrariaConfig
 
     public static class Volume
     {
-        public static ConfigCategory Category { get; } =
+        public static ConfigCategoryHandle Category { get; } =
             new ConfigCategoryDescriptor()
                .Register(Config, Mod, nameof(Volume));
 
@@ -163,7 +172,7 @@ internal static class TerrariaConfig
 
     public static class Cursor
     {
-        public static ConfigCategory Category { get; } =
+        public static ConfigCategoryHandle Category { get; } =
             new ConfigCategoryDescriptor()
                .Register(Config, Mod, nameof(Cursor));
 
@@ -179,7 +188,7 @@ internal static class TerrariaConfig
 
     public static class Controls
     {
-        public static ConfigCategory Category { get; } =
+        public static ConfigCategoryHandle Category { get; } =
             new ConfigCategoryDescriptor()
                .Register(Config, Mod, nameof(Controls));
 
@@ -191,7 +200,7 @@ internal static class TerrariaConfig
 
     public static class Language
     {
-        public static ConfigCategory Category { get; } =
+        public static ConfigCategoryHandle Category { get; } =
             new ConfigCategoryDescriptor()
                .Register(Config, Mod, nameof(Language) + "Category");
 
