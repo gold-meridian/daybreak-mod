@@ -243,17 +243,35 @@ public sealed class ConfigEntry<T> : IConfigEntry
     /// <inheritdoc />
     public LocalizedText DisplayName =>
         Options.DisplayName?.Invoke(this)
-     ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigEntry<>), nameof(DisplayName), () => Handle.Name);
+     ?? LanguageHelpers.GetLocalization(
+            Handle.Mod,
+            Handle.Name,
+            nameof(ConfigEntry<>),
+            nameof(DisplayName),
+            () => Handle.Name
+        );
 
     /// <inheritdoc />
     public LocalizedText Tooltip =>
         Options.Tooltip?.Invoke(this)
-     ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigEntry<>), nameof(Tooltip), () => "");
+     ?? LanguageHelpers.GetLocalization(
+            Handle.Mod,
+            Handle.Name,
+            nameof(ConfigEntry<>),
+            nameof(Tooltip),
+            () => ""
+        );
 
     /// <inheritdoc />
     public LocalizedText Description =>
         Options.Description?.Invoke(this)
-     ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigEntry<>), nameof(Description), () => "");
+     ?? LanguageHelpers.GetLocalization(
+            Handle.Mod,
+            Handle.Name,
+            nameof(ConfigEntry<>),
+            nameof(Description),
+            () => ""
+        );
 
     /// <inheritdoc />
     public ConfigCategoryHandle[] Categories { get; }
@@ -419,39 +437,7 @@ public sealed class ConfigEntry<T> : IConfigEntry
         }
         catch
         {
-            return FallbackParse();
-        }
-
-        object? FallbackParse()
-        {
-            var targetType = typeof(T);
-
-            try
-            {
-                var stringVal = token.ToString();
-
-                // Enum
-                if (targetType.IsEnum)
-                {
-                    if (Enum.TryParse(targetType, stringVal, ignoreCase: true, out var enumVal))
-                    {
-                        return enumVal;
-                    }
-
-                    if (long.TryParse(stringVal, out var num))
-                    {
-                        return Enum.ToObject(targetType, num);
-                    }
-                }
-
-                // Nullable and primitives
-                var underlying = Nullable.GetUnderlyingType(targetType);
-                return Convert.ChangeType(stringVal, underlying ?? targetType);
-            }
-            catch
-            {
-                return DefaultValue;
-            }
+            return ConfigSerialization.FallbackDeserialize<T>(token, this);
         }
     }
 
@@ -466,7 +452,7 @@ public sealed class ConfigEntry<T> : IConfigEntry
             _ => throw new ArgumentOutOfRangeException(nameof(modSide), modSide, null),
         };
     }
-    
+
     /// <summary>
     ///     Creates a new object for configuring the config entry.
     /// </summary>

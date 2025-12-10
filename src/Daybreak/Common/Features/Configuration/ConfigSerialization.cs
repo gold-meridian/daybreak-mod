@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -56,7 +57,7 @@ public static class ConfigSerialization
             {
                 continue;
             }
-            
+
             obj[entry.Handle.FullName] = token;
         }
 
@@ -69,5 +70,37 @@ public static class ConfigSerialization
     public static JToken? SerializeEntry(IConfigEntry entry, Mode mode)
     {
         return entry.Serialize(mode, entry.LocalValue);
+    }
+
+    internal static object? FallbackDeserialize<T>(JToken token, IConfigEntry entry)
+    {
+        var targetType = typeof(T);
+
+        try
+        {
+            var stringVal = token.ToString();
+
+            // Enum
+            if (targetType.IsEnum)
+            {
+                if (Enum.TryParse(targetType, stringVal, ignoreCase: true, out var enumVal))
+                {
+                    return enumVal;
+                }
+
+                if (long.TryParse(stringVal, out var num))
+                {
+                    return Enum.ToObject(targetType, num);
+                }
+            }
+
+            // Nullable and primitives
+            var underlying = Nullable.GetUnderlyingType(targetType);
+            return Convert.ChangeType(stringVal, underlying ?? targetType);
+        }
+        catch
+        {
+            return entry.DefaultValue;
+        }
     }
 }
