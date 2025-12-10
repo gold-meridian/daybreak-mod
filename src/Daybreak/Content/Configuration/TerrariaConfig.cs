@@ -138,7 +138,7 @@ internal static class TerrariaConfig
         // bool Boss Health Bar Numbers: On/Off
         // ??? Boss bar Style: {}
 
-        public static ConfigEntry<bool> LoadStub { get; } =
+        public static ConfigEntry<bool> LoadStub1 { get; } =
             Define(() => ref Main.HidePassword)
                .WithCategories(Category)
                .Register(Config, Mod);
@@ -163,7 +163,7 @@ internal static class TerrariaConfig
         // bool Miner's Wobble: Enabled/Disabled
         // bool Windy Environment: Enabled/Disabled
 
-        public static ConfigEntry<bool> LoadStub { get; } =
+        public static ConfigEntry<bool> LoadStub2 { get; } =
             Define(() => ref Main.HidePassword)
                .WithCategories(Category)
                .Register(Config, Mod);
@@ -179,7 +179,7 @@ internal static class TerrariaConfig
         // Sound: 0%-100%
         // Ambient: 0%-100%
 
-        public static ConfigEntry<bool> LoadStub { get; } =
+        public static ConfigEntry<bool> LoadStub3 { get; } =
             Define(() => ref Main.HidePassword)
                .WithCategories(Category)
                .Register(Config, Mod);
@@ -200,7 +200,7 @@ internal static class TerrariaConfig
         // bool Smart Block Placement: Enabled/Disabled
         // ??? Lock On Priority: {}
 
-        public static ConfigEntry<bool> LoadStub { get; } =
+        public static ConfigEntry<bool> LoadStub4 { get; } =
             Define(() => ref Main.HidePassword)
                .WithCategories(Category)
                .Register(Config, Mod);
@@ -217,7 +217,7 @@ internal static class TerrariaConfig
         // Keybindings sub-menu
         // - See about porting 1:1 as best as possible
 
-        public static ConfigEntry<bool> LoadStub { get; } =
+        public static ConfigEntry<bool> LoadStub5 { get; } =
             Define(() => ref Main.HidePassword)
                .WithCategories(Category)
                .Register(Config, Mod);
@@ -232,7 +232,7 @@ internal static class TerrariaConfig
         // Generic selection menu we can reimplement.
         // See about compatibility with other mods?
 
-        public static ConfigEntry<bool> LoadStub { get; } =
+        public static ConfigEntry<bool> LoadStub6 { get; } =
             Define(() => ref Main.HidePassword)
                .WithCategories(Category)
                .Register(Config, Mod);

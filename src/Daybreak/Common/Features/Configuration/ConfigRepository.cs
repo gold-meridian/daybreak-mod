@@ -254,7 +254,7 @@ public abstract class ConfigRepository : ILocalizedModType
     {
         if (Entries.ContainsKey(new EntryKey(entry.Handle)))
         {
-            throw new InvalidOperationException($"Cannot create entry \"{entry.Handle.Name}\" for mod \"{LanguageHelpers.GetModName(entry.Handle.Mod)}\" because a category of the same name already exists!");
+            throw new InvalidOperationException($"Cannot create entry \"{entry.Handle.Name}\" for mod \"{LanguageHelpers.GetModName(entry.Handle.Mod)}\" because am emtry of the same name already exists!");
         }
 
         Entries[new EntryKey(entry.Handle)] = entry;
