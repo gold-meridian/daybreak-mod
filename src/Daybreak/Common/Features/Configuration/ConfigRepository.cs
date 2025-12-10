@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Daybreak.Common.Features.Configuration.Default;
 using JetBrains.Annotations;
 using Terraria.Localization;
 using Terraria.ModLoader;
