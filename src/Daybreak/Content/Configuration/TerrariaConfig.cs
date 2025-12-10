@@ -137,6 +137,11 @@ internal static class TerrariaConfig
         // ??? Health and Mana Style: {}
         // bool Boss Health Bar Numbers: On/Off
         // ??? Boss bar Style: {}
+
+        public static ConfigEntry<bool> LoadStub { get; } =
+            Define(() => ref Main.HidePassword)
+               .WithCategories(Category)
+               .Register(Config, Mod);
     }
 
     public static class Video
@@ -157,6 +162,11 @@ internal static class TerrariaConfig
         // bool Blood and Gore On/Off
         // bool Miner's Wobble: Enabled/Disabled
         // bool Windy Environment: Enabled/Disabled
+
+        public static ConfigEntry<bool> LoadStub { get; } =
+            Define(() => ref Main.HidePassword)
+               .WithCategories(Category)
+               .Register(Config, Mod);
     }
 
     public static class Volume
@@ -168,6 +178,11 @@ internal static class TerrariaConfig
         // Music: 0%-100%
         // Sound: 0%-100%
         // Ambient: 0%-100%
+
+        public static ConfigEntry<bool> LoadStub { get; } =
+            Define(() => ref Main.HidePassword)
+               .WithCategories(Category)
+               .Register(Config, Mod);
     }
 
     public static class Cursor
@@ -184,6 +199,11 @@ internal static class TerrariaConfig
         // ??? Smart Cursor Priority: {}
         // bool Smart Block Placement: Enabled/Disabled
         // ??? Lock On Priority: {}
+
+        public static ConfigEntry<bool> LoadStub { get; } =
+            Define(() => ref Main.HidePassword)
+               .WithCategories(Category)
+               .Register(Config, Mod);
     }
 
     public static class Controls
@@ -196,6 +216,11 @@ internal static class TerrariaConfig
         // ??? Quick Trash: {}
         // Keybindings sub-menu
         // - See about porting 1:1 as best as possible
+
+        public static ConfigEntry<bool> LoadStub { get; } =
+            Define(() => ref Main.HidePassword)
+               .WithCategories(Category)
+               .Register(Config, Mod);
     }
 
     public static class Language
@@ -206,5 +231,10 @@ internal static class TerrariaConfig
 
         // Generic selection menu we can reimplement.
         // See about compatibility with other mods?
+
+        public static ConfigEntry<bool> LoadStub { get; } =
+            Define(() => ref Main.HidePassword)
+               .WithCategories(Category)
+               .Register(Config, Mod);
     }
 }
