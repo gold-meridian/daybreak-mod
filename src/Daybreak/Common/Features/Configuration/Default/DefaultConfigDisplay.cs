@@ -80,7 +80,11 @@ internal static class DefaultConfigDisplay
             if (Main.mouseLeft && Main.mouseLeftRelease)
             {
                 daybreakOverVanillaSettings = true;
-                ConfigRepository.Default.ShowInterface();
+                ConfigRepository.Default.ShowInterface(onExit:
+                    () =>
+                    {
+                        Main.menuMode = MenuID.Title;
+                    });
             }
         }
 
@@ -172,6 +176,8 @@ internal static class DefaultConfigDisplay
             x => x.MatchLdcI4(MenuID.Settings),
             x => x.MatchStsfld<Main>(nameof(Main.menuMode))
         );
+
+        c.MoveBeforeLabels();
 
         c.EmitDelegate(
             () =>

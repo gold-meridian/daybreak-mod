@@ -10,3 +10,12 @@ UI: {
 	SwitchToVanilla: Switch to the Vanilla settings UI
 	SwitchToModLoader: Switch to the tModLoader settings UI
 }
+
+Configs: {
+	ConditionalContainer: {
+		Enabled: {
+			Label: Enabled
+			Tooltip: ""
+		}
+	}
+}

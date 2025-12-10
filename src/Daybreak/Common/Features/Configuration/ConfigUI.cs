@@ -7,6 +7,7 @@ using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
@@ -24,6 +25,8 @@ public class ConfigState : UIState, IHaveBackButtonCommand
     protected ConfigEntryHandle? targetEntry;
 
     protected UIPanel? basePanel;
+
+    protected UITextPanel<LocalizedText>? headerPanel;
 
     protected CategoryTabList? tabs;
 
@@ -48,6 +51,7 @@ public class ConfigState : UIState, IHaveBackButtonCommand
     {
         const float vertical_margin = 160f;
 
+        // Base panel
         basePanel = new();
 
         basePanel.Width.Set(0f, 0.8f);
@@ -58,8 +62,11 @@ public class ConfigState : UIState, IHaveBackButtonCommand
 
         basePanel.HAlign = 0.5f;
 
+        basePanel.BackgroundColor = UICommon.MainPanelBackground;
+
         Append(basePanel);
 
+        // Panel tabs
         float tabsMargin = vertical_margin + basePanel._cornerSize;
 
         tabs = new(repository, basePanel);
@@ -67,11 +74,43 @@ public class ConfigState : UIState, IHaveBackButtonCommand
         tabs.Top.Set(tabsMargin, 0f);
         tabs.Height.Set(-(tabsMargin * 2f), 1f);
 
+        Append(tabs);
+
+        // Header
+        headerPanel = new(repository.DisplayName, 0.8f, large: true);
+
+        headerPanel.SetPadding(15f);
+
+        headerPanel.Top.Set(vertical_margin - 50f, 0f);
+
+        headerPanel.HAlign = 0.5f;
+
+        headerPanel.BackgroundColor = UICommon.DefaultUIBlue;
+
+        Append(headerPanel);
+
+        const float button_vertical_margin = 10f;
+
+        // Back button
         backButton = new(Language.GetText("UI.Back"), 0.7f, true);
+
+        backButton.Top.Set(-vertical_margin + button_vertical_margin, 1f);
+
+        backButton.Width.Set(0f, 0.4f);
+        backButton.MaxWidth.Set(300f, 0f);
+
+        backButton.Height.Set(50f, 0f);
+
+        backButton.HAlign = 0.5f;
+
+        backButton.OnLeftMouseDown += GoBackClick;
+
+        backButton.WithFadedMouseOver();
+
+        Append(backButton);
     }
 
-#region Buttons
-    void IHaveBackButtonCommand.HandleBackButtonUsage()
+    protected void ExitState()
     {
         SoundEngine.PlaySound(in SoundID.MenuClose);
 
@@ -86,20 +125,41 @@ public class ConfigState : UIState, IHaveBackButtonCommand
 
         exitAction?.Invoke();
     }
-#endregion
+
+    #region Buttons
+
+    public void HandleBackButtonUsage()
+    {
+        ExitState();
+    }
+
+    private void GoBackClick(UIMouseEvent evt, UIElement listeningElement)
+    {
+        ExitState();
+    }
+
+    #endregion
 }
 
 public class CategoryTabList : UIList
 {
     protected UIPanel attachedPanel;
 
+    public event Action<ConfigCategory>? OnCategorySelected;
+
     public CategoryTabList(ConfigRepository repository, UIPanel attachedPanel) : base()
     {
         this.attachedPanel = attachedPanel;
 
+        ListPadding = 2f;
+
         foreach (var category in repository.Categories)
         {
-            Add(new CategoryTab(category));
+            var tab = new CategoryTab(category);
+
+            tab.OnLeftClick += OnClickTab;
+
+            Add(tab);
         }
     }
 
@@ -111,12 +171,46 @@ public class CategoryTabList : UIList
         Width.Set(dims.X, 0f);
     }
 
+    private void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
+    {
+        if (listeningElement is not CategoryTab tab)
+        {
+            return;
+        }
+
+        OnCategorySelected?.Invoke(tab.Category);
+    }
+
     public class CategoryTab : UITextPanel<LocalizedText>
     {
+        public ConfigCategory Category;
+
+        public bool Selected = false;
+
         public CategoryTab(ConfigCategory category) : base(category.DisplayName)
         {
+            this.Category = category;
+
             _backgroundTexture = AssetReferences.Assets.Images.UI.ConfigTabPanel.Asset;
             _borderTexture = AssetReferences.Assets.Images.UI.ConfigTabPanelOutline.Asset;
+
+            MinWidth.Set(100f, 0f);
+
+            HAlign = 1f;
+
+            TextHAlign = 0f;
+
+            this.WithFadedMouseOver();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (!Selected)
+            {
+                BackgroundColor = UICommon.MainPanelBackground;
+            }
         }
     }
 }
