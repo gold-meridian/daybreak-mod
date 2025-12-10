@@ -54,7 +54,7 @@ public readonly record struct ConfigCategoryHandle(
 /// </summary>
 public sealed class ConfigCategory(
     ConfigCategoryHandle handle,
-    ConfigCategoryDescriptor descriptor
+    ConfigCategoryOptions options
 )
 {
     /// <summary>
@@ -66,13 +66,13 @@ public sealed class ConfigCategory(
     /// <summary>
     ///     The descriptor which dictates the behavior of this category.
     /// </summary>
-    public ConfigCategoryDescriptor Descriptor { get; } = descriptor;
+    public ConfigCategoryOptions Options { get; } = options;
 
     /// <summary>
     ///     The display name of this category.
     /// </summary>
     public LocalizedText DisplayName =>
-        Descriptor.DisplayNameProvider.Function?.Invoke(this)
+        Options.DisplayName?.Invoke(this)
      ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigCategory), nameof(DisplayName), () => Handle.Name);
 
     /// <summary>
@@ -82,66 +82,28 @@ public sealed class ConfigCategory(
     {
         return category.Handle;
     }
+
+    /// <summary>
+    ///     Creates a new object for configuring the config category.
+    /// </summary>
+    public static ConfigCategoryOptions Define()
+    {
+        return new ConfigCategoryOptions();
+    }
 }
 
 /// <summary>
 ///     A descriptor for dynamically constructing a
 ///     <see cref="ConfigCategory"/> with arbitrary behavior.
 /// </summary>
-public sealed class ConfigCategoryDescriptor
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+public sealed class ConfigCategoryOptions
 {
-    /// <summary>
-    ///     Represents a value provider.
-    /// </summary>
-    public readonly struct Provider<TValue>(Func<ConfigCategory, TValue>? provider)
+    public Func<ConfigCategory, LocalizedText>? DisplayName { get; set; }
+
+    public ConfigCategoryOptions With(Action<ConfigCategoryOptions> apply)
     {
-        /// <summary>
-        ///     The provider function.
-        /// </summary>
-        public Func<ConfigCategory, TValue>? Function { get; } = provider;
-
-        /// <inheritdoc />
-        public Provider(Func<TValue> provider) : this(_ => provider()) { }
-
-        /// <inheritdoc />
-        public Provider(TValue value) : this(_ => value) { }
-
-        /// <summary>
-        ///     Creates a value provider.
-        /// </summary>
-        public static implicit operator Provider<TValue>(Func<ConfigCategory, TValue> provider)
-        {
-            return new Provider<TValue>(provider);
-        }
-
-        /// <summary>
-        ///     Creates a value provider.
-        /// </summary>
-        public static implicit operator Provider<TValue>(Func<TValue> provider)
-        {
-            return new Provider<TValue>(provider);
-        }
-
-        /// <summary>
-        ///     Creates a value provider.
-        /// </summary>
-        public static implicit operator Provider<TValue>(TValue value)
-        {
-            return new Provider<TValue>(value);
-        }
-    }
-
-    /// <summary>
-    ///     Provides the display name of the category.
-    /// </summary>
-    public Provider<LocalizedText> DisplayNameProvider { get; set; }
-
-    /// <summary>
-    ///     Provides the display name of the category.
-    /// </summary>
-    public ConfigCategoryDescriptor WithDisplayName(Provider<LocalizedText> displayNameProvider)
-    {
-        DisplayNameProvider = displayNameProvider;
+        apply(this);
         return this;
     }
 
@@ -162,3 +124,15 @@ public sealed class ConfigCategoryDescriptor
         );
     }
 }
+
+public static class ConfigCategoryDescriptorExtensions
+{
+    extension(ConfigCategoryOptions options)
+    {
+        public ConfigCategoryOptions WithDisplayName(Func<ConfigCategory, LocalizedText>? displayName)
+        {
+            return options.With(x => x.DisplayName = displayName);
+        }
+    }
+}
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

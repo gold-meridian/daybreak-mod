@@ -10,7 +10,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Daybreak.Common.Features.Configuration.Default;
+namespace Daybreak.Common.Features.Configuration;
 
 internal sealed class DefaultConfigState : ConfigState
 {
@@ -54,7 +54,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
                     this,
                     category,
                     ConfigSerialization.Mode.File,
-                    EntryMap.Values.Where(x => x.MainCategory == categoryHandle)
+                    Entries.Where(x => x.MainCategory == categoryHandle)
                 )
             );
         }
