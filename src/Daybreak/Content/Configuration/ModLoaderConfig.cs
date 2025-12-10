@@ -1,5 +1,4 @@
-﻿using System;
-using Daybreak.Common.Features.Configuration;
+﻿using Daybreak.Common.Features.Configuration;
 using Terraria.ModLoader;
 
 namespace Daybreak.Content.Configuration;
@@ -10,15 +9,19 @@ internal static class ModLoaderConfig
 
     private static ConfigRepository Config => ConfigRepository.Default;
 
-    private static ConfigEntryDescriptor<T> Define<T>(ConfigEntryDescriptor<T>.RefProvider value)
+    private delegate ref T? RefProvider<T>();
+
+    private static ConfigEntryOptions<T> Define<T>(RefProvider<T> value)
     {
-        return new ConfigEntryDescriptor<T>()
+        return ConfigEntry.Options<T>()
                // These values are handled separately and should not be synced
                // by us.
-              .WithConfigSide(ConfigSide.NoSync)
+              .WithConfigSide(_ => ConfigSide.NoSync)
                // These values already exist elsewhere, so we just need to
                // provide a way to get and set them.
-              .WithLocalValueProvider(value)
+              .WithLocalValue(
+                   getter: (_, _) => value(),
+                   setter: (_, ref storedValue, newValue) => storedValue = value() = newValue)
                // These values are saved externally, and we should never have to
                // read or write them.
               .WithSerialization(
