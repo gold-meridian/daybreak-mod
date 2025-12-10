@@ -242,7 +242,7 @@ public class CategoryTabList : UIList
             _backgroundTexture = AssetReferences.Assets.Images.UI.ConfigTabPanel.Asset;
             _borderTexture = AssetReferences.Assets.Images.UI.ConfigTabPanelOutline.Asset;
 
-            MinWidth.Set(100f, 0f);
+            MinWidth.Set(160f, 0f);
 
             HAlign = 1f;
 
