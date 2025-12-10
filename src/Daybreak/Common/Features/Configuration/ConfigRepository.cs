@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Daybreak.Common.Features.Configuration.Default;
 using JetBrains.Annotations;
 using Terraria.Localization;
@@ -93,12 +92,22 @@ public abstract class ConfigRepository : ILocalizedModType
     /// <summary>
     ///     All categories registered to this repository.
     /// </summary>
-    protected virtual Dictionary<CategoryKey, ConfigCategory> Categories { get; } = [];
+    protected virtual Dictionary<CategoryKey, ConfigCategory> CategoryMap { get; } = [];
 
     /// <summary>
     ///     All entries registered to this repository.
     /// </summary>
-    protected virtual Dictionary<EntryKey, IConfigEntry> Entries { get; } = [];
+    protected virtual Dictionary<EntryKey, IConfigEntry> EntryMap { get; } = [];
+
+    /// <summary>
+    ///     All categories registered to this repository.
+    /// </summary>
+    public virtual IEnumerable<ConfigCategory> Categories => CategoryMap.Values;
+
+    /// <summary>
+    ///     All entries registered to this repository.
+    /// </summary>
+    public virtual IEnumerable<IConfigEntry> Entries => EntryMap.Values;
 
     /// <summary>
     ///     Gets a category handle from this repository.
@@ -126,7 +135,7 @@ public abstract class ConfigRepository : ILocalizedModType
             throw new InvalidOperationException("Category handle is not registered to this repository: " + handle);
         }
 
-        return Categories.TryGetValue(new CategoryKey(handle), out var category)
+        return CategoryMap.TryGetValue(new CategoryKey(handle), out var category)
             ? category
             : throw new InvalidOperationException("Category handle is not registered to this repository: " + handle);
     }
@@ -145,15 +154,7 @@ public abstract class ConfigRepository : ILocalizedModType
             return false;
         }
 
-        return Categories.TryGetValue(new CategoryKey(handle), out category);
-    }
-
-    /// <summary>
-    ///     Gets all categories owned by this repository.
-    /// </summary>
-    public virtual ConfigCategory[] GetCategories()
-    {
-        return Categories.Select(pair => pair.Value).ToArray();
+        return CategoryMap.TryGetValue(new CategoryKey(handle), out category);
     }
 
     /// <summary>
@@ -166,7 +167,7 @@ public abstract class ConfigRepository : ILocalizedModType
             throw new InvalidOperationException("Entry handle is not registered to this repository: " + handle);
         }
 
-        return Entries.TryGetValue(new EntryKey(handle), out var entry)
+        return EntryMap.TryGetValue(new EntryKey(handle), out var entry)
             ? entry
             : throw new InvalidOperationException("Entry handle is not registered to this repository: " + handle);
     }
@@ -185,7 +186,7 @@ public abstract class ConfigRepository : ILocalizedModType
             return false;
         }
 
-        return Entries.TryGetValue(new EntryKey(handle), out entry);
+        return EntryMap.TryGetValue(new EntryKey(handle), out entry);
     }
 
     /// <summary>
@@ -222,24 +223,16 @@ public abstract class ConfigRepository : ILocalizedModType
     }
 
     /// <summary>
-    ///     Gets all entries owned by this repository.
-    /// </summary>
-    public virtual IConfigEntry[] GetEntries()
-    {
-        return Entries.Select(pair => pair.Value).ToArray();
-    }
-
-    /// <summary>
     ///     Registers a category as belonging to this repository.
     /// </summary>
     public virtual ConfigCategory RegisterCategory(ConfigCategory category)
     {
-        if (Categories.ContainsKey(new CategoryKey(category.Handle)))
+        if (CategoryMap.ContainsKey(new CategoryKey(category.Handle)))
         {
             throw new InvalidOperationException($"Cannot create category \"{category.Handle.Name}\" for mod \"{LanguageHelpers.GetModName(category.Handle.Mod)}\" because a category of the same name already exists!");
         }
 
-        Categories[new CategoryKey(category.Handle)] = category;
+        CategoryMap[new CategoryKey(category.Handle)] = category;
         {
             _ = category.DisplayName;
         }
@@ -252,12 +245,12 @@ public abstract class ConfigRepository : ILocalizedModType
     /// </summary>
     public virtual ConfigEntry<T> RegisterEntry<T>(ConfigEntry<T> entry)
     {
-        if (Entries.ContainsKey(new EntryKey(entry.Handle)))
+        if (EntryMap.ContainsKey(new EntryKey(entry.Handle)))
         {
             throw new InvalidOperationException($"Cannot create entry \"{entry.Handle.Name}\" for mod \"{LanguageHelpers.GetModName(entry.Handle.Mod)}\" because am emtry of the same name already exists!");
         }
 
-        Entries[new EntryKey(entry.Handle)] = entry;
+        EntryMap[new EntryKey(entry.Handle)] = entry;
         {
             _ = entry.DisplayName;
             _ = entry.Tooltip;
@@ -268,7 +261,7 @@ public abstract class ConfigRepository : ILocalizedModType
     }
 
     /// <summary>
-    ///     Commits any pending changes to stored <see cref="Entries"/>.
+    ///     Commits any pending changes to stored <see cref="EntryMap"/>.
     /// </summary>
     /// <returns>
     ///     A list of all entries whose <see cref="IConfigEntry.LocalValue"/>s
@@ -277,7 +270,7 @@ public abstract class ConfigRepository : ILocalizedModType
     public virtual List<IConfigEntry> CommitPendingChanges()
     {
         var modifiedEntries = new List<IConfigEntry>();
-        foreach (var entry in Entries.Values)
+        foreach (var entry in EntryMap.Values)
         {
             if (entry.CommitPendingChanges(bulk: true))
             {
@@ -301,23 +294,34 @@ public abstract class ConfigRepository : ILocalizedModType
     /// <summary>
     ///     Opens the associated UI.
     /// </summary>
-    public abstract void ShowInterface(Action? onExit = null);
-    
+    public abstract void ShowInterface(
+        Action? onExit = null
+    );
+
     /// <summary>
     ///     Opens the associated UI and goes to the requested category.
     /// </summary>
-    public abstract void ShowInterface(ConfigCategoryHandle categoryHandle, Action? onExit = null);
+    public abstract void ShowInterface(
+        ConfigCategoryHandle categoryHandle,
+        Action? onExit = null
+    );
 
     /// <summary>
     ///     Opens the associated UI and goes ot the requested entry with the
     ///     page set to its main category.
     /// </summary>
-    public abstract void ShowInterface(ConfigEntryHandle entryHandle, Action? onExit = null);
-
+    public abstract void ShowInterface(
+        ConfigEntryHandle entryHandle,
+        Action? onExit = null
+    );
 
     /// <summary>
     ///     Opens the associated UI and goes ot the requested entry with the
     ///     page set to its requested category.
     /// </summary>
-    public abstract void ShowInterface(ConfigCategoryHandle categoryHandle, ConfigEntryHandle entryHandle, Action? onExit = null);
+    public abstract void ShowInterface(
+        ConfigCategoryHandle categoryHandle,
+        ConfigEntryHandle entryHandle,
+        Action? onExit = null
+    );
 }

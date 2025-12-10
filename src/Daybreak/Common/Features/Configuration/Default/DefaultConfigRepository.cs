@@ -15,8 +15,7 @@ namespace Daybreak.Common.Features.Configuration.Default;
 
 internal sealed class DefaultConfigState : ConfigState
 {
-    public DefaultConfigState(ConfigRepository repository, ConfigCategoryHandle? category = null, ConfigEntryHandle? entry = null, Action? onExit = null) : base(repository, category, entry, onExit)
-    { }
+    public DefaultConfigState(ConfigRepository repository, ConfigCategoryHandle? category = null, ConfigEntryHandle? entry = null, Action? onExit = null) : base(repository, category, entry, onExit) { }
 }
 
 internal sealed class DefaultConfigRepository : ConfigRepository
@@ -56,7 +55,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
                     this,
                     category,
                     ConfigSerialization.Mode.File,
-                    Entries.Values.Where(x => x.MainCategory == categoryHandle)
+                    EntryMap.Values.Where(x => x.MainCategory == categoryHandle)
                 )
             );
         }
@@ -93,28 +92,64 @@ internal sealed class DefaultConfigRepository : ConfigRepository
         }
     }
 
-    public override void ShowInterface(Action? onExit = null)
+    public override void ShowInterface(
+        Action? onExit = null
+    )
     {
-        var ui = GetInterface();
-        ui.SetState(new DefaultConfigState(this, onExit: onExit));
+        SetState(
+            GetInterface(),
+            new DefaultConfigState(
+                this,
+                onExit: onExit
+            )
+        );
     }
 
-    public override void ShowInterface(ConfigCategoryHandle categoryHandle, Action? onExit = null)
+    public override void ShowInterface(
+        ConfigCategoryHandle categoryHandle,
+        Action? onExit = null
+    )
     {
-        var ui = GetInterface();
-        ui.SetState(new DefaultConfigState(this, category: categoryHandle, onExit: onExit));
+        SetState(
+            GetInterface(),
+            new DefaultConfigState(
+                this,
+                category: categoryHandle,
+                onExit: onExit
+            )
+        );
     }
 
-    public override void ShowInterface(ConfigEntryHandle entryHandle, Action? onExit = null)
+    public override void ShowInterface(
+        ConfigEntryHandle entryHandle,
+        Action? onExit = null
+    )
     {
-        var ui = GetInterface();
-        ui.SetState(new DefaultConfigState(this, entry: entryHandle, onExit: onExit));
+        SetState(
+            GetInterface(),
+            new DefaultConfigState(
+                this,
+                entry: entryHandle,
+                onExit: onExit
+            )
+        );
     }
 
-    public override void ShowInterface(ConfigCategoryHandle categoryHandle, ConfigEntryHandle entryHandle, Action? onExit = null)
+    public override void ShowInterface(
+        ConfigCategoryHandle categoryHandle,
+        ConfigEntryHandle entryHandle,
+        Action? onExit = null
+    )
     {
-        var ui = GetInterface();
-        ui.SetState(new DefaultConfigState(this, categoryHandle, entryHandle, onExit));
+        SetState(
+            GetInterface(),
+            new DefaultConfigState(
+                this,
+                categoryHandle,
+                entryHandle,
+                onExit
+            )
+        );
     }
 
     private static UserInterface GetInterface()
@@ -127,13 +162,6 @@ internal sealed class DefaultConfigRepository : ConfigRepository
         }
         else
         {
-            /*
-            Main.ClosePlayerChat();
-            Main.chatText = "";
-            Main.playerInventory = false;
-            Main.editChest = false;
-            Main.npcChatText = "";
-            */
             IngameFancyUI.CoverNextFrame();
             Main.playerInventory = false;
             Main.editChest = false;
@@ -143,8 +171,12 @@ internal sealed class DefaultConfigRepository : ConfigRepository
             ui = Main.InGameUI;
         }
 
-        SoundEngine.PlaySound(in SoundID.MenuOpen);
-
         return ui;
+    }
+
+    private static void SetState(UserInterface ui, DefaultConfigState state)
+    {
+        SoundEngine.PlaySound(in SoundID.MenuOpen);
+        ui.SetState(state);
     }
 }

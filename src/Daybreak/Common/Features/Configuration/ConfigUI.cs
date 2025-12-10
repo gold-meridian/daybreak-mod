@@ -68,12 +68,9 @@ public class ConfigState : UIState, IHaveBackButtonCommand
         tabs.Height.Set(-(tabsMargin * 2f), 1f);
 
         backButton = new(Language.GetText("UI.Back"), 0.7f, true);
-
-
     }
 
-    #region Buttons
-
+#region Buttons
     void IHaveBackButtonCommand.HandleBackButtonUsage()
     {
         SoundEngine.PlaySound(in SoundID.MenuClose);
@@ -89,8 +86,7 @@ public class ConfigState : UIState, IHaveBackButtonCommand
 
         exitAction?.Invoke();
     }
-
-    #endregion
+#endregion
 }
 
 public class CategoryTabList : UIList
@@ -101,7 +97,7 @@ public class CategoryTabList : UIList
     {
         this.attachedPanel = attachedPanel;
 
-        foreach (var category in repository.GetCategories())
+        foreach (var category in repository.Categories)
         {
             Add(new CategoryTab(category));
         }
