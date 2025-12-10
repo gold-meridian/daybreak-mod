@@ -199,20 +199,6 @@ public interface IConfigEntry
 }
 
 /// <summary>
-///     Static APIs relating to <see cref="ConfigEntry{T}"/>.
-/// </summary>
-public static class ConfigEntry
-{
-    /// <summary>
-    ///     Creates a new object for configuring the config entry.
-    /// </summary>
-    public static ConfigEntryOptions<T> Options<T>()
-    {
-        return new ConfigEntryOptions<T>();
-    }
-}
-
-/// <summary>
 ///     The type-safe implementation of <see cref="IConfigEntry"/>.
 /// </summary>
 public sealed class ConfigEntry<T> : IConfigEntry
@@ -480,6 +466,14 @@ public sealed class ConfigEntry<T> : IConfigEntry
             _ => throw new ArgumentOutOfRangeException(nameof(modSide), modSide, null),
         };
     }
+    
+    /// <summary>
+    ///     Creates a new object for configuring the config entry.
+    /// </summary>
+    public static ConfigEntryOptions<T> Define()
+    {
+        return new ConfigEntryOptions<T>();
+    }
 }
 
 /// <summary>
@@ -545,76 +539,76 @@ public sealed class ConfigEntryOptions<T>
 
 public static class ConfigEntryOptionsExtensions
 {
-    extension<T>(ConfigEntryOptions<T> entry)
+    extension<T>(ConfigEntryOptions<T> options)
     {
         public ConfigEntryOptions<T> WithDisplayName(Func<ConfigEntry<T>, LocalizedText>? displayName)
         {
-            return entry.With(x => x.DisplayName = displayName);
+            return options.With(x => x.DisplayName = displayName);
         }
 
         public ConfigEntryOptions<T> WithTooltip(Func<ConfigEntry<T>, LocalizedText>? tooltip)
         {
-            return entry.With(x => x.Tooltip = tooltip);
+            return options.With(x => x.Tooltip = tooltip);
         }
 
         public ConfigEntryOptions<T> WithDescription(Func<ConfigEntry<T>, LocalizedText>? description)
         {
-            return entry.With(x => x.Description = description);
+            return options.With(x => x.Description = description);
         }
 
         public ConfigEntryOptions<T> WithConfigSide(Func<ConfigEntry<T>, ConfigSide>? configSide)
         {
-            return entry.With(x => x.ConfigSide = configSide);
+            return options.With(x => x.ConfigSide = configSide);
         }
 
         public ConfigEntryOptions<T> WithCategories(Func<ConfigEntry<T>, IEnumerable<ConfigCategoryHandle>>? categories)
         {
-            return entry.With(x => x.Categories = categories);
+            return options.With(x => x.Categories = categories);
         }
 
         public ConfigEntryOptions<T> WithCategories(params ConfigCategoryHandle[] categories)
         {
-            return entry.With(x => x.Categories = _ => categories);
+            return options.With(x => x.Categories = _ => categories);
         }
 
         public ConfigEntryOptions<T> WithDefaultValue(Func<ConfigEntry<T>, T?>? defaultValue)
         {
-            return entry.With(x => x.DefaultValue = defaultValue);
+            return options.With(x => x.DefaultValue = defaultValue);
         }
 
         public ConfigEntryOptions<T> WithLocalValue(ConfigEntryOptions<T>.Getter getter, ConfigEntryOptions<T>.Setter setter)
         {
-            return entry.With(x => x.LocalValue = (getter, setter));
+            return options.With(x => x.LocalValue = (getter, setter));
         }
 
         public ConfigEntryOptions<T> WithRemoteValue(ConfigEntryOptions<T>.Getter getter, ConfigEntryOptions<T>.Setter setter)
         {
-            return entry.With(x => x.RemoteValue = (getter, setter));
+            return options.With(x => x.RemoteValue = (getter, setter));
         }
 
         public ConfigEntryOptions<T> WithPendingValue(ConfigEntryOptions<T>.Getter getter, ConfigEntryOptions<T>.Setter setter)
         {
-            return entry.With(x => x.PendingValue = (getter, setter));
+            return options.With(x => x.PendingValue = (getter, setter));
         }
 
         public ConfigEntryOptions<T> WithSerialization(ConfigSerialization.Serialize<T> serializer, ConfigSerialization.Deserialize<T> deserializer)
         {
-            return entry.With(x => x.Serialization = (serializer, deserializer));
+            return options.With(x => x.Serialization = (serializer, deserializer));
         }
 
         public ConfigEntryOptions<T> WithValue(ConfigEntryOptions<T>.Getter? getter)
         {
-            return entry.With(x => x.Value = getter);
+            return options.With(x => x.Value = getter);
         }
 
         public ConfigEntryOptions<T> WithDirtied(Func<ConfigEntry<T>, bool>? dirtied)
         {
-            return entry.With(x => x.Dirtied = dirtied);
+            return options.With(x => x.Dirtied = dirtied);
         }
 
         public ConfigEntryOptions<T> WithReloadRequired(Func<ConfigEntry<T>, bool>? reloadRequired)
         {
-            return entry.With(x => x.ReloadRequired = reloadRequired);
+            return options.With(x => x.ReloadRequired = reloadRequired);
         }
     }
 }

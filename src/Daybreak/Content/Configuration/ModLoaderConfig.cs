@@ -13,7 +13,8 @@ internal static class ModLoaderConfig
 
     private static ConfigEntryOptions<T> Define<T>(RefProvider<T> value)
     {
-        return ConfigEntry.Options<T>()
+        return ConfigEntry<T>
+              .Define()
                // These values are handled separately and should not be synced
                // by us.
               .WithConfigSide(_ => ConfigSide.NoSync)
@@ -21,7 +22,8 @@ internal static class ModLoaderConfig
                // provide a way to get and set them.
               .WithLocalValue(
                    getter: (_, _) => value(),
-                   setter: (_, ref storedValue, newValue) => storedValue = value() = newValue)
+                   setter: (_, ref storedValue, newValue) => storedValue = value() = newValue
+               )
                // These values are saved externally, and we should never have to
                // read or write them.
               .WithSerialization(
@@ -33,7 +35,8 @@ internal static class ModLoaderConfig
     public static class General
     {
         public static ConfigCategoryHandle Category { get; } =
-            new ConfigCategoryDescriptor()
+            ConfigCategory
+               .Define()
                .Register(Config, Mod, nameof(General));
 
         // bool Download Mods From Servers: On/Off

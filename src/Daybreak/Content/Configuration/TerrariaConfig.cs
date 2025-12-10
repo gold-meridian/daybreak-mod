@@ -14,27 +14,30 @@ internal static class TerrariaConfig
 
     private static ConfigEntryOptions<T> Define<T>(RefProvider<T> value)
     {
-        return ConfigEntry.Options<T>()
-                           // These values are handled separately and should not be synced
-                           // by us.
-                          .WithConfigSide(_ => ConfigSide.NoSync)
-                           // These values already exist elsewhere, so we just need to
-                           // provide a way to get and set them.
-                          .WithLocalValue(
-                               getter: (_, _) => value(),
-                               setter: (_, ref storedValue, newValue) => storedValue = value() = newValue)
-                           // These values are saved externally, and we should never have to
-                           // read or write them.
-                          .WithSerialization(
-                               serializer: (_, _, _) => null,
-                               deserializer: (entry, _, _) => entry.LocalValue
-                           );
+        return ConfigEntry<T>
+              .Define()
+               // These values are handled separately and should not be synced
+               // by us.
+              .WithConfigSide(_ => ConfigSide.NoSync)
+               // These values already exist elsewhere, so we just need to
+               // provide a way to get and set them.
+              .WithLocalValue(
+                   getter: (_, _) => value(),
+                   setter: (_, ref storedValue, newValue) => storedValue = value() = newValue
+               )
+               // These values are saved externally, and we should never have to
+               // read or write them.
+              .WithSerialization(
+                   serializer: (_, _, _) => null,
+                   deserializer: (entry, _, _) => entry.LocalValue
+               );
     }
 
     public static class General
     {
         public static ConfigCategoryHandle Category { get; } =
-            new ConfigCategoryDescriptor()
+            ConfigCategory
+               .Define()
                .Register(Config, Mod, nameof(General));
 
         // bool Autosave On/Off
@@ -127,7 +130,8 @@ internal static class TerrariaConfig
     public static class Interface
     {
         public static ConfigCategoryHandle Category { get; } =
-            new ConfigCategoryDescriptor()
+            ConfigCategory
+               .Define()
                .Register(Config, Mod, nameof(Interface));
 
         // bool Pickup Text On/Off
@@ -150,7 +154,8 @@ internal static class TerrariaConfig
     public static class Video
     {
         public static ConfigCategoryHandle Category { get; } =
-            new ConfigCategoryDescriptor()
+            ConfigCategory
+               .Define()
                .Register(Config, Mod, nameof(Video));
 
         // Resolution sub-menu
@@ -175,7 +180,8 @@ internal static class TerrariaConfig
     public static class Volume
     {
         public static ConfigCategoryHandle Category { get; } =
-            new ConfigCategoryDescriptor()
+            ConfigCategory
+               .Define()
                .Register(Config, Mod, nameof(Volume));
 
         // Music: 0%-100%
@@ -191,7 +197,8 @@ internal static class TerrariaConfig
     public static class Cursor
     {
         public static ConfigCategoryHandle Category { get; } =
-            new ConfigCategoryDescriptor()
+            ConfigCategory
+               .Define()
                .Register(Config, Mod, nameof(Cursor));
 
         // Cursor Color sub-menu
@@ -212,7 +219,8 @@ internal static class TerrariaConfig
     public static class Controls
     {
         public static ConfigCategoryHandle Category { get; } =
-            new ConfigCategoryDescriptor()
+            ConfigCategory
+               .Define()
                .Register(Config, Mod, nameof(Controls));
 
         // ??? Activate Set Bonuses: {}
@@ -229,7 +237,8 @@ internal static class TerrariaConfig
     public static class Language
     {
         public static ConfigCategoryHandle Category { get; } =
-            new ConfigCategoryDescriptor()
+            ConfigCategory
+               .Define()
                .Register(Config, Mod, nameof(Language) + "Category");
 
         // Generic selection menu we can reimplement.

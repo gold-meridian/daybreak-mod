@@ -18,8 +18,9 @@ public enum ConfigSide
     ServerSide,
 
     /// <summary>
-    ///     The entry applies to both the client and server and needs syncing
-    ///     across the boundary.
+    ///     The entry applies to both the client and server.  It declares an
+    ///     option as server-authoritative and syncs it from the server to the
+    ///     client.
     /// </summary>
     Both,
 
