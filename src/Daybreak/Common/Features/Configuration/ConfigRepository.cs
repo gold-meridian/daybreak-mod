@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Daybreak.Common.Features.Configuration.Default;
 using JetBrains.Annotations;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -147,6 +149,14 @@ public abstract class ConfigRepository : ILocalizedModType
     }
 
     /// <summary>
+    ///     Gets all categories owned by this repository.
+    /// </summary>
+    public virtual ConfigCategory[] GetCategories()
+    {
+        return Categories.Select(pair => pair.Value).ToArray();
+    }
+
+    /// <summary>
     ///     Gets an entry owned by this repository.
     /// </summary>
     public virtual IConfigEntry GetEntry(ConfigEntryHandle handle)
@@ -209,6 +219,14 @@ public abstract class ConfigRepository : ILocalizedModType
 
         entry = null;
         return false;
+    }
+
+    /// <summary>
+    ///     Gets all entries owned by this repository.
+    /// </summary>
+    public virtual IConfigEntry[] GetEntries()
+    {
+        return Entries.Select(pair => pair.Value).ToArray();
     }
 
     /// <summary>
@@ -283,16 +301,23 @@ public abstract class ConfigRepository : ILocalizedModType
     /// <summary>
     ///     Opens the associated UI.
     /// </summary>
-    public abstract void ShowInterface();
+    public abstract void ShowInterface(Action? onExit = null);
     
     /// <summary>
     ///     Opens the associated UI and goes to the requested category.
     /// </summary>
-    public abstract void ShowInterface(ConfigCategoryHandle categoryHandle);
+    public abstract void ShowInterface(ConfigCategoryHandle categoryHandle, Action? onExit = null);
 
     /// <summary>
-    ///     Opens the associated UI and goe sot the requested entry with the
+    ///     Opens the associated UI and goes ot the requested entry with the
     ///     page set to its main category.
     /// </summary>
-    public abstract void ShowInterface(ConfigEntryHandle entryHandle);
+    public abstract void ShowInterface(ConfigEntryHandle entryHandle, Action? onExit = null);
+
+
+    /// <summary>
+    ///     Opens the associated UI and goes ot the requested entry with the
+    ///     page set to its requested category.
+    /// </summary>
+    public abstract void ShowInterface(ConfigCategoryHandle categoryHandle, ConfigEntryHandle entryHandle, Action? onExit = null);
 }

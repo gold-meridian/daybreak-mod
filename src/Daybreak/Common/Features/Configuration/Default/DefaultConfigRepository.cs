@@ -1,17 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json.Linq;
+using System.Reflection.Metadata;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Daybreak.Common.Features.Configuration;
+namespace Daybreak.Common.Features.Configuration.Default;
 
-internal sealed class DefaultConfigState : UIState;
+internal sealed class DefaultConfigState : ConfigState
+{
+    public DefaultConfigState(ConfigRepository repository, ConfigCategoryHandle? category = null, ConfigEntryHandle? entry = null, Action? onExit = null) : base(repository, category, entry, onExit)
+    { }
+}
 
 internal sealed class DefaultConfigRepository : ConfigRepository
 {
@@ -87,7 +93,31 @@ internal sealed class DefaultConfigRepository : ConfigRepository
         }
     }
 
-    public override void ShowInterface()
+    public override void ShowInterface(Action? onExit = null)
+    {
+        var ui = GetInterface();
+        ui.SetState(new DefaultConfigState(this, onExit: onExit));
+    }
+
+    public override void ShowInterface(ConfigCategoryHandle categoryHandle, Action? onExit = null)
+    {
+        var ui = GetInterface();
+        ui.SetState(new DefaultConfigState(this, category: categoryHandle, onExit: onExit));
+    }
+
+    public override void ShowInterface(ConfigEntryHandle entryHandle, Action? onExit = null)
+    {
+        var ui = GetInterface();
+        ui.SetState(new DefaultConfigState(this, entry: entryHandle, onExit: onExit));
+    }
+
+    public override void ShowInterface(ConfigCategoryHandle categoryHandle, ConfigEntryHandle entryHandle, Action? onExit = null)
+    {
+        var ui = GetInterface();
+        ui.SetState(new DefaultConfigState(this, categoryHandle, entryHandle, onExit));
+    }
+
+    private static UserInterface GetInterface()
     {
         UserInterface ui;
         if (Main.gameMenu)
@@ -113,19 +143,8 @@ internal sealed class DefaultConfigRepository : ConfigRepository
             ui = Main.InGameUI;
         }
 
-        SoundEngine.PlaySound(10);
-        ui.SetState(new DefaultConfigState());
-    }
+        SoundEngine.PlaySound(in SoundID.MenuOpen);
 
-    public override void ShowInterface(ConfigCategoryHandle categoryHandle)
-    {
-        // TODO
-        ShowInterface();
-    }
-
-    public override void ShowInterface(ConfigEntryHandle entryHandle)
-    {
-        // TODO
-        ShowInterface();
+        return ui;
     }
 }
