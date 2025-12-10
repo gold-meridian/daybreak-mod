@@ -2,6 +2,7 @@
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using System;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
@@ -147,6 +148,34 @@ public class CategoryTabList : UIList
 
     public event Action<ConfigCategory>? OnCategorySelected;
 
+    public ConfigCategory Category
+    {
+        get => field;
+        set
+        {
+            this[Category]?.Selected = false;
+            this[value]?.Selected = true;
+
+            field = value;
+        }
+    }
+
+    public CategoryTab? this[ConfigCategory category]
+    {
+        get
+        {
+            foreach (var elem in this)
+            {
+                if (elem is CategoryTab tab && tab.Category == category)
+                {
+                    return tab;
+                }
+            }
+
+            return null;
+        }
+    }
+
     public CategoryTabList(ConfigRepository repository, UIPanel attachedPanel) : base()
     {
         this.attachedPanel = attachedPanel;
@@ -161,6 +190,8 @@ public class CategoryTabList : UIList
 
             Add(tab);
         }
+
+        Category = repository.Categories.First();
     }
 
     public override void Update(GameTime gameTime)
@@ -173,19 +204,36 @@ public class CategoryTabList : UIList
 
     private void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
     {
-        if (listeningElement is not CategoryTab tab)
+        if (listeningElement is CategoryTab tab)
         {
-            return;
+            Category = tab.Category;
+            OnCategorySelected?.Invoke(Category);
         }
-
-        OnCategorySelected?.Invoke(tab.Category);
     }
 
     public class CategoryTab : UITextPanel<LocalizedText>
     {
         public ConfigCategory Category;
 
-        public bool Selected = false;
+        public bool Selected
+        {
+            get => field;
+            set
+            {
+                field = value;
+
+                BorderColor = UICommon.DefaultUIBorder;
+
+                if (value)
+                {
+                    BackgroundColor = UICommon.DefaultUIBlue;
+                }
+                else
+                {
+                    BackgroundColor = UICommon.MainPanelBackground;
+                }
+            }
+        }
 
         public CategoryTab(ConfigCategory category) : base(category.DisplayName)
         {
@@ -200,16 +248,31 @@ public class CategoryTabList : UIList
 
             TextHAlign = 0f;
 
+            BackgroundColor = UICommon.MainPanelBackground;
+            BorderColor = UICommon.DefaultUIBorder;
+
             this.WithFadedMouseOver();
         }
 
-        public override void Update(GameTime gameTime)
+        public override void MouseOver(UIMouseEvent evt)
         {
-            base.Update(gameTime);
-
             if (!Selected)
             {
+                SoundEngine.PlaySound(in SoundID.MenuTick);
+
+                BackgroundColor = UICommon.DefaultUIBlue;
+                BorderColor = UICommon.DefaultUIBorderMouseOver;
+            }
+        }
+
+        public override void MouseOut(UIMouseEvent evt)
+        {
+            if (!Selected)
+            {
+                SoundEngine.PlaySound(in SoundID.MenuTick);
+
                 BackgroundColor = UICommon.MainPanelBackground;
+                BorderColor = UICommon.DefaultUIBorder;
             }
         }
     }
