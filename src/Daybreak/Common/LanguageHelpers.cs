@@ -8,12 +8,13 @@ internal static class LanguageHelpers
 {
     public static LocalizedText GetLocalization(
         Mod? mod,
+        string name,
         string category,
         string suffix,
         Func<string>? makeDefaultValue = null
     )
     {
-        return Language.GetOrRegister($"Mods.{GetModName(mod)}.{category}.{suffix}", makeDefaultValue);
+        return Language.GetOrRegister($"Mods.{GetModName(mod)}.{category}.{name}.{suffix}", makeDefaultValue);
     }
 
     public static string GetModName(Mod? mod)

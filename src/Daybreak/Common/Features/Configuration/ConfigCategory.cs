@@ -73,7 +73,13 @@ public sealed class ConfigCategory(
     /// </summary>
     public LocalizedText DisplayName =>
         Options.DisplayName?.Invoke(this)
-     ?? LanguageHelpers.GetLocalization(Handle.Mod, nameof(ConfigCategory), nameof(DisplayName), () => Handle.Name);
+     ?? LanguageHelpers.GetLocalization(
+            Handle.Mod,
+            Handle.Name,
+            nameof(ConfigCategory),
+            nameof(DisplayName),
+            () => Handle.Name
+        );
 
     /// <summary>
     ///     Derives the handle of this category.
