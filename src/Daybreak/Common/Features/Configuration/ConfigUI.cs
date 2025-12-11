@@ -248,25 +248,32 @@ public class CategoryTabList : UIList
             this.WithFadedMouseOver();
 
             MinWidth.Set(160f, 0f);
-            MaxWidth.Set(400f, 0f);
+
+            MinHeight.Set(38f, 0f);
 
             HAlign = 1f;
 
             TextOriginX = 0f;
 
+            SetPadding(4f);
+
+            UseInnerDimensions = true;
+
             if (category.Icon is not null)
             {
                 var icon = category.Icon;
 
-                const float icon_padding = 2f;
+                // If an icon is not loaded the width values used are 0.
+                icon.Wait();
 
-                float iconMargin = icon.Width() + icon_padding;
+                float iconMargin = icon.Width();
 
                 PaddingLeft += iconMargin;
 
                 UIImage tabIcon = new(category.Icon)
                 {
                     VAlign = 0.5f,
+                    HAlign = 0f,
                     MarginLeft = -iconMargin,
                     MarginTop = -2f
                 };
