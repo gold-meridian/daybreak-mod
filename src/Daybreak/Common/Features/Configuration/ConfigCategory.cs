@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System;
 using System.Runtime.CompilerServices;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -69,6 +71,12 @@ public sealed class ConfigCategory(
     public ConfigCategoryOptions Options { get; } = options;
 
     /// <summary>
+    ///     The icon this category should use, null if not applicable.
+    /// </summary>
+    public Asset<Texture2D>? Icon =>
+        Options.Icon?.Invoke(this);
+
+    /// <summary>
     ///     The display name of this category.
     /// </summary>
     public LocalizedText DisplayName =>
@@ -105,6 +113,8 @@ public sealed class ConfigCategory(
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public sealed class ConfigCategoryOptions
 {
+    public Func<ConfigCategory, Asset<Texture2D>>? Icon { get; set; }
+
     public Func<ConfigCategory, LocalizedText>? DisplayName { get; set; }
 
     public ConfigCategoryOptions With(Action<ConfigCategoryOptions> apply)
@@ -135,10 +145,16 @@ public static class ConfigCategoryDescriptorExtensions
 {
     extension(ConfigCategoryOptions options)
     {
+        public ConfigCategoryOptions WithIcon(Func<ConfigCategory, Asset<Texture2D>>? icon)
+        {
+            return options.With(x => x.Icon = icon);
+        }
+
         public ConfigCategoryOptions WithDisplayName(Func<ConfigCategory, LocalizedText>? displayName)
         {
             return options.With(x => x.DisplayName = displayName);
         }
+
     }
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
