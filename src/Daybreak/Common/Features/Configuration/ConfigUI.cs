@@ -211,7 +211,7 @@ public class CategoryTabList : UIList
         }
     }
 
-    public class CategoryTab : UITextPanel<LocalizedText>
+    public class CategoryTab : UIAutoScaleTextTextPanel<LocalizedText>
     {
         public ConfigCategory Category;
 
@@ -242,16 +242,39 @@ public class CategoryTabList : UIList
             _backgroundTexture = AssetReferences.Assets.Images.UI.ConfigTabPanel.Asset;
             _borderTexture = AssetReferences.Assets.Images.UI.ConfigTabPanelOutline.Asset;
 
-            MinWidth.Set(160f, 0f);
-
-            HAlign = 1f;
-
-            TextHAlign = 0f;
-
             BackgroundColor = UICommon.MainPanelBackground;
             BorderColor = UICommon.DefaultUIBorder;
 
             this.WithFadedMouseOver();
+
+            MinWidth.Set(160f, 0f);
+            MaxWidth.Set(400f, 0f);
+
+            HAlign = 1f;
+
+            TextOriginX = 0f;
+
+            if (category.Icon is not null)
+            {
+                var icon = category.Icon;
+
+                const float icon_padding = 2f;
+
+                float iconMargin = icon.Width() + icon_padding;
+
+                PaddingLeft += iconMargin;
+
+                UIImage tabIcon = new(category.Icon)
+                {
+                    VAlign = 0.5f,
+                    MarginLeft = -iconMargin,
+                    MarginTop = -2f
+                };
+
+                Append(tabIcon);
+            }
+
+            Recalculate();
         }
 
         public override void MouseOver(UIMouseEvent evt)
