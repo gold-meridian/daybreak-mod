@@ -1,13 +1,13 @@
 Terraria: {
 	ConfigCategory: {
-		General: General TEST TERRARIA
-		Interface: Interface TEST TERRARIA
-		Video: Video TEST TERRARIA
-		Volume: Volume TEST TERRARIA
-		Cursor: Cursor TEST TERRARIA
-		Controls: Controls TEST TERRARIA
-		LanguageCategory: Language TEST TERRARIA
+		General.DisplayName: General
+		Interface.DisplayName: Interface
+		Video.DisplayName: Video
+		Volume.DisplayName: Volume
+		Cursor.DisplayName: Cursor
+		Controls.DisplayName: Controls
+		LanguageCategory.DisplayName: Language
 	}
 }
 
-ModLoader.ConfigCategory.General: General TEST LOADER
+ModLoader.ConfigCategory.General.DisplayName: tModLoader
