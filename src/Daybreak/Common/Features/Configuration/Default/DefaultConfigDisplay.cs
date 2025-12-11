@@ -173,6 +173,11 @@ internal static class DefaultConfigDisplay
 
         c.GotoNext(
             MoveType.After,
+            x => x.MatchLdstr("UI.Workshop")
+        );
+
+        c.GotoNext(
+            MoveType.After,
             x => x.MatchLdcI4(MenuID.Settings),
             x => x.MatchStsfld<Main>(nameof(Main.menuMode))
         );
@@ -184,7 +189,11 @@ internal static class DefaultConfigDisplay
             {
                 if (daybreakOverVanillaSettings)
                 {
-                    ConfigRepository.Default.ShowInterface();
+                    ConfigRepository.Default.ShowInterface(onExit:
+                    () =>
+                    {
+                        Main.menuMode = MenuID.Title;
+                    });
                 }
             }
         );
