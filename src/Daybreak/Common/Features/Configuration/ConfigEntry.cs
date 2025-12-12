@@ -68,11 +68,6 @@ public interface IConfigEntry
     ConfigSide Side { get; }
 
     /// <summary>
-    ///     The type this entry stores.
-    /// </summary>
-    Type ValueType { get; }
-
-    /// <summary>
     ///     The most up-to-date value of this entry.  If this entry is synced
     ///     to both the client and server, it will use the value the server
     ///     provides.  If this value is not synced, it will solely use the local
@@ -124,12 +119,6 @@ public interface IConfigEntry
     ///     The display name of this config entry.
     /// </summary>
     LocalizedText DisplayName { get; }
-
-    /// <summary>
-    ///     The short-form tooltip briefly summarizing this entry, to be
-    ///     displayed next to the cursor on hover.
-    /// </summary>
-    LocalizedText Tooltip { get; }
 
     /// <summary>
     ///     The long-form description which may be rendered at the bottom of a
@@ -203,8 +192,6 @@ public interface IConfigEntry
 /// </summary>
 public sealed class ConfigEntry<T> : IConfigEntry
 {
-    Type IConfigEntry.ValueType => typeof(T);
-
     object? IConfigEntry.Value => Value;
 
     object? IConfigEntry.LocalValue
@@ -249,17 +236,6 @@ public sealed class ConfigEntry<T> : IConfigEntry
             nameof(ConfigEntry<>),
             nameof(DisplayName),
             () => Handle.Name
-        );
-
-    /// <inheritdoc />
-    public LocalizedText Tooltip =>
-        Options.Tooltip?.Invoke(this)
-     ?? LanguageHelpers.GetLocalization(
-            Handle.Mod,
-            Handle.Name,
-            nameof(ConfigEntry<>),
-            nameof(Tooltip),
-            () => ""
         );
 
     /// <inheritdoc />
@@ -475,8 +451,6 @@ public sealed class ConfigEntryOptions<T>
 
     public Func<ConfigEntry<T>, LocalizedText>? DisplayName { get; set; }
 
-    public Func<ConfigEntry<T>, LocalizedText>? Tooltip { get; set; }
-
     public Func<ConfigEntry<T>, LocalizedText>? Description { get; set; }
 
     public Func<ConfigEntry<T>, ConfigSide>? ConfigSide { get; set; }
@@ -530,11 +504,6 @@ public static class ConfigEntryOptionsExtensions
         public ConfigEntryOptions<T> WithDisplayName(Func<ConfigEntry<T>, LocalizedText>? displayName)
         {
             return options.With(x => x.DisplayName = displayName);
-        }
-
-        public ConfigEntryOptions<T> WithTooltip(Func<ConfigEntry<T>, LocalizedText>? tooltip)
-        {
-            return options.With(x => x.Tooltip = tooltip);
         }
 
         public ConfigEntryOptions<T> WithDescription(Func<ConfigEntry<T>, LocalizedText>? description)

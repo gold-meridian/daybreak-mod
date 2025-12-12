@@ -56,6 +56,9 @@ public static class ConfigSystem
     private static void AddDefaultRepository()
     {
         AddRepository(ConfigRepository.Default);
+        {
+            _ = ConfigRepository.Default.DisplayName;
+        }
     }
 
 #pragma warning disable CA2255

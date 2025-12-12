@@ -252,7 +252,6 @@ public abstract class ConfigRepository : ILocalizedModType
         EntryMap[new EntryKey(entry.Handle)] = entry;
         {
             _ = entry.DisplayName;
-            _ = entry.Tooltip;
             _ = entry.Description;
         }
 
