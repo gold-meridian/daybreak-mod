@@ -559,9 +559,11 @@ public class CategoryTabList : UIList
             }
             Add(headerElement);
 
-            foreach (var category in categories)
+            for (var i = 0; i < categories.Count; i++)
             {
-                var tab = new CategoryTab(category);
+                var category = categories[i];
+
+                var tab = new CategoryTab(category, 1f - (i / (float)categories.Count));
                 {
                     tab.Width.Set(-16f, 1f);
                     tab.Height.Set(28f, 0f);
@@ -699,12 +701,10 @@ public class CategoryTabList : UIList
                 if (value)
                 {
                     TargetColor = textPanel.TextColor = SelectedColor;
-                    highlightDivider.Color = Main.OurFavoriteColor;
                 }
                 else
                 {
                     TargetColor = UnselectedColor;
-                    highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
                 }
             }
         }
@@ -729,13 +729,19 @@ public class CategoryTabList : UIList
         private Color oldColor;
         private int targetColorLerp;
         private int hoverProgress;
+        private int selectProgress;
 
+        private readonly float itemProgress;
         private readonly UIAutoScaleTextTextPanel<LocalizedText> textPanel;
+        private readonly UIHorizontalSeparator dimDivider;
         private readonly UIHorizontalSeparator highlightDivider;
+        private readonly UIHorizontalSeparator selectDivider;
 
-        public CategoryTab(ConfigCategory category)
+        public CategoryTab(ConfigCategory category, float progress)
         {
             this.Category = category;
+
+            itemProgress = progress;
 
             textPanel = new UIAutoScaleTextTextPanel<LocalizedText>(category.DisplayName);
             {
@@ -774,7 +780,7 @@ public class CategoryTabList : UIList
                 Append(tabIcon);
             }
 
-            var dimDivider = new UIHorizontalSeparator();
+            dimDivider = new UIHorizontalSeparator();
             {
                 dimDivider.Width = StyleDimension.Fill;
                 dimDivider.Height.Set(2f, 0f);
@@ -790,9 +796,19 @@ public class CategoryTabList : UIList
                 highlightDivider.Height.Set(2f, 0f);
                 highlightDivider.VAlign = 1f;
                 highlightDivider.Top.Set(0f, 0f);
-                highlightDivider.Color = new Color(85, 88, 159) * 1.25f;
+                highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
             }
             Append(highlightDivider);
+
+            selectDivider = new UIHorizontalSeparator();
+            {
+                selectDivider.Width = StyleDimension.Empty;
+                selectDivider.Height.Set(2f, 0f);
+                selectDivider.VAlign = 1f;
+                selectDivider.Top.Set(0f, 0f);
+                selectDivider.Color = Main.OurFavoriteColor;
+            }
+            Append(selectDivider);
 
             Recalculate();
         }
@@ -813,6 +829,7 @@ public class CategoryTabList : UIList
             const int hover_frames = 8;
             {
                 hoverProgress += IsMouseHovering || Selected ? 1 : -1;
+                selectProgress += Selected ? 1 : -1;
 
                 if (hoverProgress > hover_frames)
                 {
@@ -823,16 +840,42 @@ public class CategoryTabList : UIList
                     hoverProgress = 0;
                 }
 
-                highlightDivider.Width.Set(0f, EaseInOutCubic(hoverProgress / (float)hover_frames));
+                if (selectProgress > hover_frames)
+                {
+                    selectProgress = hover_frames;
+                }
+                else if (selectProgress < 0)
+                {
+                    selectProgress = 0;
+                }
+
+                highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
+                selectDivider.Width.Set(0f, Ease(selectProgress / (float)hover_frames));
             }
+
+            /*
+            var intensity = 0.8f;
+            var cursorProximity = MathF.Pow(_dimensions.ToRectangle().Distance(Main.MouseScreen) / 120f, 2f);
+
+            intensity -= cursorProximity;
+            if (intensity < 0f)
+            {
+                intensity = 0f;
+            }
+
+            dimDivider.Color = new Color(85, 88, 159) * (intensity + 0.2f);
+            */
+
+            dimDivider.Color = new Color(85, 88, 159) * 0.5f * itemProgress;
 
             base.Draw(spriteBatch);
 
             return;
 
-            static float EaseInOutCubic(float x)
+            static float Ease(float x)
             {
-                return x < 0.5f ? 4 * x * x * x : 1 - MathF.Pow(-2 * x + 2, 3) / 2;
+                // return x < 0.5f ? 4 * x * x * x : 1 - MathF.Pow(-2 * x + 2, 3) / 2;
+                return 1 - MathF.Pow(1 - x, 5);
             }
         }
 
