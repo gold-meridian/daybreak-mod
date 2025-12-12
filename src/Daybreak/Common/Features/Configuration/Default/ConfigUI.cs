@@ -29,10 +29,13 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
     protected UIPanel? backPanel;
     protected UIPanel? descriptionPanel;
     protected UIText? descriptionText;
+    protected UIPanel? metadataPanel;
+    protected UIText? metadataText;
     protected CategoryTabList? tabs;
     protected UITextPanel<LocalizedText>? headerPanel;
     protected UITextPanel<LocalizedText>? backButton;
     protected UITextPanel<LocalizedText>? saveButton;
+    protected UIVerticalSeparator? separator;
 
     private readonly Action? exitAction;
 
@@ -94,13 +97,24 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         {
             backPanel.Width = StyleDimension.Fill;
             backPanel.Height.Set(-vertical_margin * 1.75f, 1f);
+            backPanel.BackgroundColor = new Color(33, 43, 79) * 0.8f;
         }
         baseElement.Append(backPanel);
 
+        separator = new UIVerticalSeparator();
+        {
+            separator.Height.Set(0f, 1f);
+            separator.HAlign = 0.25f;
+            separator.VAlign = 1f;
+            separator.Color = new Color(85, 88, 159);
+        }
+        backPanel.Append(separator);
+
         descriptionPanel = new UIPanel();
         {
-            descriptionPanel.Width.Set(0f, 1f);
+            descriptionPanel.Width.Set(-backPanel.PaddingRight, 0.75f);
             descriptionPanel.Height.Set(64, 0f);
+            descriptionPanel.HAlign = 1f;
             descriptionPanel.VAlign = 1f;
             descriptionPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
             descriptionPanel.BackgroundColor = DescriptionPanelColor;
@@ -117,6 +131,28 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             descriptionPanel.Append(descriptionText);
         }
         backPanel.Append(descriptionPanel);
+
+        metadataPanel = new UIPanel();
+        {
+            metadataPanel.Width.Set(-backPanel.PaddingRight, 0.25f);
+            metadataPanel.Height.Set(64, 0f);
+            metadataPanel.HAlign = 0f;
+            metadataPanel.VAlign = 1f;
+            metadataPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
+            metadataPanel.BackgroundColor = DescriptionPanelColor;
+            metadataPanel.BorderColor = Color.Transparent;
+
+            metadataText = new UIText(
+                Mods.Daybreak.UI.DefaultConfigDescription.GetText()
+            );
+            {
+                metadataText.Width.Set(0f, 1f);
+                metadataText.Height.Set(0f, 1f);
+                metadataText.IsWrapped = true;
+            }
+            metadataPanel.Append(metadataText);
+        }
+        backPanel.Append(metadataPanel);
 
         // Panel tabs
         const float tabs_width = 160f;
