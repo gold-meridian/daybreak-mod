@@ -1,7 +1,9 @@
 ﻿using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -9,7 +11,9 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.ModLoader.Config.UI;
+using Terraria.ModLoader.Default;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Gamepad;
@@ -186,8 +190,8 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
             tabScrollbar.Height.Set(-64f - backPanel.PaddingTop - search_bar_offset - (vertical_adjust * 2f), 1f);
             tabScrollbar.Top.Set(search_bar_offset + vertical_adjust, 0f);
-            tabScrollbar.HAlign = 0f;
-            tabScrollbar.Left.Set(0f, 0f);
+            tabScrollbar.HAlign = category_margin;
+            tabScrollbar.Left.Set(-tabScrollbar.Width.Pixels - 6f, 0f);
         }
         backPanel.Append(tabScrollbar);
 
@@ -200,7 +204,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
                 container.Width.Set(-backPanel.PaddingRight - widthReduction, category_margin);
                 container.Height.Set(-64f - backPanel.PaddingTop - search_bar_offset, 1f);
                 container.Top.Set(search_bar_offset, 0f);
-                container.Left.Set(widthReduction, 0f);
+                container.Left.Set(0f, 0f);
             }
             backPanel.Append(container);
 
@@ -521,22 +525,46 @@ public class CategoryTabList : UIList
     {
         ListPadding = 2f;
 
+        var categoriesByMod = new Dictionary<ValueTuple<Mod?>, List<ConfigCategory>>();
         foreach (var category in repository.Categories)
         {
-            var tab = new CategoryTab(category);
+            if (!categoriesByMod.TryGetValue(new ValueTuple<Mod?>(category.Handle.Mod), out var categories))
+            {
+                categoriesByMod[new ValueTuple<Mod?>(category.Handle.Mod)] = categories = [];
+            }
 
-            tab.OnLeftClick += OnClickTab;
-
-            Add(tab);
+            categories.Add(category);
         }
 
-        foreach (var category in repository.Categories)
+        foreach (var (mod, categories) in categoriesByMod)
         {
-            var tab = new CategoryTab(category);
+            var headerElement = new UIElement();
+            {
+                headerElement.Width = StyleDimension.Fill;
+                headerElement.Height.Set(40f, 0f);
 
-            tab.OnLeftClick += OnClickTab;
+                var header = new ModHeader(mod.Item1);
+                headerElement.Append(header);
 
-            Add(tab);
+                var divider = new UIHorizontalSeparator();
+                {
+                    divider.Width = StyleDimension.Fill;
+                    divider.VAlign = 1f;
+                    divider.Top.Set(-2f, 0f);
+                    divider.Color = new Color(85, 88, 159);
+                }
+                headerElement.Append(divider);
+            }
+            Add(headerElement);
+
+            foreach (var category in categories)
+            {
+                var tab = new CategoryTab(category);
+                {
+                    tab.OnLeftClick += OnClickTab;
+                }
+                Add(tab);
+            }
         }
 
         Category = repository.Categories.First();
@@ -548,6 +576,66 @@ public class CategoryTabList : UIList
         {
             Category = tab.Category;
             OnCategorySelected?.Invoke(Category);
+        }
+    }
+
+    public class ModHeader : UIAutoScaleTextTextPanel<string>
+    {
+        public ModHeader(Mod? mod) : base(mod?.DisplayName ?? "Terraria")
+        {
+            // _backgroundTexture = AssetReferences.Assets.Images.UI.ConfigTabPanel.Asset;
+            // _borderTexture = AssetReferences.Assets.Images.UI.ConfigTabPanelOutline.Asset;
+
+            BackgroundColor = Color.Transparent;
+            BorderColor = Color.Transparent;
+
+            Width.Set(0f, 1f);
+            Height.Set(38f, 0f);
+
+            HAlign = 1f;
+
+            TextOriginX = 0f;
+
+            SetPadding(4f);
+
+            // Makes the text respond to padding.
+            UseInnerDimensions = true;
+
+            if (GetModSmallIcon(mod) is { } icon)
+            {
+                // If an icon is not loaded the width values used are 0.
+                icon.Wait();
+
+                float iconMargin = icon.Width();
+
+                PaddingLeft += iconMargin;
+
+                UIImage tabIcon = new(icon)
+                {
+                    VAlign = 0.5f,
+                    HAlign = 0f,
+                    MarginLeft = -iconMargin,
+                    MarginTop = -2f
+                };
+
+                Append(tabIcon);
+            }
+
+            Recalculate();
+        }
+
+        private static Asset<Texture2D>? GetModSmallIcon(Mod? mod)
+        {
+            if (mod is null)
+            {
+                return AssetReferences.Assets.Images.Configuration.GeneralTerrariaIcon.Asset;
+            }
+            else if (mod is ModLoaderMod)
+            {
+                return AssetReferences.Assets.Images.Configuration.GeneraltModLoaderIcon.Asset;
+            }
+
+            return mod.HasAsset("icon_small") ? mod.Assets.Request<Texture2D>("icon_small") : null;
         }
     }
 
@@ -580,8 +668,8 @@ public class CategoryTabList : UIList
         {
             this.Category = category;
 
-            _backgroundTexture = AssetReferences.Assets.Images.UI.ConfigTabPanel.Asset;
-            _borderTexture = AssetReferences.Assets.Images.UI.ConfigTabPanelOutline.Asset;
+            // _backgroundTexture = AssetReferences.Assets.Images.UI.ConfigTabPanel.Asset;
+            // _borderTexture = AssetReferences.Assets.Images.UI.ConfigTabPanelOutline.Asset;
 
             BackgroundColor = UICommon.MainPanelBackground;
             BorderColor = UICommon.DefaultUIBorder;
