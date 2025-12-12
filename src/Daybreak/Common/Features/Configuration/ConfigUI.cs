@@ -1,6 +1,7 @@
 ﻿using Daybreak.Common.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
 using Terraria;
@@ -10,6 +11,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
+using Terraria.UI.Gamepad;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -173,6 +175,13 @@ public class ConfigState : UIState, IHaveBackButtonCommand
         }
     }
 
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        base.Draw(spriteBatch);
+
+        UILinkPointNavigator.Shortcuts.BackButtonCommand = 7;
+    }
+
     protected void ExitState()
     {
         SoundEngine.PlaySound(in SoundID.MenuClose);
@@ -208,7 +217,7 @@ public class ConfigState : UIState, IHaveBackButtonCommand
 
     private void GoBackClick(UIMouseEvent evt, UIElement listeningElement)
     {
-        ExitState();
+        ((IHaveBackButtonCommand)this).HandleBackButtonUsage();
     }
 
     #endregion

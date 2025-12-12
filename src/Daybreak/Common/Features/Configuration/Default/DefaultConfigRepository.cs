@@ -12,10 +12,12 @@ using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
 
-internal sealed class DefaultConfigState : ConfigState
-{
-    public DefaultConfigState(ConfigRepository repository, ConfigCategoryHandle? category = null, ConfigEntryHandle? entry = null, Action? onExit = null) : base(repository, category, entry, onExit) { }
-}
+internal sealed class DefaultConfigState(
+    ConfigRepository repository,
+    ConfigCategoryHandle? category = null,
+    ConfigEntryHandle? entry = null,
+    Action? onExit = null
+) : ConfigState(repository, category, entry, onExit);
 
 internal sealed class DefaultConfigRepository : ConfigRepository
 {

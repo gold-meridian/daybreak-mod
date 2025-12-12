@@ -31,7 +31,7 @@ internal static class DefaultConfigDisplay
 
         public static void UnloadData(Data data) { }
     }
-    
+
     // Hardcoding this is evil, but it's our only practical choice.
     private const int text_settings_menu_y_offset = 585;
 
@@ -80,11 +80,13 @@ internal static class DefaultConfigDisplay
             if (Main.mouseLeft && Main.mouseLeftRelease)
             {
                 daybreakOverVanillaSettings = true;
-                ConfigRepository.Default.ShowInterface(onExit:
+                ConfigRepository.Default.ShowInterface(
+                    onExit:
                     () =>
                     {
                         Main.menuMode = MenuID.Title;
-                    });
+                    }
+                );
             }
         }
 
@@ -189,11 +191,13 @@ internal static class DefaultConfigDisplay
             {
                 if (daybreakOverVanillaSettings)
                 {
-                    ConfigRepository.Default.ShowInterface(onExit:
-                    () =>
-                    {
-                        Main.menuMode = MenuID.Title;
-                    });
+                    ConfigRepository.Default.ShowInterface(
+                        onExit:
+                        () =>
+                        {
+                            Main.menuMode = MenuID.Title;
+                        }
+                    );
                 }
             }
         );
