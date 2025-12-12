@@ -15,6 +15,8 @@ namespace Daybreak.Common.Features.Configuration;
 
 public class ConfigState : UIState, IHaveBackButtonCommand
 {
+    protected static readonly Color descriptionPanelColor = Color.LightGray * 0.7f;
+
     private readonly Action? exitAction;
 
     UIState IHaveBackButtonCommand.PreviousUIState { get; set; }
@@ -27,9 +29,12 @@ public class ConfigState : UIState, IHaveBackButtonCommand
 
     protected UIPanel? basePanel;
 
-    protected UITextPanel<LocalizedText>? headerPanel;
+    protected UIPanel? descriptionPanel;
+    protected UIText? descriptionText;
 
     protected CategoryTabList? tabs;
+
+    protected UITextPanel<LocalizedText>? headerPanel;
 
     protected UITextPanel<LocalizedText>? backButton;
 
@@ -52,63 +57,120 @@ public class ConfigState : UIState, IHaveBackButtonCommand
     {
         const float vertical_margin = 160f;
 
+        const float min_panel_width = 600f;
+
         // Base panel
-        basePanel = new();
+        {
+            basePanel = new();
 
-        basePanel.Width.Set(0f, 0.8f);
-        basePanel.MaxWidth.Set(600f, 0f);
+            basePanel.Width.Set(0f, 0.8f);
+            basePanel.MaxWidth.Set(min_panel_width, 0f);
 
-        basePanel.Top.Set(vertical_margin, 0f);
-        basePanel.Height.Set(-(vertical_margin * 2f), 1f);
+            basePanel.Top.Set(vertical_margin, 0f);
+            basePanel.Height.Set(-(vertical_margin * 2f), 1f);
 
-        basePanel.HAlign = 0.5f;
+            basePanel.HAlign = 0.5f;
 
-        basePanel.BackgroundColor = UICommon.MainPanelBackground;
+            basePanel.BackgroundColor = UICommon.MainPanelBackground;
 
-        Append(basePanel);
+            Append(basePanel);
+        }
+
+        // Description panel
+        {
+            descriptionPanel = new();
+
+            descriptionPanel.Width.Set(0f, 1f);
+
+            descriptionPanel.Height.Set(64, 0f);
+
+            descriptionPanel.VAlign = 1f;
+
+            descriptionPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
+            descriptionPanel.BackgroundColor = descriptionPanelColor;
+
+            descriptionPanel.BorderColor = Color.Transparent;
+
+            basePanel.Append(descriptionPanel);
+        }
+
+        // Description text
+        {
+            descriptionText = new(Mods.Daybreak.UI.DefaultConfigDescription.GetText());
+
+            descriptionText.Width.Set(0f, 1f);
+            descriptionText.Height.Set(0f, 1f);
+
+            descriptionText.IsWrapped = true;
+
+            descriptionPanel.Append(descriptionText);
+        }
 
         // Panel tabs
-        float tabsMargin = vertical_margin + basePanel._cornerSize;
+        {
+            float verticalMargin = vertical_margin + basePanel._cornerSize;
 
-        tabs = new(repository, basePanel);
+            var container = new UIElement();
 
-        tabs.Top.Set(tabsMargin, 0f);
-        tabs.Height.Set(-(tabsMargin * 2f), 1f);
+            container.Top.Set(verticalMargin, 0f);
 
-        Append(tabs);
+            container.Height.Set(-(verticalMargin * 2f), 1f);
+
+            // Effectively the inverse of the panel width calculation.
+            container.Width.Set(0f, 0.2f);
+            container.MinWidth.Set(-(min_panel_width * 0.5f), 0.5f);
+
+            Append(container);
+
+            const float tabs_width = 160f;
+
+            tabs = new(repository);
+
+            tabs.Width.Set(tabs_width, 0f);
+
+            tabs.Height.Set(0, 1f);
+
+            tabs.HAlign = 1f;
+
+            container.Append(tabs);
+        }
 
         // Header
-        headerPanel = new(repository.DisplayName, 0.8f, large: true);
+        {
+            headerPanel = new(repository.DisplayName, 0.8f, large: true);
 
-        headerPanel.SetPadding(15f);
+            headerPanel.SetPadding(15f);
 
-        headerPanel.Top.Set(vertical_margin - 50f, 0f);
+            headerPanel.Top.Set(vertical_margin - 50f, 0f);
 
-        headerPanel.HAlign = 0.5f;
+            headerPanel.HAlign = 0.5f;
 
-        headerPanel.BackgroundColor = UICommon.DefaultUIBlue;
+            headerPanel.BackgroundColor = UICommon.DefaultUIBlue;
 
-        Append(headerPanel);
-
-        const float button_vertical_margin = 10f;
+            Append(headerPanel);
+        }
 
         // Back button
-        backButton = new(Language.GetText("UI.Back"), 0.7f, true);
+        {
+            const float button_vertical_margin = 10f;
 
-        backButton.Top.Set(-vertical_margin + button_vertical_margin, 1f);
+            backButton = new(Language.GetText("UI.Back"), 0.7f, true);
 
-        backButton.Width.Set(0f, 0.4f);
-        backButton.MaxWidth.Set(300f, 0f);
+            backButton.Top.Set(-vertical_margin + button_vertical_margin, 1f);
 
-        backButton.Height.Set(50f, 0f);
+            backButton.Width.Set(0f, 0.4f);
+            backButton.MaxWidth.Set(300f, 0f);
 
-        backButton.HAlign = 0.5f;
+            backButton.Height.Set(50f, 0f);
 
-        backButton.OnLeftMouseDown += GoBackClick;
+            backButton.HAlign = 0.5f;
 
-        backButton.WithFadedMouseOver();
+            backButton.OnLeftMouseDown += GoBackClick;
 
-        Append(backButton);
+            backButton.WithFadedMouseOver();
+
+            Append(backButton);
+        }
     }
 
     protected void ExitState()
@@ -129,7 +191,17 @@ public class ConfigState : UIState, IHaveBackButtonCommand
 
     #region Buttons
 
-    public void HandleBackButtonUsage()
+    private void DescriptionMouseOver(UIMouseEvent evt, UIElement listeningElement)
+    {
+        // TODO
+    }
+
+    private void DescriptionMouseOut(UIMouseEvent evt, UIElement listeningElement)
+    {
+        descriptionText?.SetText(Mods.Daybreak.UI.DefaultConfigDescription.GetText());
+    }
+
+    void IHaveBackButtonCommand.HandleBackButtonUsage()
     {
         ExitState();
     }
@@ -144,8 +216,6 @@ public class ConfigState : UIState, IHaveBackButtonCommand
 
 public class CategoryTabList : UIList
 {
-    protected UIPanel attachedPanel;
-
     public event Action<ConfigCategory>? OnCategorySelected;
 
     public ConfigCategory Category
@@ -176,10 +246,8 @@ public class CategoryTabList : UIList
         }
     }
 
-    public CategoryTabList(ConfigRepository repository, UIPanel attachedPanel) : base()
+    public CategoryTabList(ConfigRepository repository) : base()
     {
-        this.attachedPanel = attachedPanel;
-
         ListPadding = 2f;
 
         foreach (var category in repository.Categories)
@@ -192,14 +260,6 @@ public class CategoryTabList : UIList
         }
 
         Category = repository.Categories.First();
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-        // Update the width so it'll always match the left edge of the attached panel.
-        Rectangle dims = attachedPanel.Dimensions;
-
-        Width.Set(dims.X, 0f);
     }
 
     private void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
@@ -247,7 +307,7 @@ public class CategoryTabList : UIList
 
             this.WithFadedMouseOver();
 
-            MinWidth.Set(160f, 0f);
+            MinWidth.Set(0f, 1f);
 
             MinHeight.Set(38f, 0f);
 
@@ -257,6 +317,7 @@ public class CategoryTabList : UIList
 
             SetPadding(4f);
 
+            // Makes the text respond to padding.
             UseInnerDimensions = true;
 
             if (category.Icon is not null)

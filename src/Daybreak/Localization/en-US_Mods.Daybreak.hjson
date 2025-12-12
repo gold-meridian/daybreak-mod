@@ -9,6 +9,7 @@ UI: {
 	SwitchToDaybreak: Switch to the DAYBREAK settings UI
 	SwitchToVanilla: Switch to the Vanilla settings UI
 	SwitchToModLoader: Switch to the tModLoader settings UI
+	DefaultConfigDescription: Hover over an option for more information.
 }
 
 Configs: {
