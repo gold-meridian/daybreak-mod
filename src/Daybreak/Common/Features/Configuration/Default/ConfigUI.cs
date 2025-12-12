@@ -155,31 +155,24 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         backPanel.Append(metadataPanel);
 
         // Panel tabs
-        const float tabs_width = 160f;
         {
-            var verticalMargin = vertical_margin + backPanel._cornerSize;
-
             var container = new UIElement();
             {
-                container.Top.Set(verticalMargin, 0f);
-                container.Height.Set(-(verticalMargin * 2f), 1f);
-
-                // Effectively the inverse of the panel width calculation.
-                container.Width.Set(0f, 0.2f);
-                container.MinWidth.Set(-(min_panel_width * 0.5f), 0.5f);
+                container.Width.Set(-backPanel.PaddingRight, 0.25f);
+                container.Height.Set(-64f - backPanel.PaddingTop, 1f);
+                container.Top.Set(0f, 0f);
             }
-            baseElement.Append(container);
+            backPanel.Append(container);
 
             tabs = new CategoryTabList(Repository);
             {
-                tabs.Width.Set(tabs_width, 0f);
+                tabs.Width.Set(0f, 1f);
                 tabs.Height.Set(0, 1f);
                 tabs.HAlign = 1f;
             }
             container.Append(tabs);
         }
 
-        // Header
         headerPanel = new UITextPanel<LocalizedText>(
             Repository.DisplayName,
             textScale: 0.8f,
@@ -317,6 +310,14 @@ public class CategoryTabList : UIList
 
             Add(tab);
         }
+        foreach (var category in repository.Categories)
+        {
+            var tab = new CategoryTab(category);
+
+            tab.OnLeftClick += OnClickTab;
+
+            Add(tab);
+        }
 
         Category = repository.Categories.First();
     }
@@ -367,9 +368,8 @@ public class CategoryTabList : UIList
 
             this.WithFadedMouseOver();
 
-            MinWidth.Set(0f, 1f);
-
-            MinHeight.Set(38f, 0f);
+            Width.Set(0f, 1f);
+            Height.Set(38f, 0f);
 
             HAlign = 1f;
 
