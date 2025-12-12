@@ -38,7 +38,7 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
-               .WithIcon(c => Assets.Images.Configuration.GeneralTerrariaIcon.Asset)
+               // .WithIcon(c => Assets.Images.Configuration.GeneralTerrariaIcon.Asset)
                .Register(Config, Mod, nameof(General));
 
         // bool Autosave On/Off

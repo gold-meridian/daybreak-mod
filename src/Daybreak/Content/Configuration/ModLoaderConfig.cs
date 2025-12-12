@@ -37,7 +37,7 @@ internal static class ModLoaderConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
-               .WithIcon(c => Assets.Images.Configuration.GeneraltModLoaderIcon.Asset)
+               // .WithIcon(c => Assets.Images.Configuration.GeneraltModLoaderIcon.Asset)
                .Register(Config, Mod, nameof(General));
 
         // bool Download Mods From Servers: On/Off

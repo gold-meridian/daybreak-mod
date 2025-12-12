@@ -5,6 +5,7 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Daybreak.Common.Rendering;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
@@ -213,6 +214,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
                 tabs.Width.Set(0f, 1f);
                 tabs.Height.Set(0f, 1f);
                 tabs.HAlign = 1f;
+                tabs.SetScrollbar(tabScrollbar);
             }
             container.Append(tabs);
         }
@@ -565,6 +567,15 @@ public class CategoryTabList : UIList
                 }
                 Add(tab);
             }
+
+            foreach (var category in categories)
+            {
+                var tab = new CategoryTab(category);
+                {
+                    tab.OnLeftClick += OnClickTab;
+                }
+                Add(tab);
+            }
         }
 
         Category = repository.Categories.First();
@@ -577,6 +588,35 @@ public class CategoryTabList : UIList
             Category = tab.Category;
             OnCategorySelected?.Invoke(Category);
         }
+    }
+
+    protected override void DrawChildren(SpriteBatch spriteBatch)
+    {
+        AssetReferences.Assets.Shaders.UI.SlightListFade.Asset.Wait();
+
+        using var rtLease = ScreenspaceTargetPool.Shared.Rent(
+            Main.instance.GraphicsDevice,
+            RenderTargetDescriptor.DefaultPreserveContents
+        );
+
+        spriteBatch.End(out var ss);
+
+        using (rtLease.Scope(preserveContents: true, clearColor: Color.Transparent))
+        {
+            spriteBatch.Begin(ss);
+            base.DrawChildren(spriteBatch);
+            spriteBatch.End();
+        }
+
+        spriteBatch.Begin(ss with { SortMode = SpriteSortMode.Immediate });
+
+        var fadeShader = AssetReferences.Assets.Shaders.UI.SlightListFade.CreateFadeShader();
+        fadeShader.Parameters.uPanelDimensions = new Vector4(_dimensions.X, _dimensions.Y, _dimensions.Width, _dimensions.Height);
+        fadeShader.Parameters.uScreenSize = new Vector2(rtLease.Target.Width, rtLease.Target.Height);
+        fadeShader.Apply();
+
+        spriteBatch.Draw(rtLease.Target, _dimensions.Position(), _dimensions.ToRectangle(), Color.White);
+        spriteBatch.Restart(ss);
     }
 
     public class ModHeader : UIAutoScaleTextTextPanel<string>
@@ -628,11 +668,11 @@ public class CategoryTabList : UIList
         {
             if (mod is null)
             {
-                return AssetReferences.Assets.Images.Configuration.GeneralTerrariaIcon.Asset;
+                return AssetReferences.Assets.Images.Configuration.ModIcon_Terraria.Asset;
             }
             else if (mod is ModLoaderMod)
             {
-                return AssetReferences.Assets.Images.Configuration.GeneraltModLoaderIcon.Asset;
+                return AssetReferences.Assets.Images.Configuration.ModIcon_ModLoader.Asset;
             }
 
             return mod.HasAsset("icon_small") ? mod.Assets.Request<Texture2D>("icon_small") : null;
