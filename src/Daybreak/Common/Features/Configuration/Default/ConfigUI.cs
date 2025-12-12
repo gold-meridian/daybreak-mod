@@ -6,6 +6,7 @@ using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
+using Terraria.GameContent.UI.States;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader.Config.UI;
@@ -38,6 +39,13 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
     protected UITextPanel<LocalizedText>? headerPanel;
     protected UITextPanel<LocalizedText>? backButton;
     protected UITextPanel<LocalizedText>? saveButton;
+
+    // Search bar
+    protected UISearchBar searchBar;
+    protected UIPanel searchBoxPanel;
+    protected string searchString;
+    protected bool didClickSomething;
+    protected bool didClickSearchBar;
 
     private readonly Action? exitAction;
 
@@ -160,14 +168,24 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         }
         backPanel.Append(metadataPanel);
 
+        const float search_bar_height = 24f;
+        const float search_bar_offset = search_bar_height + 6f;
+        var searchBarContainer = new UIElement();
+        {
+            searchBarContainer.Height.Set(search_bar_height, 0f);
+            searchBarContainer.Width.Set(-backPanel.PaddingRight, category_margin);
+            AddSearchBar(searchBarContainer);
+        }
+        backPanel.Append(searchBarContainer);
+
         tabScrollbar = new UIScrollbar();
         {
             // It overflows by this amount of pixels vertically on the top and
             // bottom, for some reason.
             const float vertical_adjust = 6f;
 
-            tabScrollbar.Height.Set(-64f - backPanel.PaddingTop - vertical_adjust * 2f, 1f);
-            tabScrollbar.Top.Set(vertical_adjust, 0f);
+            tabScrollbar.Height.Set(-64f - backPanel.PaddingTop - search_bar_offset - (vertical_adjust * 2f), 1f);
+            tabScrollbar.Top.Set(search_bar_offset + vertical_adjust, 0f);
             tabScrollbar.HAlign = 0f;
             tabScrollbar.Left.Set(0f, 0f);
         }
@@ -180,8 +198,8 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
                 var widthReduction = tabScrollbar.Width.Pixels + backPanel.PaddingRight / 2f;
 
                 container.Width.Set(-backPanel.PaddingRight - widthReduction, category_margin);
-                container.Height.Set(-64f - backPanel.PaddingTop, 1f);
-                container.Top.Set(0f, 0f);
+                container.Height.Set(-64f - backPanel.PaddingTop - search_bar_offset, 1f);
+                container.Top.Set(search_bar_offset, 0f);
                 container.Left.Set(widthReduction, 0f);
             }
             backPanel.Append(container);
@@ -189,7 +207,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             tabs = new CategoryTabList(Repository);
             {
                 tabs.Width.Set(0f, 1f);
-                tabs.Height.Set(0, 1f);
+                tabs.Height.Set(0f, 1f);
                 tabs.HAlign = 1f;
             }
             container.Append(tabs);
@@ -223,7 +241,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             backButton.WithFadedMouseOver();
         }
         baseElement.Append(backButton);
-        
+
         saveButton = new UITextPanel<LocalizedText>(
             Language.GetText("tModLoader.ModConfigSaveConfig"),
             textScale: 0.7f,
@@ -241,11 +259,190 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         baseElement.Append(saveButton);
     }
 
+    private void AddSearchBar(UIElement searchArea)
+    {
+        var searchButton = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/Bestiary/Button_Search"));
+        {
+            searchButton.VAlign = 0.5f;
+            searchButton.HAlign = 0f;
+            searchButton.OnLeftClick += ClickSearchArea;
+            searchButton.SetHoverImage(Main.Assets.Request<Texture2D>("Images/UI/Bestiary/Button_Search_Border"));
+            searchButton.SetVisibility(1f, 1f);
+        }
+        searchArea.Append(searchButton);
+
+        searchBoxPanel = new UIPanel();
+        {
+            searchBoxPanel.Width = new StyleDimension(0f - searchButton.Width.Pixels - 3f, 1f);
+            searchBoxPanel.Height = new StyleDimension(0f, 1f);
+            searchBoxPanel.VAlign = 0.5f;
+            searchBoxPanel.HAlign = 1f;
+            searchBoxPanel.BackgroundColor = new Color(35, 40, 83);
+            searchBoxPanel.BorderColor = new Color(35, 40, 83);
+            searchBoxPanel.SetPadding(0f);
+            searchBoxPanel.OnLeftClick += ClickSearchArea;
+        }
+        searchArea.Append(searchBoxPanel);
+
+        searchBar = new UISearchBar(Language.GetText("UI.PlayerNameSlot"), 0.8f);
+        {
+            searchBar.Width = new StyleDimension(0f, 1f);
+            searchBar.Height = new StyleDimension(0f, 1f);
+            searchBar.HAlign = 0f;
+            searchBar.VAlign = 0.5f;
+            searchBar.Left = new StyleDimension(0f, 0f);
+            searchBar.IgnoresMouseInteraction = true;
+            searchBar.OnContentsChanged += SearchBarContentsChanged;
+            searchBar.OnStartTakingInput += SearchBarStartTakingInput;
+            searchBar.OnEndTakingInput += SearchBarEndTakingInput;
+            searchBar.OnNeedingVirtualKeyboard += SearchBarOpenVirtualKeyboardWhenNeeded;
+            searchBar.OnCanceledTakingInput += SearchBarCanceledInput;
+        }
+        searchBoxPanel.Append(searchBar);
+
+        var searchCancelButton = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/SearchCancel"));
+        {
+            searchCancelButton.HAlign = 1f;
+            searchCancelButton.VAlign = 0.5f;
+            searchCancelButton.Left = new StyleDimension(-2f, 0f);
+            searchCancelButton.OnMouseOver += SearchCancelButtonOnMouseOver;
+            searchCancelButton.OnLeftClick += SearchCancelButtonOnClick;
+        }
+        searchBoxPanel.Append(searchCancelButton);
+
+        return;
+
+        void ClickSearchArea(UIMouseEvent e, UIElement el)
+        {
+            if (e.Target.Parent == searchBoxPanel)
+            {
+                return;
+            }
+
+            searchBar.ToggleTakingText();
+            didClickSearchBar = true;
+        }
+
+        void SearchBarContentsChanged(string contents)
+        {
+            searchString = contents;
+            // _filterer.SetSearchFilter(contents);
+            // UpdateContents();
+        }
+
+        void SearchBarStartTakingInput()
+        {
+            searchBoxPanel.BorderColor = Main.OurFavoriteColor;
+        }
+
+        void SearchBarEndTakingInput()
+        {
+            searchBoxPanel.BorderColor = new Color(35, 40, 83);
+        }
+
+        void SearchBarOpenVirtualKeyboardWhenNeeded()
+        {
+            const int max_input_length = 40;
+            var uIVirtualKeyboard = new UIVirtualKeyboard(
+                Language.GetText("UI.PlayerNameSlot").Value,
+                searchString,
+                OnFinishedSettingName,
+                GoBackHere,
+                3,
+                allowEmpty: true
+            );
+            {
+                uIVirtualKeyboard.SetMaxInputLength(max_input_length);
+                uIVirtualKeyboard.CustomEscapeAttempt = EscapeVirtualKeyboard;
+            }
+
+            IngameFancyUI.OpenUIState(uIVirtualKeyboard);
+        }
+
+        void SearchBarCanceledInput()
+        {
+            // Main.LocalPlayer.ToggleInv();
+        }
+
+        void OnFinishedSettingName(string name)
+        {
+            var contents = name.Trim();
+            searchBar.SetContents(contents);
+            GoBackHere();
+        }
+
+        void GoBackHere()
+        {
+            // TODO: ?!?!
+            IngameFancyUI.OpenUIState(this);
+        }
+
+        bool EscapeVirtualKeyboard()
+        {
+            // TODO: ?!?!
+            if (searchBar.IsWritingText)
+                searchBar.ToggleTakingText();
+
+            GoBackHere();
+            return true;
+        }
+
+        void SearchCancelButtonOnMouseOver(UIMouseEvent e, UIElement el)
+        {
+            SoundEngine.PlaySound(12);
+        }
+
+        void SearchCancelButtonOnClick(UIMouseEvent e, UIElement el)
+        {
+            if (searchBar.HasContents)
+            {
+                searchBar.SetContents(null, forced: true);
+                SoundEngine.PlaySound(11);
+            }
+            else
+            {
+                SoundEngine.PlaySound(12);
+            }
+        }
+    }
+
     public override void Draw(SpriteBatch spriteBatch)
     {
         base.Draw(spriteBatch);
 
         UILinkPointNavigator.Shortcuts.BackButtonCommand = 7;
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        if (didClickSomething && !didClickSearchBar && searchBar.isWritingText)
+        {
+            searchBar.ToggleTakingText();
+        }
+
+        didClickSomething = false;
+        didClickSearchBar = false;
+    }
+
+    public override void LeftClick(UIMouseEvent evt)
+    {
+        base.LeftClick(evt);
+
+        AttemptToStopUsingSearchBar();
+    }
+
+    public override void RightClick(UIMouseEvent evt)
+    {
+        base.RightClick(evt);
+
+        AttemptToStopUsingSearchBar();
+    }
+
+    private void AttemptToStopUsingSearchBar()
+    {
+        didClickSomething = true;
     }
 
     protected void ExitState()
@@ -332,6 +529,7 @@ public class CategoryTabList : UIList
 
             Add(tab);
         }
+
         foreach (var category in repository.Categories)
         {
             var tab = new CategoryTab(category);
