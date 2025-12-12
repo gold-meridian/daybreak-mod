@@ -567,15 +567,6 @@ public class CategoryTabList : UIList
                 }
                 Add(tab);
             }
-
-            foreach (var category in categories)
-            {
-                var tab = new CategoryTab(category);
-                {
-                    tab.OnLeftClick += OnClickTab;
-                }
-                Add(tab);
-            }
         }
 
         Category = repository.Categories.First();
