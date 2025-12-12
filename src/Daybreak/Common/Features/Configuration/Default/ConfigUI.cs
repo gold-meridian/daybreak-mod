@@ -548,14 +548,14 @@ public class CategoryTabList : UIList
                 var header = new ModHeader(mod.Item1);
                 headerElement.Append(header);
 
-                var divider = new UIHorizontalSeparator();
+                var headerDivider = new UIHorizontalSeparator();
                 {
-                    divider.Width = StyleDimension.Fill;
-                    divider.VAlign = 1f;
-                    divider.Top.Set(-2f, 0f);
-                    divider.Color = new Color(85, 88, 159);
+                    headerDivider.Width = StyleDimension.Fill;
+                    headerDivider.VAlign = 1f;
+                    headerDivider.Top.Set(-2f, 0f);
+                    headerDivider.Color = new Color(85, 88, 159);
                 }
-                headerElement.Append(divider);
+                headerElement.Append(headerDivider);
             }
             Add(headerElement);
 
@@ -567,6 +567,16 @@ public class CategoryTabList : UIList
                 }
                 Add(tab);
             }
+
+            var sectionDivider = new UIHorizontalSeparator();
+            {
+                sectionDivider.Width = StyleDimension.Fill;
+                sectionDivider.Height.Set(4f, 0f);
+                sectionDivider.VAlign = 1f;
+                sectionDivider.Top.Set(-2f, 0f);
+                sectionDivider.Color = new Color(255, 88, 159);
+            }
+            Add(sectionDivider);
         }
 
         Category = repository.Categories.First();
@@ -682,7 +692,16 @@ public class CategoryTabList : UIList
             {
                 field = value;
 
-                BorderColor = UICommon.DefaultUIBorder;
+                if (value)
+                {
+                    TargetColor = TextColor = SelectedColor;
+                }
+                else
+                {
+                    TargetColor = TextColor = UnselectedColor;
+                }
+
+                /*BorderColor = UICommon.DefaultUIBorder;
 
                 if (value)
                 {
@@ -691,9 +710,29 @@ public class CategoryTabList : UIList
                 else
                 {
                     BackgroundColor = UICommon.MainPanelBackground;
-                }
+                }*/
             }
         }
+
+        private static Color SelectedColor => Main.OurFavoriteColor;
+
+        private static Color HoveredColor => Color.White;
+
+        private static Color UnselectedColor => Color.Gray;
+
+        private Color TargetColor
+        {
+            get => field;
+            set
+            {
+                field = value;
+                targetColorLerp = 0;
+                oldColor = TextColor;
+            }
+        }
+
+        private Color oldColor;
+        private int targetColorLerp;
 
         public CategoryTab(ConfigCategory category) : base(category.DisplayName)
         {
@@ -702,19 +741,24 @@ public class CategoryTabList : UIList
             // _backgroundTexture = AssetReferences.Assets.Images.UI.ConfigTabPanel.Asset;
             // _borderTexture = AssetReferences.Assets.Images.UI.ConfigTabPanelOutline.Asset;
 
-            BackgroundColor = UICommon.MainPanelBackground;
-            BorderColor = UICommon.DefaultUIBorder;
+            // BackgroundColor = UICommon.MainPanelBackground;
+            // BorderColor = UICommon.DefaultUIBorder;
 
-            this.WithFadedMouseOver();
+            BackgroundColor = Color.Transparent;
+            BorderColor = Color.Transparent;
 
-            Width.Set(0f, 1f);
-            Height.Set(38f, 0f);
+            TargetColor = TextColor = UnselectedColor;
+
+            // this.WithFadedMouseOver();
+
+            Width.Set(-16f, 1f);
+            Height.Set(28f, 0f);
 
             HAlign = 1f;
 
             TextOriginX = 0f;
 
-            SetPadding(4f);
+            SetPadding(0f);
 
             // Makes the text respond to padding.
             UseInnerDimensions = true;
@@ -744,14 +788,30 @@ public class CategoryTabList : UIList
             Recalculate();
         }
 
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            const int lerp_frames = 6;
+
+            targetColorLerp++;
+            if (targetColorLerp > lerp_frames)
+            {
+                targetColorLerp = lerp_frames;
+            }
+
+            TextColor = Color.Lerp(oldColor, TargetColor, targetColorLerp / (float)lerp_frames);
+        }
+
         public override void MouseOver(UIMouseEvent evt)
         {
             if (!Selected)
             {
                 SoundEngine.PlaySound(in SoundID.MenuTick);
 
-                BackgroundColor = UICommon.DefaultUIBlue;
-                BorderColor = UICommon.DefaultUIBorderMouseOver;
+                // BackgroundColor = UICommon.DefaultUIBlue;
+                // BorderColor = UICommon.DefaultUIBorderMouseOver;
+                TargetColor = HoveredColor;
             }
         }
 
@@ -761,8 +821,9 @@ public class CategoryTabList : UIList
             {
                 SoundEngine.PlaySound(in SoundID.MenuTick);
 
-                BackgroundColor = UICommon.MainPanelBackground;
-                BorderColor = UICommon.DefaultUIBorder;
+                // BackgroundColor = UICommon.MainPanelBackground;
+                // BorderColor = UICommon.DefaultUIBorder;
+                TargetColor = UnselectedColor;
             }
         }
     }
