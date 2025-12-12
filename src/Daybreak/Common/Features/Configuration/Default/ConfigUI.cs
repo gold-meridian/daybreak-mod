@@ -27,15 +27,17 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
     protected UIElement? baseElement;
     protected UIPanel? backPanel;
+    protected UIVerticalSeparator? separator;
     protected UIPanel? descriptionPanel;
     protected UIText? descriptionText;
     protected UIPanel? metadataPanel;
     protected UIText? metadataText;
     protected CategoryTabList? tabs;
+    protected UIScrollbar? tabScrollbar;
+    protected UIScrollbar? configScrollbar;
     protected UITextPanel<LocalizedText>? headerPanel;
     protected UITextPanel<LocalizedText>? backButton;
     protected UITextPanel<LocalizedText>? saveButton;
-    protected UIVerticalSeparator? separator;
 
     private readonly Action? exitAction;
 
@@ -80,6 +82,9 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         const float max_panel_width = 800f;
         const float vertical_margin = 160f;
 
+        const float category_margin = 1f / 3f;
+        const float config_margin = 2f / 3f;
+
         baseElement = new UIElement();
         {
             baseElement.Width.Set(0f, 0.8f);
@@ -104,7 +109,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         separator = new UIVerticalSeparator();
         {
             separator.Height.Set(0f, 1f);
-            separator.HAlign = 0.25f;
+            separator.HAlign = category_margin;
             separator.VAlign = 1f;
             separator.Color = new Color(85, 88, 159);
         }
@@ -112,7 +117,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
         descriptionPanel = new UIPanel();
         {
-            descriptionPanel.Width.Set(-backPanel.PaddingRight, 0.75f);
+            descriptionPanel.Width.Set(-backPanel.PaddingRight, config_margin);
             descriptionPanel.Height.Set(64, 0f);
             descriptionPanel.HAlign = 1f;
             descriptionPanel.VAlign = 1f;
@@ -134,7 +139,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
         metadataPanel = new UIPanel();
         {
-            metadataPanel.Width.Set(-backPanel.PaddingRight, 0.25f);
+            metadataPanel.Width.Set(-backPanel.PaddingRight, category_margin);
             metadataPanel.Height.Set(64, 0f);
             metadataPanel.HAlign = 0f;
             metadataPanel.VAlign = 1f;
@@ -143,24 +148,41 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             metadataPanel.BorderColor = Color.Transparent;
 
             metadataText = new UIText(
-                Mods.Daybreak.UI.DefaultConfigDescription.GetText()
+                Mods.Daybreak.UI.DefaultMetadataDescription.GetText()
             );
             {
                 metadataText.Width.Set(0f, 1f);
                 metadataText.Height.Set(0f, 1f);
                 metadataText.IsWrapped = true;
+                metadataText.TextColor = Color.DarkGray;
             }
             metadataPanel.Append(metadataText);
         }
         backPanel.Append(metadataPanel);
 
+        tabScrollbar = new UIScrollbar();
+        {
+            // It overflows by this amount of pixels vertically on the top and
+            // bottom, for some reason.
+            const float vertical_adjust = 6f;
+
+            tabScrollbar.Height.Set(-64f - backPanel.PaddingTop - vertical_adjust * 2f, 1f);
+            tabScrollbar.Top.Set(vertical_adjust, 0f);
+            tabScrollbar.HAlign = 0f;
+            tabScrollbar.Left.Set(0f, 0f);
+        }
+        backPanel.Append(tabScrollbar);
+
         // Panel tabs
         {
             var container = new UIElement();
             {
-                container.Width.Set(-backPanel.PaddingRight, 0.25f);
+                var widthReduction = tabScrollbar.Width.Pixels + backPanel.PaddingRight / 2f;
+
+                container.Width.Set(-backPanel.PaddingRight - widthReduction, category_margin);
                 container.Height.Set(-64f - backPanel.PaddingTop, 1f);
                 container.Top.Set(0f, 0f);
+                container.Left.Set(widthReduction, 0f);
             }
             backPanel.Append(container);
 

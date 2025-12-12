@@ -10,6 +10,7 @@ UI: {
 	SwitchToVanilla: Switch to the Vanilla settings UI
 	SwitchToModLoader: Switch to the tModLoader settings UI
 	DefaultConfigDescription: Hover over an option for more information.
+	DefaultMetadataDescription: Item metadata will appear here.
 }
 
 ConfigRepository.Settings.DisplayName: Settings
