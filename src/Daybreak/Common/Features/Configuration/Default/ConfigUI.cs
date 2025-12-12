@@ -543,7 +543,7 @@ public class CategoryTabList : UIList
             var headerElement = new UIElement();
             {
                 headerElement.Width = StyleDimension.Fill;
-                headerElement.Height.Set(40f, 0f);
+                headerElement.Height.Set(42f, 0f);
 
                 var header = new ModHeader(mod.Item1);
                 headerElement.Append(header);
@@ -553,7 +553,7 @@ public class CategoryTabList : UIList
                     headerDivider.Width = StyleDimension.Fill;
                     headerDivider.VAlign = 1f;
                     headerDivider.Top.Set(-2f, 0f);
-                    headerDivider.Color = new Color(85, 88, 159);
+                    headerDivider.Color = (new Color(85, 88, 159) * 0.8f) with { A = 255 };
                 }
                 headerElement.Append(headerDivider);
             }
@@ -563,6 +563,9 @@ public class CategoryTabList : UIList
             {
                 var tab = new CategoryTab(category);
                 {
+                    tab.Width.Set(-16f, 1f);
+                    tab.Height.Set(28f, 0f);
+                    tab.HAlign = 1f;
                     tab.OnLeftClick += OnClickTab;
                 }
                 Add(tab);
@@ -584,10 +587,11 @@ public class CategoryTabList : UIList
 
     private void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
     {
-        if (listeningElement is CategoryTab tab)
+        if (listeningElement is CategoryTab tab && Category != tab.Category)
         {
             Category = tab.Category;
             OnCategorySelected?.Invoke(Category);
+            SoundEngine.PlaySound(SoundID.MenuOpen);
         }
     }
 
@@ -631,13 +635,13 @@ public class CategoryTabList : UIList
             BorderColor = Color.Transparent;
 
             Width.Set(0f, 1f);
-            Height.Set(38f, 0f);
+            Height = StyleDimension.Fill;
 
             HAlign = 1f;
 
             TextOriginX = 0f;
 
-            SetPadding(4f);
+            SetPadding(0f);
 
             // Makes the text respond to padding.
             UseInnerDimensions = true;
@@ -680,7 +684,7 @@ public class CategoryTabList : UIList
         }
     }
 
-    public class CategoryTab : UIAutoScaleTextTextPanel<LocalizedText>
+    public class CategoryTab : UIElement
     {
         public ConfigCategory Category;
 
@@ -694,31 +698,22 @@ public class CategoryTabList : UIList
 
                 if (value)
                 {
-                    TargetColor = TextColor = SelectedColor;
+                    TargetColor = textPanel.TextColor = SelectedColor;
+                    highlightDivider.Color = Main.OurFavoriteColor;
                 }
                 else
                 {
-                    TargetColor = TextColor = UnselectedColor;
+                    TargetColor = UnselectedColor;
+                    highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
                 }
-
-                /*BorderColor = UICommon.DefaultUIBorder;
-
-                if (value)
-                {
-                    BackgroundColor = UICommon.DefaultUIBlue;
-                }
-                else
-                {
-                    BackgroundColor = UICommon.MainPanelBackground;
-                }*/
             }
         }
 
-        private static Color SelectedColor => Main.OurFavoriteColor;
+        private static Color SelectedColor => Color.White;
 
-        private static Color HoveredColor => Color.White;
+        private static Color HoveredColor => (Color.White * 0.95f) with { A = 255 };
 
-        private static Color UnselectedColor => Color.Gray;
+        private static Color UnselectedColor => (Color.White * 0.75f) with { A = 255 };
 
         private Color TargetColor
         {
@@ -727,104 +722,144 @@ public class CategoryTabList : UIList
             {
                 field = value;
                 targetColorLerp = 0;
-                oldColor = TextColor;
+                oldColor = textPanel.TextColor;
             }
         }
 
         private Color oldColor;
         private int targetColorLerp;
+        private int hoverProgress;
 
-        public CategoryTab(ConfigCategory category) : base(category.DisplayName)
+        private readonly UIAutoScaleTextTextPanel<LocalizedText> textPanel;
+        private readonly UIHorizontalSeparator highlightDivider;
+
+        public CategoryTab(ConfigCategory category)
         {
             this.Category = category;
 
-            // _backgroundTexture = AssetReferences.Assets.Images.UI.ConfigTabPanel.Asset;
-            // _borderTexture = AssetReferences.Assets.Images.UI.ConfigTabPanelOutline.Asset;
-
-            // BackgroundColor = UICommon.MainPanelBackground;
-            // BorderColor = UICommon.DefaultUIBorder;
-
-            BackgroundColor = Color.Transparent;
-            BorderColor = Color.Transparent;
-
-            TargetColor = TextColor = UnselectedColor;
-
-            // this.WithFadedMouseOver();
-
-            Width.Set(-16f, 1f);
-            Height.Set(28f, 0f);
-
-            HAlign = 1f;
-
-            TextOriginX = 0f;
-
-            SetPadding(0f);
-
-            // Makes the text respond to padding.
-            UseInnerDimensions = true;
+            textPanel = new UIAutoScaleTextTextPanel<LocalizedText>(category.DisplayName);
+            {
+                textPanel.Width = StyleDimension.Fill;
+                textPanel.Height = StyleDimension.Fill;
+                textPanel.BackgroundColor = Color.Transparent;
+                textPanel.BorderColor = Color.Transparent;
+                TargetColor = textPanel.TextColor = UnselectedColor;
+                textPanel.TextOriginX = 0f;
+                textPanel.SetPadding(0f);
+                // Makes the text respond to padding.
+                textPanel.UseInnerDimensions = true;
+            }
+            Append(textPanel);
 
             if (category.Icon is not null)
             {
                 var icon = category.Icon;
-
-                // If an icon is not loaded the width values used are 0.
-                icon.Wait();
+                {
+                    // If an icon is not loaded the width values used are 0.
+                    icon.Wait();
+                }
 
                 float iconMargin = icon.Width();
-
-                PaddingLeft += iconMargin;
-
-                UIImage tabIcon = new(category.Icon)
                 {
-                    VAlign = 0.5f,
-                    HAlign = 0f,
-                    MarginLeft = -iconMargin,
-                    MarginTop = -2f
-                };
+                    PaddingLeft += iconMargin;
+                }
 
+                var tabIcon = new UIImage(category.Icon);
+                {
+                    tabIcon.VAlign = 0.5f;
+                    tabIcon.HAlign = 0f;
+                    tabIcon.MarginLeft = -iconMargin;
+                    tabIcon.MarginTop = -2f;
+                }
                 Append(tabIcon);
             }
+
+            var dimDivider = new UIHorizontalSeparator();
+            {
+                dimDivider.Width = StyleDimension.Fill;
+                dimDivider.Height.Set(2f, 0f);
+                dimDivider.VAlign = 1f;
+                dimDivider.Top.Set(0f, 0f);
+                dimDivider.Color = new Color(85, 88, 159) * 0.4f;
+            }
+            Append(dimDivider);
+
+            highlightDivider = new UIHorizontalSeparator();
+            {
+                highlightDivider.Width = StyleDimension.Empty;
+                highlightDivider.Height.Set(2f, 0f);
+                highlightDivider.VAlign = 1f;
+                highlightDivider.Top.Set(0f, 0f);
+                highlightDivider.Color = new Color(85, 88, 159) * 1.25f;
+            }
+            Append(highlightDivider);
 
             Recalculate();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
-
             const int lerp_frames = 6;
-
-            targetColorLerp++;
-            if (targetColorLerp > lerp_frames)
             {
-                targetColorLerp = lerp_frames;
+                targetColorLerp++;
+                if (targetColorLerp > lerp_frames)
+                {
+                    targetColorLerp = lerp_frames;
+                }
+
+                textPanel.TextColor = Color.Lerp(oldColor, TargetColor, targetColorLerp / (float)lerp_frames);
             }
 
-            TextColor = Color.Lerp(oldColor, TargetColor, targetColorLerp / (float)lerp_frames);
+            const int hover_frames = 8;
+            {
+                hoverProgress += IsMouseHovering || Selected ? 1 : -1;
+
+                if (hoverProgress > hover_frames)
+                {
+                    hoverProgress = hover_frames;
+                }
+                else if (hoverProgress < 0)
+                {
+                    hoverProgress = 0;
+                }
+
+                highlightDivider.Width.Set(0f, EaseInOutCubic(hoverProgress / (float)hover_frames));
+            }
+
+            base.Draw(spriteBatch);
+
+            return;
+
+            static float EaseInOutCubic(float x)
+            {
+                return x < 0.5f ? 4 * x * x * x : 1 - MathF.Pow(-2 * x + 2, 3) / 2;
+            }
         }
 
         public override void MouseOver(UIMouseEvent evt)
         {
-            if (!Selected)
+            base.MouseOver(evt);
+            
+            if (Selected)
             {
-                SoundEngine.PlaySound(in SoundID.MenuTick);
-
-                // BackgroundColor = UICommon.DefaultUIBlue;
-                // BorderColor = UICommon.DefaultUIBorderMouseOver;
-                TargetColor = HoveredColor;
+                return;
             }
+
+            SoundEngine.PlaySound(in SoundID.MenuTick);
+            TargetColor = HoveredColor;
         }
 
         public override void MouseOut(UIMouseEvent evt)
         {
-            if (!Selected)
-            {
-                SoundEngine.PlaySound(in SoundID.MenuTick);
+            base.MouseOut(evt);
 
-                // BackgroundColor = UICommon.MainPanelBackground;
-                // BorderColor = UICommon.DefaultUIBorder;
-                TargetColor = UnselectedColor;
+            if (Selected)
+            {
+                return;
             }
+
+            SoundEngine.PlaySound(in SoundID.MenuTick);
+            TargetColor = UnselectedColor;
         }
     }
 }
