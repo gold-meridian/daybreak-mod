@@ -12,6 +12,8 @@ UI: {
 	DefaultConfigDescription: Hover over an option for more information.
 }
 
+ConfigRepository.Settings.DisplayName: Settings
+
 Configs: {
 	ConditionalContainer: {
 		Enabled: {
