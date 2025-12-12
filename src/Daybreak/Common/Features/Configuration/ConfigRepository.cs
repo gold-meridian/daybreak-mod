@@ -290,36 +290,20 @@ public abstract class ConfigRepository : ILocalizedModType
     public abstract void SynchronizeEntries(params ConfigEntryHandle[] entries);
 
     /// <summary>
-    ///     Opens the associated UI.
+    ///     Opens the associated configuration UI.  If not category or entry are
+    ///     provided, then it should open to some default view.  If an entry is
+    ///     provided, it should jump to that entry in its main category.  If a
+    ///     category is provided, it should open that category.  If both are
+    ///     provided, it should show that entry in the requested category (since
+    ///     entries may belong to more than one category).  If the entry is not
+    ///     in the category or the category does not exist, the entry should
+    ///     open in its main category.  If the entry does not exist but the
+    ///     category does, it should open to the category page.  If neither
+    ///     exist, treat it as if neither were provided.
     /// </summary>
     public abstract void ShowInterface(
-        Action? onExit = null
-    );
-
-    /// <summary>
-    ///     Opens the associated UI and goes to the requested category.
-    /// </summary>
-    public abstract void ShowInterface(
-        ConfigCategoryHandle categoryHandle,
-        Action? onExit = null
-    );
-
-    /// <summary>
-    ///     Opens the associated UI and goes ot the requested entry with the
-    ///     page set to its main category.
-    /// </summary>
-    public abstract void ShowInterface(
-        ConfigEntryHandle entryHandle,
-        Action? onExit = null
-    );
-
-    /// <summary>
-    ///     Opens the associated UI and goes ot the requested entry with the
-    ///     page set to its requested category.
-    /// </summary>
-    public abstract void ShowInterface(
-        ConfigCategoryHandle categoryHandle,
-        ConfigEntryHandle entryHandle,
+        ConfigCategoryHandle? categoryHandle = null,
+        ConfigEntryHandle? entryHandle = null,
         Action? onExit = null
     );
 }

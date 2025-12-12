@@ -1,5 +1,4 @@
-﻿using Daybreak.Common.UI;
-using Daybreak.Core;
+﻿using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -9,47 +8,64 @@ using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Gamepad;
 
 namespace Daybreak.Common.Features.Configuration;
 
-public class ConfigState : UIState, IHaveBackButtonCommand
+internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 {
-    protected static readonly Color descriptionPanelColor = Color.LightGray * 0.7f;
+    public static Color DescriptionPanelColor { get; } = Color.LightGray * 0.7f;
+
+    public ConfigRepository Repository { get; protected set; }
+
+    public ConfigCategory? TargetCategory { get; protected set; }
+
+    public IConfigEntry? TargetEntry { get; protected set; }
+
+    protected UIElement? baseElement;
+    protected UIPanel? backPanel;
+    protected UIPanel? descriptionPanel;
+    protected UIText? descriptionText;
+    protected CategoryTabList? tabs;
+    protected UITextPanel<LocalizedText>? headerPanel;
+    protected UITextPanel<LocalizedText>? backButton;
+    protected UITextPanel<LocalizedText>? saveButton;
 
     private readonly Action? exitAction;
 
-    UIState IHaveBackButtonCommand.PreviousUIState { get; set; }
+    // Not used in favor of exitAction.
+    UIState? IHaveBackButtonCommand.PreviousUIState { get; set; } = null;
 
-    protected ConfigRepository repository;
-
-    protected ConfigCategoryHandle? targetCategory;
-
-    protected ConfigEntryHandle? targetEntry;
-
-    protected UIPanel? basePanel;
-
-    protected UIPanel? descriptionPanel;
-    protected UIText? descriptionText;
-
-    protected CategoryTabList? tabs;
-
-    protected UITextPanel<LocalizedText>? headerPanel;
-
-    protected UITextPanel<LocalizedText>? backButton;
-
-    public ConfigState(ConfigRepository repository, ConfigCategoryHandle? category = null, ConfigEntryHandle? entry = null, Action? onExit = null)
+    public ConfigState(
+        ConfigRepository repository,
+        ConfigCategoryHandle? category = null,
+        ConfigEntryHandle? entry = null,
+        Action? onExit = null
+    )
     {
-        this.repository = repository;
+        Repository = repository;
 
-        targetCategory = category;
-        targetEntry = entry;
-
-        if (targetEntry is not null)
+        if (category.HasValue && Repository.TryGetCategory(category.Value, out var theCategory))
         {
-            targetCategory ??= this.repository.GetEntry(targetEntry.Value).MainCategory;
+            TargetCategory = theCategory;
+        }
+
+        if (entry.HasValue && Repository.TryGetEntry(entry.Value, out var theEntry))
+        {
+            TargetEntry = theEntry;
+
+            if (TargetCategory is not null && !theEntry.Categories.Contains(TargetCategory))
+            {
+                TargetCategory = null;
+            }
+
+            if (TargetCategory is null && Repository.TryGetCategory(theEntry.MainCategory, out var mainCategory))
+            {
+                TargetCategory = mainCategory;
+            }
         }
 
         exitAction = onExit;
@@ -57,122 +73,121 @@ public class ConfigState : UIState, IHaveBackButtonCommand
 
     public override void OnInitialize()
     {
+        const float min_panel_width = 600f;
+        const float max_panel_width = 800f;
         const float vertical_margin = 160f;
 
-        const float min_panel_width = 600f;
-
-        // Base panel
+        baseElement = new UIElement();
         {
-            basePanel = new();
+            baseElement.Width.Set(0f, 0.8f);
+            baseElement.MinWidth.Set(min_panel_width, 0f);
+            baseElement.MaxWidth.Set(max_panel_width, 0f);
 
-            basePanel.Width.Set(0f, 0.8f);
-            basePanel.MaxWidth.Set(min_panel_width, 0f);
+            baseElement.Top.Set(vertical_margin, 0f);
+            baseElement.Height.Set(0f, 1f);
 
-            basePanel.Top.Set(vertical_margin, 0f);
-            basePanel.Height.Set(-(vertical_margin * 2f), 1f);
-
-            basePanel.HAlign = 0.5f;
-
-            basePanel.BackgroundColor = UICommon.MainPanelBackground;
-
-            Append(basePanel);
+            baseElement.HAlign = 0.5f;
         }
+        Append(baseElement);
 
-        // Description panel
+        backPanel = new UIPanel();
         {
-            descriptionPanel = new();
+            backPanel.Width = StyleDimension.Fill;
+            backPanel.Height.Set(-vertical_margin * 1.75f, 1f);
+        }
+        baseElement.Append(backPanel);
 
+        descriptionPanel = new UIPanel();
+        {
             descriptionPanel.Width.Set(0f, 1f);
-
             descriptionPanel.Height.Set(64, 0f);
-
             descriptionPanel.VAlign = 1f;
-
             descriptionPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
-            descriptionPanel.BackgroundColor = descriptionPanelColor;
-
+            descriptionPanel.BackgroundColor = DescriptionPanelColor;
             descriptionPanel.BorderColor = Color.Transparent;
 
-            basePanel.Append(descriptionPanel);
-        }
-
-        // Description text
-        {
-            descriptionText = new(Mods.Daybreak.UI.DefaultConfigDescription.GetText());
-
-            descriptionText.Width.Set(0f, 1f);
-            descriptionText.Height.Set(0f, 1f);
-
-            descriptionText.IsWrapped = true;
-
+            descriptionText = new UIText(
+                Mods.Daybreak.UI.DefaultConfigDescription.GetText()
+            );
+            {
+                descriptionText.Width.Set(0f, 1f);
+                descriptionText.Height.Set(0f, 1f);
+                descriptionText.IsWrapped = true;
+            }
             descriptionPanel.Append(descriptionText);
         }
+        backPanel.Append(descriptionPanel);
 
         // Panel tabs
+        const float tabs_width = 160f;
         {
-            float verticalMargin = vertical_margin + basePanel._cornerSize;
+            var verticalMargin = vertical_margin + backPanel._cornerSize;
 
             var container = new UIElement();
+            {
+                container.Top.Set(verticalMargin, 0f);
+                container.Height.Set(-(verticalMargin * 2f), 1f);
 
-            container.Top.Set(verticalMargin, 0f);
+                // Effectively the inverse of the panel width calculation.
+                container.Width.Set(0f, 0.2f);
+                container.MinWidth.Set(-(min_panel_width * 0.5f), 0.5f);
+            }
+            baseElement.Append(container);
 
-            container.Height.Set(-(verticalMargin * 2f), 1f);
-
-            // Effectively the inverse of the panel width calculation.
-            container.Width.Set(0f, 0.2f);
-            container.MinWidth.Set(-(min_panel_width * 0.5f), 0.5f);
-
-            Append(container);
-
-            const float tabs_width = 160f;
-
-            tabs = new(repository);
-
-            tabs.Width.Set(tabs_width, 0f);
-
-            tabs.Height.Set(0, 1f);
-
-            tabs.HAlign = 1f;
-
+            tabs = new CategoryTabList(Repository);
+            {
+                tabs.Width.Set(tabs_width, 0f);
+                tabs.Height.Set(0, 1f);
+                tabs.HAlign = 1f;
+            }
             container.Append(tabs);
         }
 
         // Header
+        headerPanel = new UITextPanel<LocalizedText>(
+            Repository.DisplayName,
+            textScale: 0.8f,
+            large: true
+        );
         {
-            headerPanel = new(repository.DisplayName, 0.8f, large: true);
-
-            headerPanel.SetPadding(15f);
-
-            headerPanel.Top.Set(vertical_margin - 50f, 0f);
-
+            headerPanel.SetPadding(13f);
+            headerPanel.Top.Set(-44f, 0f);
             headerPanel.HAlign = 0.5f;
-
             headerPanel.BackgroundColor = UICommon.DefaultUIBlue;
-
-            Append(headerPanel);
         }
+        backPanel.Append(headerPanel);
 
-        // Back button
+        backButton = new UITextPanel<LocalizedText>(
+            Language.GetText("UI.Back"),
+            textScale: 0.7f,
+            large: true
+        );
         {
-            const float button_vertical_margin = 10f;
-
-            backButton = new(Language.GetText("UI.Back"), 0.7f, true);
-
-            backButton.Top.Set(-vertical_margin + button_vertical_margin, 1f);
-
-            backButton.Width.Set(0f, 0.4f);
-            backButton.MaxWidth.Set(300f, 0f);
-
+            backButton.Width.Set(-8f, 0.5f);
             backButton.Height.Set(50f, 0f);
-
-            backButton.HAlign = 0.5f;
-
+            backButton.Top.Set(-vertical_margin - 50, 0f);
+            backButton.VAlign = 1f;
+            backButton.HAlign = 0f;
             backButton.OnLeftMouseDown += GoBackClick;
-
             backButton.WithFadedMouseOver();
-
-            Append(backButton);
         }
+        baseElement.Append(backButton);
+        
+        saveButton = new UITextPanel<LocalizedText>(
+            Language.GetText("tModLoader.ModConfigSaveConfig"),
+            textScale: 0.7f,
+            large: true
+        );
+        {
+            saveButton.Width.Set(-8f, 0.5f);
+            saveButton.Height.Set(50, 0f);
+            saveButton.Top.Set(-vertical_margin - 50, 0f);
+            saveButton.VAlign = 1f;
+            saveButton.HAlign = 1f;
+            saveButton.OnLeftMouseDown += GoBackClick;
+            saveButton.WithFadedMouseOver();
+        }
+        baseElement.Append(saveButton);
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -198,8 +213,7 @@ public class ConfigState : UIState, IHaveBackButtonCommand
         exitAction?.Invoke();
     }
 
-    #region Buttons
-
+#region Buttons
     private void DescriptionMouseOver(UIMouseEvent evt, UIElement listeningElement)
     {
         // TODO
@@ -219,8 +233,7 @@ public class ConfigState : UIState, IHaveBackButtonCommand
     {
         ((IHaveBackButtonCommand)this).HandleBackButtonUsage();
     }
-
-    #endregion
+#endregion
 }
 
 public class CategoryTabList : UIList
@@ -230,6 +243,7 @@ public class CategoryTabList : UIList
     public ConfigCategory Category
     {
         get => field;
+
         set
         {
             this[Category]?.Selected = false;
@@ -287,6 +301,7 @@ public class CategoryTabList : UIList
         public bool Selected
         {
             get => field;
+
             set
             {
                 field = value;

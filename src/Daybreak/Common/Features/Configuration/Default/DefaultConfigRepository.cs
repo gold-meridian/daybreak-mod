@@ -73,7 +73,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
             return;
         }
 
-        var entryTokens = new Dictionary<IConfigEntry, JToken>();
+        var entryTokens = new Dictionary<IConfigEntry, JToken?>();
         foreach (var entryHandle in entries)
         {
             Debug.Assert(entryHandle.Repository == this);
@@ -94,51 +94,8 @@ internal sealed class DefaultConfigRepository : ConfigRepository
     }
 
     public override void ShowInterface(
-        Action? onExit = null
-    )
-    {
-        SetState(
-            GetInterface(),
-            new DefaultConfigState(
-                this,
-                onExit: onExit
-            )
-        );
-    }
-
-    public override void ShowInterface(
-        ConfigCategoryHandle categoryHandle,
-        Action? onExit = null
-    )
-    {
-        SetState(
-            GetInterface(),
-            new DefaultConfigState(
-                this,
-                category: categoryHandle,
-                onExit: onExit
-            )
-        );
-    }
-
-    public override void ShowInterface(
-        ConfigEntryHandle entryHandle,
-        Action? onExit = null
-    )
-    {
-        SetState(
-            GetInterface(),
-            new DefaultConfigState(
-                this,
-                entry: entryHandle,
-                onExit: onExit
-            )
-        );
-    }
-
-    public override void ShowInterface(
-        ConfigCategoryHandle categoryHandle,
-        ConfigEntryHandle entryHandle,
+        ConfigCategoryHandle? categoryHandle = null,
+        ConfigEntryHandle? entryHandle = null,
         Action? onExit = null
     )
     {
