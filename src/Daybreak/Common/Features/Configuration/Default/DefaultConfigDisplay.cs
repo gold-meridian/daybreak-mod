@@ -443,17 +443,17 @@ internal static class DefaultConfigDisplay
     [OnUnload]
     private static void RevertModsList()
     {
-        if (Interface.modsMenu is not { } menu)
+        if (Interface.modsMenu is not { } menu || menu.uIElement is not { } element)
         {
             return;
         }
 
-        if (menu.Children?.FirstOrDefault(x => x is DaybreakSettingsIcon) is not { } element)
+        if (element.Children?.FirstOrDefault(x => x is DaybreakSettingsIcon) is not { } icon)
         {
             return;
         }
 
-        menu.RemoveChild(element);
+        element.RemoveChild(icon);
         menu.Recalculate();
     }
 
