@@ -3,7 +3,7 @@ sampler uImage0 : register(s0);
 float4 uPanelDimensions;
 float2 uScreenSize;
 
-#define FADE_DISTANCE_TOP 8.0
+#define FADE_DISTANCE_TOP 10.0
 #define FADE_DISTANCE_BOTTOM 32.0
 #define POSITION uPanelDimensions.xy
 #define SIZE uPanelDimensions.zw
