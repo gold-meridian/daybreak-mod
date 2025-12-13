@@ -5,6 +5,7 @@ using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using MonoMod.Cil;
@@ -50,6 +51,11 @@ internal static class DefaultConfigDisplay
         MonoModHooks.Add(
             typeof(MenuLoader).GetMethod(nameof(MenuLoader.UpdateAndDrawModMenu), BindingFlags.NonPublic | BindingFlags.Static)!,
             UpdateAndDrawModMenu_DrawDaybreakSettingsIcon
+        );
+
+        MonoModHooks.Modify(
+            typeof(UIModItem).GetMethod(nameof(UIModItem.OnInitialize), BindingFlags.Public | BindingFlags.Instance)!,
+            OnInitialize_AddOurConfigButton
         );
 
         MonoModHooks.Add(
@@ -178,6 +184,30 @@ internal static class DefaultConfigDisplay
         );
 
         spriteBatch.Restart(ss);
+    }
+
+    private static void OnInitialize_AddOurConfigButton(ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        c.GotoNext(MoveType.After, x => x.MatchCallvirt<IDictionary<Mod, List<ModConfig>>>(nameof(IDictionary<,>.ContainsKey)));
+        c.EmitLdarg0();
+        c.EmitDelegate(
+            (bool show, UIModItem self) =>
+            {
+                if (show)
+                {
+                    return show;
+                }
+
+                if (!ModLoader.TryGetMod(self._mod.Name, out var mod))
+                {
+                    return false;
+                }
+
+                return ConfigRepository.Default.Categories.Any(x => x.Handle.Mod == mod);
+            }
+        );
     }
 
     private static void OpenConfig_OpenOurConfig(

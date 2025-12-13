@@ -8,7 +8,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Config;
 using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
@@ -33,6 +32,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
 
     private static string ConfigsDirectory => Path.Combine(Main.SavePath, "daybreak", "configs");
 
+    /*
     public override ConfigCategory RegisterCategory(ConfigCategory category)
     {
         if (category.Handle.Mod is { } mod)
@@ -50,6 +50,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
 
         return base.RegisterCategory(category);
     }
+    */
 
     public override void SerializeCategories(params ConfigCategoryHandle[] categories)
     {

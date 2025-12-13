@@ -13,7 +13,6 @@ using Terraria.GameContent.UI.States;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.Default;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
