@@ -5,11 +5,17 @@ using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using MonoMod.Cil;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
+using Terraria.ModLoader.UI;
+using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -36,6 +42,7 @@ internal static class DefaultConfigDisplay
     private const int text_settings_menu_y_offset = 585;
 
     private static bool daybreakOverVanillaSettings;
+    private static bool daybreakOverModdedSettings;
     private static float hoverIntensity;
 
     [OnLoad]
@@ -44,6 +51,16 @@ internal static class DefaultConfigDisplay
         MonoModHooks.Add(
             typeof(MenuLoader).GetMethod(nameof(MenuLoader.UpdateAndDrawModMenu), BindingFlags.NonPublic | BindingFlags.Static)!,
             UpdateAndDrawModMenu_DrawDaybreakSettingsIcon
+        );
+
+        MonoModHooks.Modify(
+            typeof(UIModItem).GetMethod(nameof(UIModItem.OnInitialize), BindingFlags.Public | BindingFlags.Instance)!,
+            OnInitialize_AddOurConfigButton
+        );
+
+        MonoModHooks.Add(
+            typeof(UIModItem).GetMethod(nameof(UIModItem.OpenConfig), BindingFlags.NonPublic | BindingFlags.Instance)!,
+            OpenConfig_OpenOurConfig
         );
 
         IL_Main.DrawMenu += DrawMenu_OpenDaybreakSettingsWhenRequestingVanillaMenu;
@@ -167,6 +184,61 @@ internal static class DefaultConfigDisplay
         );
 
         spriteBatch.Restart(ss);
+    }
+
+    private static void OnInitialize_AddOurConfigButton(ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        c.GotoNext(MoveType.After, x => x.MatchCallvirt<IDictionary<Mod, List<ModConfig>>>(nameof(IDictionary<,>.ContainsKey)));
+        c.EmitLdarg0();
+        c.EmitDelegate(
+            (bool show, UIModItem self) =>
+            {
+                if (show)
+                {
+                    return show;
+                }
+
+                if (!ModLoader.TryGetMod(self._mod.Name, out var mod))
+                {
+                    return false;
+                }
+
+                return ConfigRepository.Default.Categories.Any(x => x.Handle.Mod == mod);
+            }
+        );
+    }
+
+    private static void OpenConfig_OpenOurConfig(
+        // Action<UIModItem, UIMouseEvent, UIElement> orig,
+        UIModItem self,
+        UIMouseEvent evt,
+        UIElement listeningElement
+    )
+    {
+        SoundEngine.PlaySound(SoundID.MenuOpen);
+
+        if (!ModLoader.TryGetMod(self._mod.Name, out var mod))
+        {
+            return;
+        }
+
+        if (daybreakOverModdedSettings || !ConfigManager.Configs.TryGetValue(mod, out var modConfigs) || modConfigs.Count == 0)
+        {
+            ConfigRepository.Default.ShowInterface(
+                categoryHandle: ConfigRepository.Default.Categories.FirstOrDefault(x => x.Handle.Mod == mod) ?? default(ConfigCategoryHandle),
+                onExit: () =>
+                {
+                    Main.menuMode = Interface.modsMenuID;
+                }
+            );
+        }
+        else
+        {
+            Interface.modConfigList.ModToSelectOnOpen = mod;
+            Main.menuMode = Interface.modConfigListID;
+        }
     }
 
     private static void DrawMenu_OpenDaybreakSettingsWhenRequestingVanillaMenu(ILContext il)

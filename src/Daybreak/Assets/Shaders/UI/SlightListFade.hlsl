@@ -3,7 +3,7 @@ sampler uImage0 : register(s0);
 float4 uPanelDimensions;
 float2 uScreenSize;
 
-#define FADE_DISTANCE_TOP 8.0
+#define FADE_DISTANCE_TOP 10.0
 #define FADE_DISTANCE_BOTTOM 32.0
 #define POSITION uPanelDimensions.xy
 #define SIZE uPanelDimensions.zw
@@ -19,7 +19,7 @@ float4 main(float2 coords : SV_POSITION, float2 tex_coords : TEXCOORD0) : COLOR0
     float bottom_fade = saturate((SIZE.y - local_coords.y) / FADE_DISTANCE_BOTTOM);
     float fade = min(top_fade, bottom_fade);
     
-    c *= fade;
+    c *= pow(fade, 2);
     
     return c;
 }

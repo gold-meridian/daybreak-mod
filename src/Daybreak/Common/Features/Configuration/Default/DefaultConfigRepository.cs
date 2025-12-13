@@ -32,6 +32,26 @@ internal sealed class DefaultConfigRepository : ConfigRepository
 
     private static string ConfigsDirectory => Path.Combine(Main.SavePath, "daybreak", "configs");
 
+    /*
+    public override ConfigCategory RegisterCategory(ConfigCategory category)
+    {
+        if (category.Handle.Mod is { } mod)
+        {
+            if (!ConfigManager.Configs.ContainsKey(mod))
+            {
+                ConfigManager.Configs.Add(mod, []);
+            }
+
+            if (!ConfigManager.loadTimeConfigs.ContainsKey(mod))
+            {
+                ConfigManager.loadTimeConfigs.Add(mod, []);
+            }
+        }
+
+        return base.RegisterCategory(category);
+    }
+    */
+
     public override void SerializeCategories(params ConfigCategoryHandle[] categories)
     {
         if (categories.Length == 0)
