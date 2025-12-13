@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using System;
-using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
@@ -161,14 +160,23 @@ public class InputField : UIPanel
         Vector2 textSize = font.MeasureString(Text == string.Empty ? Hint : Text);
         Vector2 origin = new(textSize.X * TextAlignX, textSize.Y * .5f);
 
-        bool drawBlinker = writing && Main.GlobalTimeWrappedHourly % .666f > .333f;
-
         if (Text == string.Empty)
         {
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, Hint, position, Color.Gray, 0f, origin, new(textScale));
         }
 
-        spriteBatch.DrawInputStringWithShadow(UserInterface.ActiveInstance.MousePosition, font, Text, position, Color.White, origin, new(textScale), out mousePosition, drawBlinker, InputHelpers.CursorPositon);
+        spriteBatch.DrawInputStringWithShadow(
+            UserInterface.ActiveInstance.MousePosition,
+            font,
+            Text,
+            position,
+            Color.White,
+            0f,
+            origin,
+            new(textScale),
+            out mousePosition,
+            writing,
+            InputHelpers.CursorPositon);
 
         if (writing)
         {

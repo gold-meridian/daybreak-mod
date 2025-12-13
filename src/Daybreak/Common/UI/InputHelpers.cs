@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.GameInput;
 using Terraria.Initializers;
 using Terraria.UI.Chat;
@@ -288,13 +289,6 @@ internal static class InputHelpers
                                 Platform.Get<IClipboard>().Value);
     }
 
-    /// <summary>
-    /// Ultimately slower version of typical string drawing methods, that allows for a cursor to be drawn in-between characters.<br/>
-    /// Made for use with <c>Input.GetInput</c>, and <see cref="CursorPositon"/> as <paramref name="blinkerIndex"/>.
-    /// </summary>
-    /// <param name="mousePosition">Position that should be checked to find <paramref name="hoveredChar"/>.</param>
-    /// <param name="drawBlinker">Weither or not the cursor/"blinker" should be drawn, best used with a timer.</param>
-    /// <param name="blinkerIndex">The index at which the blinker should be drawn, usually <see cref="CursorPositon"/>.</param>
     public static void DrawInputString(
         this SpriteBatch spriteBatch,
         Vector2 mousePosition,
@@ -302,14 +296,14 @@ internal static class InputHelpers
         string text,
         Vector2 position,
         Color color,
+        float rotation,
         Vector2 origin,
         Vector2 scale,
         out int hoveredChar,
         bool drawBlinker = false,
         int blinkerIndex = -1) =>
-        spriteBatch.DrawInputStringWithShadow(mousePosition, font, text, position, color, Color.Black, origin, scale, out hoveredChar, drawBlinker, blinkerIndex, -1f);
+        spriteBatch.DrawInputStringWithShadow(mousePosition, font, text, position, color, Color.Black, rotation, origin, scale, out hoveredChar, drawBlinker, blinkerIndex, -1f);
 
-    /// <inheritdoc cref="DrawInputString"/>
     public static void DrawInputStringWithShadow(
         this SpriteBatch spriteBatch,
         Vector2 mousePosition,
@@ -317,15 +311,15 @@ internal static class InputHelpers
         string text,
         Vector2 position,
         Color color,
+        float rotation,
         Vector2 origin,
         Vector2 scale,
         out int hoveredChar,
         bool drawBlinker = false,
         int blinkerIndex = -1,
         float spread = 2f) =>
-        spriteBatch.DrawInputStringWithShadow(mousePosition, font, text, position, color, Color.Black, origin, scale, out hoveredChar, drawBlinker, blinkerIndex, spread);
+        spriteBatch.DrawInputStringWithShadow(mousePosition, font, text, position, color, Color.Black, rotation, origin, scale, out hoveredChar, drawBlinker, blinkerIndex, spread);
 
-    /// <inheritdoc cref="DrawInputString"/>
     public static void DrawInputStringWithShadow(
         this SpriteBatch spriteBatch,
         Vector2 mousePosition,
@@ -334,6 +328,7 @@ internal static class InputHelpers
         Vector2 position,
         Color color,
         Color shadowColor,
+        float rotation,
         Vector2 origin,
         Vector2 scale,
         out int hoveredChar,
@@ -341,43 +336,53 @@ internal static class InputHelpers
         int blinkerIndex = -1,
         float spread = 2f)
     {
-        bool first = true;
-        float lastKerning = 0f;
+        // Mirrors the matrix created by DynamicSpriteFont.InternalDraw.
+        Matrix matrix = Matrix.CreateTranslation((0f - origin.X) * scale.X, (0f - origin.Y) * scale.Y, 0f) * Matrix.CreateRotationZ(rotation);
 
-        hoveredChar = 0;
-
-        for (int i = 0; i < text.Length; i++)
-        {
-            char c = text[i];
-
-            spriteBatch.DrawStringWithShadow(font, c.ToString(), position, color, shadowColor, 0f, origin, scale, spread);
-
-            if (drawBlinker &&
-                i == blinkerIndex)
-            {
-                Vector2 blinkerPosition = new(position.X - (2f * scale.X), position.Y);
-
-                spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, shadowColor, 0f, origin, scale, spread);
-            }
-
-            Vector2 charSize = font.MeasureChar(c, first, scale, lastKerning, out lastKerning);
-
-            if (mousePosition.X >= position.X && mousePosition.X <= position.X + charSize.X)
-                hoveredChar = mousePosition.X >= position.X + (charSize.X * .5f) ? i + 1 : i;
-
-            position.X += charSize.X;
-            first = false;
-        }
-
-        if (mousePosition.X >= position.X)
-            hoveredChar = text.Length;
+        spriteBatch.DrawStringWithShadow(font, text, position, color, shadowColor, rotation, origin, scale, spread);
 
         if (drawBlinker &&
-            blinkerIndex >= text.Length)
+            blinkerIndex != -1 &&
+            Main.GlobalTimeWrappedHourly % .666f > .333f)
         {
-            Vector2 blinkerPosition = new(position.X - (2f * scale.X), position.Y);
+            float blinkerX = font.MeasureString(text[..blinkerIndex]).X;
 
-            spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, shadowColor, 0f, origin, scale, spread);
+            Vector2 blinkerPosition = position + Vector2.Transform(new(blinkerX, 0), matrix);
+
+            spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, shadowColor, rotation, Vector2.Zero, scale, spread);
+        }
+
+        // Find hovered char
+        {
+            mousePosition -= position;
+            mousePosition = Vector2.Transform(mousePosition, matrix);
+
+            bool first = true;
+            float lastKerning = 0f;
+
+            float totalWidth = -origin.X * 2;
+
+            hoveredChar = 0;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+
+                Vector2 charSize = font.MeasureChar(c, first, scale, lastKerning, out lastKerning);
+
+                if (mousePosition.X >= totalWidth && mousePosition.X <= totalWidth + charSize.X)
+                {
+                    hoveredChar = mousePosition.X >= totalWidth + (charSize.X * .5f) ? i + 1 : i;
+                }
+
+                totalWidth += charSize.X;
+                first = false;
+            }
+
+            if (mousePosition.X >= totalWidth)
+            {
+                hoveredChar = text.Length;
+            }
         }
     }
 
