@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using Daybreak.Common.Features.Hooks;
-using Newtonsoft.Json.Serialization;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;

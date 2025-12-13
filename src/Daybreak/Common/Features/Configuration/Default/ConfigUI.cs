@@ -523,6 +523,8 @@ public class CategoryTabList : UIList
         }
     }
 
+    private bool goneToCategory;
+
     public CategoryTabList(
         ConfigRepository repository,
         ConfigCategory? targetCategory,
@@ -631,6 +633,19 @@ public class CategoryTabList : UIList
             OnCategorySelected?.Invoke(Category);
             SoundEngine.PlaySound(SoundID.MenuOpen);
         }
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        if (goneToCategory)
+        {
+            return;
+        }
+
+        goneToCategory = true;
+        Goto(x => x is CategoryTab tab && tab.Category == Category);
     }
 
     protected override void DrawChildren(SpriteBatch spriteBatch)
