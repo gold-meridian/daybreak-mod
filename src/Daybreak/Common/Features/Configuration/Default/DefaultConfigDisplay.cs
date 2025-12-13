@@ -16,6 +16,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
+using Terraria.GameContent;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -36,6 +37,121 @@ internal static class DefaultConfigDisplay
         }
 
         public static void UnloadData(Data data) { }
+    }
+
+    private sealed class DaybreakSettingsIcon : UIElement
+    {
+        private float HoverIntensity { get; set; }
+
+        public Action? OnExit { get; set; }
+
+        public ConfigCategoryHandle? CategoryHandle { get; set; }
+
+        public ConfigEntryHandle? EntryHandle { get; set; }
+
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            base.DrawSelf(spriteBatch);
+
+            if (IsMouseHovering)
+            {
+                Main.instance.MouseText(Mods.Daybreak.UI.SwitchToDaybreak.GetTextValue());
+            }
+
+            var dimensions = GetDimensions();
+            var center = dimensions.Center();
+
+            HoverIntensity = MathHelper.Lerp(HoverIntensity, IsMouseHovering ? 1f : 0f, 0.2f);
+
+            var texture = AssetReferences.Assets.Images.DaybreakSun.Asset.Value;
+            var pulseTexture = AssetReferences.Assets.Images.DaybreakSunPulse.Asset.Value;
+
+            var scale = 0.85f + hoverIntensity * 0.15f + MathF.Sin(Main.GlobalTimeWrappedHourly / 4f) * 0.1f;
+            var rotation = MathF.Sin(Main.GlobalTimeWrappedHourly / 2) * 0.15f;
+
+            spriteBatch.Draw(
+                texture,
+                center,
+                texture.Frame(),
+                Color.Orange,
+                rotation,
+                texture.Size() / 2,
+                scale,
+                SpriteEffects.None,
+                0f
+            );
+
+            spriteBatch.Draw(
+                texture,
+                center,
+                texture.Frame(),
+                Color.White with { A = 200 },
+                rotation,
+                texture.Size() / 2,
+                scale,
+                SpriteEffects.None,
+                0f
+            );
+
+            var pulseTime = Main.GlobalTimeWrappedHourly / 3f % 1f;
+            var upScale = scale * (0.2f + (pulseTime * 0.8f));
+            var colorFade = 0.8f * MathF.Sin(pulseTime * MathHelper.Pi);
+            spriteBatch.Draw(
+                pulseTexture,
+                center,
+                pulseTexture.Frame(),
+                Color.DarkOrange with { A = 0 } * colorFade,
+                rotation,
+                pulseTexture.Size() / 2,
+                upScale,
+                SpriteEffects.None,
+                0f
+            );
+
+            spriteBatch.End(out var ss);
+            spriteBatch.Begin(
+                SpriteSortMode.Immediate,
+                BlendState.Additive,
+                SamplerState.PointClamp,
+                DepthStencilState.None,
+                ss.RasterizerState,
+                null,
+                Main.UIScaleMatrix
+            );
+
+            var shaderData = IStatic<Data>.Instance.SunShader;
+            shaderData.Parameters.uSpeed = 0.3f;
+            shaderData.Parameters.uPixel = 2f;
+            shaderData.Parameters.uColorResolution = 10f;
+            shaderData.Parameters.uSource = new Vector4(0, 0, texture.Width, texture.Height);
+            shaderData.Parameters.uInColor = new Vector3(1f, 0.1f, 0f);
+            shaderData.Apply();
+
+            spriteBatch.Draw(
+                texture,
+                center,
+                texture.Frame(),
+                Color.Orange with { A = 128 },
+                rotation,
+                texture.Size() / 2,
+                scale,
+                SpriteEffects.None,
+                0f
+            );
+
+            spriteBatch.Restart(ss);
+        }
+
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            base.LeftClick(evt);
+
+            ConfigRepository.Default.ShowInterface(
+                categoryHandle: CategoryHandle,
+                entryHandle: EntryHandle,
+                onExit: OnExit
+            );
+        }
     }
 
     // Hardcoding this is evil, but it's our only practical choice.
@@ -273,5 +389,76 @@ internal static class DefaultConfigDisplay
                 }
             }
         );
+    }
+
+    [OnLoad]
+    private static void UpdateModsList()
+    {
+        MonoModHooks.Add(
+            typeof(UIMods).GetMethod(nameof(UIMods.OnInitialize), BindingFlags.Public | BindingFlags.Instance)!,
+            OnInitialize_AddDaybreakButtonToModsList
+        );
+
+        if (Interface.modsMenu is { } menu && menu.uIElement is not null)
+        {
+            menu.Append(MakeDaybreakButtonForModsList(Interface.modsMenu));
+            menu.Recalculate();
+        }
+    }
+
+    // Mostly in case some other mod ever attempts to reinitialize the UI state.
+    private static void OnInitialize_AddDaybreakButtonToModsList(Action<UIMods> orig, UIMods self)
+    {
+        orig(self);
+
+        self.Append(MakeDaybreakButtonForModsList(self));
+    }
+
+    [OnUnload]
+    private static void RevertModsList()
+    {
+        if (Interface.modsMenu is not { } menu)
+        {
+            return;
+        }
+
+        if (menu.Children?.FirstOrDefault(x => x is DaybreakSettingsIcon) is not { } element)
+        {
+            return;
+        }
+
+        menu.RemoveChild(element);
+        menu.Recalculate();
+    }
+
+    private static DaybreakSettingsIcon MakeDaybreakButtonForModsList(UIMods parent)
+    {
+        var button = new DaybreakSettingsIcon();
+        {
+            button.CategoryHandle = null;
+            button.EntryHandle = null;
+            button.OnExit = () =>
+            {
+                SoundEngine.PlaySound(10);
+                Main.MenuUI.SetState(Interface.modsMenu);
+            };
+
+            button.Width.Set(30f, 0f);
+            button.Height.Set(30f, 0f);
+
+            // We have to append it to the state directly since it escapes the
+            // bounds of the backing panel.
+            // button.VAlign = 1f;
+            // button.HAlign = 1f;
+            // button.Top.Set(-30f - /* gap between buttons */ 2.5f - (button.Height.Pixels / 2f), 0f);
+            // button.Left.Set(button.Height.Pixels + 10f, 0f);
+
+            parent.Recalculate();
+
+            button.Top.Set(parent.buttonCL.GetDimensions().Y - /* gap between buttons */ 2.5f - (button.Height.Pixels / 2f), 0f);
+            button.Left.Set(parent.buttonCL.GetDimensions().X + parent.buttonCL.Width.Pixels + 10f, 0f);
+        }
+
+        return button;
     }
 }
