@@ -49,11 +49,24 @@ internal static class DefaultConfigDisplay
 
         public ConfigEntryHandle? EntryHandle { get; set; }
 
+        public UIElement? ElementThatDecidesClicks { get; set; }
+
+        public bool IsHoveringAtAll => IsMouseHovering || ContainsPoint(Main.MouseScreen);
+
+        public bool IsHoveringButNotReally => !IsMouseHovering && ContainsPoint(Main.MouseScreen);
+
+        public override void OnInitialize()
+        {
+            base.OnInitialize();
+
+            ElementThatDecidesClicks?.OnLeftClick += ReceiveLeftClickFromParent;
+        }
+
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             base.DrawSelf(spriteBatch);
 
-            if (IsMouseHovering)
+            if (IsHoveringAtAll)
             {
                 Main.instance.MouseText(Mods.Daybreak.UI.SwitchToDaybreak.GetTextValue());
             }
@@ -61,7 +74,7 @@ internal static class DefaultConfigDisplay
             var dimensions = GetDimensions();
             var center = dimensions.Center();
 
-            HoverIntensity = MathHelper.Lerp(HoverIntensity, IsMouseHovering ? 1f : 0f, 0.2f);
+            HoverIntensity = MathHelper.Lerp(HoverIntensity, IsHoveringAtAll ? 1f : 0f, 0.2f);
 
             var texture = AssetReferences.Assets.Images.DaybreakSun.Asset.Value;
             var pulseTexture = AssetReferences.Assets.Images.DaybreakSunPulse.Asset.Value;
@@ -142,10 +155,23 @@ internal static class DefaultConfigDisplay
             spriteBatch.Restart(ss);
         }
 
+        private void ReceiveLeftClickFromParent(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (IsHoveringButNotReally)
+            {
+                HandleClick();
+            }
+        }
+
         public override void LeftClick(UIMouseEvent evt)
         {
             base.LeftClick(evt);
 
+            HandleClick();
+        }
+
+        private void HandleClick()
+        {
             ConfigRepository.Default.ShowInterface(
                 categoryHandle: CategoryHandle,
                 entryHandle: EntryHandle,
@@ -399,9 +425,9 @@ internal static class DefaultConfigDisplay
             OnInitialize_AddDaybreakButtonToModsList
         );
 
-        if (Interface.modsMenu is { } menu && menu.uIElement is not null)
+        if (Interface.modsMenu is { } menu && menu.uIElement is { } element)
         {
-            menu.Append(MakeDaybreakButtonForModsList(Interface.modsMenu));
+            element.Append(MakeDaybreakButtonForModsList(Interface.modsMenu));
             menu.Recalculate();
         }
     }
@@ -411,7 +437,7 @@ internal static class DefaultConfigDisplay
     {
         orig(self);
 
-        self.Append(MakeDaybreakButtonForModsList(self));
+        self.uIElement.Append(MakeDaybreakButtonForModsList(self));
     }
 
     [OnUnload]
@@ -446,17 +472,12 @@ internal static class DefaultConfigDisplay
             button.Width.Set(30f, 0f);
             button.Height.Set(30f, 0f);
 
-            // We have to append it to the state directly since it escapes the
-            // bounds of the backing panel.
-            // button.VAlign = 1f;
-            // button.HAlign = 1f;
-            // button.Top.Set(-30f - /* gap between buttons */ 2.5f - (button.Height.Pixels / 2f), 0f);
-            // button.Left.Set(button.Height.Pixels + 10f, 0f);
+            button.VAlign = 1f;
+            button.HAlign = 1f;
+            button.Top.Set(-30f - /* gap between buttons */ 2.5f - (button.Height.Pixels / 2f), 0f);
+            button.Left.Set(button.Height.Pixels + 10f, 0f);
 
-            parent.Recalculate();
-
-            button.Top.Set(parent.buttonCL.GetDimensions().Y - /* gap between buttons */ 2.5f - (button.Height.Pixels / 2f), 0f);
-            button.Left.Set(parent.buttonCL.GetDimensions().X + parent.buttonCL.Width.Pixels + 10f, 0f);
+            button.ElementThatDecidesClicks = parent;
         }
 
         return button;

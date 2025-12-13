@@ -621,7 +621,7 @@ public class CategoryTabList : UIList
         {
             categoryToGoTo = targetCategory ?? categoriesByMod.Values.First().First();
         }
-        
+
         Category = categoryToGoTo;
     }
 
