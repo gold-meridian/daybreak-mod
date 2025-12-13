@@ -17,6 +17,7 @@ using Terraria.ModLoader.Default;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Gamepad;
+using rail;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -644,7 +645,10 @@ public class CategoryTabList : UIList
         }
 
         goneToCategory = true;
-        Goto(x => x is CategoryTab tab && tab.Category == Category);
+
+        // Goto(x => x is CategoryTab tab && tab.Category == Category);
+
+        GotoModCategory(Category);
     }
 
     protected override void DrawChildren(SpriteBatch spriteBatch)
@@ -674,6 +678,29 @@ public class CategoryTabList : UIList
 
         spriteBatch.Draw(rtLease.Target, _dimensions.Position(), _dimensions.ToRectangle(), Color.White);
         spriteBatch.Restart(ss);
+    }
+
+    public void GotoModCategory(ConfigCategory category)
+    {
+        var categoryElement = _items.FirstOrDefault(x => x is CategoryTab tab && tab.Category == category);
+        if (categoryElement is null)
+        {
+            return;
+        }
+
+        var idx = _items.IndexOf(categoryElement);
+        if (idx < 0)
+        {
+            return;
+        }
+
+        var modHeader = _items.Take(idx).Reverse().FirstOrDefault(x => x.Children.Any(y => y is ModHeader));
+        if (modHeader is null)
+        {
+            return;
+        }
+
+        _scrollbar.ViewPosition = modHeader.Top.Pixels;
     }
 
     public class ModHeader : UIAutoScaleTextTextPanel<string>
