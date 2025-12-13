@@ -19,7 +19,7 @@ float4 main(float2 coords : SV_POSITION, float2 tex_coords : TEXCOORD0) : COLOR0
     float bottom_fade = saturate((SIZE.y - local_coords.y) / FADE_DISTANCE_BOTTOM);
     float fade = min(top_fade, bottom_fade);
     
-    c *= fade;
+    c *= pow(fade, 2);
     
     return c;
 }
