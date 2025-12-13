@@ -11,7 +11,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Daybreak.Common.Features.Configuration.Default;
+namespace Daybreak.Common.Features.Configuration;
 
 internal static class DefaultConfigDisplay
 {

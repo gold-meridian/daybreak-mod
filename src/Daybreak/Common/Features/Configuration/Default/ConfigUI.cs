@@ -20,7 +20,7 @@ using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Gamepad;
 
-namespace Daybreak.Common.Features.Configuration.Default;
+namespace Daybreak.Common.Features.Configuration;
 
 internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 {

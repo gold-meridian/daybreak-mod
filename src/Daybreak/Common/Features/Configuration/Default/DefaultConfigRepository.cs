@@ -10,7 +10,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Daybreak.Common.Features.Configuration.Default;
+namespace Daybreak.Common.Features.Configuration;
 
 internal sealed class DefaultConfigState(
     ConfigRepository repository,
