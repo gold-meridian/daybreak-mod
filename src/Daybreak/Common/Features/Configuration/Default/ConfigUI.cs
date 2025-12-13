@@ -210,7 +210,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             }
             backPanel.Append(container);
 
-            tabs = new CategoryTabList(Repository);
+            tabs = new CategoryTabList(Repository, TargetCategory, TargetEntry);
             {
                 tabs.Width.Set(0f, 1f);
                 tabs.Height.Set(0f, 1f);
@@ -524,11 +524,22 @@ public class CategoryTabList : FadedList
         }
     }
 
-    public CategoryTabList(ConfigRepository repository) : base()
+    public CategoryTabList(
+        ConfigRepository repository,
+        ConfigCategory? targetCategory,
+        IConfigEntry? targetEntry
+    )
     {
         ListPadding = 2f;
 
-        var categoriesByMod = new Dictionary<ValueTuple<Mod?>, List<ConfigCategory>>();
+        ManualSortMethod = _ => { };
+
+        var categoriesByMod = new Dictionary<ValueTuple<Mod?>, List<ConfigCategory>>
+        {
+            [new ValueTuple<Mod?>(null)] = [],
+            [new ValueTuple<Mod?>(ModContent.GetInstance<ModLoaderMod>())] = [],
+        };
+
         foreach (var category in repository.Categories)
         {
             if (!categoriesByMod.TryGetValue(new ValueTuple<Mod?>(category.Handle.Mod), out var categories))
@@ -585,7 +596,32 @@ public class CategoryTabList : FadedList
             Add(sectionDivider);
         }
 
-        Category = repository.Categories.First();
+        // Extra padding at the bottom of the list to avoid the last item being
+        // engulfed in the fade.
+        var endPadElement = new UIElement();
+        {
+            endPadElement.Height.Set(24f, 0f);
+        }
+        Add(endPadElement);
+
+        ConfigCategory categoryToGoTo;
+        if (targetEntry is not null)
+        {
+            if (targetCategory is not null && targetEntry.Categories.Contains(targetCategory))
+            {
+                categoryToGoTo = targetCategory;
+            }
+            else
+            {
+                categoryToGoTo = repository.GetCategory(targetEntry.MainCategory);
+            }
+        }
+        else
+        {
+            categoryToGoTo = targetCategory ?? categoriesByMod.Values.First().First();
+        }
+        
+        Category = categoryToGoTo;
     }
 
     private void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
@@ -664,7 +700,7 @@ public class CategoryTabList : FadedList
 
         public bool Selected
         {
-            get => field;
+            get;
 
             set
             {
@@ -690,6 +726,7 @@ public class CategoryTabList : FadedList
         private Color TargetColor
         {
             get => field;
+
             set
             {
                 field = value;
@@ -854,7 +891,7 @@ public class CategoryTabList : FadedList
         public override void MouseOver(UIMouseEvent evt)
         {
             base.MouseOver(evt);
-            
+
             if (Selected)
             {
                 return;
