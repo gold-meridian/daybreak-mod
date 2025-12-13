@@ -117,14 +117,11 @@ public class InputField : UIPanel
             (Main.mouseLeft &&
             !IsMouseHovering);
 
-        if (!clickedOff || !writing)
+        if (clickedOff && writing)
         {
-            return;
+            OnEnter?.Invoke(this);
+            writing = false;
         }
-
-        // Should clicking off the panel count as confirming?
-        // OnEnter?.Invoke(this);
-        writing = false;
     }
 
     private void HandleInput()
