@@ -13,13 +13,13 @@ using Terraria.GameContent.UI.States;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.Default;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Gamepad;
+using Daybreak.Common.Features.Configuration;
 
-namespace Daybreak.Common.Features.Configuration;
+namespace Daybreak.Common.Features.Configuration.Default;
 
 internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 {
