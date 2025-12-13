@@ -335,8 +335,6 @@ public class CategoryTabList : FadedList
         }
     }
 
-    private bool goneToCategory;
-
     public CategoryTabList(
         ConfigRepository repository,
         ConfigCategory? targetCategory,
@@ -447,16 +445,8 @@ public class CategoryTabList : FadedList
         }
     }
 
-    public override void Update(GameTime gameTime)
+    public override void OnActivate()
     {
-        base.Update(gameTime);
-
-        if (goneToCategory)
-        {
-            return;
-        }
-
-        goneToCategory = true;
         Goto(x => x is CategoryTab tab && tab.Category == Category);
     }
 
