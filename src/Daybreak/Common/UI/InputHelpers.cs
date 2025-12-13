@@ -360,12 +360,12 @@ internal static class InputHelpers
                 spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, shadowColor, 0f, origin, scale, spread);
             }
 
-            Vector2 charSize = font.MeasureChar(c, first, lastKerning, out lastKerning);
+            Vector2 charSize = font.MeasureChar(c, first, scale, lastKerning, out lastKerning);
 
             if (mousePosition.X >= position.X && mousePosition.X <= position.X + charSize.X)
                 hoveredChar = mousePosition.X >= position.X + (charSize.X * .5f) ? i + 1 : i;
 
-            position.X += font.MeasureChar(c, first, lastKerning, out lastKerning).X;
+            position.X += charSize.X;
             first = false;
         }
 
@@ -402,7 +402,7 @@ internal static class InputHelpers
         spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
     }
 
-    private static Vector2 MeasureChar(this DynamicSpriteFont font, char c, bool firstChar, float lastKerning, out float kerningZ)
+    private static Vector2 MeasureChar(this DynamicSpriteFont font, char c, bool firstChar, Vector2 scale, float lastKerning, out float kerningZ)
     {
         Vector2 output = Vector2.Zero;
         output.Y = font.LineSpacing;
@@ -421,7 +421,11 @@ internal static class InputHelpers
 
         output.X += Math.Max(kerning.Z, 0f);
 
+        output *= scale;
+
         kerningZ = kerning.Z;
+
+        kerningZ *= scale.X;
 
         return output;
     }
