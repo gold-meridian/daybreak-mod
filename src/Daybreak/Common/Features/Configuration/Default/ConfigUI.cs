@@ -471,7 +471,7 @@ public class CategoryTabList : FadedList
 
         spriteBatch.Begin(ss with { SortMode = SpriteSortMode.Immediate });
 
-        var truncatedDims = _dimensions.ToRectangle();
+        var truncatedDims = this.Dimensions;
 
         var fadeShader = AssetReferences.Assets.Shaders.UI.SlightListFade.CreateFadeShader();
         fadeShader.Parameters.uPanelDimensions = new Vector4(truncatedDims.X, truncatedDims.Y, truncatedDims.Width, truncatedDims.Height);
