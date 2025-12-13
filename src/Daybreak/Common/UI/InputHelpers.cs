@@ -8,6 +8,7 @@ using ReLogic.OS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Terraria;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.GameInput;
@@ -45,7 +46,7 @@ internal static class InputHelpers
 
     private static int rightArrowTimer = key_timer_delay;
 
-    private static string keyStroke = string.Empty;
+    private static StringBuilder keyStroke = new();
 
     // Stores the state of WritingText for use outside of drawing scopes.
     private static bool wasWritingText;
@@ -89,7 +90,7 @@ internal static class InputHelpers
     {
         if (WritingText &&
             keyStroke.Length <= max_stroke_length)
-            keyStroke += key;
+            keyStroke.Append(key);
     }
 
     private static void FancyExit_IgnoreExitIfWriting(On_UILinksInitializer.orig_FancyExit orig)
@@ -210,9 +211,9 @@ internal static class InputHelpers
         {
             if (keyStroke.Length >= 1)
             {
-                string stroke = RemoveInvalidCharacters(keyStroke);
+                string stroke = RemoveInvalidCharacters(keyStroke.ToString());
 
-                keyStroke = string.Empty;
+                keyStroke.Clear();
 
                 output = output.Insert(CursorPositon, stroke);
 
