@@ -17,6 +17,7 @@ using Terraria.ModLoader.Default;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Gamepad;
+using rail;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -431,7 +432,7 @@ public class CategoryTabList : FadedList
         {
             categoryToGoTo = targetCategory ?? categoriesByMod.Values.First().First();
         }
-        
+
         Category = categoryToGoTo;
     }
 
@@ -447,7 +448,61 @@ public class CategoryTabList : FadedList
 
     public override void OnActivate()
     {
-        Goto(x => x is CategoryTab tab && tab.Category == Category);
+        GotoModCategory(Category);
+    }
+
+    protected override void DrawChildren(SpriteBatch spriteBatch)
+    {
+        AssetReferences.Assets.Shaders.UI.SlightListFade.Asset.Wait();
+
+        using var rtLease = ScreenspaceTargetPool.Shared.Rent(
+            Main.instance.GraphicsDevice,
+            RenderTargetDescriptor.DefaultPreserveContents
+        );
+
+        spriteBatch.End(out var ss);
+
+        using (rtLease.Scope(preserveContents: true, clearColor: Color.Transparent))
+        {
+            spriteBatch.Begin(ss);
+            base.DrawChildren(spriteBatch);
+            spriteBatch.End();
+        }
+
+        spriteBatch.Begin(ss with { SortMode = SpriteSortMode.Immediate });
+
+        var truncatedDims = _dimensions.ToRectangle();
+
+        var fadeShader = AssetReferences.Assets.Shaders.UI.SlightListFade.CreateFadeShader();
+        fadeShader.Parameters.uPanelDimensions = new Vector4(truncatedDims.X, truncatedDims.Y, truncatedDims.Width, truncatedDims.Height);
+        fadeShader.Parameters.uScreenSize = new Vector2(rtLease.Target.Width, rtLease.Target.Height);
+        fadeShader.Apply();
+
+        spriteBatch.Draw(rtLease.Target, truncatedDims.TopLeft(), truncatedDims, Color.White);
+        spriteBatch.Restart(ss);
+    }
+
+    public void GotoModCategory(ConfigCategory category)
+    {
+        var categoryElement = _items.FirstOrDefault(x => x is CategoryTab tab && tab.Category == category);
+        if (categoryElement is null)
+        {
+            return;
+        }
+
+        var idx = _items.IndexOf(categoryElement);
+        if (idx < 0)
+        {
+            return;
+        }
+
+        var modHeader = _items.Take(idx).Reverse().FirstOrDefault(x => x.Children.Any(y => y is ModHeader));
+        if (modHeader is null)
+        {
+            return;
+        }
+
+        _scrollbar.ViewPosition = modHeader.Top.Pixels;
     }
 
     public class ModHeader : UIAutoScaleTextTextPanel<string>
@@ -477,19 +532,19 @@ public class CategoryTabList : FadedList
                 // If an icon is not loaded the width values used are 0.
                 icon.Wait();
 
-                float iconMargin = icon.Width();
+                PaddingLeft += 30f;
 
-                PaddingLeft += iconMargin;
-
-                UIImage tabIcon = new(icon)
+                var tabImage = new BetterImage();
                 {
-                    VAlign = 0.5f,
-                    HAlign = 0f,
-                    MarginLeft = -iconMargin,
-                    MarginTop = -2f
-                };
-
-                Append(tabIcon);
+                    tabImage.VAlign = 0.5f;
+                    tabImage.HAlign = 0f;
+                    tabImage.MarginLeft = -30f;
+                    tabImage.MarginTop = -2f;
+                    tabImage.Width.Set(30f, 0f);
+                    tabImage.Height.Set(30f, 0f);
+                    tabImage.Texture = icon;
+                }
+                Append(tabImage);
             }
 
             Recalculate();
@@ -506,7 +561,46 @@ public class CategoryTabList : FadedList
                 return AssetReferences.Assets.Images.Configuration.ModIcon_ModLoader.Asset;
             }
 
-            return mod.HasAsset("icon_small") ? mod.Assets.Request<Texture2D>("icon_small") : null;
+            if (mod.RequestAssetIfExists<Texture2D>("icon_small", out var iconSmall))
+            {
+                return iconSmall;
+            }
+
+            if (mod.RequestAssetIfExists<Texture2D>("icon", out var icon))
+            {
+                return icon;
+            }
+
+            return null;
+        }
+    }
+
+    private sealed class BetterImage : UIElement
+    {
+        public Asset<Texture2D>? Texture { get; set; }
+
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            base.DrawSelf(spriteBatch);
+
+            if (Texture is null)
+            {
+                return;
+            }
+
+            var dims = GetDimensions();
+            var pos = dims.Position();
+
+            spriteBatch.Draw(
+                Texture.Value,
+                new Rectangle((int)pos.X, (int)pos.Y, (int)Width.Pixels, (int)Height.Pixels),
+                null,
+                Color.White,
+                0f,
+                Vector2.Zero,
+                SpriteEffects.None,
+                0f
+            );
         }
     }
 
