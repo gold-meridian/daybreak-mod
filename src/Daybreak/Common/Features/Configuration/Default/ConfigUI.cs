@@ -527,6 +527,8 @@ public class CategoryTabList : UIList
     {
         ListPadding = 2f;
 
+        ManualSortMethod = l => { };
+
         var categoriesByMod = new Dictionary<ValueTuple<Mod?>, List<ConfigCategory>>();
         foreach (var category in repository.Categories)
         {
@@ -583,6 +585,14 @@ public class CategoryTabList : UIList
             }
             Add(sectionDivider);
         }
+
+        // Extra padding at the bottom of the list to avoid the last item being
+        // engulfed in the fade.
+        var endPadElement = new UIElement();
+        {
+            endPadElement.Height.Set(24f, 0f);
+        }
+        Add(endPadElement);
 
         Category = repository.Categories.First();
     }
