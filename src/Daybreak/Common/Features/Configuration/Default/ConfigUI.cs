@@ -209,7 +209,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             }
             backPanel.Append(container);
 
-            tabs = new CategoryTabList(Repository);
+            tabs = new CategoryTabList(Repository, TargetCategory, TargetEntry);
             {
                 tabs.Width.Set(0f, 1f);
                 tabs.Height.Set(0f, 1f);
@@ -523,13 +523,22 @@ public class CategoryTabList : UIList
         }
     }
 
-    public CategoryTabList(ConfigRepository repository) : base()
+    public CategoryTabList(
+        ConfigRepository repository,
+        ConfigCategory? targetCategory,
+        IConfigEntry? targetEntry
+    )
     {
         ListPadding = 2f;
 
-        ManualSortMethod = l => { };
+        ManualSortMethod = _ => { };
 
-        var categoriesByMod = new Dictionary<ValueTuple<Mod?>, List<ConfigCategory>>();
+        var categoriesByMod = new Dictionary<ValueTuple<Mod?>, List<ConfigCategory>>
+        {
+            [new ValueTuple<Mod?>(null)] = [],
+            [new ValueTuple<Mod?>(ModContent.GetInstance<ModLoaderMod>())] = [],
+        };
+
         foreach (var category in repository.Categories)
         {
             if (!categoriesByMod.TryGetValue(new ValueTuple<Mod?>(category.Handle.Mod), out var categories))
@@ -594,7 +603,24 @@ public class CategoryTabList : UIList
         }
         Add(endPadElement);
 
-        Category = repository.Categories.First();
+        ConfigCategory categoryToGoTo;
+        if (targetEntry is not null)
+        {
+            if (targetCategory is not null && targetEntry.Categories.Contains(targetCategory))
+            {
+                categoryToGoTo = targetCategory;
+            }
+            else
+            {
+                categoryToGoTo = repository.GetCategory(targetEntry.MainCategory);
+            }
+        }
+        else
+        {
+            categoryToGoTo = targetCategory ?? categoriesByMod.Values.First().First();
+        }
+        
+        Category = categoryToGoTo;
     }
 
     private void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
@@ -702,7 +728,7 @@ public class CategoryTabList : UIList
 
         public bool Selected
         {
-            get => field;
+            get;
 
             set
             {
@@ -728,6 +754,7 @@ public class CategoryTabList : UIList
         private Color TargetColor
         {
             get => field;
+
             set
             {
                 field = value;
@@ -892,7 +919,7 @@ public class CategoryTabList : UIList
         public override void MouseOver(UIMouseEvent evt)
         {
             base.MouseOver(evt);
-            
+
             if (Selected)
             {
                 return;

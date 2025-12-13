@@ -17,7 +17,12 @@ internal sealed class DefaultConfigState(
     ConfigCategoryHandle? category = null,
     ConfigEntryHandle? entry = null,
     Action? onExit = null
-) : ConfigState(repository, category, entry, onExit);
+) : ConfigState(
+    repository,
+    category,
+    entry,
+    onExit
+);
 
 internal sealed class DefaultConfigRepository : ConfigRepository
 {
