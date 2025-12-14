@@ -843,7 +843,7 @@ internal class TabList : FadedList
     {
         public ConfigCategory Category;
 
-        public CategoryTab(ConfigCategory category) : base(category.DisplayName, category.Icon)
+        public CategoryTab(ConfigCategory category) : base(category.DisplayName)
         {
             Category = category;
         }
