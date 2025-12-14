@@ -508,16 +508,16 @@ internal class TabList : FadedList
             {
                 if (useIcon)
                 {
-                    PaddingLeft += icon_padding;
+                    PaddingRight += icon_padding;
 
                     var tabImage = new Icon();
                     {
                         tabImage.VAlign = 0.5f;
-                        tabImage.HAlign = 0f;
-                        tabImage.MarginLeft = -30f;
+                        tabImage.HAlign = 1f;
+                        tabImage.MarginRight = -icon_padding;
                         tabImage.MarginTop = -2f;
-                        tabImage.Width.Set(30f, 0f);
-                        tabImage.Height.Set(30f, 0f);
+                        tabImage.Width.Set(icon_padding, 0f);
+                        tabImage.Height.Set(icon_padding, 0f);
                         tabImage.Texture = icon;
                     }
                     Append(tabImage);
@@ -531,7 +531,6 @@ internal class TabList : FadedList
 
                 dividerContainer.Height.Set(2f, 0f);
 
-                dividerContainer.HAlign = 1f;
                 dividerContainer.VAlign = 1f;
             }
             Append(dividerContainer);
@@ -808,11 +807,6 @@ internal class TabList : FadedList
             if (mod.RequestAssetIfExists<Texture2D>("icon_small", out var iconSmall))
             {
                 return iconSmall;
-            }
-
-            if (mod.RequestAssetIfExists<Texture2D>("icon", out var icon))
-            {
-                return icon;
             }
 
             return null;
