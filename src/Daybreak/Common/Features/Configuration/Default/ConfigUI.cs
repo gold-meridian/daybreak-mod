@@ -303,7 +303,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 #endregion
 }
 
-internal sealed class TabList : FadedList
+internal class TabList : FadedList
 {
     public event Action<ConfigCategory>? OnCategorySelected;
 
