@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Terraria;
-using Terraria.GameContent.ObjectInteractions;
 using Terraria.GameInput;
 using Terraria.Initializers;
 using Terraria.UI.Chat;
@@ -46,7 +45,7 @@ internal static class InputHelpers
 
     private static int rightArrowTimer = key_timer_delay;
 
-    private static StringBuilder keyStroke = new();
+    private static readonly StringBuilder keyStroke = new();
 
     // Stores the state of WritingText for use outside of drawing scopes.
     private static bool wasWritingText;
