@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -17,7 +18,6 @@ using Terraria.ModLoader.Default;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Gamepad;
-using rail;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -38,7 +38,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
     protected UIText? descriptionText;
     protected UIPanel? metadataPanel;
     protected UIText? metadataText;
-    protected CategoryTabList? tabs;
+    protected TabList? tabs;
     protected UIScrollbar? tabScrollbar;
     protected UIScrollbar? configScrollbar;
     protected UITextPanel<LocalizedText>? headerPanel;
@@ -201,7 +201,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             }
             backPanel.Append(container);
 
-            tabs = new CategoryTabList(Repository, TargetCategory, TargetEntry);
+            tabs = new TabList(Repository, TargetCategory, TargetEntry);
             {
                 tabs.Width.Set(0f, 1f);
                 tabs.Height.Set(0f, 1f);
@@ -303,46 +303,51 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 #endregion
 }
 
-public class CategoryTabList : FadedList
+internal class TabList : FadedList
 {
     public event Action<ConfigCategory>? OnCategorySelected;
 
     public ConfigCategory Category
     {
-        get => field;
-
+        get;
         set
         {
-            this[Category]?.Selected = false;
-            this[value]?.Selected = true;
+            if (Category is not null)
+            {
+                this[Category.Handle.Mod]?.Selected = false;
+            }
+
+            OpenCategory(value);
 
             field = value;
         }
     }
 
-    public CategoryTab? this[ConfigCategory category]
+    private ModGroup? this[Mod? mod]
     {
         get
         {
-            foreach (var elem in this)
-            {
-                if (elem is CategoryTab tab && tab.Category == category)
-                {
-                    return tab;
-                }
-            }
+            var elem = _items.FirstOrDefault(m => m is ModGroup c && c.Mod == mod);
 
-            return null;
+            return elem as ModGroup;
         }
     }
 
-    public CategoryTabList(
+    public TabList(
         ConfigRepository repository,
         ConfigCategory? targetCategory,
         IConfigEntry? targetEntry
     )
     {
-        ListPadding = 2f;
+        ListPadding = 4f;
+
+        // Extra padding at the start of the list to avoid the last item being
+        // engulfed in the fade.
+        var startPadElement = new UIElement();
+        {
+            startPadElement.Height.Set(4f, 0f);
+        }
+        Add(startPadElement);
 
         ManualSortMethod = _ => { };
 
@@ -364,48 +369,11 @@ public class CategoryTabList : FadedList
 
         foreach (var (mod, categories) in categoriesByMod)
         {
-            var headerElement = new UIElement();
+            var modGroup = new ModGroup(mod.Item1, categories, targetCategory);
             {
-                headerElement.Width = StyleDimension.Fill;
-                headerElement.Height.Set(42f, 0f);
-
-                var header = new ModHeader(mod.Item1);
-                headerElement.Append(header);
-
-                var headerDivider = new UIHorizontalSeparator();
-                {
-                    headerDivider.Width = StyleDimension.Fill;
-                    headerDivider.VAlign = 1f;
-                    headerDivider.Top.Set(-2f, 0f);
-                    headerDivider.Color = (new Color(85, 88, 159) * 0.8f) with { A = 255 };
-                }
-                headerElement.Append(headerDivider);
+                modGroup.OnCategorySelected += ModGroup_OnCategorySelected;
             }
-            Add(headerElement);
-
-            for (var i = 0; i < categories.Count; i++)
-            {
-                var category = categories[i];
-
-                var tab = new CategoryTab(category, 1f - (i / (float)categories.Count));
-                {
-                    tab.Width.Set(-16f, 1f);
-                    tab.Height.Set(28f, 0f);
-                    tab.HAlign = 1f;
-                    tab.OnLeftClick += OnClickTab;
-                }
-                Add(tab);
-            }
-
-            var sectionDivider = new UIHorizontalSeparator();
-            {
-                sectionDivider.Width = StyleDimension.Fill;
-                sectionDivider.Height.Set(4f, 0f);
-                sectionDivider.VAlign = 1f;
-                sectionDivider.Top.Set(-2f, 0f);
-                sectionDivider.Color = new Color(255, 88, 159);
-            }
-            Add(sectionDivider);
+            Add(modGroup);
         }
 
         // Extra padding at the bottom of the list to avoid the last item being
@@ -436,189 +404,57 @@ public class CategoryTabList : FadedList
         Category = categoryToGoTo;
     }
 
-    private void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
+    private void ModGroup_OnCategorySelected(ConfigCategory category)
     {
-        if (listeningElement is CategoryTab tab && Category != tab.Category)
-        {
-            Category = tab.Category;
-            OnCategorySelected?.Invoke(Category);
-            SoundEngine.PlaySound(SoundID.MenuOpen);
-        }
+        Category = category;
+        OnCategorySelected?.Invoke(Category);
+        SoundEngine.PlaySound(SoundID.MenuOpen);
     }
 
     public override void OnActivate()
     {
-        GotoModCategory(Category);
+        OpenCategory(Category, true);
     }
 
-    protected override void DrawChildren(SpriteBatch spriteBatch)
+    public void OpenCategory(ConfigCategory category, bool scroll = false)
     {
-        AssetReferences.Assets.Shaders.UI.SlightListFade.Asset.Wait();
+        var elem = _items.FirstOrDefault(m => m is ModGroup group && group.Mod == category.Handle.Mod);
 
-        using var rtLease = ScreenspaceTargetPool.Shared.Rent(
-            Main.instance.GraphicsDevice,
-            RenderTargetDescriptor.DefaultPreserveContents
-        );
-
-        spriteBatch.End(out var ss);
-
-        using (rtLease.Scope(preserveContents: true, clearColor: Color.Transparent))
-        {
-            spriteBatch.Begin(ss);
-            base.DrawChildren(spriteBatch);
-            spriteBatch.End();
-        }
-
-        spriteBatch.Begin(ss with { SortMode = SpriteSortMode.Immediate });
-
-        var truncatedDims = this.Dimensions;
-
-        var fadeShader = AssetReferences.Assets.Shaders.UI.SlightListFade.CreateFadeShader();
-        fadeShader.Parameters.uPanelDimensions = new Vector4(truncatedDims.X, truncatedDims.Y, truncatedDims.Width, truncatedDims.Height);
-        fadeShader.Parameters.uScreenSize = new Vector2(rtLease.Target.Width, rtLease.Target.Height);
-        fadeShader.Apply();
-
-        spriteBatch.Draw(rtLease.Target, truncatedDims.TopLeft(), truncatedDims, Color.White);
-        spriteBatch.Restart(ss);
-    }
-
-    public void GotoModCategory(ConfigCategory category)
-    {
-        var categoryElement = _items.FirstOrDefault(x => x is CategoryTab tab && tab.Category == category);
-        if (categoryElement is null)
+        if (elem is null || elem is not ModGroup group)
         {
             return;
         }
 
-        var idx = _items.IndexOf(categoryElement);
-        if (idx < 0)
+        group.Selected = true;
+
+        group[category]?.Selected = true;
+
+        if (scroll)
         {
-            return;
-        }
-
-        var modHeader = _items.Take(idx).Reverse().FirstOrDefault(x => x.Children.Any(y => y is ModHeader));
-        if (modHeader is null)
-        {
-            return;
-        }
-
-        _scrollbar.ViewPosition = modHeader.Top.Pixels;
-    }
-
-    public class ModHeader : UIAutoScaleTextTextPanel<string>
-    {
-        public ModHeader(Mod? mod) : base(mod?.DisplayName ?? "Terraria")
-        {
-            // _backgroundTexture = AssetReferences.Assets.Images.UI.ConfigTabPanel.Asset;
-            // _borderTexture = AssetReferences.Assets.Images.UI.ConfigTabPanelOutline.Asset;
-
-            BackgroundColor = Color.Transparent;
-            BorderColor = Color.Transparent;
-
-            Width.Set(0f, 1f);
-            Height = StyleDimension.Fill;
-
-            HAlign = 1f;
-
-            TextOriginX = 0f;
-
-            SetPadding(0f);
-
-            // Makes the text respond to padding.
-            UseInnerDimensions = true;
-
-            if (GetModSmallIcon(mod) is { } icon)
-            {
-                // If an icon is not loaded the width values used are 0.
-                icon.Wait();
-
-                PaddingLeft += 30f;
-
-                var tabImage = new BetterImage();
-                {
-                    tabImage.VAlign = 0.5f;
-                    tabImage.HAlign = 0f;
-                    tabImage.MarginLeft = -30f;
-                    tabImage.MarginTop = -2f;
-                    tabImage.Width.Set(30f, 0f);
-                    tabImage.Height.Set(30f, 0f);
-                    tabImage.Texture = icon;
-                }
-                Append(tabImage);
-            }
-
-            Recalculate();
-        }
-
-        private static Asset<Texture2D>? GetModSmallIcon(Mod? mod)
-        {
-            if (mod is null)
-            {
-                return AssetReferences.Assets.Images.Configuration.ModIcon_Terraria.Asset;
-            }
-            else if (mod is ModLoaderMod)
-            {
-                return AssetReferences.Assets.Images.Configuration.ModIcon_ModLoader.Asset;
-            }
-
-            if (mod.RequestAssetIfExists<Texture2D>("icon_small", out var iconSmall))
-            {
-                return iconSmall;
-            }
-
-            if (mod.RequestAssetIfExists<Texture2D>("icon", out var icon))
-            {
-                return icon;
-            }
-
-            return null;
+            _scrollbar.ViewPosition = elem.Top.Pixels;
         }
     }
 
-    private sealed class BetterImage : UIElement
+    protected class TextTab<T> : UIAutoScaleTextTextPanel<T>
     {
-        public Asset<Texture2D>? Texture { get; set; }
+        private const float icon_padding = 30f;
 
-        protected override void DrawSelf(SpriteBatch spriteBatch)
-        {
-            base.DrawSelf(spriteBatch);
+        private static Color SelectedColor => Color.White;
 
-            if (Texture is null)
-            {
-                return;
-            }
+        private static Color HoveredColor => (Color.White * 0.95f) with { A = 255 };
 
-            var dims = GetDimensions();
-            var pos = dims.Position();
-
-            spriteBatch.Draw(
-                Texture.Value,
-                new Rectangle((int)pos.X, (int)pos.Y, (int)Width.Pixels, (int)Height.Pixels),
-                null,
-                Color.White,
-                0f,
-                Vector2.Zero,
-                SpriteEffects.None,
-                0f
-            );
-        }
-    }
-
-    public class CategoryTab : UIElement
-    {
-        public ConfigCategory Category;
+        private static Color UnselectedColor => (Color.White * 0.75f) with { A = 255 };
 
         public bool Selected
         {
             get;
-
             set
             {
                 field = value;
 
                 if (value)
                 {
-                    TargetColor = textPanel.TextColor = SelectedColor;
+                    TargetColor = TextColor = SelectedColor;
                 }
                 else
                 {
@@ -627,21 +463,14 @@ public class CategoryTabList : FadedList
             }
         }
 
-        private static Color SelectedColor => Color.White;
-
-        private static Color HoveredColor => (Color.White * 0.95f) with { A = 255 };
-
-        private static Color UnselectedColor => (Color.White * 0.75f) with { A = 255 };
-
         private Color TargetColor
         {
-            get => field;
-
+            get;
             set
             {
                 field = value;
                 targetColorLerp = 0;
-                oldColor = textPanel.TextColor;
+                oldColor = TextColor;
             }
         }
 
@@ -650,84 +479,83 @@ public class CategoryTabList : FadedList
         private int hoverProgress;
         private int selectProgress;
 
-        private readonly float itemProgress;
-        private readonly UIAutoScaleTextTextPanel<LocalizedText> textPanel;
         private readonly UIHorizontalSeparator dimDivider;
         private readonly UIHorizontalSeparator highlightDivider;
         private readonly UIHorizontalSeparator selectDivider;
 
-        public CategoryTab(ConfigCategory category, float progress)
+        public TextTab(T text, Asset<Texture2D>? icon = null, float textScaleMax = 1, bool large = false) : base(text, textScaleMax, large)
         {
-            this.Category = category;
+            TargetColor = TextColor = UnselectedColor;
 
-            itemProgress = progress;
+            BackgroundColor = Color.Transparent;
+            BorderColor = Color.Transparent;
 
-            textPanel = new UIAutoScaleTextTextPanel<LocalizedText>(category.DisplayName);
+            Width.Set(0f, 1f);
+
+            TextOriginX = 0f;
+
+            SetPadding(0f);
+
+            // Makes the text respond to padding.
+            UseInnerDimensions = true;
+
+            bool useIcon = icon is not null;
+
+            // Icon
             {
-                textPanel.Width = StyleDimension.Fill;
-                textPanel.Height = StyleDimension.Fill;
-                textPanel.BackgroundColor = Color.Transparent;
-                textPanel.BorderColor = Color.Transparent;
-                TargetColor = textPanel.TextColor = UnselectedColor;
-                textPanel.TextOriginX = 0f;
-                textPanel.SetPadding(0f);
-                // Makes the text respond to padding.
-                textPanel.UseInnerDimensions = true;
-            }
-            Append(textPanel);
+                if (useIcon)
+                {
+                    PaddingLeft += icon_padding;
 
-            if (category.Icon is not null)
+                    var tabImage = new Icon();
+                    {
+                        tabImage.VAlign = 0.5f;
+                        tabImage.HAlign = 0f;
+                        tabImage.MarginLeft = -30f;
+                        tabImage.MarginTop = -2f;
+                        tabImage.Width.Set(30f, 0f);
+                        tabImage.Height.Set(30f, 0f);
+                        tabImage.Texture = icon;
+                    }
+                    Append(tabImage);
+                }
+            }
+
+            var dividerContainer = new UIElement();
             {
-                var icon = category.Icon;
-                {
-                    // If an icon is not loaded the width values used are 0.
-                    icon.Wait();
-                }
+                dividerContainer.Width.Set(useIcon ? icon_padding : 0f, 1f);
+                dividerContainer.MaxWidth.Set(useIcon ? icon_padding : 0f, 1f);
 
-                float iconMargin = icon.Width();
-                {
-                    PaddingLeft += iconMargin;
-                }
+                dividerContainer.Height.Set(2f, 0f);
 
-                var tabIcon = new UIImage(category.Icon);
-                {
-                    tabIcon.VAlign = 0.5f;
-                    tabIcon.HAlign = 0f;
-                    tabIcon.MarginLeft = -iconMargin;
-                    tabIcon.MarginTop = -2f;
-                }
-                Append(tabIcon);
+                dividerContainer.HAlign = 1f;
+                dividerContainer.VAlign = 1f;
             }
+            Append(dividerContainer);
 
             dimDivider = new UIHorizontalSeparator();
             {
                 dimDivider.Width = StyleDimension.Fill;
                 dimDivider.Height.Set(2f, 0f);
-                dimDivider.VAlign = 1f;
-                dimDivider.Top.Set(0f, 0f);
                 dimDivider.Color = new Color(85, 88, 159) * 0.4f;
             }
-            Append(dimDivider);
+            dividerContainer.Append(dimDivider);
 
             highlightDivider = new UIHorizontalSeparator();
             {
                 highlightDivider.Width = StyleDimension.Empty;
                 highlightDivider.Height.Set(2f, 0f);
-                highlightDivider.VAlign = 1f;
-                highlightDivider.Top.Set(0f, 0f);
                 highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
             }
-            Append(highlightDivider);
+            dividerContainer.Append(highlightDivider);
 
             selectDivider = new UIHorizontalSeparator();
             {
                 selectDivider.Width = StyleDimension.Empty;
                 selectDivider.Height.Set(2f, 0f);
-                selectDivider.VAlign = 1f;
-                selectDivider.Top.Set(0f, 0f);
                 selectDivider.Color = Main.OurFavoriteColor;
             }
-            Append(selectDivider);
+            dividerContainer.Append(selectDivider);
 
             Recalculate();
         }
@@ -742,7 +570,7 @@ public class CategoryTabList : FadedList
                     targetColorLerp = lerp_frames;
                 }
 
-                textPanel.TextColor = Color.Lerp(oldColor, TargetColor, targetColorLerp / (float)lerp_frames);
+                TextColor = Color.Lerp(oldColor, TargetColor, targetColorLerp / (float)lerp_frames);
             }
 
             const int hover_frames = 8;
@@ -785,7 +613,7 @@ public class CategoryTabList : FadedList
             dimDivider.Color = new Color(85, 88, 159) * (intensity + 0.2f);
             */
 
-            dimDivider.Color = new Color(85, 88, 159) * 0.5f * itemProgress;
+            dimDivider.Color = new Color(85, 88, 159) * 0.5f;
 
             base.Draw(spriteBatch);
 
@@ -822,6 +650,172 @@ public class CategoryTabList : FadedList
 
             SoundEngine.PlaySound(in SoundID.MenuTick);
             TargetColor = UnselectedColor;
+        }
+
+        private sealed class Icon : UIElement
+        {
+            public Asset<Texture2D>? Texture { get; set; }
+
+            protected override void DrawSelf(SpriteBatch spriteBatch)
+            {
+                base.DrawSelf(spriteBatch);
+
+                if (Texture is null)
+                {
+                    return;
+                }
+
+                var dims = this.Dimensions;
+
+                spriteBatch.Draw(
+                    Texture.Value,
+                    dims,
+                    null,
+                    Color.White,
+                    0f,
+                    Vector2.Zero,
+                    SpriteEffects.None,
+                    0f
+                );
+            }
+        }
+    }
+
+    protected class ModGroup : UIElement
+    {
+        protected readonly TextTab<string> header;
+        protected readonly UIList list;
+
+        public readonly Mod? Mod;
+
+        public event Action<ConfigCategory>? OnCategorySelected;
+
+        public bool Selected
+        {
+            get => header.Selected;
+            set
+            {
+                header.Selected = value;
+
+                if (value)
+                {
+                    return;
+                }
+
+                foreach (var elem in list)
+                {
+                    if (elem is CategoryTab tab)
+                    {
+                        tab.Selected = false;
+                    }
+                }
+            }
+        }
+
+        public CategoryTab? this[ConfigCategory category]
+        {
+            get
+            {
+                var elem = list._items.FirstOrDefault(m => m is CategoryTab c && c.Category == category);
+
+                return elem as CategoryTab;
+            }
+        }
+
+        public ModGroup(Mod? mod, IEnumerable<ConfigCategory> categories, ConfigCategory? targetCategory)
+        {
+            Mod = mod;
+
+            const float tab_height = 32f;
+
+            Width = StyleDimension.Fill;
+            MinHeight.Set(tab_height, 0f);
+
+            HAlign = 1f;
+
+            header = new TextTab<string>(mod?.DisplayName ?? "Terraria", GetModSmallIcon(mod));
+            {
+                header.Height.Set(tab_height, 0f);
+            }
+            Append(header);
+
+            list = [];
+            {
+                const float list_margin = 15f;
+
+                list.Top.Set(tab_height, 0f);
+                list.Left.Set(list_margin, 0f);
+
+                list.Width.Set(-list_margin, 1f);
+                list.Height = StyleDimension.Fill;
+
+                list.ListPadding = 2f;
+
+                foreach (var category in categories)
+                {
+                    var tab = new CategoryTab(category);
+                    {
+                        tab.Height.Set(tab_height, 0f);
+
+                        tab.OnLeftClick += OnClickTab;
+
+                        if (category == targetCategory)
+                        {
+                            Selected = true;
+                            tab.Selected = true;
+                        }
+                    }
+                    list.Add(tab);
+                }
+            }
+            Append(list);
+
+            Height.Set(tab_height + list.GetTotalHeight(), 0f);
+
+            void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
+            {
+                if (listeningElement is CategoryTab tab)
+                {
+                    Selected = true;
+                    tab.Selected = true;
+
+                    OnCategorySelected?.Invoke(tab.Category);
+                }
+            }
+        }
+
+        private static Asset<Texture2D>? GetModSmallIcon(Mod? mod)
+        {
+            if (mod is null)
+            {
+                return AssetReferences.Assets.Images.Configuration.ModIcon_Terraria.Asset;
+            }
+            else if (mod is ModLoaderMod)
+            {
+                return AssetReferences.Assets.Images.Configuration.ModIcon_ModLoader.Asset;
+            }
+
+            if (mod.RequestAssetIfExists<Texture2D>("icon_small", out var iconSmall))
+            {
+                return iconSmall;
+            }
+
+            if (mod.RequestAssetIfExists<Texture2D>("icon", out var icon))
+            {
+                return icon;
+            }
+
+            return null;
+        }
+    }
+
+    protected class CategoryTab : TextTab<LocalizedText>
+    {
+        public ConfigCategory Category;
+
+        public CategoryTab(ConfigCategory category) : base(category.DisplayName, category.Icon)
+        {
+            Category = category;
         }
     }
 }
