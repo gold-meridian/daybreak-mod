@@ -29,12 +29,14 @@ public class FadedList : UIList
 
         spriteBatch.Begin(ss with { SortMode = SpriteSortMode.Immediate });
 
+        var truncatedDims = _dimensions.ToRectangle();
+
         var fadeShader = AssetReferences.Assets.Shaders.UI.SlightListFade.CreateFadeShader();
-        fadeShader.Parameters.uPanelDimensions = new Vector4(_dimensions.X, _dimensions.Y, _dimensions.Width, _dimensions.Height);
+        fadeShader.Parameters.uPanelDimensions = new Vector4(truncatedDims.X, truncatedDims.Y, truncatedDims.Width, truncatedDims.Height);
         fadeShader.Parameters.uScreenSize = new Vector2(rtLease.Target.Width, rtLease.Target.Height);
         fadeShader.Apply();
 
-        spriteBatch.Draw(rtLease.Target, _dimensions.Position(), _dimensions.ToRectangle(), Color.White);
+        spriteBatch.Draw(rtLease.Target, truncatedDims.TopLeft(), truncatedDims, Color.White);
         spriteBatch.Restart(ss);
     }
 }
