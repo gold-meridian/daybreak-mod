@@ -339,7 +339,7 @@ internal class TabList : FadedList
         IConfigEntry? targetEntry
     )
     {
-        ListPadding = 4f;
+        ListPadding = 16f;
 
         // Extra padding at the start of the list to avoid the last item being
         // engulfed in the fade.
@@ -406,9 +406,12 @@ internal class TabList : FadedList
 
     private void ModGroup_OnCategorySelected(ConfigCategory category)
     {
-        Category = category;
-        OnCategorySelected?.Invoke(Category);
-        SoundEngine.PlaySound(SoundID.MenuOpen);
+        if (Category != category)
+        {
+            Category = category;
+            OnCategorySelected?.Invoke(Category);
+            SoundEngine.PlaySound(SoundID.MenuOpen);
+        }
     }
 
     public override void OnActivate()
@@ -483,7 +486,7 @@ internal class TabList : FadedList
         private readonly UIHorizontalSeparator highlightDivider;
         private readonly UIHorizontalSeparator selectDivider;
 
-        public TextTab(T text, Asset<Texture2D>? icon = null, float textScaleMax = 1, bool large = false) : base(text, textScaleMax, large)
+        public TextTab(T text, Asset<Texture2D>? icon = null, Color? selectedColor = null, float textScaleMax = 1, bool large = false) : base(text, textScaleMax, large)
         {
             TargetColor = TextColor = UnselectedColor;
 
@@ -537,7 +540,7 @@ internal class TabList : FadedList
             {
                 dimDivider.Width = StyleDimension.Fill;
                 dimDivider.Height.Set(2f, 0f);
-                dimDivider.Color = new Color(85, 88, 159) * 0.4f;
+                dimDivider.Color = new Color(85, 88, 159) * 0.5f;
             }
             dividerContainer.Append(dimDivider);
 
@@ -553,18 +556,19 @@ internal class TabList : FadedList
             {
                 selectDivider.Width = StyleDimension.Empty;
                 selectDivider.Height.Set(2f, 0f);
-                selectDivider.Color = Main.OurFavoriteColor;
+                selectDivider.Color = selectedColor ?? Main.OurFavoriteColor;
             }
             dividerContainer.Append(selectDivider);
 
             Recalculate();
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Update(GameTime gameTime)
         {
             const int lerp_frames = 6;
             {
                 targetColorLerp++;
+
                 if (targetColorLerp > lerp_frames)
                 {
                     targetColorLerp = lerp_frames;
@@ -575,26 +579,8 @@ internal class TabList : FadedList
 
             const int hover_frames = 8;
             {
-                hoverProgress += IsMouseHovering || Selected ? 1 : -1;
-                selectProgress += Selected ? 1 : -1;
-
-                if (hoverProgress > hover_frames)
-                {
-                    hoverProgress = hover_frames;
-                }
-                else if (hoverProgress < 0)
-                {
-                    hoverProgress = 0;
-                }
-
-                if (selectProgress > hover_frames)
-                {
-                    selectProgress = hover_frames;
-                }
-                else if (selectProgress < 0)
-                {
-                    selectProgress = 0;
-                }
+                hoverProgress = MathHelper.Clamp(hoverProgress + (IsMouseHovering || Selected).ToDirectionInt(), 0, hover_frames);
+                selectProgress = MathHelper.Clamp(selectProgress + Selected.ToDirectionInt(), 0, hover_frames);
 
                 highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
                 selectDivider.Width.Set(0f, Ease(selectProgress / (float)hover_frames));
@@ -612,12 +598,6 @@ internal class TabList : FadedList
 
             dimDivider.Color = new Color(85, 88, 159) * (intensity + 0.2f);
             */
-
-            dimDivider.Color = new Color(85, 88, 159) * 0.5f;
-
-            base.Draw(spriteBatch);
-
-            return;
 
             static float Ease(float x)
             {
@@ -683,6 +663,8 @@ internal class TabList : FadedList
 
     protected class ModGroup : UIElement
     {
+        private const float tab_height = 32f;
+
         protected readonly TextTab<string> header;
         protected readonly UIList list;
 
@@ -699,6 +681,8 @@ internal class TabList : FadedList
 
                 if (value)
                 {
+                    openProgress = 12;
+                    Open = true;
                     return;
                 }
 
@@ -722,40 +706,56 @@ internal class TabList : FadedList
             }
         }
 
+        public bool Open { get; private set; }
+
+        private int openProgress;
+
         public ModGroup(Mod? mod, IEnumerable<ConfigCategory> categories, ConfigCategory? targetCategory)
         {
             Mod = mod;
-
-            const float tab_height = 32f;
 
             Width = StyleDimension.Fill;
             MinHeight.Set(tab_height, 0f);
 
             HAlign = 1f;
 
-            header = new TextTab<string>(mod?.DisplayName ?? "Terraria", GetModSmallIcon(mod));
+            header = new TextTab<string>(mod?.DisplayName ?? "Terraria", GetModSmallIcon(mod), Color.Transparent);
             {
                 header.Height.Set(tab_height, 0f);
+
+                header.OnLeftClick += OnClickHeader;
             }
             Append(header);
 
-            list = [];
+            var listContainer = new UIElement();
             {
                 const float list_margin = 15f;
 
-                list.Top.Set(tab_height, 0f);
-                list.Left.Set(list_margin, 0f);
+                listContainer.Left.Set(list_margin, 0f);
 
-                list.Width.Set(-list_margin, 1f);
-                list.Height = StyleDimension.Fill;
+                listContainer.Width.Set(-list_margin, 1f);
+                listContainer.Height.Set(-tab_height, 1f);
 
-                list.ListPadding = 2f;
+                listContainer.VAlign = 1f;
+
+                listContainer.OverflowHidden = true;
+            }
+            Append(listContainer);
+
+            list = [];
+            {
+                list.Width.Set(0f, 1f);
+                list.Height.Set(0f, 1f);
+
+                list.VAlign = 1f;
+
+                list.ListPadding = 4f;
 
                 foreach (var category in categories)
                 {
                     var tab = new CategoryTab(category);
                     {
-                        tab.Height.Set(tab_height, 0f);
+                        tab.Height.Set(28, 0f);
 
                         tab.OnLeftClick += OnClickTab;
 
@@ -768,9 +768,19 @@ internal class TabList : FadedList
                     list.Add(tab);
                 }
             }
-            Append(list);
+            listContainer.Append(list);
 
-            Height.Set(tab_height + list.GetTotalHeight(), 0f);
+            list.MinHeight.Set(list.GetTotalHeight(), 0f);
+
+            void OnClickHeader(UIMouseEvent evt, UIElement listeningElement)
+            {
+                if (!Selected)
+                {
+                    Open = !Open;
+
+                    SoundEngine.PlaySound(in SoundID.MenuOpen);
+                }
+            }
 
             void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
             {
@@ -806,6 +816,26 @@ internal class TabList : FadedList
             }
 
             return null;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            const int open_frames = 12;
+            {
+                openProgress = MathHelper.Clamp(openProgress + Open.ToDirectionInt(), 0, open_frames);
+
+                float height = list.GetTotalHeight() * Ease(openProgress / (float)open_frames);
+
+                Height.Set(tab_height + height, 0f);
+            }
+
+            static float Ease(float x)
+            {
+                // return x < 0.5f ? 4 * x * x * x : 1 - MathF.Pow(-2 * x + 2, 3) / 2;
+                return 1 - MathF.Pow(1 - x, 5);
+            }
         }
     }
 
