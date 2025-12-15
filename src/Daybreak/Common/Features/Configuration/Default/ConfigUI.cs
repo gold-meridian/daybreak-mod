@@ -559,6 +559,8 @@ internal class TabList : FadedList
 
         public bool Open { get; private set; }
 
+        protected bool hoveringHeader;
+
         private int hoverProgress;
         private int openProgress;
 
@@ -703,19 +705,11 @@ internal class TabList : FadedList
             return null;
         }
 
-        public override void MouseOver(UIMouseEvent evt)
-        {
-            base.MouseOver(evt);
-
-            if (!Selected)
-            {
-                SoundEngine.PlaySound(in SoundID.MenuTick);
-            }
-        }
-
         public override void LeftMouseDown(UIMouseEvent evt)
         {
-            if (!Selected && IsMouseHovering)
+            base.LeftMouseDown(evt);
+
+            if (!Selected && hoveringHeader)
             {
                 Open = !Open;
 
@@ -729,11 +723,17 @@ internal class TabList : FadedList
 
             var mousePosition = UserInterface.ActiveInstance.MousePosition;
 
-            IsMouseHovering = this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
+            bool wasHoveringHeader = hoveringHeader;
+            hoveringHeader = this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
+
+            if (!Selected && hoveringHeader && !wasHoveringHeader)
+            {
+                SoundEngine.PlaySound(in SoundID.MenuTick);
+            }
 
             const int hover_frames = 8;
             {
-                hoverProgress = MathHelper.Clamp(hoverProgress + IsMouseHovering.ToDirectionInt(), 0, hover_frames);
+                hoverProgress = MathHelper.Clamp(hoverProgress + (hoveringHeader || Selected).ToDirectionInt(), 0, hover_frames);
 
                 highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
             }
