@@ -438,58 +438,10 @@ internal class TabList : FadedList
         }
     }
 
-    protected class TextTab<T> : UIAutoScaleTextTextPanel<T>
+    protected abstract class TextTab<T> : UIAutoScaleTextTextPanel<T>
     {
-        private const float icon_padding = 30f;
-
-        private static Color SelectedColor => Color.White;
-
-        private static Color HoveredColor => (Color.White * 0.95f) with { A = 255 };
-
-        private static Color UnselectedColor => (Color.White * 0.75f) with { A = 255 };
-
-        public bool Selected
+        public TextTab(T text, Asset<Texture2D>? icon = null) : base(text, 1f, false)
         {
-            get;
-            set
-            {
-                field = value;
-
-                if (value)
-                {
-                    TargetColor = TextColor = SelectedColor;
-                }
-                else
-                {
-                    TargetColor = UnselectedColor;
-                }
-            }
-        }
-
-        private Color TargetColor
-        {
-            get;
-            set
-            {
-                field = value;
-                targetColorLerp = 0;
-                oldColor = TextColor;
-            }
-        }
-
-        private Color oldColor;
-        private int targetColorLerp;
-        private int hoverProgress;
-        private int selectProgress;
-
-        private readonly UIHorizontalSeparator dimDivider;
-        private readonly UIHorizontalSeparator highlightDivider;
-        private readonly UIHorizontalSeparator selectDivider;
-
-        public TextTab(T text, Asset<Texture2D>? icon = null, Color? selectedColor = null, float textScaleMax = 1, bool large = false) : base(text, textScaleMax, large)
-        {
-            TargetColor = TextColor = UnselectedColor;
-
             BackgroundColor = Color.Transparent;
             BorderColor = Color.Transparent;
 
@@ -508,131 +460,29 @@ internal class TabList : FadedList
             {
                 if (useIcon)
                 {
-                    PaddingRight += icon_padding;
+                    PaddingRight += 30f;
 
                     var tabImage = new Icon();
                     {
                         tabImage.VAlign = 0.5f;
                         tabImage.HAlign = 1f;
-                        tabImage.MarginRight = -icon_padding;
+                        tabImage.MarginRight = -PaddingRight;
                         tabImage.MarginTop = -2f;
-                        tabImage.Width.Set(icon_padding, 0f);
-                        tabImage.Height.Set(icon_padding, 0f);
+                        tabImage.Width.Set(30f, 0f);
+                        tabImage.Height.Set(30f, 0f);
                         tabImage.Texture = icon;
                     }
                     Append(tabImage);
                 }
             }
 
-            var dividerContainer = new UIElement();
-            {
-                dividerContainer.Width.Set(useIcon ? icon_padding : 0f, 1f);
-                dividerContainer.MaxWidth.Set(useIcon ? icon_padding : 0f, 1f);
-
-                dividerContainer.Height.Set(2f, 0f);
-
-                dividerContainer.VAlign = 1f;
-            }
-            Append(dividerContainer);
-
-            dimDivider = new UIHorizontalSeparator();
-            {
-                dimDivider.Width = StyleDimension.Fill;
-                dimDivider.Height.Set(2f, 0f);
-                dimDivider.Color = new Color(85, 88, 159) * 0.5f;
-            }
-            dividerContainer.Append(dimDivider);
-
-            highlightDivider = new UIHorizontalSeparator();
-            {
-                highlightDivider.Width = StyleDimension.Empty;
-                highlightDivider.Height.Set(2f, 0f);
-                highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
-            }
-            dividerContainer.Append(highlightDivider);
-
-            selectDivider = new UIHorizontalSeparator();
-            {
-                selectDivider.Width = StyleDimension.Empty;
-                selectDivider.Height.Set(2f, 0f);
-                selectDivider.Color = selectedColor ?? Main.OurFavoriteColor;
-            }
-            dividerContainer.Append(selectDivider);
-
             Recalculate();
         }
 
-        public override void Update(GameTime gameTime)
+        protected sealed class Icon : UIElement
         {
-            const int lerp_frames = 6;
-            {
-                targetColorLerp++;
+            public float Rotation { get; set; }
 
-                if (targetColorLerp > lerp_frames)
-                {
-                    targetColorLerp = lerp_frames;
-                }
-
-                TextColor = Color.Lerp(oldColor, TargetColor, targetColorLerp / (float)lerp_frames);
-            }
-
-            const int hover_frames = 8;
-            {
-                hoverProgress = MathHelper.Clamp(hoverProgress + (IsMouseHovering || Selected).ToDirectionInt(), 0, hover_frames);
-                selectProgress = MathHelper.Clamp(selectProgress + Selected.ToDirectionInt(), 0, hover_frames);
-
-                highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
-                selectDivider.Width.Set(0f, Ease(selectProgress / (float)hover_frames));
-            }
-
-            /*
-            var intensity = 0.8f;
-            var cursorProximity = MathF.Pow(_dimensions.ToRectangle().Distance(Main.MouseScreen) / 120f, 2f);
-
-            intensity -= cursorProximity;
-            if (intensity < 0f)
-            {
-                intensity = 0f;
-            }
-
-            dimDivider.Color = new Color(85, 88, 159) * (intensity + 0.2f);
-            */
-
-            static float Ease(float x)
-            {
-                // return x < 0.5f ? 4 * x * x * x : 1 - MathF.Pow(-2 * x + 2, 3) / 2;
-                return 1 - MathF.Pow(1 - x, 5);
-            }
-        }
-
-        public override void MouseOver(UIMouseEvent evt)
-        {
-            base.MouseOver(evt);
-
-            if (Selected)
-            {
-                return;
-            }
-
-            SoundEngine.PlaySound(in SoundID.MenuTick);
-            TargetColor = HoveredColor;
-        }
-
-        public override void MouseOut(UIMouseEvent evt)
-        {
-            base.MouseOut(evt);
-
-            if (Selected)
-            {
-                return;
-            }
-
-            SoundEngine.PlaySound(in SoundID.MenuTick);
-            TargetColor = UnselectedColor;
-        }
-
-        private sealed class Icon : UIElement
-        {
             public Asset<Texture2D>? Texture { get; set; }
 
             protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -645,14 +495,19 @@ internal class TabList : FadedList
                 }
 
                 var dims = this.Dimensions;
+                var position = dims.Center();
+                var scale = dims.Size() / Texture.Value.Size();
+
+                var origin = Texture.Value.Size() * 0.5f;
 
                 spriteBatch.Draw(
                     Texture.Value,
-                    dims,
+                    position,
                     null,
                     Color.White,
-                    0f,
-                    Vector2.Zero,
+                    Rotation,
+                    origin,
+                    scale,
                     SpriteEffects.None,
                     0f
                 );
@@ -660,12 +515,9 @@ internal class TabList : FadedList
         }
     }
 
-    protected class ModGroup : UIElement
+    protected class ModGroup : TextTab<string>
     {
         private const float tab_height = 32f;
-
-        protected readonly TextTab<string> header;
-        protected readonly UIList list;
 
         public readonly Mod? Mod;
 
@@ -673,10 +525,10 @@ internal class TabList : FadedList
 
         public bool Selected
         {
-            get => header.Selected;
+            get;
             set
             {
-                header.Selected = value;
+                field = value;
 
                 if (value)
                 {
@@ -707,9 +559,18 @@ internal class TabList : FadedList
 
         public bool Open { get; private set; }
 
+        private int hoverProgress;
         private int openProgress;
 
-        public ModGroup(Mod? mod, IEnumerable<ConfigCategory> categories, ConfigCategory? targetCategory)
+        private readonly UIHorizontalSeparator dimDivider;
+        private readonly UIHorizontalSeparator highlightDivider;
+
+        protected readonly Icon dropdownIcon;
+
+        protected readonly UIElement listContainer;
+        protected readonly UIList list;
+
+        public ModGroup(Mod? mod, IEnumerable<ConfigCategory> categories, ConfigCategory? targetCategory) : base(mod?.DisplayName ?? "Terraria", GetModSmallIcon(mod))
         {
             Mod = mod;
 
@@ -718,24 +579,64 @@ internal class TabList : FadedList
 
             HAlign = 1f;
 
-            header = new TextTab<string>(mod?.DisplayName ?? "Terraria", GetModSmallIcon(mod), Color.Transparent);
+            PaddingLeft += 12f;
+
+            dropdownIcon = new Icon();
             {
-                header.Height.Set(tab_height, 0f);
-
-                header.OnLeftClick += OnClickHeader;
+                dropdownIcon.VAlign = 0.5f;
+                dropdownIcon.MarginLeft = -PaddingLeft;
+                dropdownIcon.MarginTop = 2f;
+                dropdownIcon.Width.Set(12f, 0f);
+                dropdownIcon.Height.Set(12f, 0f);
+                dropdownIcon.Texture = AssetReferences.Assets.Images.UI.Dropdown.Asset;
             }
-            Append(header);
+            Append(dropdownIcon);
 
-            var listContainer = new UIElement();
+            // Dividers
+            {
+                var dividerContainer = new UIElement();
+                {
+                    dividerContainer.MarginLeft = -PaddingLeft;
+                    dividerContainer.MarginRight = -PaddingRight;
+
+                    dividerContainer.Width.Set(PaddingLeft + PaddingRight, 1f);
+                    dividerContainer.MaxWidth.Set(PaddingLeft + PaddingRight, 1f);
+
+                    dividerContainer.Height.Set(2f, 0f);
+
+                    dividerContainer.VAlign = 1f;
+                }
+                Append(dividerContainer);
+
+                dimDivider = new UIHorizontalSeparator();
+                {
+                    dimDivider.Width = StyleDimension.Fill;
+                    dimDivider.Height.Set(2f, 0f);
+                    dimDivider.Color = new Color(85, 88, 159) * 0.5f;
+                }
+                dividerContainer.Append(dimDivider);
+
+                highlightDivider = new UIHorizontalSeparator();
+                {
+                    highlightDivider.Width = StyleDimension.Empty;
+                    highlightDivider.Height.Set(2f, 0f);
+                    highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
+                }
+                dividerContainer.Append(highlightDivider);
+            }
+
+            listContainer = new UIElement();
             {
                 const float list_margin = 15f;
 
+                listContainer.MarginLeft = -PaddingLeft;
+                listContainer.MarginRight = -PaddingRight;
+
                 listContainer.Left.Set(list_margin, 0f);
+                listContainer.Top.Set(tab_height, 0f);
 
-                listContainer.Width.Set(-list_margin, 1f);
-                listContainer.Height.Set(-tab_height, 1f);
-
-                listContainer.VAlign = 1f;
+                listContainer.Width.Set(list_margin + PaddingLeft + PaddingRight, 1f);
+                listContainer.MaxWidth.Set(list_margin + PaddingLeft + PaddingRight, 1f);
 
                 listContainer.OverflowHidden = true;
             }
@@ -771,16 +672,6 @@ internal class TabList : FadedList
 
             list.MinHeight.Set(list.GetTotalHeight(), 0f);
 
-            void OnClickHeader(UIMouseEvent evt, UIElement listeningElement)
-            {
-                if (!Selected)
-                {
-                    Open = !Open;
-
-                    SoundEngine.PlaySound(in SoundID.MenuOpen);
-                }
-            }
-
             void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
             {
                 if (listeningElement is CategoryTab tab)
@@ -812,17 +703,57 @@ internal class TabList : FadedList
             return null;
         }
 
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            base.MouseOver(evt);
+
+            if (!Selected)
+            {
+                SoundEngine.PlaySound(in SoundID.MenuTick);
+            }
+        }
+
+        public override void LeftMouseDown(UIMouseEvent evt)
+        {
+            if (!Selected && IsMouseHovering)
+            {
+                Open = !Open;
+
+                SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            var mousePosition = UserInterface.ActiveInstance.MousePosition;
+
+            IsMouseHovering = this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
+
+            const int hover_frames = 8;
+            {
+                hoverProgress = MathHelper.Clamp(hoverProgress + IsMouseHovering.ToDirectionInt(), 0, hover_frames);
+
+                highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
+            }
 
             const int open_frames = 12;
             {
                 openProgress = MathHelper.Clamp(openProgress + Open.ToDirectionInt(), 0, open_frames);
 
-                float height = list.GetTotalHeight() * Ease(openProgress / (float)open_frames);
+                float eased = Ease(openProgress / (float)open_frames);
+
+                dropdownIcon.Rotation = MathHelper.PiOver2 * eased;
+
+                float height = list.GetTotalHeight() * eased;
+
+                listContainer.MinHeight.Set(height, 0f);
+                listContainer.MaxHeight.Set(height, 0f);
 
                 Height.Set(tab_height + height, 0f);
+
+                PaddingBottom = height;
             }
 
             static float Ease(float x)
@@ -835,11 +766,149 @@ internal class TabList : FadedList
 
     protected class CategoryTab : TextTab<LocalizedText>
     {
+        private static Color SelectedColor => Color.White;
+
+        private static Color HoveredColor => (Color.White * 0.95f) with { A = 255 };
+
+        private static Color UnselectedColor => (Color.White * 0.75f) with { A = 255 };
+
+        public bool Selected
+        {
+            get;
+            set
+            {
+                field = value;
+
+                if (value)
+                {
+                    TextTargetColor = TextColor = SelectedColor;
+                }
+                else
+                {
+                    TextTargetColor = UnselectedColor;
+                }
+            }
+        }
+
+        private Color TextTargetColor
+        {
+            get;
+            set
+            {
+                field = value;
+                targetColorLerp = 0;
+                oldColor = TextColor;
+            }
+        }
+
+        private Color oldColor;
+        private int targetColorLerp;
+        private int hoverProgress;
+        private int selectProgress;
+
+        private readonly UIHorizontalSeparator dimDivider;
+        private readonly UIHorizontalSeparator highlightDivider;
+        private readonly UIHorizontalSeparator selectDivider;
+
         public ConfigCategory Category;
 
         public CategoryTab(ConfigCategory category) : base(category.DisplayName)
         {
             Category = category;
+
+            TextTargetColor = TextColor = UnselectedColor;
+
+            var dividerContainer = new UIElement();
+            {
+                dividerContainer.MarginLeft = -PaddingLeft;
+                dividerContainer.MarginRight = -PaddingRight;
+
+                dividerContainer.Width.Set(PaddingLeft + PaddingRight, 1f);
+                dividerContainer.MaxWidth.Set(PaddingLeft + PaddingRight, 1f);
+
+                dividerContainer.Height.Set(2f, 0f);
+
+                dividerContainer.VAlign = 1f;
+            }
+            Append(dividerContainer);
+
+            dimDivider = new UIHorizontalSeparator();
+            {
+                dimDivider.Width = StyleDimension.Fill;
+                dimDivider.Height.Set(2f, 0f);
+                dimDivider.Color = new Color(85, 88, 159) * 0.5f;
+            }
+            dividerContainer.Append(dimDivider);
+
+            highlightDivider = new UIHorizontalSeparator();
+            {
+                highlightDivider.Width = StyleDimension.Empty;
+                highlightDivider.Height.Set(2f, 0f);
+                highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
+            }
+            dividerContainer.Append(highlightDivider);
+
+            selectDivider = new UIHorizontalSeparator();
+            {
+                selectDivider.Width = StyleDimension.Empty;
+                selectDivider.Height.Set(2f, 0f);
+                selectDivider.Color = Main.OurFavoriteColor;
+            }
+            dividerContainer.Append(selectDivider);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            const int lerp_frames = 6;
+            {
+                targetColorLerp++;
+
+                if (targetColorLerp > lerp_frames)
+                {
+                    targetColorLerp = lerp_frames;
+                }
+
+                TextColor = Color.Lerp(oldColor, TextTargetColor, targetColorLerp / (float)lerp_frames);
+            }
+
+            const int hover_frames = 8;
+            {
+                hoverProgress = MathHelper.Clamp(hoverProgress + (IsMouseHovering || Selected).ToDirectionInt(), 0, hover_frames);
+                selectProgress = MathHelper.Clamp(selectProgress + Selected.ToDirectionInt(), 0, hover_frames);
+
+                highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
+                selectDivider.Width.Set(0f, Ease(selectProgress / (float)hover_frames));
+            }
+
+            static float Ease(float x)
+            {
+                return 1 - MathF.Pow(1 - x, 5);
+            }
+        }
+
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            base.MouseOver(evt);
+
+            if (Selected)
+            {
+                return;
+            }
+
+            SoundEngine.PlaySound(in SoundID.MenuTick);
+            TextTargetColor = HoveredColor;
+        }
+
+        public override void MouseOut(UIMouseEvent evt)
+        {
+            base.MouseOut(evt);
+
+            if (Selected)
+            {
+                return;
+            }
+
+            TextTargetColor = UnselectedColor;
         }
     }
 }
