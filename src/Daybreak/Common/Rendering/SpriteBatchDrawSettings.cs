@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -114,6 +115,7 @@ public static class SpriteBatchDrawSettingsExtensions
         /// 
         /// </summary>
         /// <param name="settings"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Draw(DrawSettings settings) {
             float texW = settings.Texture.Width;
             float texH = settings.Texture.Height;
