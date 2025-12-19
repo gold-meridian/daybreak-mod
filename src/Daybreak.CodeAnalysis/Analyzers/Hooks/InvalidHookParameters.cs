@@ -186,7 +186,10 @@ public static class InvalidHookParameters
                     continue;
                 }
 
-                if (originalNameMap.TryGetValue(hookParameter.Name, out var originalSymbol) && SymbolEqualityComparer.Default.Equals(hookParameter.Type, originalSymbol.Type))
+                if (
+                    originalNameMap.TryGetValue(hookParameter.Name, out var originalSymbol)
+                 && ParameterSignatureEquals(hookParameter, originalSymbol)
+                )
                 {
                     continue;
                 }
@@ -381,7 +384,6 @@ public static class InvalidHookParameters
             }
             else
             {
-                
                 newReturnType = (TypeSyntax)editor.Generator.TypeExpression(sigInfo.HookReturnType);
             }
 
@@ -460,9 +462,10 @@ public static class InvalidHookParameters
                 var oldParamSyntax = decl.ParameterList.Parameters
                                          .FirstOrDefault(x => x.Identifier.Text == userName);
 
-                var newParamSyntax = SyntaxFactory.Parameter(
-                    SyntaxFactory.Identifier(userName)
-                ).WithType(newType);
+                var newParamSyntax = SyntaxFactory
+                                    .Parameter(SyntaxFactory.Identifier(userName))
+                                    .WithType(newType)
+                                    .WithModifiers(GetModifiers(hookParam));
 
                 if (oldParamSyntax is not null)
                 {
@@ -482,6 +485,41 @@ public static class InvalidHookParameters
             editor.ReplaceNode(decl.ParameterList, newParamList);
 
             return editor.GetChangedDocument();
+
+            static SyntaxTokenList GetModifiers(IParameterSymbol parameter)
+            {
+                return parameter.RefKind switch
+                {
+                    RefKind.Ref => SyntaxFactory.TokenList(
+                        SyntaxFactory.Token(SyntaxKind.RefKeyword)
+                    ),
+                    RefKind.Out => SyntaxFactory.TokenList(
+                        SyntaxFactory.Token(SyntaxKind.OutKeyword)
+                    ),
+                    RefKind.In => SyntaxFactory.TokenList(
+                        SyntaxFactory.Token(SyntaxKind.InKeyword)
+                    ),
+                    _ => default(SyntaxTokenList),
+                };
+            }
         }
+    }
+
+    private static bool ParameterSignatureEquals(
+        IParameterSymbol hook,
+        IParameterSymbol impl
+    )
+    {
+        if (!SymbolEqualityComparer.Default.Equals(hook.Type, impl.Type))
+        {
+            return false;
+        }
+
+        if (hook.RefKind != impl.RefKind)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
