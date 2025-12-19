@@ -15,7 +15,7 @@ public struct DrawSettings()
     /// <summary>
     ///     The <see cref="Texture2D"/> for this draw.
     /// </summary>
-    public required Texture2D Texture;
+    public Texture2D Texture;
     
     /// <summary>
     ///     The position for this draw.
