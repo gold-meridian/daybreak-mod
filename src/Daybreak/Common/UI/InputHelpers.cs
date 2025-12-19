@@ -345,6 +345,8 @@ internal static class InputHelpers
             blinkerIndex != -1 &&
             Main.GlobalTimeWrappedHourly % .666f > .333f)
         {
+            blinkerIndex = Math.Min(blinkerIndex, text.Length);
+
             float blinkerX = font.MeasureString(text[..blinkerIndex]).X;
 
             Vector2 blinkerPosition = position + Vector2.Transform(new(blinkerX, 0), matrix);

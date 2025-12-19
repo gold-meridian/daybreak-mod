@@ -7,7 +7,7 @@ namespace Daybreak.Common.UI;
 
 public class SearchBar : InputField
 {
-    public SearchBar(LocalizedText hint, int maxChars = 30, float textScale = 1f)
+    public SearchBar(LocalizedText hint, int maxChars = 50, float textScale = 1f)
         : base(hint.ToString(), maxChars, textScale)
     {
         OnEscape += OnEscape_CancelText;

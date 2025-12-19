@@ -106,9 +106,11 @@ public class InputField : UIPanel
             cap = Text.Length - 1;
         }
 
-        if (Text.Length > cap)
+        if (Text.Length > cap && cap >= 0)
         {
             Text = Text[..cap];
+
+            mousePosition = Math.Min(mousePosition, cap);
         }
 
         bool clickedOff =
