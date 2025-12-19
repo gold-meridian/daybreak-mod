@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 
 namespace Daybreak.Common.Rendering;
 
@@ -45,12 +46,15 @@ namespace Daybreak.Common.Rendering;
 ///     This type is intended to be cheap to copy and suitable for transient
 ///     construction during draw submission.
 /// </remarks>
-public readonly struct DrawParameters(Texture2D texture)
+public readonly struct DrawParameters
 {
     /// <summary>
     ///     The texture to render.
     /// </summary>
-    public Texture2D Texture { get; } = texture;
+    public Texture2D Texture =>
+        field
+     ?? asset?.Value
+     ?? throw new InvalidOperationException("Attempted to get the Texture of DrawParameters, but no texture was provided?");
 
     /// <summary>
     ///     The world- or screen-space position at which the quad will be
@@ -162,6 +166,28 @@ public readonly struct DrawParameters(Texture2D texture)
     /// </remarks>
     public float LayerDepth { get; init; } = 0f;
 
+    private readonly Asset<Texture2D>? asset;
+
+    /// <summary>
+    ///     Initializes a new instance of <see cref="DrawParameters"/> which
+    ///     will use the given <paramref name="texture"/>.
+    /// </summary>
+    public DrawParameters(Texture2D texture)
+    {
+        Texture = texture;
+    }
+
+    /// <summary>
+    ///     Initializes a new instance of <see cref="DrawParameters"/> which
+    ///     will use the given <paramref name="asset"/>.  The value of the
+    ///     <paramref name="asset"/> is resolved upon request from the
+    ///     <see cref="Texture"/> property.
+    /// </summary>
+    public DrawParameters(Asset<Texture2D> asset)
+    {
+        this.asset = asset;
+    }
+
     /// <summary>
     ///     Truncates the <see cref="Position"/> and <see cref="Size"/> to
     ///     render at integer coordinates by setting <see cref="Destination"/>
@@ -187,17 +213,20 @@ public static class SpriteBatchDrawSettingsExtensions
         ///     <paramref name="sb"/> for rendering.
         /// </summary>
         /// <param name="parameters">
-        ///     The parameters determing how a quad is rendered.
+        ///     The parameters determining how a quad is rendered.
         /// </param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Draw(in DrawParameters parameters)
         {
-            ArgumentNullException.ThrowIfNull(parameters.Texture);
-            
+            var tex = parameters.Texture;
+            {
+                ArgumentNullException.ThrowIfNull(tex);
+            }
+
             sb.CheckBegin(nameof(Draw));
 
-            var texW = (float)parameters.Texture.Width;
-            var texH = (float)parameters.Texture.Height;
+            var texW = (float)tex.Width;
+            var texH = (float)tex.Height;
 
             var srcX = parameters.Source?.X ?? 0f;
             var srcY = parameters.Source?.Y ?? 0f;
@@ -208,7 +237,7 @@ public static class SpriteBatchDrawSettingsExtensions
             var dstH = srcH * parameters.Scale.Y;
 
             sb.PushSprite(
-                parameters.Texture,
+                tex,
                 srcX / texW,
                 srcY / texH,
                 srcW / texW,
