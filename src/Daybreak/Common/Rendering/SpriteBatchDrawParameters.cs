@@ -161,6 +161,16 @@ public struct DrawParameters(Texture2D texture)
     ///     This is seldom-used in Terraria rendering!
     /// </remarks>
     public float LayerDepth { get; set; } = 0f;
+
+    /// <summary>
+    ///     Truncates the <see cref="Position"/> and <see cref="Size"/> to
+    ///     render at integer coordinates by setting <see cref="Destination"/>
+    ///     to itself.
+    /// </summary>
+    public DrawParameters Truncate()
+    {
+        return this with { Destination = Destination };
+    }
 }
 
 /// <summary>
@@ -208,7 +218,7 @@ public static class SpriteBatchDrawSettingsExtensions
                 (float)Math.Sin(parameters.Rotation),
                 (float)Math.Cos(parameters.Rotation),
                 parameters.LayerDepth,
-                (byte)((int)parameters.Effects)
+                (byte)parameters.Effects
             );
         }
     }
