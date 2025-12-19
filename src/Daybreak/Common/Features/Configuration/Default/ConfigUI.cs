@@ -33,7 +33,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
     protected UIElement? baseElement;
     protected UIPanel? backPanel;
-    protected UIVerticalSeparator? separator;
+    protected SplitDraggableElement? splitElement;
     protected UIPanel? descriptionPanel;
     protected UIText? descriptionText;
     protected UIPanel? metadataPanel;
@@ -89,8 +89,9 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         const float max_panel_width = 800f;
         const float vertical_margin = 160f;
 
-        const float category_margin = 1f / 3f;
-        const float config_margin = 2f / 3f;
+        const float default_min_ratio = 0f;
+        const float default_max_ratio = 0.5f;
+        const float default_ratio = 1f / 3f;
 
         baseElement = new UIElement();
         {
@@ -113,20 +114,17 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         }
         baseElement.Append(backPanel);
 
-        separator = new UIVerticalSeparator();
+        splitElement = new SplitDraggableElement(default_min_ratio, default_max_ratio, default_ratio);
         {
-            separator.Height.Set(0f, 1f);
-            separator.HAlign = category_margin;
-            separator.VAlign = 1f;
-            separator.Color = new Color(85, 88, 159);
+            splitElement.Height.Set(0f, 1f);
+            splitElement.Width.Set(0f, 1f);
         }
-        backPanel.Append(separator);
+        backPanel.Append(splitElement);
 
         descriptionPanel = new UIPanel();
         {
-            descriptionPanel.Width.Set(-backPanel.PaddingRight, config_margin);
+            descriptionPanel.Width.Set(0f, 1f);
             descriptionPanel.Height.Set(64, 0f);
-            descriptionPanel.HAlign = 1f;
             descriptionPanel.VAlign = 1f;
             descriptionPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
             descriptionPanel.BackgroundColor = DescriptionPanelColor;
@@ -142,13 +140,13 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             }
             descriptionPanel.Append(descriptionText);
         }
-        backPanel.Append(descriptionPanel);
+        splitElement.Right.Append(descriptionPanel);
 
         metadataPanel = new UIPanel();
         {
-            metadataPanel.Width.Set(-backPanel.PaddingRight, category_margin);
+            metadataPanel.Width.Set(0f, 1f);
+            metadataPanel.MinWidth.Set(110f, 0f);
             metadataPanel.Height.Set(64, 0f);
-            metadataPanel.HAlign = 0f;
             metadataPanel.VAlign = 1f;
             metadataPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
             metadataPanel.BackgroundColor = DescriptionPanelColor;
@@ -165,13 +163,13 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             }
             metadataPanel.Append(metadataText);
         }
-        backPanel.Append(metadataPanel);
+        splitElement.Left.Append(metadataPanel);
 
         searchBar = new(Language.GetText("UI.PlayerNameSlot"));
         {
-            searchBar.Width.Set(-backPanel.PaddingRight, category_margin);
+            searchBar.MinWidth.Set(110f, 0f);
         }
-        backPanel.Append(searchBar);
+        splitElement.Left.Append(searchBar);
 
         float searchBarOffset = searchBar.Height.Pixels + 6f;
 
@@ -183,23 +181,19 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
             tabScrollbar.Height.Set(-64f - backPanel.PaddingTop - searchBarOffset - (vertical_adjust * 2f), 1f);
             tabScrollbar.Top.Set(searchBarOffset + vertical_adjust, 0f);
-            tabScrollbar.HAlign = category_margin;
-            tabScrollbar.Left.Set(-tabScrollbar.Width.Pixels - 6f, 0f);
+            tabScrollbar.HAlign = 1f;
         }
-        backPanel.Append(tabScrollbar);
+        splitElement.Left.Append(tabScrollbar);
 
         // Panel tabs
         {
             var container = new UIElement();
             {
-                var widthReduction = tabScrollbar.Width.Pixels + backPanel.PaddingRight / 2f;
-
-                container.Width.Set(-backPanel.PaddingRight - widthReduction, category_margin);
+                container.Width.Set(-tabScrollbar.Width.Pixels - 4f, 1f);
                 container.Height.Set(-64f - backPanel.PaddingTop - searchBarOffset, 1f);
                 container.Top.Set(searchBarOffset, 0f);
-                container.Left.Set(0f, 0f);
             }
-            backPanel.Append(container);
+            splitElement.Left.Append(container);
 
             tabs = new TabList(Repository, TargetCategory, TargetEntry);
             {
@@ -340,6 +334,8 @@ internal class TabList : FadedList
     )
     {
         ListPadding = 16f;
+
+        _innerList.MinWidth.Set(150f, 0f);
 
         // Extra padding at the start of the list to avoid the last item being
         // engulfed in the fade.
@@ -724,7 +720,7 @@ internal class TabList : FadedList
             var mousePosition = UserInterface.ActiveInstance.MousePosition;
 
             bool wasHoveringHeader = hoveringHeader;
-            hoveringHeader = this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
+            hoveringHeader = IsMouseHovering && this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
 
             if (!Selected && hoveringHeader && !wasHoveringHeader)
             {
