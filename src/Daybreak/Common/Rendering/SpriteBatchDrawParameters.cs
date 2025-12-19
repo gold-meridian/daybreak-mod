@@ -11,8 +11,8 @@ namespace Daybreak.Common.Rendering;
 ///     call.
 ///     <br />
 ///     <br />
-///     This struct acts as a lightweight, mutable value object describing how a
-///     textured quad should be submitted to the <see cref="SpriteBatch"/>,
+///     This struct acts as a lightweight, immutable value object describing how
+///     a textured quad should be submitted to the <see cref="SpriteBatch"/>,
 ///     independent of the actual draw call.  This promotes reuse in basic
 ///     parameters and allows for more eloquent expression of values without
 ///     specifying redundant variables.
@@ -23,7 +23,7 @@ namespace Daybreak.Common.Rendering;
 ///         <item>
 ///             <description>
 ///                 <see cref="Size"/> is computed from the <see cref="Scale"/>
-///                 and the source texture (or <see cref="SourceRectangle"/>, if
+///                 and the source texture (or <see cref="Source"/>, if
 ///                 provided).
 ///             </description>
 ///         </item>
@@ -45,12 +45,12 @@ namespace Daybreak.Common.Rendering;
 ///     This type is intended to be cheap to copy and suitable for transient
 ///     construction during draw submission.
 /// </remarks>
-public struct DrawParameters(Texture2D texture)
+public readonly struct DrawParameters(Texture2D texture)
 {
     /// <summary>
     ///     The texture to render.
     /// </summary>
-    public Texture2D Texture { get; set; } = texture;
+    public Texture2D Texture { get; init; } = texture;
 
     /// <summary>
     ///     The world- or screen-space position at which the quad will be
@@ -59,7 +59,7 @@ public struct DrawParameters(Texture2D texture)
     ///     Interpreted as the top-left corner prior to origin, rotation, and
     ///     scale being applied.
     /// </summary>
-    public Vector2 Position { get; set; } = Vector2.Zero;
+    public Vector2 Position { get; init; } = Vector2.Zero;
 
     /// <summary>
     ///     An optional sub-region of the <see cref="Texture"/> to sample from.
@@ -71,7 +71,7 @@ public struct DrawParameters(Texture2D texture)
     ///     <br />
     ///     When <see langword="null"/>, the entire texture is used (default).
     /// </summary>
-    public Rectangle? SourceRectangle { get; set; } = null;
+    public Rectangle? Source { get; init; } = null;
 
     /// <summary>
     ///     Gets or sets the absolute, on-screen size of the rendered quad.
@@ -85,15 +85,15 @@ public struct DrawParameters(Texture2D texture)
     {
         get
         {
-            float sw = SourceRectangle?.Width ?? Texture.Width;
-            float sh = SourceRectangle?.Height ?? Texture.Height;
+            float sw = Source?.Width ?? Texture.Width;
+            float sh = Source?.Height ?? Texture.Height;
             return new Vector2(sw * Scale.X, sh * Scale.Y);
         }
 
-        set
+        init
         {
-            float sw = SourceRectangle?.Width ?? Texture.Width;
-            float sh = SourceRectangle?.Height ?? Texture.Height;
+            float sw = Source?.Width ?? Texture.Width;
+            float sh = Source?.Height ?? Texture.Height;
             Scale = new Vector2(value.X / sw, value.Y / sh);
         }
     }
@@ -111,7 +111,7 @@ public struct DrawParameters(Texture2D texture)
     {
         get => new((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
 
-        set
+        init
         {
             Position = new Vector2(value.X, value.Y);
             Size = new Vector2(value.Width, value.Height);
@@ -123,18 +123,18 @@ public struct DrawParameters(Texture2D texture)
     ///     <br />
     ///     <see cref="Color.White"/> results in no tinting.
     /// </summary>
-    public Color Color { get; set; } = Color.White;
+    public Color Color { get; init; } = Color.White;
 
     /// <summary>
     ///     The degrees, in radians, applied around the <see cref="Origin"/>.
     /// </summary>
-    public float Rotation { get; set; } = 0f;
+    public float Rotation { get; init; } = 0f;
 
     /// <summary>
     ///     The origin point, in texture-space coordinates, about which rotation
     ///     and scaling and performed.
     /// </summary>
-    public Vector2 Origin { get; set; } = Vector2.Zero;
+    public Vector2 Origin { get; init; } = Vector2.Zero;
 
     /// <summary>
     ///     The scale factor applied to the source texture.
@@ -143,7 +143,7 @@ public struct DrawParameters(Texture2D texture)
     ///     This value is considered the canonical representation of scale;
     ///     other size-related properties derive from it.
     /// </summary>
-    public Vector2 Scale { get; set; } = Vector2.One;
+    public Vector2 Scale { get; init; } = Vector2.One;
 
     /// <summary>
     ///     Additional, built-in effects provided by <see cref="BasicEffect"/>.
@@ -151,7 +151,7 @@ public struct DrawParameters(Texture2D texture)
     ///     Includes options for mirroring and flipping the texture during
     ///     rendering.
     /// </summary>
-    public SpriteEffects Effects { get; set; } = SpriteEffects.None;
+    public SpriteEffects Effects { get; init; } = SpriteEffects.None;
     
     /// <summary>
     ///     The depth value used for draw ordering when the
@@ -160,7 +160,7 @@ public struct DrawParameters(Texture2D texture)
     /// <remarks>
     ///     This is seldom-used in Terraria rendering!
     /// </remarks>
-    public float LayerDepth { get; set; } = 0f;
+    public float LayerDepth { get; init; } = 0f;
 
     /// <summary>
     ///     Truncates the <see cref="Position"/> and <see cref="Size"/> to
@@ -194,10 +194,10 @@ public static class SpriteBatchDrawSettingsExtensions
             var texW = (float)parameters.Texture.Width;
             var texH = (float)parameters.Texture.Height;
 
-            var srcX = parameters.SourceRectangle?.X ?? 0f;
-            var srcY = parameters.SourceRectangle?.Y ?? 0f;
-            var srcW = parameters.SourceRectangle?.Width ?? texW;
-            var srcH = parameters.SourceRectangle?.Height ?? texH;
+            var srcX = parameters.Source?.X ?? 0f;
+            var srcY = parameters.Source?.Y ?? 0f;
+            var srcW = parameters.Source?.Width ?? texW;
+            var srcH = parameters.Source?.Height ?? texH;
 
             var dstW = srcW * parameters.Scale.X;
             var dstH = srcH * parameters.Scale.Y;
