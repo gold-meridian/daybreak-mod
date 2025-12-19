@@ -87,7 +87,8 @@ public struct DrawSettings()
     ///     The layer depth for this draw.
     /// </summary>
     public float LayerDepth = 0f;
-    
+
+    /// <inheritdoc />
     public DrawSettings(Texture2D texture) : this()
     {
         Texture = texture;
