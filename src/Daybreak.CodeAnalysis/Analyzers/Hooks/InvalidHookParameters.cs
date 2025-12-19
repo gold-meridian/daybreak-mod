@@ -418,7 +418,7 @@ public static class InvalidHookParameters
                 return doc;
             }
 
-            var hookParamMap = sigInfo.HookParameters.ToDictionary(x => x.Name);
+            // var hookParamMap = sigInfo.HookParameters.ToDictionary(x => x.Name);
 
             var originalNames = new Dictionary<string, string>();
             foreach (var parameter in methodSymbol.Parameters)
@@ -488,19 +488,32 @@ public static class InvalidHookParameters
 
             static SyntaxTokenList GetModifiers(IParameterSymbol parameter)
             {
-                return parameter.RefKind switch
+                var tokens = new List<SyntaxToken>();
+
+                // TODO: ScopedKind...
+                // if p.ScopedKind != None { tokens.Add(SF.Token(ScopedKeyword))) }
+
+                var refToken = parameter.RefKind switch
                 {
-                    RefKind.Ref => SyntaxFactory.TokenList(
-                        SyntaxFactory.Token(SyntaxKind.RefKeyword)
-                    ),
-                    RefKind.Out => SyntaxFactory.TokenList(
-                        SyntaxFactory.Token(SyntaxKind.OutKeyword)
-                    ),
-                    RefKind.In => SyntaxFactory.TokenList(
-                        SyntaxFactory.Token(SyntaxKind.InKeyword)
-                    ),
-                    _ => default(SyntaxTokenList),
+                    RefKind.Ref => SyntaxFactory.Token(SyntaxKind.RefKeyword),
+                    RefKind.Out => SyntaxFactory.Token(SyntaxKind.OutKeyword),
+                    RefKind.In => SyntaxFactory.Token(SyntaxKind.InKeyword),
+                    _ => default(SyntaxToken?),
                 };
+
+                if (refToken.HasValue)
+                {
+                    tokens.Add(refToken.Value);
+                }
+
+                /*
+                if (parameter.IsParams)
+                {
+                    tokens.Add(SyntaxFactory.Token(SyntaxKind.ParamsKeyword));
+                }
+                */
+
+                return SyntaxFactory.TokenList(tokens);
             }
         }
     }
@@ -510,14 +523,93 @@ public static class InvalidHookParameters
         IParameterSymbol impl
     )
     {
-        if (!SymbolEqualityComparer.Default.Equals(hook.Type, impl.Type))
+        // in/out/ref
+        if (hook.RefKind != impl.RefKind)
         {
             return false;
         }
 
-        if (hook.RefKind != impl.RefKind)
+        // TODO: Compare ScopedKind when we update.
+
+        // params can be included if we never need it
+        /*
+        if (hook.IsParams != impl.IsParams)
         {
             return false;
+        }
+        */
+
+        if (!TypeEquals(hook.Type, impl.Type))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool TypeEquals(ITypeSymbol a, ITypeSymbol b)
+    {
+        if (
+            a is IFunctionPointerTypeSymbol fa
+         && b is IFunctionPointerTypeSymbol fb
+        )
+        {
+            return FunctionPointerEquals(fa, fb);
+        }
+
+        return SymbolEqualityComparer.Default.Equals(a, b);
+    }
+
+    private static bool FunctionPointerEquals(
+        IFunctionPointerTypeSymbol a,
+        IFunctionPointerTypeSymbol b
+    )
+    {
+        var aSig = a.Signature;
+        var bSig = b.Signature;
+
+        if (!TypeEquals(aSig.ReturnType, bSig.ReturnType))
+        {
+            return false;
+        }
+
+        if (aSig.CallingConvention != bSig.CallingConvention)
+        {
+            return false;
+        }
+
+        if (aSig.Parameters.Length != bSig.Parameters.Length)
+        {
+            return false;
+        }
+
+        if (
+            !ImmutableArrayExtensions.SequenceEqual(
+                aSig.UnmanagedCallingConventionTypes,
+                bSig.UnmanagedCallingConventionTypes,
+                SymbolEqualityComparer.Default
+            )
+        )
+        {
+            return false;
+        }
+
+        for (var i = 0; i < aSig.Parameters.Length; i++)
+        {
+            var aParam = aSig.Parameters[i];
+            var bParam = bSig.Parameters[i];
+
+            if (aParam.RefKind != bParam.RefKind)
+            {
+                return false;
+            }
+
+            // TODO: Compare ScopedKind when we update.
+
+            if (!TypeEquals(aParam.Type, bParam.Type))
+            {
+                return false;
+            }
         }
 
         return true;
