@@ -1,9 +1,6 @@
 ﻿using System;
-using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ModLoader;
 
 namespace Daybreak.Common.Rendering;
 
@@ -28,9 +25,37 @@ public struct DrawSettings()
     public Rectangle? SourceRectangle = null;
     
     /// <summary>
+    ///     Gets / sets the absolute dimensions of this draw.
+    ///     Updating this automatically derives the canonical scale.
+    /// </summary>
+    public Vector2 Size
+    {
+        get
+        {
+            float sw = SourceRectangle?.Width ?? Texture.Width;
+            float sh = SourceRectangle?.Height ?? Texture.Height;
+            return new Vector2(sw * Scale.X, sh * Scale.Y);
+        }
+        set
+        {
+            float sw = SourceRectangle?.Width ?? Texture.Width;
+            float sh = SourceRectangle?.Height ?? Texture.Height;
+            Scale = new Vector2(value.X / sw, value.Y / sh);
+        }
+    }
+    
+    /// <summary>
     ///     The destination rectangle for this draw.
     /// </summary>
-    public Rectangle? DestinationRectangle = null;
+    public Rectangle Destination
+    {
+        get => new((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
+        set
+        {
+            Position = new Vector2(value.X, value.Y);
+            Size = new Vector2(value.Width, value.Height);
+        }
+    }
     
     /// <summary>
     ///     The color for this draw.
@@ -62,15 +87,15 @@ public struct DrawSettings()
     /// </summary>
     public float LayerDepth = 0f;
     
-    public DrawSettings(Texture2D texture) : this() {
+    public DrawSettings(Texture2D texture) : this()
+    {
         Texture = texture;
-        Position = Vector2.Zero;
         SourceRectangle = null;
-        DestinationRectangle = null;
+        Position = Vector2.Zero;
+        Scale = Vector2.One;
         Color = Color.White;
         Rotation = 0f;
         Origin = Vector2.Zero;
-        Scale = Vector2.One;
         Effects = SpriteEffects.None;
         LayerDepth = 0f;
     }
@@ -89,61 +114,35 @@ public static class SpriteBatchDrawSettingsExtensions
         /// 
         /// </summary>
         /// <param name="settings"></param>
-        public void Draw(DrawSettings settings)
-        {
-            float invW = 1f / settings.Texture.Width;
-            float invH = 1f / settings.Texture.Height;
+        public void Draw(DrawSettings settings) {
+            float texW = settings.Texture.Width;
+            float texH = settings.Texture.Height;
 
-            float sX, sY, sW, sH;
-            float srcW, srcH;
+            float srcX = settings.SourceRectangle?.X ?? 0f;
+            float srcY = settings.SourceRectangle?.Y ?? 0f;
+            float srcW = settings.SourceRectangle?.Width ?? texW;
+            float srcH = settings.SourceRectangle?.Height ?? texH;
 
-            if (settings.SourceRectangle.HasValue) {
-                var src = settings.SourceRectangle.Value;
-                sX = src.X * invW;
-                sY = src.Y * invH;
-                sW = src.Width * invW;
-                sH = src.Height * invH;
-                srcW = src.Width;
-                srcH = src.Height;
-            }
-            else {
-                sX = 0.0f;
-                sY = 0.0f;
-                sW = 1.0f;
-                sH = 1.0f;
-                srcW = settings.Texture.Width;
-                srcH = settings.Texture.Height;
-            }
-
-            float dX, dY, dW, dH;
-            if (settings.DestinationRectangle.HasValue) {
-                var dest = settings.DestinationRectangle.Value;
-                dX = dest.X;
-                dY = dest.Y;
-                dW = dest.Width;
-                dH = dest.Height;
-            }
-            else {
-                dX = settings.Position.X;
-                dY = settings.Position.Y;
-                dW = srcW * settings.Scale.X;
-                dH = srcH * settings.Scale.Y;
-            }
-
-            float oX = settings.Origin.X / srcW;
-            float oY = settings.Origin.Y / srcH;
+            float dstW = srcW * settings.Scale.X;
+            float dstH = srcH * settings.Scale.Y;
 
             sb.PushSprite(
                 settings.Texture,
-                sX, sY, sW, sH,
-                dX, dY, dW, dH,
+                srcX / texW,
+                srcY / texH,
+                srcW / texW,
+                srcH / texH,
+                settings.Position.X,
+                settings.Position.Y,
+                dstW,
+                dstH,
                 settings.Color,
-                oX,
-                oY,
+                settings.Origin.X / srcW,
+                settings.Origin.Y / srcH,
                 (float)Math.Sin(settings.Rotation),
                 (float)Math.Cos(settings.Rotation),
                 settings.LayerDepth,
-                (byte)(settings.Effects)
+                (byte)((int)settings.Effects)
             );
         }
     }
