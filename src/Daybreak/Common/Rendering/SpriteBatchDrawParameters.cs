@@ -50,7 +50,7 @@ public readonly struct DrawParameters(Texture2D texture)
     /// <summary>
     ///     The texture to render.
     /// </summary>
-    public Texture2D Texture { get; init; } = texture;
+    public Texture2D Texture { get; } = texture;
 
     /// <summary>
     ///     The world- or screen-space position at which the quad will be
@@ -117,7 +117,7 @@ public readonly struct DrawParameters(Texture2D texture)
             Size = new Vector2(value.Width, value.Height);
         }
     }
-    
+
     /// <summary>
     ///     The color tint applied to the texture at render time.
     ///     <br />
@@ -152,7 +152,7 @@ public readonly struct DrawParameters(Texture2D texture)
     ///     rendering.
     /// </summary>
     public SpriteEffects Effects { get; init; } = SpriteEffects.None;
-    
+
     /// <summary>
     ///     The depth value used for draw ordering when the
     ///     <see cref="SpriteBatch"/> is configured to or sprites by depth.
@@ -183,12 +183,17 @@ public static class SpriteBatchDrawSettingsExtensions
     extension(SpriteBatch sb)
     {
         /// <summary>
-        ///     Pushes the
+        ///     Pushes the <paramref name="parameters"/> to the
+        ///     <paramref name="sb"/> for rendering.
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">
+        ///     The parameters determing how a quad is rendered.
+        /// </param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Draw(DrawParameters parameters)
+        public void Draw(in DrawParameters parameters)
         {
+            ArgumentNullException.ThrowIfNull(parameters.Texture);
+            
             sb.CheckBegin(nameof(Draw));
 
             var texW = (float)parameters.Texture.Width;
