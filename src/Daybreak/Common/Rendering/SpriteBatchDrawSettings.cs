@@ -10,12 +10,12 @@ namespace Daybreak.Common.Rendering;
 /// <summary>
 ///     A set of parameters for a <see cref="SpriteBatch"/> drawing call.
 /// </summary>
-public struct DrawSettings()
+public struct DrawSettings(Texture2D texture)
 {
     /// <summary>
     ///     The <see cref="Texture2D"/> for this draw.
     /// </summary>
-    public Texture2D Texture;
+    public Texture2D Texture = texture;
     
     /// <summary>
     ///     The position for this draw.
