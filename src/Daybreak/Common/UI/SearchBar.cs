@@ -10,7 +10,7 @@ public class SearchBar : InputField
     public SearchBar(LocalizedText hint, int maxChars = 50, float textScale = 1f)
         : base(hint.ToString(), maxChars, textScale)
     {
-        const float button_margin = 24f;
+        const float button_margin = 22f;
 
         PaddingLeft += button_margin;
         PaddingRight += button_margin;
@@ -34,7 +34,7 @@ public class SearchBar : InputField
         {
             searchCancelButton.VAlign = 0.5f;
             searchCancelButton.HAlign = 1f;
-            searchCancelButton.Left = new StyleDimension(PaddingRight - 7f, 0f);
+            searchCancelButton.Left = new StyleDimension(button_margin, 0f);
             searchCancelButton.OnLeftClick += SearchCancelButton_CancelText;
         }
         Append(searchCancelButton);

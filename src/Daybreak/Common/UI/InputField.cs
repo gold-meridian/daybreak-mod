@@ -60,7 +60,7 @@ public class InputField : UIPanel
         SetPadding(0f);
 
         PaddingLeft = 6f;
-        PaddingRight = 16f;
+        PaddingRight = 6f;
     }
 
     public override void LeftMouseDown(UIMouseEvent evt)
