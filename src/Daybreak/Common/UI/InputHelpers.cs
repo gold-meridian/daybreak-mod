@@ -337,7 +337,7 @@ internal static class InputHelpers
         float spread = 2f)
     {
         // Mirrors the matrix created by DynamicSpriteFont.InternalDraw.
-        Matrix matrix = Matrix.CreateTranslation((0f - origin.X) * scale.X, (0f - origin.Y) * scale.Y, 0f) * Matrix.CreateRotationZ(rotation);
+        Matrix matrix = Matrix.CreateTranslation(-origin.X * scale.X, -origin.Y * scale.Y, 0f) * Matrix.CreateRotationZ(rotation);
 
         spriteBatch.DrawStringWithShadow(font, text, position, color, shadowColor, rotation, origin, scale, spread);
 
@@ -345,8 +345,6 @@ internal static class InputHelpers
             blinkerIndex != -1 &&
             Main.GlobalTimeWrappedHourly % .666f > .333f)
         {
-            blinkerIndex = Math.Min(blinkerIndex, text.Length);
-
             float blinkerX = font.MeasureString(text[..blinkerIndex]).X;
 
             Vector2 blinkerPosition = position + Vector2.Transform(new(blinkerX, 0), matrix);

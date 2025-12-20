@@ -1,4 +1,5 @@
-﻿using Daybreak.Core;
+﻿using Daybreak.Common.Rendering;
+using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -97,16 +98,7 @@ public class InputField : UIPanel
 
         int cap = MaxChars;
 
-        DynamicSpriteFont font = FontAssets.MouseText.Value;
-
-        Vector2 textSize = font.MeasureString(Text == string.Empty ? Hint : Text) * new Vector2(textScale);
-
-        if (textSize.X >= this.InnerDimensions.Width)
-        {
-            cap = Text.Length - 1;
-        }
-
-        if (Text.Length > cap && cap >= 0)
+        if (Text.Length > cap)
         {
             Text = Text[..cap];
 
@@ -153,32 +145,80 @@ public class InputField : UIPanel
     {
         base.DrawSelf(spriteBatch);
 
-        DynamicSpriteFont font = FontAssets.MouseText.Value;
-
         Rectangle dims = this.InnerDimensions;
 
-        Vector2 position = new(dims.X + (dims.Width * TextAlignX), dims.Y + (dims.Height * .5f) + 4);
+        spriteBatch.End(out var ss);
 
-        Vector2 textSize = font.MeasureString(Text == string.Empty ? Hint : Text);
-        Vector2 origin = new(textSize.X * TextAlignX, textSize.Y * .5f);
+        var oldScissor = spriteBatch.GraphicsDevice.ScissorRectangle;
+        spriteBatch.GraphicsDevice.ScissorRectangle = GetClippingRectangle(spriteBatch);
 
-        if (Text == string.Empty)
+        float cursorMargin = 5f * textScale;
+
+        dims.Width -= (int)cursorMargin;
+
+        spriteBatch.Begin(ss with { RasterizerState = OverflowHiddenRasterizerState });
         {
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, Hint, position, Color.Gray, 0f, origin, new(textScale));
-        }
+            DynamicSpriteFont font = FontAssets.MouseText.Value;
 
-        spriteBatch.DrawInputStringWithShadow(
-            UserInterface.ActiveInstance.MousePosition,
-            font,
-            Text,
-            position,
-            Color.White,
-            0f,
-            origin,
-            new(textScale),
-            out mousePosition,
-            writing,
-            InputHelpers.CursorPositon);
+            Vector2 position = new(dims.X + (dims.Width * TextAlignX), dims.Y + (dims.Height * .5f) + 4);
+
+            Vector2 textSize = font.MeasureString(Text == string.Empty ? Hint : Text);
+            Vector2 origin = new(textSize.X * TextAlignX, textSize.Y * .5f);
+
+            if (Text == string.Empty)
+            {
+                ChatManager.DrawColorCodedStringWithShadow(
+                    spriteBatch,
+                    font,
+                    Hint,
+                    position,
+                    Color.Gray,
+                    0f,
+                    origin,
+                    new(textScale));
+            }
+            else
+            {
+                int cursorIndex = Math.Min(InputHelpers.CursorPositon, Text.Length);
+
+                // Move the text position based on the cursor when text is out of the frame.
+                if (writing && textSize.X >= dims.Width)
+                {
+                    float cursorPosition = font.MeasureString(Text[..cursorIndex]).X;
+
+                    cursorPosition -= origin.X;
+
+                    float offset = cursorPosition * textScale;
+
+                    float width =
+                        Math.Sign(offset) <= 0 ?
+                        (dims.Width * TextAlignX) :
+                        (dims.Width * (1f - TextAlignX));
+
+                    offset = Utils.Remap(Math.Abs(offset), width, textSize.X, 0f, textSize.X - width) * Math.Sign(offset);
+
+                    position.X -= offset;
+                }
+
+                spriteBatch.DrawInputStringWithShadow(
+                    UserInterface.ActiveInstance.MousePosition,
+                    font,
+                    Text,
+                    position,
+                    Color.White,
+                    0f,
+                    origin,
+                    new(textScale),
+                    out mousePosition,
+                    writing,
+                    cursorIndex);
+            }
+        }
+        spriteBatch.End();
+
+        spriteBatch.GraphicsDevice.ScissorRectangle = oldScissor;
+
+        spriteBatch.Begin(in ss);
 
         if (writing)
         {

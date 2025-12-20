@@ -10,12 +10,12 @@ public class SearchBar : InputField
     public SearchBar(LocalizedText hint, int maxChars = 50, float textScale = 1f)
         : base(hint.ToString(), maxChars, textScale)
     {
-        OnEscape += OnEscape_CancelText;
-
         const float button_margin = 24f;
 
         PaddingLeft += button_margin;
         PaddingRight += button_margin;
+
+        OnEscape += OnEscape_CancelText;
 
         AssetReferences.Assets.Images.UI.SearchIcon.Asset.Wait();
 
