@@ -273,14 +273,15 @@ public sealed class LaneOverloadGenerator : IIncrementalGenerator
     {
         var methodName = method.Name;
 
-        sb.AppendLine("     [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]");
-        sb.AppendLine($"     public static {binding.Domain} {methodName}({binding.Domain} a, {binding.Domain} b, float t)");
-        sb.AppendLine("     {");
+        sb.AppendLine("    /// <inheritdoc />");
+        sb.AppendLine("    [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]");
+        sb.AppendLine($"    public static {binding.Domain} {methodName}({binding.Domain} a, {binding.Domain} b, float t)");
+        sb.AppendLine("    {");
 
         sb.AppendLine($"        var retVal = global::{method.ContainingType}.{methodName}<{binding.Lane}>(");
         sb.AppendLine($"            {binding.ToLane.ToDisplayString(full_method_name_no_parameters_formnat)}(a),");
         sb.AppendLine($"            {binding.ToLane.ToDisplayString(full_method_name_no_parameters_formnat)}(b),");
-        sb.AppendLine($"            t");
+        sb.AppendLine("            t");
         sb.AppendLine("        );");
         sb.AppendLine();
         sb.AppendLine($"        return {binding.FromLane.ToDisplayString(full_method_name_no_parameters_formnat)}(retVal);");

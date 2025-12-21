@@ -16,13 +16,19 @@ public static partial class Curves
     /// <typeparam name="TValue">The type to be operated on.</typeparam>
     public delegate TValue Interpolator<TValue>(TValue a, TValue b, float t);
 
+    /// <summary>
+    /// A
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="t"></param>
+    /// <typeparam name="TLane"></typeparam>
+    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane Lerp<TLane>(TLane a, TLane b, float t)
         where TLane : unmanaged, ILane<TLane>
     {
-        Interpolator<TLane> c = Lerp;
-
         return TLane.Lerp(a, b, t);
     }
 }
