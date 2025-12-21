@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-using Microsoft.Xna.Framework;
+﻿using JetBrains.Annotations;
 
 namespace Daybreak.Common;
 
@@ -12,6 +10,7 @@ namespace Daybreak.Common;
 ///     The type for which values may be interpolated.
 /// </typeparam>
 public interface IInterpolator<TValue>
+    where TValue : unmanaged, ILane<TValue>
 {
     /// <summary>
     ///     Interpolates values <paramref name="a"/> and <paramref name="b"/>
@@ -40,6 +39,7 @@ public interface IInterpolator<TValue>
 /// </typeparam>
 public interface IInterpolator<TSelf, TValue> : IInterpolator<TValue>
     where TSelf : IInterpolator<TSelf, TValue>
+    where TValue : unmanaged, ILane<TValue>
 {
     TValue IInterpolator<TValue>.Invoke(TValue a, TValue b, float t)
     {
@@ -59,20 +59,12 @@ public interface IInterpolator<TSelf, TValue> : IInterpolator<TValue>
 /// <summary>
 ///     Provides a linear interpolation function (&quot;lerp&quot;).
 /// </summary>
-public readonly struct Linear : IInterpolator<Linear, float>,
-                                IInterpolator<Linear, Vector2>
+public readonly struct Linear<TLane> : IInterpolator<Linear<TLane>, TLane> 
+    where TLane : unmanaged, ILane<TLane>
 {
     /// <inheritdoc />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float Interpolate(float a, float b, float t)
+    public static TLane Interpolate(TLane a, TLane b, float t)
     {
-        return a + (b - a) * t;
-    }
-
-    /// <inheritdoc />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 Interpolate(Vector2 a, Vector2 b, float t)
-    {
-        return a + (b - a) * t;
+        return TLane.Lerp(a, b, t);
     }
 }

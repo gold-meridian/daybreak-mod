@@ -1,11 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
+using Daybreak.Core.SourceGen;
 using Microsoft.Xna.Framework;
 
 namespace Daybreak.Common;
 
 /// <summary>
-///     An abstraction over a mathematically-operable value which may be
+///     An abstraction over a mathematically-operable, vector value which may be
 ///     SIMD-accelerated.
 /// </summary>
 /// <typeparam name="TSelf">The type that implements this interface.</typeparam>
@@ -46,49 +47,49 @@ public interface ILane<TSelf>
 /// <summary>
 ///     Implements a <see cref="ILane{TSelf}"/> with a count of one.
 /// </summary>
-public readonly struct Lane1(float value) : ILane<Lane1>
+public readonly struct Lane1(float x) : ILane<Lane1>
 {
     /// <inheritdoc />
     public static int LaneCount => 1;
 
     /// <summary>
-    ///     The value wrapped by this lane.
+    ///     Accesses the first element of the lane.
     /// </summary>
-    public float Value { get; } = value;
+    public float X { get; } = x;
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane1 Add(Lane1 a, Lane1 b)
     {
-        return new Lane1(a.Value + b.Value);
+        return new Lane1(a.X + b.X);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane1 Sub(Lane1 a, Lane1 b)
     {
-        return new Lane1(a.Value - b.Value);
+        return new Lane1(a.X - b.X);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane1 Mul(Lane1 a, Lane1 b)
     {
-        return new Lane1(a.Value * b.Value);
+        return new Lane1(a.X * b.X);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane1 Div(Lane1 a, Lane1 b)
     {
-        return new Lane1(a.Value / b.Value);
+        return new Lane1(a.X / b.X);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane1 Lerp(Lane1 a, Lane1 b, float t)
     {
-        return new Lane1(a.Value + (b.Value - a.Value) * t);
+        return new Lane1(a.X + (b.X - a.X) * t);
     }
 }
 
@@ -100,58 +101,65 @@ public readonly struct Lane2 : ILane<Lane2>
     /// <inheritdoc />
     public static int LaneCount => 2;
 
-    private readonly Vector128<float> vector;
+    /// <summary>
+    ///     The lane's data.
+    /// </summary>
+    public Vector128<float> Vector { get; }
+
+    /// <summary>
+    ///     Accesses the first element of the lane.
+    /// </summary>
+    public float X => Vector[0];
+
+    /// <summary>
+    ///     Accesses the second element of the lane.
+    /// </summary>
+    public float Y => Vector[1];
 
     /// <summary/>
     public Lane2(float x, float y)
     {
-        vector = Vector128.Create(x, y, 0f, 0f);
-    }
-
-    /// <summary/>
-    public Lane2(Vector2 v)
-    {
-        vector = Vector128.Create(v.X, v.Y, 0f, 0f);
+        Vector = Vector128.Create(x, y, 0f, 0f);
     }
 
     private Lane2(Vector128<float> v)
     {
-        vector = v;
+        Vector = v;
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane2 Add(Lane2 a, Lane2 b)
     {
-        return new Lane2(a.vector + b.vector);
+        return new Lane2(a.Vector + b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane2 Sub(Lane2 a, Lane2 b)
     {
-        return new Lane2(a.vector - b.vector);
+        return new Lane2(a.Vector - b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane2 Mul(Lane2 a, Lane2 b)
     {
-        return new Lane2(a.vector * b.vector);
+        return new Lane2(a.Vector * b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane2 Div(Lane2 a, Lane2 b)
     {
-        return new Lane2(a.vector / b.vector);
+        return new Lane2(a.Vector / b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane2 Lerp(Lane2 a, Lane2 b, float t)
     {
-        return new Lane2(a.vector + (b.vector - a.vector) * t);
+        return new Lane2(a.Vector + (b.Vector - a.Vector) * t);
     }
 }
 
@@ -163,58 +171,70 @@ public readonly struct Lane3 : ILane<Lane3>
     /// <inheritdoc />
     public static int LaneCount => 3;
 
-    private readonly Vector128<float> vector;
+    /// <summary>
+    ///     The lane's data.
+    /// </summary>
+    public Vector128<float> Vector { get; }
+
+    /// <summary>
+    ///     Accesses the first element of the lane.
+    /// </summary>
+    public float X => Vector[0];
+
+    /// <summary>
+    ///     Accesses the second element of the lane.
+    /// </summary>
+    public float Y => Vector[1];
+
+    /// <summary>
+    ///     Accesses the third element of the lane.
+    /// </summary>
+    public float Z => Vector[2];
 
     /// <summary/>
     public Lane3(float x, float y, float z)
     {
-        vector = Vector128.Create(x, y, z, 0f);
-    }
-
-    /// <summary/>
-    public Lane3(Vector3 v)
-    {
-        vector = Vector128.Create(v.X, v.Y, v.Z, 0f);
+        Vector = Vector128.Create(x, y, z, 0f);
     }
 
     private Lane3(Vector128<float> v)
     {
-        vector = v;
+        Vector = v;
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane3 Add(Lane3 a, Lane3 b)
     {
-        return new Lane3(a.vector + b.vector);
+        return new Lane3(a.Vector + b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane3 Sub(Lane3 a, Lane3 b)
     {
-        return new Lane3(a.vector - b.vector);
+        return new Lane3(a.Vector - b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane3 Mul(Lane3 a, Lane3 b)
     {
-        return new Lane3(a.vector * b.vector);
+        return new Lane3(a.Vector * b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane3 Div(Lane3 a, Lane3 b)
     {
-        return new Lane3(a.vector / b.vector);
+        return new Lane3(a.Vector / b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane3 Lerp(Lane3 a, Lane3 b, float t)
     {
-        return new Lane3(a.vector + (b.vector - a.vector) * t);
+        return new Lane3(a.Vector + (b.Vector - a.Vector) * t);
     }
 }
 
@@ -226,60 +246,154 @@ public readonly struct Lane4 : ILane<Lane4>
     /// <inheritdoc />
     public static int LaneCount => 4;
 
-    private readonly Vector128<float> vector;
+    /// <summary>
+    ///     The lane's data.
+    /// </summary>
+    public Vector128<float> Vector { get; }
+
+    /// <summary>
+    ///     Accesses the first element of the lane.
+    /// </summary>
+    public float X => Vector[0];
+
+    /// <summary>
+    ///     Accesses the second element of the lane.
+    /// </summary>
+    public float Y => Vector[1];
+
+    /// <summary>
+    ///     Accesses the third element of the lane.
+    /// </summary>
+    public float Z => Vector[2];
+
+    /// <summary>
+    ///     Accesses the fourth element of the lane.
+    /// </summary>
+    public float W => Vector[3];
 
     /// <summary/>
     public Lane4(float x, float y, float z, float w)
     {
-        vector = Vector128.Create(x, y, z, w);
+        Vector = Vector128.Create(x, y, z, w);
     }
-
-    /// <summary/>
-    public Lane4(Vector4 v)
-    {
-        vector = Vector128.Create(v.X, v.Y, v.Z, v.W);
-    }
-
-    /// <summary/>
-    public Lane4(Color c) : this(c.ToVector4()) { }
 
     private Lane4(Vector128<float> v)
     {
-        vector = v;
+        Vector = v;
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane4 Add(Lane4 a, Lane4 b)
     {
-        return new Lane4(a.vector + b.vector);
+        return new Lane4(a.Vector + b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane4 Sub(Lane4 a, Lane4 b)
     {
-        return new Lane4(a.vector - b.vector);
+        return new Lane4(a.Vector - b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane4 Mul(Lane4 a, Lane4 b)
     {
-        return new Lane4(a.vector * b.vector);
+        return new Lane4(a.Vector * b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane4 Div(Lane4 a, Lane4 b)
     {
-        return new Lane4(a.vector / b.vector);
+        return new Lane4(a.Vector / b.Vector);
     }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Lane4 Lerp(Lane4 a, Lane4 b, float t)
     {
-        return new Lane4(a.vector + (b.vector - a.vector) * t);
+        return new Lane4(a.Vector + (b.Vector - a.Vector) * t);
     }
 }
+
+/// <summary>
+///     Provides default marshalling for default <see cref="ILane{TSelf}"/>s.
+/// </summary>
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+public static class LaneMarshalling
+{
+    [ToLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane1 ToLane(float x)
+    {
+        return new Lane1(x);
+    }
+
+    [FromLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float FromLane(Lane1 lane)
+    {
+        return lane.X;
+    }
+
+    [ToLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane2 ToLane(Vector2 v)
+    {
+        return new Lane2(v.X, v.Y);
+    }
+
+    [FromLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 FromLane(Lane2 lane)
+    {
+        return new Vector2(lane.X, lane.Y);
+    }
+
+    [ToLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane3 ToLane(Vector3 v)
+    {
+        return new Lane3(v.X, v.Y, v.Z);
+    }
+
+    [FromLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector3 FromLane(Lane3 lane)
+    {
+        return new Vector3(lane.X, lane.Y, lane.Z);
+    }
+
+    [ToLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane4 ToLane(Vector4 v)
+    {
+        return new Lane4(v.X, v.Y, v.Z, v.W);
+    }
+
+    [FromLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector4 FromLane(Lane4 lane)
+    {
+        return new Vector4(lane.X, lane.Y, lane.Z, lane.W);
+    }
+
+    /*
+    [ToLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane4 ToLane(Color c)
+    {
+        return new Lane4(c.R, c.G, c.B, c.A);
+    }
+
+    [FromLane]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color ColorFromLane(Lane4 lane)
+    {
+        return new Color(lane.X, lane.Y, lane.Z, lane.W);
+    }
+    */
+}
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
