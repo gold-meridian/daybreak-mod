@@ -1,7 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using Daybreak.Core.SourceGen;
-using Microsoft.Xna.Framework;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
+using Vector4 = Microsoft.Xna.Framework.Vector4;
 
 namespace Daybreak.Common;
 
@@ -19,29 +22,175 @@ public interface ILane<TSelf>
     static abstract int LaneCount { get; }
 
     /// <summary>
+    ///     The values of the vector.
+    /// </summary>
+    ReadOnlySpan<float> Values { get; }
+
+    /// <summary>
     ///     Performs an addition operation over the values.
     /// </summary>
     static abstract TSelf Add(TSelf a, TSelf b);
+
+    /// <inheritdoc cref="Add(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Add(TSelf a, float b)
+    {
+        return TSelf.Add(a, TSelf.CreateFromSingle(b));
+    }
+
+    /// <inheritdoc cref="Add(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Add(float a, TSelf b)
+    {
+        return TSelf.Add(TSelf.CreateFromSingle(a), b);
+    }
+
+    /// <inheritdoc cref="Add(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator +(TSelf a, TSelf b)
+    {
+        return TSelf.Add(a, b);
+    }
+
+    /// <inheritdoc cref="Add(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator +(TSelf a, float b)
+    {
+        return TSelf.Add(a, b);
+    }
+
+    /// <inheritdoc cref="Add(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator +(float a, TSelf b)
+    {
+        return TSelf.Add(a, b);
+    }
 
     /// <summary>
     ///     Performs a subtraction operation over the values.
     /// </summary>
     static abstract TSelf Sub(TSelf a, TSelf b);
 
+    /// <inheritdoc cref="Sub(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Sub(TSelf a, float b)
+    {
+        return TSelf.Sub(a, TSelf.CreateFromSingle(b));
+    }
+
+    /// <inheritdoc cref="Sub(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Sub(float a, TSelf b)
+    {
+        return TSelf.Sub(TSelf.CreateFromSingle(a), b);
+    }
+
+    /// <inheritdoc cref="Sub(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator -(TSelf a, TSelf b)
+    {
+        return TSelf.Sub(a, b);
+    }
+
+    /// <inheritdoc cref="Sub(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator -(TSelf a, float b)
+    {
+        return TSelf.Sub(a, b);
+    }
+
+    /// <inheritdoc cref="Sub(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator -(float a, TSelf b)
+    {
+        return TSelf.Sub(a, b);
+    }
+
     /// <summary>
     ///     Performs a multiplication operation over the values.
     /// </summary>
     static abstract TSelf Mul(TSelf a, TSelf b);
+
+    /// <inheritdoc cref="Mul(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Mul(TSelf a, float b)
+    {
+        return TSelf.Mul(a, TSelf.CreateFromSingle(b));
+    }
+
+    /// <inheritdoc cref="Mul(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Mul(float a, TSelf b)
+    {
+        return TSelf.Mul(TSelf.CreateFromSingle(a), b);
+    }
+
+    /// <inheritdoc cref="Mul(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator *(TSelf a, TSelf b)
+    {
+        return TSelf.Mul(a, b);
+    }
+
+    /// <inheritdoc cref="Mul(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator *(TSelf a, float b)
+    {
+        return TSelf.Mul(a, b);
+    }
+
+    /// <inheritdoc cref="Mul(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator *(float a, TSelf b)
+    {
+        return TSelf.Mul(a, b);
+    }
 
     /// <summary>
     ///     Performs a division operation over the values.
     /// </summary>
     static abstract TSelf Div(TSelf a, TSelf b);
 
+    /// <inheritdoc cref="Div(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Div(TSelf a, float b)
+    {
+        return TSelf.Div(a, TSelf.CreateFromSingle(b));
+    }
+
+    /// <inheritdoc cref="Div(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Div(float a, TSelf b)
+    {
+        return TSelf.Div(TSelf.CreateFromSingle(a), b);
+    }
+
+    /// <inheritdoc cref="Div(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator /(TSelf a, TSelf b)
+    {
+        return TSelf.Div(a, b);
+    }
+
+    /// <inheritdoc cref="Div(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator /(TSelf a, float b)
+    {
+        return TSelf.Div(a, b);
+    }
+
+    /// <inheritdoc cref="Div(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator /(float a, TSelf b)
+    {
+        return TSelf.Div(a, b);
+    }
+
     /// <summary>
-    ///     Performs a linear interpolation over the values.
+    ///     Initializes a lane object filled with the single for each valid
+    ///     lane.
     /// </summary>
-    static abstract TSelf Lerp(TSelf a, TSelf b, float t);
+    static abstract TSelf CreateFromSingle(float f);
 }
 
 /// <summary>
@@ -51,6 +200,14 @@ public readonly struct Lane1(float x) : ILane<Lane1>
 {
     /// <inheritdoc />
     public static int LaneCount => 1;
+
+    public ReadOnlySpan<float> Values
+    {
+        get
+        {
+            return 
+        }
+    }
 
     /// <summary>
     ///     Accesses the first element of the lane.
@@ -85,11 +242,9 @@ public readonly struct Lane1(float x) : ILane<Lane1>
         return new Lane1(a.X / b.X);
     }
 
-    /// <inheritdoc />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Lane1 Lerp(Lane1 a, Lane1 b, float t)
+    static Lane1 ILane<Lane1>.CreateFromSingle(float f)
     {
-        return new Lane1(a.X + (b.X - a.X) * t);
+        return new Lane1(f);
     }
 }
 
@@ -155,11 +310,9 @@ public readonly struct Lane2 : ILane<Lane2>
         return new Lane2(a.Vector / b.Vector);
     }
 
-    /// <inheritdoc />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Lane2 Lerp(Lane2 a, Lane2 b, float t)
+    static Lane2 ILane<Lane2>.CreateFromSingle(float f)
     {
-        return new Lane2(a.Vector + (b.Vector - a.Vector) * t);
+        return new Lane2(f, f);
     }
 }
 
@@ -230,11 +383,9 @@ public readonly struct Lane3 : ILane<Lane3>
         return new Lane3(a.Vector / b.Vector);
     }
 
-    /// <inheritdoc />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Lane3 Lerp(Lane3 a, Lane3 b, float t)
+    static Lane3 ILane<Lane3>.CreateFromSingle(float f)
     {
-        return new Lane3(a.Vector + (b.Vector - a.Vector) * t);
+        return new Lane3(f, f, f);
     }
 }
 
@@ -310,11 +461,9 @@ public readonly struct Lane4 : ILane<Lane4>
         return new Lane4(a.Vector / b.Vector);
     }
 
-    /// <inheritdoc />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Lane4 Lerp(Lane4 a, Lane4 b, float t)
+    static Lane4 ILane<Lane4>.CreateFromSingle(float f)
     {
-        return new Lane4(a.Vector + (b.Vector - a.Vector) * t);
+        return new Lane4(f, f, f, f);
     }
 }
 

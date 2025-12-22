@@ -11,6 +11,12 @@ namespace Daybreak.Core.SourceGen;
 public sealed class GenerateLaneOverloadsAttribute : Attribute;
 
 /// <summary>
+///     Marks a generic parameter as being a lane type to be substituted.
+/// </summary>
+[AttributeUsage(AttributeTargets.GenericParameter, AllowMultiple = false, Inherited = false)]
+public sealed class LaneParameterAttribute : Attribute;
+
+/// <summary>
 ///     Marks a method as being a valid factory method to convert a type to a
 ///     lane.
 /// </summary>
