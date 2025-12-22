@@ -209,6 +209,84 @@ public interface ILane<TSelf>
     }
 
     /// <summary>
+    ///     Returns the minimum value of each lane.
+    /// </summary>
+    static abstract TSelf Min(TSelf a, TSelf b);
+
+    /// <inheritdoc cref="Min(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Min(TSelf a, float b)
+    {
+        return TSelf.Min(a, TSelf.CreateFromSingle(b));
+    }
+
+    /// <inheritdoc cref="Min(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Min(float a, TSelf b)
+    {
+        return TSelf.Min(TSelf.CreateFromSingle(a), b);
+    }
+
+    /// <summary>
+    ///     Returns the maximum value of each lane.
+    /// </summary>
+    static abstract TSelf Max(TSelf a, TSelf b);
+
+    /// <inheritdoc cref="Max(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Max(TSelf a, float b)
+    {
+        return TSelf.Max(a, TSelf.CreateFromSingle(b));
+    }
+
+    /// <inheritdoc cref="Max(TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Max(float a, TSelf b)
+    {
+        return TSelf.Max(TSelf.CreateFromSingle(a), b);
+    }
+
+    /// <summary>
+    ///     Computes the absolute value of each value.
+    /// </summary>
+    static abstract TSelf Abs(TSelf a);
+
+    /// <summary>
+    ///     Clamps each value to the given range.
+    /// </summary>
+    static abstract TSelf Clamp(TSelf value, TSelf min, TSelf max);
+
+    /// <inheritdoc cref="Clamp(TSelf, TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Clamp(TSelf value, float min, TSelf max)
+    {
+        return TSelf.Clamp(value, TSelf.CreateFromSingle(min), max);
+    }
+
+    /// <inheritdoc cref="Clamp(TSelf, TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Clamp(TSelf value, TSelf min, float max)
+    {
+        return TSelf.Clamp(value, min, TSelf.CreateFromSingle(max));
+    }
+
+    /// <inheritdoc cref="Clamp(TSelf, TSelf, TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Clamp(TSelf value, float min, float max)
+    {
+        return TSelf.Clamp(value, TSelf.CreateFromSingle(min), TSelf.CreateFromSingle(max));
+    }
+
+    /// <summary>
+    ///     Clamps each value in the vector to [0, 1].
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf Saturate(TSelf value)
+    {
+        return TSelf.Clamp(value, TSelf.CreateFromSingle(0f), TSelf.CreateFromSingle(1f));
+    }
+
+    /// <summary>
     ///     Initializes a lane object filled with the single for each valid
     ///     lane.
     /// </summary>
@@ -277,6 +355,34 @@ public readonly struct Lane1(float x) : ILane<Lane1>
     public static Lane1 Neg(Lane1 a)
     {
         return new Lane1(-a.X);
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane1 Min(Lane1 a, Lane1 b)
+    {
+        return new Lane1(MathF.Min(a.X, b.X));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane1 Max(Lane1 a, Lane1 b)
+    {
+        return new Lane1(MathF.Max(a.X, b.X));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane1 Abs(Lane1 a)
+    {
+        return new Lane1(MathF.Abs(a.X));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane1 Clamp(Lane1 value, Lane1 min, Lane1 max)
+    {
+        return new Lane1(Math.Clamp(value.X, min.X, max.X));
     }
 
     static Lane1 ILane<Lane1>.CreateFromSingle(float f)
@@ -371,6 +477,35 @@ public readonly struct Lane2 : ILane<Lane2>
         return new Lane2(-a.Vector);
     }
 
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane2 Min(Lane2 a, Lane2 b)
+    {
+        return new Lane2(Vector128.Min(a.Vector, b.Vector));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane2 Max(Lane2 a, Lane2 b)
+    {
+        return new Lane2(Vector128.Max(a.Vector, b.Vector));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane2 Abs(Lane2 a)
+    {
+        return new Lane2(Vector128.Abs(a.Vector));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane2 Clamp(Lane2 value, Lane2 min, Lane2 max)
+    {
+        return new Lane2(LaneExtensions.Clamp(value.Vector, min.Vector, max.Vector));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static Lane2 ILane<Lane2>.CreateFromSingle(float f)
     {
         return new Lane2(f, f);
@@ -468,7 +603,36 @@ public readonly struct Lane3 : ILane<Lane3>
     {
         return new Lane3(-a.Vector);
     }
+    
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane3 Min(Lane3 a, Lane3 b)
+    {
+        return new Lane3(Vector128.Min(a.Vector, b.Vector));
+    }
 
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane3 Max(Lane3 a, Lane3 b)
+    {
+        return new Lane3(Vector128.Max(a.Vector, b.Vector));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane3 Abs(Lane3 a)
+    {
+        return new Lane3(Vector128.Abs(a.Vector));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane3 Clamp(Lane3 value, Lane3 min, Lane3 max)
+    {
+        return new Lane3(LaneExtensions.Clamp(value.Vector, min.Vector, max.Vector));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static Lane3 ILane<Lane3>.CreateFromSingle(float f)
     {
         return new Lane3(f, f, f);
@@ -580,6 +744,35 @@ public readonly struct Lane4 : ILane<Lane4>
         return new Lane4(-a.Vector);
     }
 
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane4 Min(Lane4 a, Lane4 b)
+    {
+        return new Lane4(Vector128.Min(a.Vector, b.Vector));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane4 Max(Lane4 a, Lane4 b)
+    {
+        return new Lane4(Vector128.Max(a.Vector, b.Vector));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane4 Abs(Lane4 a)
+    {
+        return new Lane4(Vector128.Abs(a.Vector));
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane4 Clamp(Lane4 value, Lane4 min, Lane4 max)
+    {
+        return new Lane4(LaneExtensions.Clamp(value.Vector, min.Vector, max.Vector));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static Lane4 ILane<Lane4>.CreateFromSingle(float f)
     {
         return new Lane4(f, f, f, f);
@@ -769,4 +962,16 @@ public static class LaneExtensions
             return total;
         }
     }
+
+#if NET9_0_OR_GREATER
+    #error REPLACE ME
+#else
+    // https://github.com/dotnet/dotnet/blob/b0f34d51fccc69fd334253924abd8d6853fad7aa/src/runtime/src/libraries/System.Private.CoreLib/src/System/Runtime/Intrinsics/Vector128.cs#L347
+    internal static Vector128<T> Clamp<T>(Vector128<T> value, Vector128<T> min, Vector128<T> max)
+    {
+        // // We must follow HLSL behavior in the case user specified min value
+        // is bigger than max value.
+        return Vector128.Min(Vector128.Max(value, min), max);
+    }
+#endif
 }
