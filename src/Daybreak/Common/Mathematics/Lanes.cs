@@ -197,6 +197,18 @@ public interface ILane<TSelf>
     }
 
     /// <summary>
+    ///     Negates the values.
+    /// </summary>
+    static abstract TSelf Neg(TSelf a);
+
+    /// <inheritdoc cref="Neg(TSelf)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static virtual TSelf operator -(TSelf a)
+    {
+        return TSelf.Neg(a);
+    }
+
+    /// <summary>
     ///     Initializes a lane object filled with the single for each valid
     ///     lane.
     /// </summary>
@@ -260,6 +272,13 @@ public readonly struct Lane1(float x) : ILane<Lane1>
         return new Lane1(a.X / b.X);
     }
 
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane1 Neg(Lane1 a)
+    {
+        return new Lane1(-a.X);
+    }
+
     static Lane1 ILane<Lane1>.CreateFromSingle(float f)
     {
         return new Lane1(f);
@@ -277,7 +296,7 @@ public readonly struct Lane2 : ILane<Lane2>
     /// <summary>
     ///     The lane's data.
     /// </summary>
-    public Vector128<float> Vector { get; }
+    private Vector128<float> Vector { get; }
 
     /// <summary>
     ///     Accesses the first element of the lane.
@@ -345,6 +364,13 @@ public readonly struct Lane2 : ILane<Lane2>
         return new Lane2(a.Vector / b.Vector);
     }
 
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane2 Neg(Lane2 a)
+    {
+        return new Lane2(-a.Vector);
+    }
+
     static Lane2 ILane<Lane2>.CreateFromSingle(float f)
     {
         return new Lane2(f, f);
@@ -362,7 +388,7 @@ public readonly struct Lane3 : ILane<Lane3>
     /// <summary>
     ///     The lane's data.
     /// </summary>
-    public Vector128<float> Vector { get; }
+    private Vector128<float> Vector { get; }
 
     /// <summary>
     ///     Accesses the first element of the lane.
@@ -436,6 +462,13 @@ public readonly struct Lane3 : ILane<Lane3>
         return new Lane3(a.Vector / b.Vector);
     }
 
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane3 Neg(Lane3 a)
+    {
+        return new Lane3(-a.Vector);
+    }
+
     static Lane3 ILane<Lane3>.CreateFromSingle(float f)
     {
         return new Lane3(f, f, f);
@@ -453,7 +486,7 @@ public readonly struct Lane4 : ILane<Lane4>
     /// <summary>
     ///     The lane's data.
     /// </summary>
-    public Vector128<float> Vector { get; }
+    private Vector128<float> Vector { get; }
 
     /// <summary>
     ///     Accesses the first element of the lane.
@@ -538,6 +571,13 @@ public readonly struct Lane4 : ILane<Lane4>
     public static Lane4 Div(Lane4 a, Lane4 b)
     {
         return new Lane4(a.Vector / b.Vector);
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane4 Neg(Lane4 a)
+    {
+        return new Lane4(-a.Vector);
     }
 
     static Lane4 ILane<Lane4>.CreateFromSingle(float f)
