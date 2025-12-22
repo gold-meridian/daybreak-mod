@@ -23,14 +23,18 @@ public interface ILane<TSelf>
     static abstract int LaneCount { get; }
 
     /// <summary>
+    ///     Creates a new lane from the provided scalar values, assuming the
+    ///     span is of length <see cref="LaneCount"/>.
+    /// </summary>
+    static abstract TSelf ReadScalars(Span<float> scalars);
+
+    /// <summary>
     ///     Writes all scalar components of this lane into
     ///     <paramref name="destination"/>.
     ///     <br />
     ///     Returns the number of floats written.
     /// </summary>
-    int WriteScalars(
-        Span<float> destination
-    );
+    int WriteScalars(Span<float> destination);
 
     /// <summary>
     ///     Performs an addition operation over the values.
@@ -214,6 +218,14 @@ public readonly struct Lane1(float x) : ILane<Lane1>
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane1 ReadScalars(Span<float> scalars)
+    {
+        Debug.Assert(scalars.Length == LaneCount);
+        return new Lane1(scalars[0]);
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int WriteScalars(Span<float> destination)
     {
         destination[0] = X;
@@ -286,6 +298,14 @@ public readonly struct Lane2 : ILane<Lane2>
     private Lane2(Vector128<float> v)
     {
         Vector = v;
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane2 ReadScalars(Span<float> scalars)
+    {
+        Debug.Assert(scalars.Length == LaneCount);
+        return new Lane2(scalars[0], scalars[1]);
     }
 
     /// <inheritdoc />
@@ -368,6 +388,14 @@ public readonly struct Lane3 : ILane<Lane3>
     private Lane3(Vector128<float> v)
     {
         Vector = v;
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane3 ReadScalars(Span<float> scalars)
+    {
+        Debug.Assert(scalars.Length == LaneCount);
+        return new Lane3(scalars[0], scalars[1], scalars[2]);
     }
 
     /// <inheritdoc />
@@ -456,6 +484,14 @@ public readonly struct Lane4 : ILane<Lane4>
     private Lane4(Vector128<float> v)
     {
         Vector = v;
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lane4 ReadScalars(Span<float> scalars)
+    {
+        Debug.Assert(scalars.Length == LaneCount);
+        return new Lane4(scalars[0], scalars[1], scalars[2], scalars[3]);
     }
 
     /// <inheritdoc />
