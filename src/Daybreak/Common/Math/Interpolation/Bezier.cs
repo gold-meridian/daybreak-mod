@@ -1,23 +1,15 @@
 ﻿using System.Runtime.CompilerServices;
 using Daybreak.Core.SourceGen;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 namespace Daybreak.Common;
 
 /// <summary>
-/// TODO
+///     Provides Bézier curve interpolation primitives.
 /// </summary>
 public static partial class Bezier
 {
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="p0"></param>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    /// <param name="p3"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane Cubic<[LaneParameter] TLane>(
@@ -40,17 +32,7 @@ public static partial class Bezier
           + p2 * (3f * u * t2)
           + p3 * t3;
     }
-    
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="p0"></param>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    /// <param name="p3"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
+
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane VectorCubic<[LaneParameter] TLane>(
@@ -74,15 +56,6 @@ public static partial class Bezier
           + p3 * t3;
     }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="p0"></param>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane Quadratic<[LaneParameter] TLane>(
@@ -100,15 +73,6 @@ public static partial class Bezier
           + p2 * (t * t);
     }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="p0"></param>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane VectorQuadratic<[LaneParameter] TLane>(

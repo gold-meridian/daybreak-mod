@@ -1,23 +1,15 @@
 ﻿using System.Runtime.CompilerServices;
 using Daybreak.Core.SourceGen;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 namespace Daybreak.Common;
 
 /// <summary>
-/// TODO
+///     Provides Hermite spline interpolation primitives.
 /// </summary>
 public static partial class Hermite
 {
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="p0"></param>
-    /// <param name="m0"></param>
-    /// <param name="p1"></param>
-    /// <param name="m1"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane Cubic<[LaneParameter] TLane>(
@@ -42,17 +34,7 @@ public static partial class Hermite
           + p1 * h01
           + m1 * h11;
     }
-    
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="p0"></param>
-    /// <param name="m0"></param>
-    /// <param name="p1"></param>
-    /// <param name="m1"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
+
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane VectorCubic<[LaneParameter] TLane>(
@@ -77,17 +59,7 @@ public static partial class Hermite
           + p1 * h01
           + m1 * h11;
     }
-    
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="p0"></param>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    /// <param name="p3"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
+
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane CatmullRom<[LaneParameter] TLane>(
@@ -103,17 +75,7 @@ public static partial class Hermite
 
         return Cubic(p1, m1, p2, m2, t);
     }
-    
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="p0"></param>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    /// <param name="p3"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
+
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane VectorCatmullRom<[LaneParameter] TLane>(

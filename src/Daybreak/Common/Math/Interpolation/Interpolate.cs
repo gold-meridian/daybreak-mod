@@ -1,29 +1,17 @@
 ﻿using System.Runtime.CompilerServices;
 using Daybreak.Core.SourceGen;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 namespace Daybreak.Common;
 
-/// <summary>
-///     Defines the signature for an interpolator function which takes
-///     parameters <paramref name="a"/> amd <paramref name="b"/> and produces a
-///     return value based on progress <paramref name="t"/>.
-/// </summary>
-/// <typeparam name="TValue">The type to be operated on.</typeparam>
-public delegate TValue Interpolator<TValue>(TValue a, TValue b, float t);
+// public delegate TValue Interpolator<TValue>(TValue a, TValue b, float t);
 
 /// <summary>
-///     Provides core interpolation primitives.
+///     Provides core interpolation and remapping primitives.
 /// </summary>
 public static partial class Interpolate
 {
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane Lerp<[LaneParameter] TLane>(
@@ -35,14 +23,6 @@ public static partial class Interpolate
         return a + (b - a) * t;
     }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane VectorLerp<[LaneParameter] TLane>(
@@ -54,14 +34,6 @@ public static partial class Interpolate
         return a + (b - a) * t;
     }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="value"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float InverseLerp<[LaneParameter] TLane>(
@@ -73,14 +45,6 @@ public static partial class Interpolate
         return ((value - a) / (b - a)).Average();
     }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="value"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane VectorInverseLerp<[LaneParameter] TLane>(
@@ -92,16 +56,6 @@ public static partial class Interpolate
         return (value - a) / (b - a);
     }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="inMin"></param>
-    /// <param name="inMax"></param>
-    /// <param name="outMin"></param>
-    /// <param name="outMax"></param>
-    /// <param name="value"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane Remap<[LaneParameter] TLane>(

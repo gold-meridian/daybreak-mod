@@ -1,19 +1,15 @@
 ﻿using System.Runtime.CompilerServices;
 using Daybreak.Core.SourceGen;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 namespace Daybreak.Common;
 
 /// <summary>
-///     Interpolation primitives performed through time shaping.
+///     Provides smooth time-shaping and eased interpolation primitives.
 /// </summary>
 public static partial class Smooth
 {
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane TimeStep<[LaneParameter] TLane>(
@@ -23,12 +19,6 @@ public static partial class Smooth
         return t * t * (3f - 2f * t);
     }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane SmootherTimeStep<[LaneParameter] TLane>(
@@ -38,14 +28,6 @@ public static partial class Smooth
         return t * t * t * (t * (6f * t - 15f) + 10f);
     }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane Step<[LaneParameter] TLane>(
@@ -56,15 +38,7 @@ public static partial class Smooth
     {
         return Interpolate.Lerp(a, b, TimeStep(t));
     }
-    
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
+
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane VectorStep<[LaneParameter] TLane>(
@@ -76,14 +50,6 @@ public static partial class Smooth
         return Interpolate.VectorLerp(a, b, TimeStep(t));
     }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane SmootherStep<[LaneParameter] TLane>(
@@ -94,15 +60,7 @@ public static partial class Smooth
     {
         return Interpolate.Lerp(a, b, SmootherTimeStep(t));
     }
-    
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="t"></param>
-    /// <typeparam name="TLane"></typeparam>
-    /// <returns></returns>
+
     [GenerateLaneOverloads]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TLane VectorSmootherStep<[LaneParameter] TLane>(
