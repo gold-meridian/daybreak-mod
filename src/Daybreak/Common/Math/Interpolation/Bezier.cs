@@ -3,7 +3,7 @@ using Daybreak.Core.SourceGen;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace Daybreak.Common;
+namespace Daybreak.Common.Math;
 
 /// <summary>
 ///     Provides Bézier curve interpolation primitives.
