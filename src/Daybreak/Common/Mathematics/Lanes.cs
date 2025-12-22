@@ -748,5 +748,25 @@ public static class LaneExtensions
 
             return max;
         }
+
+        /// <summary>
+        ///     Returns the total value of the components.
+        /// </summary>
+        public float Sum()
+        {
+            var components = (Span<float>)stackalloc float[TLane.LaneCount];
+            var written = lane.WriteScalars(components);
+            {
+                Debug.Assert(written == TLane.LaneCount);
+            }
+
+            var total = 0f;
+            for (var i = 0; i < written; i++)
+            {
+                total += components[i];
+            }
+
+            return total;
+        }
     }
 }
