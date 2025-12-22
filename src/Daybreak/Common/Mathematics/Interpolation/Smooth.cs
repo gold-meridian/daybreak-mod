@@ -3,7 +3,7 @@ using Daybreak.Core.SourceGen;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace Daybreak.Common.Math;
+namespace Daybreak.Common.Mathematics;
 
 /// <summary>
 ///     Provides smooth time-shaping and eased interpolation primitives.
@@ -36,7 +36,7 @@ public static partial class Smooth
         float t
     ) where TLane : unmanaged, ILane<TLane>
     {
-        return Interpolate.Lerp(a, b, Common.Smooth.TimeStep(t));
+        return Interpolate.Lerp(a, b, TimeStep(t));
     }
 
     [GenerateLaneOverloads]
@@ -58,7 +58,7 @@ public static partial class Smooth
         float t
     ) where TLane : unmanaged, ILane<TLane>
     {
-        return Interpolate.Lerp(a, b, Common.Smooth.SmootherTimeStep(t));
+        return Interpolate.Lerp(a, b, SmootherTimeStep(t));
     }
 
     [GenerateLaneOverloads]

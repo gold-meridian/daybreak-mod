@@ -3,7 +3,7 @@ using Daybreak.Core.SourceGen;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace Daybreak.Common.Math;
+namespace Daybreak.Common.Mathematics;
 
 // public delegate TValue Interpolator<TValue>(TValue a, TValue b, float t);
 

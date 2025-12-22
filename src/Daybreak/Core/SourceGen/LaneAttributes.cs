@@ -1,5 +1,6 @@
 ﻿using System;
 using Daybreak.Common;
+using Daybreak.Common.Mathematics;
 
 namespace Daybreak.Core.SourceGen;
 
