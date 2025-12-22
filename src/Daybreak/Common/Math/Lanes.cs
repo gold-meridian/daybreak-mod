@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using Daybreak.Core.SourceGen;
@@ -22,9 +23,14 @@ public interface ILane<TSelf>
     static abstract int LaneCount { get; }
 
     /// <summary>
-    ///     The values of the vector.
+    ///     Writes all scalar components of this lane into
+    ///     <paramref name="destination"/>.
+    ///     <br />
+    ///     Returns the number of floats written.
     /// </summary>
-    ReadOnlySpan<float> Values { get; }
+    int WriteScalars(
+        Span<float> destination
+    );
 
     /// <summary>
     ///     Performs an addition operation over the values.
@@ -201,18 +207,18 @@ public readonly struct Lane1(float x) : ILane<Lane1>
     /// <inheritdoc />
     public static int LaneCount => 1;
 
-    public ReadOnlySpan<float> Values
-    {
-        get
-        {
-            return 
-        }
-    }
-
     /// <summary>
     ///     Accesses the first element of the lane.
     /// </summary>
     public float X { get; } = x;
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int WriteScalars(Span<float> destination)
+    {
+        destination[0] = X;
+        return LaneCount;
+    }
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -280,6 +286,15 @@ public readonly struct Lane2 : ILane<Lane2>
     private Lane2(Vector128<float> v)
     {
         Vector = v;
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int WriteScalars(Span<float> destination)
+    {
+        destination[0] = X;
+        destination[1] = Y;
+        return LaneCount;
     }
 
     /// <inheritdoc />
@@ -353,6 +368,16 @@ public readonly struct Lane3 : ILane<Lane3>
     private Lane3(Vector128<float> v)
     {
         Vector = v;
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int WriteScalars(Span<float> destination)
+    {
+        destination[0] = X;
+        destination[1] = Y;
+        destination[2] = Z;
+        return LaneCount;
     }
 
     /// <inheritdoc />
@@ -431,6 +456,24 @@ public readonly struct Lane4 : ILane<Lane4>
     private Lane4(Vector128<float> v)
     {
         Vector = v;
+    }
+
+    /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int WriteScalars(Span<float> destination)
+    {
+        /*
+        destination[0] = X;
+        destination[1] = Y;
+        destination[2] = Z;
+        destination[3] = W;
+        */
+
+        Unsafe.WriteUnaligned(
+            ref Unsafe.As<float, byte>(ref destination[0]),
+            Vector
+        );
+        return LaneCount;
     }
 
     /// <inheritdoc />
@@ -546,3 +589,88 @@ public static class LaneMarshalling
     */
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+/// <summary>
+///     Provides generic extensions for lanes.
+/// </summary>
+public static class LaneExtensions
+{
+    extension<TLane>(TLane lane)
+        where TLane : unmanaged, ILane<TLane>
+    {
+        /// <summary>
+        ///     Returns the first component of the lane.
+        /// </summary>
+        public float X
+        {
+            get
+            {
+                var components = (Span<float>)stackalloc float[TLane.LaneCount];
+                lane.WriteScalars(components);
+
+                return components[0];
+            }
+        }
+
+        /// <summary>
+        ///     Returns the mean average of every component.
+        /// </summary>
+        /// <returns></returns>
+        public float Average()
+        {
+            var components = (Span<float>)stackalloc float[TLane.LaneCount];
+            var written = lane.WriteScalars(components);
+            {
+                Debug.Assert(written == TLane.LaneCount);
+            }
+
+            var sum = 0f;
+            foreach (var f in components)
+            {
+                sum += f;
+            }
+
+            return sum / written;
+        }
+
+        /// <summary>
+        ///     Returns the value of the smallest component.
+        /// </summary>
+        public float Min()
+        {
+            var components = (Span<float>)stackalloc float[TLane.LaneCount];
+            var written = lane.WriteScalars(components);
+            {
+                Debug.Assert(written == TLane.LaneCount);
+            }
+
+            var min = components[0];
+            for (var i = 1; i < written; i++)
+            {
+                min = MathF.Min(min, components[i]);
+            }
+
+            return min;
+        }
+
+        /// <summary>
+        ///     Returns the value of the largest component.
+        /// </summary>
+        public float Max()
+        {
+            var components = (Span<float>)stackalloc float[TLane.LaneCount];
+            var written = lane.WriteScalars(components);
+            {
+                Debug.Assert(written == TLane.LaneCount);
+            }
+
+            var max = components[0];
+            for (var i = 1; i < written; i++)
+            {
+                max = MathF.Max(max, components[i]);
+            }
+
+            return max;
+        }
+    }
+}

@@ -70,9 +70,9 @@ public static partial class Interpolate
         TLane value
     ) where TLane : unmanaged, ILane<TLane>
     {
-        return (value - a) / (b - a);
+        return ((value - a) / (b - a)).Average();
     }
-    
+
     /// <summary>
     /// TODO
     /// </summary>
@@ -112,7 +112,7 @@ public static partial class Interpolate
         TLane value
     ) where TLane : unmanaged, ILane<TLane>
     {
-        var t = InverseLerp(inMin, inMax, value);
+        var t = VectorInverseLerp(inMin, inMax, value);
         return VectorLerp(outMin, outMax, t);
     }
 }
