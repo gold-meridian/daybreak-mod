@@ -303,7 +303,7 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
     {
         return MathF.Abs(Radians - other.Radians) <= tolerance;
     }
-    
+
     /// <summary>
     ///     Determines whether this angle is approximately equal to
     ///     <paramref name="other"/> within the given tolerance,
@@ -432,6 +432,32 @@ public static class AngleExtensions
         {
             var r = MathF.Round(a.Radians / increment.Radians) * increment.Radians;
             return Angle.FromRadians(r);
+        }
+
+        /// <summary>
+        ///     Linearly interpolates from this angle to <paramref name="target"/>
+        ///     along the shortest path.
+        /// </summary>
+        /// <param name="target">The target angle to lerp toward.</param>
+        /// <param name="t">
+        ///     Interpolation factor in [0, 1].
+        /// </param>
+        public Angle LerpTo(Angle target, float t)
+        {
+            var delta = a.ShortestDeltaTo(target);
+            return a + delta * t;
+        }
+
+        /// <summary>
+        ///     Rotates this angle toward <paramref name="target"/> by at most
+        ///     <paramref name="maxDelta"/> radians, using the shortest path.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Angle MoveToward(Angle target, Angle maxDelta)
+        {
+            var delta = a.ShortestDeltaTo(target).Radians;
+            var clamped = Math.Clamp(delta, -maxDelta.Radians, maxDelta.Radians);
+            return Angle.FromRadians(a.Radians + clamped);
         }
     }
 }
