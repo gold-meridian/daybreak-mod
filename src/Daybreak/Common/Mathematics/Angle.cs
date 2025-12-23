@@ -421,6 +421,7 @@ public static class AngleExtensions
         ///     Initializes this angle with the value of the rotation of the
         ///     vector <paramref name="v"/>.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Angle FromVector(Vector2 v)
         {
             return Angle.FromRadians(MathF.Atan2(v.Y, v.X));
@@ -430,6 +431,7 @@ public static class AngleExtensions
         ///     Returns a new angle rounded to the nearest multiple of the
         ///     <paramref name="increment"/>, effectively quantizing it.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Angle Snap(Angle increment)
         {
             var r = MathF.Round(a.Radians / increment.Radians) * increment.Radians;
@@ -444,6 +446,7 @@ public static class AngleExtensions
         /// <param name="t">
         ///     Interpolation factor in [0, 1].
         /// </param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Angle LerpTo(Angle target, float t)
         {
             var delta = a.ShortestDeltaTo(target);
@@ -460,6 +463,32 @@ public static class AngleExtensions
             var delta = a.ShortestDeltaTo(target).Radians;
             var clamped = Math.Clamp(delta, -maxDelta.Radians, maxDelta.Radians);
             return Angle.FromRadians(a.Radians + clamped);
+        }
+
+        /// <summary>
+        ///     Rotates the vector <paramref name="v"/> by the angle.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Vector2 Rotate(Vector2 v)
+        {
+            var (sin, cos) = a.SinCos();
+
+            return new Vector2(
+                cos * v.X - sin * v.Y,
+                sin * v.X + cos * v.Y
+            );
+        }
+    }
+    
+    extension(Vector2 v)
+    {
+        /// <summary>
+        ///     Rotates the vector by the angle <paramref name="a"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Vector2 RotatedBy(Angle a)
+        {
+            return a.Rotate(v);
         }
     }
 }
