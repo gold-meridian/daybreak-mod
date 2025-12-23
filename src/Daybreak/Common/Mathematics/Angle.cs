@@ -219,30 +219,35 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
 
 #region Arithmetic
     /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Angle operator +(Angle left, Angle right)
     {
         return new Angle(left.Radians + right.Radians);
     }
 
     /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Angle operator -(Angle left, Angle right)
     {
         return new Angle(left.Radians - right.Radians);
     }
 
     /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Angle operator -(Angle value)
     {
         return new Angle(-value.Radians);
     }
 
     /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Angle operator *(Angle left, float right)
     {
         return new Angle(left.Radians * right);
     }
 
     /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Angle operator /(Angle left, float right)
     {
         return new Angle(left.Radians / right);
@@ -251,24 +256,28 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
 
 #region Comparison
     /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >(Angle left, Angle right)
     {
         return left.Radians > right.Radians;
     }
 
     /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >=(Angle left, Angle right)
     {
         return left.Radians >= right.Radians;
     }
 
     /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <(Angle left, Angle right)
     {
         return left.Radians < right.Radians;
     }
 
     /// <inheritdoc />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <=(Angle left, Angle right)
     {
         return left.Radians <= right.Radians;
@@ -278,9 +287,32 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
     ///     Compares <see cref="Radians"/> as float values (in no particular
     ///     normalized space).
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int CompareTo(Angle other)
     {
         return Radians.CompareTo(other.Radians);
+    }
+
+    /// <summary>
+    ///     Determines whether this angle is approximately equal to
+    ///     <paramref name="other"/> within the given tolerance, using
+    ///     raw radian values (no wrapping).
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool ApproximatelyEquals(Angle other, float tolerance)
+    {
+        return MathF.Abs(Radians - other.Radians) <= tolerance;
+    }
+    
+    /// <summary>
+    ///     Determines whether this angle is approximately equal to
+    ///     <paramref name="other"/> within the given tolerance,
+    ///     accounting for circular wrap-around.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool ApproximatelyEqualsCircular(Angle other, float tolerance)
+    {
+        return MathF.Abs(ShortestDeltaTo(other).Radians) <= tolerance;
     }
 #endregion
 
