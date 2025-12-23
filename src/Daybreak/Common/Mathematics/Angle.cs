@@ -397,5 +397,41 @@ public static class AngleExtensions
         {
             return MathF.Cos(a.Radians);
         }
+
+        /// <inheritdoc cref="MathF.SinCos"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public (float Sin, float Cos) SinCos()
+        {
+            return MathF.SinCos(a.Radians);
+        }
+
+        /// <summary>
+        ///     Creates a vector of length 1 with this angle's rotation.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Vector2 ToUnitVector()
+        {
+            var (sin, cos) = a.SinCos();
+            return new Vector2(cos, sin);
+        }
+
+        /// <summary>
+        ///     Initializes this angle with the value of the rotation of the
+        ///     vector <paramref name="v"/>.
+        /// </summary>
+        public static Angle FromVector(Vector2 v)
+        {
+            return Angle.FromRadians(MathF.Atan2(v.Y, v.X));
+        }
+
+        /// <summary>
+        ///     Returns a new angle rounded to the nearest multiple of the
+        ///     <paramref name="increment"/>, effectively quantizing it.
+        /// </summary>
+        public Angle Snap(Angle increment)
+        {
+            var r = MathF.Round(a.Radians / increment.Radians) * increment.Radians;
+            return Angle.FromRadians(r);
+        }
     }
 }
