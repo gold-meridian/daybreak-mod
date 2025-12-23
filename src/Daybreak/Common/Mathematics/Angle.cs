@@ -44,6 +44,8 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
         CounterClockwise,
     }
 
+    private const float default_equality_tolerance = 1e-5f;
+
     /// <summary>
     ///     An angle of 0 radians (0 degrees).
     /// </summary>
@@ -299,7 +301,7 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
     ///     raw radian values (no wrapping).
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool ApproximatelyEquals(Angle other, float tolerance)
+    public bool ApproximatelyEquals(Angle other, float tolerance = default_equality_tolerance)
     {
         return MathF.Abs(Radians - other.Radians) <= tolerance;
     }
@@ -310,7 +312,7 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
     ///     accounting for circular wrap-around.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool ApproximatelyEqualsCircular(Angle other, float tolerance)
+    public bool ApproximatelyEqualsCircular(Angle other, float tolerance = default_equality_tolerance)
     {
         return MathF.Abs(ShortestDeltaTo(other).Radians) <= tolerance;
     }
