@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Daybreak.Common.Mathematics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -130,9 +131,10 @@ public readonly struct DrawParameters
     public Color Color { get; init; } = Color.White;
 
     /// <summary>
-    ///     The degrees, in radians, applied around the <see cref="Origin"/>.
+    ///     The angle, in radians, used to rotate the texture around the
+    ///     <see cref="Origin"/>.
     /// </summary>
-    public float Rotation { get; init; } = 0f;
+    public Angle Rotation { get; init; } = Angle.Zero;
 
     /// <summary>
     ///     The origin point, in texture-space coordinates, about which rotation
@@ -236,6 +238,8 @@ public static class SpriteBatchDrawSettingsExtensions
             var dstW = srcW * parameters.Scale.X;
             var dstH = srcH * parameters.Scale.Y;
 
+            var (sin, cos) = parameters.Rotation.SinCos();
+
             sb.PushSprite(
                 tex,
                 srcX / texW,
@@ -249,8 +253,8 @@ public static class SpriteBatchDrawSettingsExtensions
                 parameters.Color,
                 parameters.Origin.X / srcW,
                 parameters.Origin.Y / srcH,
-                (float)Math.Sin(parameters.Rotation),
-                (float)Math.Cos(parameters.Rotation),
+                sin,
+                cos,
                 parameters.LayerDepth,
                 (byte)parameters.Effects
             );
