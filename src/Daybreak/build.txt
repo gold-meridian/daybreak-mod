@@ -1,6 +1,6 @@
 displayName = DAYBREAK
 author = tomat
-version = 2.3.1
+version = 2.4.0
 homepage = https://discord.gg/6Fm4ZTHVub
 side = NoSync
 
