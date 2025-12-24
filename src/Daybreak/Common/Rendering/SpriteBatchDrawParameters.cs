@@ -199,6 +199,25 @@ public readonly struct DrawParameters
     {
         return this with { Destination = Destination };
     }
+
+    /// <summary>
+    ///     Converts this set of parameters to a <see cref="DrawData"/> instance
+    ///     to be used in appropriate APIs.
+    /// </summary>
+    public DrawData ToDrawData()
+    {
+        return new DrawData(
+            Texture,
+            Position,
+            Source,
+            Color,
+            Rotation,
+            Origin,
+            Scale,
+            Effects,
+            LayerDepth
+        );
+    }
 }
 
 /// <summary>
