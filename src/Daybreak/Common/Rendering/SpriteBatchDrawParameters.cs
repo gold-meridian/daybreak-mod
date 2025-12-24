@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Terraria;
+using Terraria.DataStructures;
 
 namespace Daybreak.Common.Rendering;
 
@@ -253,6 +255,26 @@ public static class SpriteBatchDrawSettingsExtensions
                 (float)Math.Cos(parameters.Rotation),
                 parameters.LayerDepth,
                 (byte)parameters.Effects
+            );
+        }
+    }
+
+    extension(Main)
+    {
+        /// <inheritdoc cref="Main.EntitySpriteDraw(DrawData)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void EntitySpriteDraw(DrawParameters parameters)
+        {
+            Main.EntitySpriteDraw(
+                parameters.Texture,
+                parameters.Position,
+                parameters.Source,
+                parameters.Color,
+                parameters.Rotation,
+                parameters.Origin,
+                parameters.Scale,
+                parameters.Effects,
+                parameters.LayerDepth
             );
         }
     }
