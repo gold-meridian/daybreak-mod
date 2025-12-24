@@ -323,4 +323,64 @@ public static class NoiseOperations
         return warp;
     }
 #endregion
+
+#region Curl
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 Curl(
+        Vector2 p,
+        float epsilon = 0.5f
+    )
+    {
+        return Curl<FastSimplexNoise>(
+            p,
+            epsilon
+        );
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 Curl(
+        Vector2 p,
+        FastSimplexNoise settings,
+        float epsilon = 0.5f
+    )
+    {
+        return Curl(
+            p,
+            settings,
+            epsilon
+        );
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 Curl<TNoise>(
+        Vector2 p,
+        float epsilon = 0.5f
+    ) where TNoise : unmanaged, INoise2d<TNoise>
+    {
+        return Curl(
+            p,
+            TNoise.DefaultSettings(),
+            epsilon
+        );
+    }
+
+    public static Vector2 Curl<TNoise>(
+        Vector2 p,
+        TNoise settings,
+        float epsilon = 0.5f
+    ) where TNoise : unmanaged, INoise2d<TNoise>
+    {
+        var dx = new Vector2(epsilon, 0f);
+        var dy = new Vector2(0f, epsilon);
+
+        var n1 = TNoise.Sample(p + dy, settings);
+        var n2 = TNoise.Sample(p - dy, settings);
+        var n3 = TNoise.Sample(p + dx, settings with { Seed = settings.Seed + 17 });
+        var n4 = TNoise.Sample(p - dx, settings with { Seed = settings.Seed + 17 });
+
+        var dnx = (n1 - n2) / (2f * epsilon);
+        var dny = (n3 - n4) / (2f * epsilon);
+        return new Vector2(dnx, -dny);
+    }
+#endregion
 }
