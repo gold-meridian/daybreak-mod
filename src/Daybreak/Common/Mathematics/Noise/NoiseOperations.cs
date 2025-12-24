@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Buffers;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace Daybreak.Common.Mathematics;
 
@@ -186,7 +190,7 @@ public static class NoiseOperations
         float scale = 1f
     )
     {
-        return HybridMultifractal(
+        return HybridMultifractal<FastSimplexNoise>(
             p,
             settings,
             octaves,
@@ -276,7 +280,7 @@ public static class NoiseOperations
         int iterations = 2
     )
     {
-        return DomainWarpVector2(
+        return DomainWarpVector2<FastSimplexNoise>(
             p,
             settings,
             amplitude,
@@ -344,7 +348,7 @@ public static class NoiseOperations
         float epsilon = 0.5f
     )
     {
-        return Curl(
+        return Curl<FastSimplexNoise>(
             p,
             settings,
             epsilon
@@ -381,6 +385,68 @@ public static class NoiseOperations
         var dnx = (n1 - n2) / (2f * epsilon);
         var dny = (n3 - n4) / (2f * epsilon);
         return new Vector2(dnx, -dny);
+    }
+#endregion
+
+#region FillNoiseMap
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void FillNoiseMap<TNoise>(
+        Rectangle area,
+        Span<float> destination,
+        bool parallel = true
+    ) where TNoise : unmanaged, INoise2d<TNoise>
+    {
+        FillNoiseMap(
+            area,
+            TNoise.DefaultSettings(),
+            destination,
+            parallel
+        );
+    }
+
+    public static void FillNoiseMap<TNoise>(
+        Rectangle area,
+        TNoise settings,
+        Span<float> destination,
+        bool parallel = true
+    ) where TNoise : unmanaged, INoise2d<TNoise>
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(destination.Length, area.Width * area.Height);
+
+        var width = area.Width;
+
+        if (parallel && area.Height > 8)
+        {
+            var temp = ArrayPool<float>.Shared.Rent(destination.Length);
+
+            Parallel.For(
+                area.Top,
+                area.Bottom,
+                y =>
+                {
+                    var rowIndex = (y - area.Top) * width;
+                    for (var x = area.Left; x < area.Right; x++)
+                    {
+                        temp[rowIndex + (x - area.Left)] = TNoise.Sample(new Vector2(x, y), settings);
+                    }
+                }
+            );
+
+            temp.AsSpan().CopyTo(destination);
+            ArrayPool<float>.Shared.Return(temp);
+
+            return;
+        }
+
+        for (var y = area.Top; y < area.Bottom; y++)
+        {
+            var rowIndex = (y - area.Top) * width;
+
+            for (var x = area.Left; x < area.Right; x++)
+            {
+                destination[rowIndex + (x - area.Left)] = TNoise.Sample(new Vector2(x, y), settings);
+            }
+        }
     }
 #endregion
 }
