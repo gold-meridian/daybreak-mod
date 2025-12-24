@@ -6,6 +6,12 @@ using Microsoft.Xna.Framework;
 
 namespace Daybreak.Common.Mathematics;
 
+/* Credit to Verminoid Creature for the original implementation, based on:
+ * <https://github.com/JasperDawg/Cataphract/blob/10fe993da52d558d3bba2fe49237195701a2b6a4/Common/Worldgen.cs>.
+ *
+ * Generously licensed to us under AGPL v3.0.
+ */
+
 /// <summary>
 ///     Provides helpers to generating common SDF shapes.
 /// </summary>

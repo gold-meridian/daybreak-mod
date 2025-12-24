@@ -3,6 +3,12 @@ using System.Runtime.CompilerServices;
 
 namespace Daybreak.Common.Mathematics;
 
+/* Credit to Verminoid Creature for the original implementation, based on:
+ * <https://github.com/JasperDawg/Cataphract/blob/10fe993da52d558d3bba2fe49237195701a2b6a4/Common/Worldgen.cs>.
+ *
+ * Generously licensed to us under AGPL v3.0.
+ */
+
 /// <summary>
 ///     Provides common operations on <see cref="SdfSample"/>s.
 /// </summary>
@@ -48,7 +54,7 @@ public static class SdfOperations
     )
     {
         // k *= 1f;
-        
+
         var ea = MathF.Pow(2f, -a.Distance / k);
         var eb = MathF.Pow(2f, -b.Distance / k);
         var r = ea + eb;
