@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Buffers;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
@@ -504,6 +506,73 @@ public static class NoiseOperations
             {
                 destination[rowIndex + (x - area.Left)] = TNoise.Sample(new Vector2(x, y), settings);
             }
+        }
+    }
+#endregion
+
+#region Buffer operations
+    public static void Normalize(Span<float> buffer)
+    {
+        if (buffer.IsEmpty)
+        {
+            return;
+        }
+
+        var length = buffer.Length;
+        var vecWidth = Vector<float>.Count;
+        var i = 0;
+
+        var vMin = new Vector<float>(float.MaxValue);
+        var vMax = new Vector<float>(float.MinValue);
+
+        for (; i <= length - vecWidth; i += vecWidth)
+        {
+            var v = new Vector<float>(buffer[i..]);
+            vMin = Vector.Min(vMin, v);
+            vMax = Vector.Max(vMax, v);
+        }
+
+        var min = vMin[0];
+        var max = vMax[0];
+        for (var j = 1; j < vecWidth; j++)
+        {
+            min = MathF.Min(min, vMin[j]);
+            max = MathF.Max(max, vMax[j]);
+        }
+
+        for (; i < length; i++)
+        {
+            var v = buffer[i];
+            min = MathF.Min(min, v);
+            max = MathF.Max(max, v);
+        }
+
+        var range = MathF.Max(1e-6f, max - min);
+
+        vMin = new Vector<float>(min);
+        var vRange = new Vector<float>(range);
+        var vZero = Vector<float>.Zero;
+        var vOne = Vector<float>.One;
+
+        for (i = 0; i <= length - vecWidth; i += vecWidth)
+        {
+            var v = new Vector<float>(buffer[i..]);
+            v = (v - vMin) / vRange;
+            v = Vector.Min(Vector.Max(v, vZero), vOne);
+            v.CopyTo(buffer[i..]);
+        }
+
+        for (; i < length; i++)
+        {
+            buffer[i] = Math.Clamp((buffer[i] - min) / range, 0f, 1f);
+        }
+    }
+
+    public static void ApplyCurve(Span<float> buffer, Func<float, float> curve)
+    {
+        for (var i = 0; i < buffer.Length; i++)
+        {
+            buffer[i] = Math.Clamp(curve(buffer[i]), 0f, 1f);
         }
     }
 #endregion
