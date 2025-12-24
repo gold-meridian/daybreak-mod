@@ -124,6 +124,11 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
         return new Angle(r);
     }
 
+    // The difference between ShortestDeltaTo and ShortestDistanceTo is implied
+    // by the semantic difference in their name.
+    // ShortestDistanceTo(a, b) == ShortestDistanceTo(b, a) for all a, b
+    // a + ShortestDeltaTo(a, b) == b for all a, b
+
     /// <summary>
     ///     Returns the signed, shortest rotation required to rotate from this
     ///     angle to <paramref name="other"/>.
@@ -136,12 +141,25 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Angle ShortestDeltaTo(Angle other)
     {
-        var delta = other.Radians - Radians;
-        {
-            delta = MathF.IEEERemainder(delta, MathF.Tau);
-        }
+        return new Angle(ShortestSignedDelta(other.Radians, Radians));
+    }
 
-        return new Angle(delta);
+    /// <summary>
+    ///     Returns the unsigned, shortest rotation required to rotate from this
+    ///     angle to <paramref name="other"/>.
+    /// </summary>
+    /// <remarks>
+    ///     The result is normalized to the range [0, π].
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Angle ShortestDistanceTo(Angle other)
+    {
+        return new Angle(MathF.Abs(ShortestSignedDelta(other.Radians, Radians)));
+    }
+
+    private static float ShortestSignedDelta(float from, float to)
+    {
+        return MathF.IEEERemainder(to - from, MathF.Tau);
     }
 
     /// <summary>
@@ -347,36 +365,6 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
     {
         return new Angle(degrees * (MathF.PI / 180f));
     }
-
-    /// <summary>
-    ///     Returns the signed shortest angular separation between
-    ///     <paramref name="a"/> and <paramref name="b"/>.
-    /// </summary>
-    /// <remarks>
-    ///     The result is normalized to the range (-π, π].
-    ///     To compute a directed rotation from one angle to another,
-    ///     prefer <see cref="ShortestDeltaTo"/>.
-    /// </remarks>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Angle ShortestDistance(Angle a, Angle b)
-    {
-        var delta = a.Radians - b.Radians;
-        {
-            delta = MathF.IEEERemainder(delta, MathF.Tau);
-        }
-
-        return new Angle(delta);
-    }
-
-    /// <summary>
-    ///     Returns the absolute value of the signed, shortest angular
-    ///     separation between <paramref name="a"/> and <paramref name="b"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Angle AbsShortestDistance(Angle a, Angle b)
-    {
-        return new Angle(MathF.Abs(ShortestDistance(a, b).Radians));
-    }
 #endregion
 }
 
@@ -480,7 +468,7 @@ public static class AngleExtensions
             );
         }
     }
-    
+
     extension(Vector2 v)
     {
         /// <summary>
