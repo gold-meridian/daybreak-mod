@@ -120,6 +120,8 @@ public static class SignedDistance
     // https://iquilezles.org/articles/distgradfunctions2d/
 
 #region Circle
+    // https://www.shadertoy.com/view/WltSDj
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static SdfSample Circle(Vector2 p, float radius)
     {
@@ -139,24 +141,70 @@ public static class SignedDistance
 #endregion
 
 #region Pie
+    // https://www.shadertoy.com/view/3tGXRc
 #endregion
 
 #region Arc
+    // https://www.shadertoy.com/view/WtGXRc
 #endregion
 
 #region Segment
+    // https://www.shadertoy.com/view/WtdSDj
 #endregion
 
 #region Vesica
+    // https://www.shadertoy.com/view/3lGXRc
 #endregion
 
 #region Box
+    // https://www.shadertoy.com/view/wlcXD2
 #endregion
 
 #region Cross
+    // https://www.shadertoy.com/view/WtdXWj
 #endregion
 
-#region RoundedBox
+#region Pentagon
+    // https://www.shadertoy.com/view/3lySRc
+#endregion
+
+#region Hexagon
+    // https://www.shadertoy.com/view/WtySRc
+#endregion
+
+#region Isosceles Triangle
+    // https://www.shadertoy.com/view/3dyfDd
+#endregion
+
+#region Triangle
+    // https://www.shadertoy.com/view/tlVyWh
+#endregion
+
+#region Quad
+    // https://www.shadertoy.com/view/WtVcD1
+#endregion
+
+#region Ellipse
+    // https://www.shadertoy.com/view/3lcfR8
+#endregion
+
+#region Moon
+    // https://www.shadertoy.com/view/ddX3WH
+#endregion
+
+#region Parabola
+    // https://www.shadertoy.com/view/mdX3WH
+#endregion
+
+#region Trapezoid
+    // https://www.shadertoy.com/view/ddt3Rs
+#endregion
+
+#region Heart
+    // https://www.shadertoy.com/view/DldXRf
+#endregion
+
+#region Rounded Box
 #endregion
 
 #region Annulus
