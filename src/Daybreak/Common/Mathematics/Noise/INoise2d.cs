@@ -8,7 +8,7 @@ namespace Daybreak.Common.Mathematics;
 /// </summary>
 /// <typeparam name="TSelf">The type that implements this interface.</typeparam>
 public interface INoise2d<TSelf>
-    where TSelf : INoise2d<TSelf>
+    where TSelf : unmanaged, INoise2d<TSelf>
 {
     /// <summary>
     ///     The seed to use when sampling.
