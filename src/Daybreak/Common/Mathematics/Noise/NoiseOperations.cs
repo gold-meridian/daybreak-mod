@@ -255,13 +255,13 @@ public static class NoiseOperations
 
 #region DomainWarp
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 DomainWarp(
+    public static Vector2 DomainWarpVector2(
         Vector2 p,
         float amplitude = 1.5f,
         int iterations = 2
     )
     {
-        return DomainWarp<FastSimplexNoise>(
+        return DomainWarpVector2<FastSimplexNoise>(
             p,
             amplitude,
             iterations
@@ -269,14 +269,14 @@ public static class NoiseOperations
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 DomainWarp(
+    public static Vector2 DomainWarpVector2(
         Vector2 p,
         FastSimplexNoise settings,
         float amplitude = 1.5f,
         int iterations = 2
     )
     {
-        return DomainWarp(
+        return DomainWarpVector2(
             p,
             settings,
             amplitude,
@@ -285,13 +285,13 @@ public static class NoiseOperations
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 DomainWarp<TNoise>(
+    public static Vector2 DomainWarpVector2<TNoise>(
         Vector2 p,
         float amplitude = 1.5f,
         int iterations = 2
     ) where TNoise : unmanaged, INoise2d<TNoise>
     {
-        return DomainWarp(
+        return DomainWarpVector2(
             p,
             TNoise.DefaultSettings(),
             amplitude,
@@ -299,7 +299,7 @@ public static class NoiseOperations
         );
     }
 
-    public static Vector2 DomainWarp<TNoise>(
+    public static Vector2 DomainWarpVector2<TNoise>(
         Vector2 p,
         TNoise settings,
         float amplitude = 1.5f,
