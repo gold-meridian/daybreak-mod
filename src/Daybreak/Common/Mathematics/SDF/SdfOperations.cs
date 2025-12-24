@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using Microsoft.Xna.Framework;
 
 namespace Daybreak.Common.Mathematics;
 
@@ -59,7 +58,7 @@ public static class SdfOperations
 
         return new SdfSample(
             d,
-            Vector2.Lerp(b.Gradient, a.Gradient, w)
+            Interpolate.Lerp(b.Gradient, a.Gradient, w)
         );
     }
 
@@ -81,7 +80,7 @@ public static class SdfOperations
 
         return new SdfSample(
             d,
-            Vector2.Lerp(b.Gradient, a.Gradient, w)
+            Interpolate.Lerp(b.Gradient, a.Gradient, w)
         );
     }
 
@@ -103,7 +102,7 @@ public static class SdfOperations
 
         return new SdfSample(
             d,
-            Vector2.Lerp(b.Gradient, a.Gradient, w)
+            Interpolate.Lerp(b.Gradient, a.Gradient, w)
         );
     }
 
@@ -125,7 +124,7 @@ public static class SdfOperations
 
         return new SdfSample(
             MathF.Min(a.Distance, b.Distance) - m,
-            Vector2.Lerp(a.Gradient, b.Gradient, d < 0f ? w : 1f - w)
+            Interpolate.Lerp(a.Gradient, b.Gradient, d < 0f ? w : 1f - w)
         );
     }
 
@@ -147,7 +146,7 @@ public static class SdfOperations
 
         return new SdfSample(
             MathF.Min(a.Distance, b.Distance) - m,
-            Vector2.Lerp(a.Gradient, b.Gradient, d < 0f ? w : 1f - w)
+            Interpolate.Lerp(a.Gradient, b.Gradient, d < 0f ? w : 1f - w)
         );
     }
 
@@ -169,7 +168,7 @@ public static class SdfOperations
 
         return new SdfSample(
             MathF.Min(a.Distance, b.Distance) - m,
-            Vector2.Lerp(a.Gradient, b.Gradient, d < 0f ? w : 1f - w)
+            Interpolate.Lerp(a.Gradient, b.Gradient, d < 0f ? w : 1f - w)
         );
     }
 
@@ -192,7 +191,7 @@ public static class SdfOperations
 
         return new SdfSample(
             MathF.Min(a.Distance, b.Distance) - m,
-            Vector2.Lerp(a.Gradient, b.Gradient, d < 0f ? w : 1f - w)
+            Interpolate.Lerp(a.Gradient, b.Gradient, d < 0f ? w : 1f - w)
         );
     }
 
@@ -216,25 +215,9 @@ public static class SdfOperations
 
         return new SdfSample(
             d,
-            Vector2.Lerp(b.Gradient, a.Gradient, w)
+            Interpolate.Lerp(b.Gradient, a.Gradient, w)
         );
     }
-
-    /*
-    /// <summary>
-    ///     Creates a new SDF sample which attempts to merge the two samples
-    ///     <paramref name="a"/> and <paramref name="b"/>, creating a smoothed
-    ///     connection between two shapes.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static SdfSample SmoothMin(SdfSample a, SdfSample b, float k)
-    {
-        var h = Math.Clamp(0.5f + 0.5f * (b.Distance - a.Distance) / k, 0f, 1f);
-        var dist = Interpolate.Lerp(b.Distance, a.Distance, h) - k * h * (1f - h);
-        var grad = Vector2.Lerp(b.Gradient, a.Gradient, h);
-        return new SdfSample(dist, grad);
-    }
-    */
 
     /// <summary>
     ///     Computes the exclusive-or (XOR) of two signed distance fields.
