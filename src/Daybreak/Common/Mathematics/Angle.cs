@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace Daybreak.Common.Mathematics;
 
