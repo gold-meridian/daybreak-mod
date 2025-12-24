@@ -4,6 +4,8 @@ using Daybreak.Common.Mathematics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Terraria;
+using Terraria.DataStructures;
 
 namespace Daybreak.Common.Rendering;
 
@@ -199,6 +201,25 @@ public readonly struct DrawParameters
     {
         return this with { Destination = Destination };
     }
+
+    /// <summary>
+    ///     Converts this set of parameters to a <see cref="DrawData"/> instance
+    ///     to be used in appropriate APIs.
+    /// </summary>
+    public DrawData ToDrawData()
+    {
+        return new DrawData(
+            Texture,
+            Position,
+            Source,
+            Color,
+            Rotation,
+            Origin,
+            Scale,
+            Effects,
+            LayerDepth
+        );
+    }
 }
 
 /// <summary>
@@ -257,6 +278,26 @@ public static class SpriteBatchDrawSettingsExtensions
                 cos,
                 parameters.LayerDepth,
                 (byte)parameters.Effects
+            );
+        }
+    }
+
+    extension(Main)
+    {
+        /// <inheritdoc cref="Main.EntitySpriteDraw(DrawData)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void EntitySpriteDraw(DrawParameters parameters)
+        {
+            Main.EntitySpriteDraw(
+                parameters.Texture,
+                parameters.Position,
+                parameters.Source,
+                parameters.Color,
+                parameters.Rotation,
+                parameters.Origin,
+                parameters.Scale,
+                parameters.Effects,
+                parameters.LayerDepth
             );
         }
     }
