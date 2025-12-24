@@ -10,19 +10,17 @@ namespace Daybreak.Common.Mathematics;
 public static class NoiseOperations
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float Fbm<TNoise, TSettings>(
+    public static float Fbm<TNoise>(
         Vector2 p,
         int octaves = 4,
         float lacunarity = 2f,
         float gain = 0.5f,
         float scale = 1f
-    )
-        where TNoise : INoise2d<TNoise, TSettings>
-        where TSettings : INoise2dSettings<TSettings>
+    ) where TNoise : INoise2d<TNoise>
     {
-        return Fbm<TNoise, TSettings>(
+        return Fbm(
             p,
-            TSettings.DefaultSettings(),
+            TNoise.DefaultSettings(),
             octaves,
             lacunarity,
             gain,
@@ -30,16 +28,14 @@ public static class NoiseOperations
         );
     }
 
-    public static float Fbm<TNoise, TSettings>(
+    public static float Fbm<TNoise>(
         Vector2 p,
-        TSettings settings,
+        TNoise settings,
         int octaves = 4,
         float lacunarity = 2f,
         float gain = 0.5f,
         float scale = 1f
-    )
-        where TNoise : INoise2d<TNoise, TSettings>
-        where TSettings : INoise2dSettings<TSettings>
+    ) where TNoise : INoise2d<TNoise>
     {
         var amp = 1f;
         var freq = 1f;

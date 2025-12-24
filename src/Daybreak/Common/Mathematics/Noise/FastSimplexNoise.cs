@@ -6,7 +6,9 @@ namespace Daybreak.Common.Mathematics;
 /// <summary>
 ///     A fast implementation of Simplex noise.
 /// </summary>
-public readonly struct FastSimplexNoise : INoise2d<FastSimplexNoise, FastSimplexNoise.Settings>
+public record struct FastSimplexNoise(
+    int Seed
+) : INoise2d<FastSimplexNoise>
 {
     private static readonly Vector2[] simplex_gradients =
     [
@@ -14,22 +16,16 @@ public readonly struct FastSimplexNoise : INoise2d<FastSimplexNoise, FastSimplex
         new(1f, 0f), new(-1f, 0f), new(0f, 1f), new(0f, -1f),
     ];
 
-    /// <inheritdoc cref="INoise2dSettings{TSelf}"/>
-    public record struct Settings(
-        int Seed = 0
-    ) : INoise2dSettings<Settings>
+    /// <inheritdoc />
+    public static FastSimplexNoise DefaultSettings()
     {
-        /// <inheritdoc />
-        public static Settings DefaultSettings()
-        {
-            return new Settings(Seed: 0);
-        }
+        return new FastSimplexNoise(Seed: 0);
     }
 
     /// <inheritdoc />
     public static float Sample(
         Vector2 p,
-        Settings settings
+        FastSimplexNoise settings
     )
     {
         const float f2 = 0.366025403f; // (sqrt(3) - 1) / 2

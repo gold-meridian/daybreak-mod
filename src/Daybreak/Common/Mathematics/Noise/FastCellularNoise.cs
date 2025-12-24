@@ -8,25 +8,21 @@ namespace Daybreak.Common.Mathematics;
 /// <summary>
 ///     A fast implementation of Cellular noise.
 /// </summary>
-public readonly struct FastCellularNoise : INoise2d<FastCellularNoise, FastCellularNoise.Settings>
+public record struct FastCellularNoise(
+    int Seed = 0,
+    float Jitter = 0.9f
+) : INoise2d<FastCellularNoise>
 {
-    /// <inheritdoc cref="INoise2dSettings{TSelf}"/>
-    public record struct Settings(
-        int Seed = 0,
-        float Jitter = 0.9f
-    ) : INoise2dSettings<Settings>
+    /// <inheritdoc />
+    public static FastCellularNoise DefaultSettings()
     {
-        /// <inheritdoc />
-        public static Settings DefaultSettings()
-        {
-            return new Settings(Seed: 0);
-        }
+        return new FastCellularNoise(Seed: 0);
     }
 
     /// <inheritdoc />
     public static float Sample(
         Vector2 p,
-        Settings settings
+        FastCellularNoise settings
     )
     {
         var ix = (int)MathF.Floor(p.X);

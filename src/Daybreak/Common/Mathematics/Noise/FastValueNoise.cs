@@ -6,24 +6,20 @@ namespace Daybreak.Common.Mathematics;
 /// <summary>
 ///     A fast implementation of Value noise.
 /// </summary>
-public readonly struct FastValueNoise : INoise2d<FastValueNoise, FastValueNoise.Settings>
+public record struct FastValueNoise(
+    int Seed = 0
+) : INoise2d<FastValueNoise>
 {
-    /// <inheritdoc cref="INoise2dSettings{TSelf}"/>
-    public record struct Settings(
-        int Seed = 0
-    ) : INoise2dSettings<Settings>
+    /// <inheritdoc />
+    public static FastValueNoise DefaultSettings()
     {
-        /// <inheritdoc />
-        public static Settings DefaultSettings()
-        {
-            return new Settings(Seed: 0);
-        }
+        return new FastValueNoise(Seed: 0);
     }
 
     /// <inheritdoc />
     public static float Sample(
         Vector2 p,
-        Settings settings
+        FastValueNoise settings
     )
     {
         var ix = (int)MathF.Floor(p.X);

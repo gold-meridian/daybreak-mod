@@ -3,10 +3,12 @@
 namespace Daybreak.Common.Mathematics;
 
 /// <summary>
-///     Settings for a <see cref="INoise2d{TSelf,TSettings}"/> function.
+///     A 2-dimensional noise function.  Instances denote settings for the
+///     sampler.
 /// </summary>
 /// <typeparam name="TSelf">The type that implements this interface.</typeparam>
-public interface INoise2dSettings<out TSelf>
+public interface INoise2d<TSelf>
+    where TSelf : INoise2d<TSelf>
 {
     /// <summary>
     ///     The seed to use when sampling.
@@ -18,21 +20,11 @@ public interface INoise2dSettings<out TSelf>
     ///     configuration.
     /// </summary>
     static abstract TSelf DefaultSettings();
-}
 
-/// <summary>
-///     A 2-dimensional noise function.
-/// </summary>
-/// <typeparam name="TSelf">The type that implements this interface.</typeparam>
-/// <typeparam name="TSettings">The settings that may configure a sample.</typeparam>
-public interface INoise2d<TSelf, in TSettings>
-    where TSelf : INoise2d<TSelf, TSettings>
-    where TSettings : INoise2dSettings<TSettings>
-{
-    /// <inheritdoc cref="Sample(Vector2, TSettings)"/>
+    /// <inheritdoc cref="Sample(Vector2, TSelf)"/>
     static virtual float Sample(Vector2 p)
     {
-        return TSelf.Sample(p, TSettings.DefaultSettings());
+        return TSelf.Sample(p, TSelf.DefaultSettings());
     }
 
     /// <summary>
@@ -46,6 +38,6 @@ public interface INoise2d<TSelf, in TSettings>
     /// <returns>The scalar value resulting from the sample.</returns>
     static abstract float Sample(
         Vector2 p,
-        TSettings settings
+        TSelf settings
     );
 }
