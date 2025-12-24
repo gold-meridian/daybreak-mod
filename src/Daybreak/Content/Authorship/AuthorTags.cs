@@ -38,7 +38,7 @@ public class BlockarozTag : DaybreakAuthorTag
         sb.Draw(
             Assets.Images.AuthorTags.Blockaroz_Overlay.Asset.Value,
             new Rectangle((int)position.X, (int)position.Y - 2, 26, 26),
-            Color.Red with { A = 200 } * (0.4f + MathF.Sin(Main.GlobalTimeWrappedHourly * MathHelper.TwoPi * 0.1f) * 0.3f)
+            Color.Red with { A = 200 } * (0.4f + MathF.Sin(Main.GlobalTimeWrappedHourly * MathF.Tau * 0.1f) * 0.3f)
         );
     }
 }
