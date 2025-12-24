@@ -69,4 +69,20 @@ public static partial class Interpolate
         var t = VectorInverseLerp(inMin, inMax, value);
         return VectorLerp(outMin, outMax, t);
     }
+    
+    // TODO: Implement when follow-up lane APIs are merged.
+    /*
+    [GenerateLaneOverloads]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static TLane Blend<[LaneParameter] TLane>(
+        TLane a,
+        TLane b,
+        TLane mask,
+        TLane feather
+    ) where TLane : unmanaged, ILane<TLane>
+    {
+        var t = TLane.Clamp((mask - feather * 0.5f) / TLane.Max(TLane.CreateFromSingle(1e-6f, feather), TLane.CreateFromSingle(0f), TLane.CreateFromSingle(1f);
+        return VectorLerp(a, b, t);
+    }
+    */
 }
