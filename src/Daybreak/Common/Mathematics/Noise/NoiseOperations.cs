@@ -170,6 +170,7 @@ public static class NoiseOperations
             octaves,
             lacunarity,
             gain,
+            offset,
             scale
         );
     }
@@ -185,12 +186,13 @@ public static class NoiseOperations
         float scale = 1f
     )
     {
-        return HybridMultifractal<FastSimplexNoise>(
+        return HybridMultifractal(
             p,
             settings,
             octaves,
             lacunarity,
             gain,
+            offset,
             scale
         );
     }
@@ -211,6 +213,7 @@ public static class NoiseOperations
             octaves,
             lacunarity,
             gain,
+            offset,
             scale
         );
     }
@@ -247,6 +250,77 @@ public static class NoiseOperations
         }
 
         return Math.Clamp(value * 0.5f, 0f, 1f);
+    }
+#endregion
+
+#region DomainWarp
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 DomainWarp(
+        Vector2 p,
+        float amplitude = 1.5f,
+        int iterations = 2
+    )
+    {
+        return DomainWarp<FastSimplexNoise>(
+            p,
+            amplitude,
+            iterations
+        );
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 DomainWarp(
+        Vector2 p,
+        FastSimplexNoise settings,
+        float amplitude = 1.5f,
+        int iterations = 2
+    )
+    {
+        return DomainWarp(
+            p,
+            settings,
+            amplitude,
+            iterations
+        );
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 DomainWarp<TNoise>(
+        Vector2 p,
+        float amplitude = 1.5f,
+        int iterations = 2
+    ) where TNoise : unmanaged, INoise2d<TNoise>
+    {
+        return DomainWarp(
+            p,
+            TNoise.DefaultSettings(),
+            amplitude,
+            iterations
+        );
+    }
+
+    public static Vector2 DomainWarp<TNoise>(
+        Vector2 p,
+        TNoise settings,
+        float amplitude = 1.5f,
+        int iterations = 2
+    ) where TNoise : unmanaged, INoise2d<TNoise>
+    {
+        var warp = Vector2.Zero;
+        var amp = amplitude;
+        var freq = 1f;
+
+        for (var i = 0; i < iterations; i++)
+        {
+            var nx = TNoise.Sample(p * freq + warp, settings with { Seed = settings.Seed + i * 61 });
+            var ny = TNoise.Sample(p * freq + warp + new Vector2(17.3f, 43.7f), settings with { Seed = settings.Seed + i * 61 + 1 });
+
+            warp += new Vector2(nx, ny) * amp;
+            freq *= 2f;
+            amp *= 0.5f;
+        }
+
+        return warp;
     }
 #endregion
 }
