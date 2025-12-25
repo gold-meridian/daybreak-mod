@@ -154,21 +154,6 @@ public abstract class WorldIcon : InfoIcon
     public abstract bool IsVisible(WorldFileData worldFile);
 }
 
-internal sealed class S : PlayerIcon
-{
-    [OnLoad]
-    private static void Load()
-    {
-        ModContent.GetInstance<ModImpl>().AddContent(new S());
-        ModContent.GetInstance<ModImpl>().AddContent(new S());
-        ModContent.GetInstance<ModImpl>().AddContent(new S());
-    }
-
-    public override string Texture => AssetReferences.Assets.Images.UI.InfoIconTEST.KEY;
-
-    public override bool IsVisible(PlayerFileData worldFile) => true;
-}
-
 [Autoload(Side = ModSide.Client)]
 internal static class InfoIcons
 {
@@ -482,7 +467,7 @@ internal static class InfoIcons
                 elem.Append(listContainer);
 
                 var icons = worldIcons.Where(x => x.IsVisible(elem.Data)).ToArray();
-                var iconList = new ScrollableIconPanel(icons.Concat(icons).Concat(icons));
+                var iconList = new ScrollableIconPanel(icons);
                 {
                     iconList.Width.Set(0f, 1f);
                     iconList.Height.Set(0f, 1f);
@@ -570,7 +555,7 @@ internal static class InfoIcons
                 elem.Append(listContainer);
 
                 var icons = playerIcons.Where(x => x.IsVisible(elem.Data)).ToArray();
-                var iconList = new ScrollableIconPanel(icons.Concat(icons).Concat(icons).Concat(icons).Concat(icons));
+                var iconList = new ScrollableIconPanel(icons);
                 {
                     iconList.Width.Set(0f, 1f);
                     iconList.Height.Set(0f, 1f);
