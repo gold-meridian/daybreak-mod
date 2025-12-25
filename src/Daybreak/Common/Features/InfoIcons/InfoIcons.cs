@@ -1,13 +1,18 @@
 ﻿using Daybreak.Common.Features.Hooks;
+using Daybreak.Common.Rendering;
 using Daybreak.Common.UI;
 using Daybreak.Core;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.IO;
 using Terraria.Localization;
@@ -23,6 +28,44 @@ namespace Daybreak.Common.Features.InfoIcons;
 [Autoload(Side = ModSide.Client)]
 public abstract class InfoIcon : ModTexturedType, ILocalizedModType
 {
+    private sealed class BetterImageButton : UIElement
+    {
+        public float VisibilityActive { get; set; } = 1f;
+
+        public float VisibilityInactive { get; set; } = 0.4f;
+
+        public Asset<Texture2D> Asset { get; }
+
+        public BetterImageButton(Asset<Texture2D> asset, float targetHeight, float targetWidth)
+        {
+            Asset = asset;
+            Height.Set(targetHeight, 0f);
+            Width.Set(targetWidth, 0f);
+        }
+
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            base.DrawSelf(spriteBatch);
+
+            var dims = this.Dimensions;
+
+            spriteBatch.Draw(
+                new DrawParameters(Asset)
+                {
+                    Destination = dims,
+                    Color = Color.White * (IsMouseHovering ? VisibilityActive : VisibilityInactive),
+                }
+            );
+        }
+
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            base.MouseOver(evt);
+
+            SoundEngine.PlaySound(12);
+        }
+    }
+
     /// <inheritdoc />
     public virtual string LocalizationCategory => nameof(InfoIcon);
 
@@ -48,7 +91,28 @@ public abstract class InfoIcon : ModTexturedType, ILocalizedModType
     {
         base.SetupContent();
 
+        _ = Description;
+
         SetStaticDefaults();
+    }
+
+    /// <summary>
+    ///     Initializes the element to render this icon in.
+    /// </summary>
+    public virtual UIElement CreateElement()
+    {
+        return new BetterImageButton(ModContent.Request<Texture2D>(Texture), 20f, 20f)
+        {
+            VAlign = 0.5f,
+        };
+    }
+
+    /// <summary>
+    ///     Invoked when your icon element is being hovered.
+    /// </summary>
+    public virtual void OnHover()
+    {
+        UICommon.TooltipMouseText(Description.Value);
     }
 }
 
@@ -98,7 +162,20 @@ internal sealed class S : WorldIcon
         ModContent.GetInstance<ModImpl>().AddContent(new S());
         ModContent.GetInstance<ModImpl>().AddContent(new S());
         ModContent.GetInstance<ModImpl>().AddContent(new S());
-        ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
+        // ModContent.GetInstance<ModImpl>().AddContent(new S());
     }
 
     public override string Texture => AssetReferences.Assets.Images.UI.InfoIconTEST.KEY;
@@ -112,57 +189,16 @@ internal static class InfoIcons
     private sealed class ScrollableIconPanel : UIList
     {
         private float horizontalViewPosition;
-
         private float innerListWidth;
-
-#region List Edit
-
-        [OnLoad]
-        private static void Load()
-        {
-            IL_UIElement.Recalculate += IL_UIElement_Recalculate;
-        }
-
-        // Maybe make a generic horizontal list element if this is the amount of effort I put into UI.
-        private static void IL_UIElement_Recalculate(ILContext il)
-        {
-            var c = new ILCursor(il);
-
-            ILLabel? jumpUiListCheckTarget = null;
-
-            c.GotoNext(MoveType.Before,
-                i => i.MatchLdarg0(),
-                i => i.MatchCall<UIElement>($"get_{nameof(Parent)}"),
-                i => i.MatchIsinst<UIList>(),
-                i => i.MatchBrfalse(out jumpUiListCheckTarget));
-
-            Debug.Assert(jumpUiListCheckTarget is not null);
-
-            c.EmitLdarg0();
-
-            c.EmitLdloca(0);
-
-            c.EmitDelegate(
-                (UIElement elem, ref CalculatedStyle parentDimensions) =>
-                {
-                    if (elem is ScrollableIconPanel)
-                    {
-                        parentDimensions.Width = float.MaxValue;
-
-                        return true;
-                    }
-
-                    return false;
-                }
-            );
-
-            c.EmitBrtrue(jumpUiListCheckTarget);
-        }
-
-#endregion
 
         public ScrollableIconPanel(IEnumerable<InfoIcon> icons)
         {
+            var startPaddingElement = new UIElement();
+            {
+                startPaddingElement.Width.Set(0f, 0f);
+            };
+            Add(startPaddingElement);
+
             foreach (var icon in icons)
             {
                 if (!ModContent.RequestIfExists<Texture2D>(icon.Texture, out var texture))
@@ -172,19 +208,17 @@ internal static class InfoIcons
 
                 texture.Wait();
 
-                var button = new UIImageButton(texture);
+                var element = icon.CreateElement();
                 {
-                    button.OnDraw += (elem) =>
+                    element.OnDraw += e =>
                     {
-                        if (!elem.IsMouseHovering)
+                        if (e.IsMouseHovering)
                         {
-                            return;
+                            icon.OnHover();
                         }
-
-                        UICommon.TooltipMouseText(icon.Description.Value);
                     };
                 }
-                Add(button);
+                Add(element);
             }
         }
 
@@ -198,7 +232,6 @@ internal static class InfoIcons
             }
 
             const float button_padding = 24f;
-
             const float scroll_amount = 6f;
 
             PaddingLeft += button_padding;
@@ -213,7 +246,7 @@ internal static class InfoIcons
 
                 leftButton.MarginLeft -= button_padding;
 
-                leftButton.OnUpdate += (elem) => SrollList(elem, -scroll_amount);
+                leftButton.OnUpdate += (elem) => ScrollList(elem, -scroll_amount);
             }
             Append(leftButton);
 
@@ -231,11 +264,13 @@ internal static class InfoIcons
 
                 rightButton.HAlign = 1f;
 
-                rightButton.OnUpdate += (elem) => SrollList(elem, scroll_amount);
+                rightButton.OnUpdate += elem => ScrollList(elem, scroll_amount);
             }
             Append(rightButton);
 
-            void SrollList(UIElement element, float amount)
+            return;
+
+            void ScrollList(UIElement element, float amount)
             {
                 if (element.IsMouseHovering && Main.mouseLeft)
                 {
@@ -249,7 +284,14 @@ internal static class InfoIcons
             // Manually recalculate child elements.
             foreach (UIElement element in Elements)
             {
+                var tempParent = new UIElement
+                {
+                    _innerDimensions = _innerDimensions,
+                };
+
+                element.Parent = tempParent;
                 element.Recalculate();
+                element.Parent = this;
             }
 
             float totalWidth = 0f;
@@ -257,11 +299,15 @@ internal static class InfoIcons
             {
                 float padding = (_items.Count == 1) ? 0f : ListPadding;
 
-                _items[i].Left.Set(totalWidth, 0f);
-                _items[i].Recalculate();
+                var item = _items[i];
+
+                // item.Top.Set((this.Dimensions.Height - item.Dimensions.Height) / 2f, 0f);
+                item.Left.Set(totalWidth, 0f);
+                item.Recalculate();
 
                 totalWidth += _items[i].GetOuterDimensions().Width + padding;
             }
+
             innerListWidth = totalWidth;
         }
 
@@ -275,9 +321,81 @@ internal static class InfoIcons
             }
 
             Recalculate();
+
+            DrawPanel(spriteBatch, dims.TopLeft(), innerListWidth);
         }
+
+        private static void DrawPanel(SpriteBatch spriteBatch, Vector2 position, float width)
+        {
+            var panelTexture = ModContent.Request<Texture2D>("Terraria/Images/UI/InnerPanelBackground");
+
+            spriteBatch.Draw(
+                panelTexture.Value,
+                position,
+                new Rectangle(0, 0, 8, panelTexture.Height()),
+                Color.White
+            );
+            spriteBatch.Draw(
+                panelTexture.Value,
+                new Vector2(position.X + 8f, position.Y),
+                new Rectangle(8, 0, 8, panelTexture.Height()),
+                Color.White,
+                0f,
+                Vector2.Zero,
+                new Vector2((width - 16f) / 8f, 1f),
+                SpriteEffects.None,
+                0f
+            );
+            spriteBatch.Draw(
+                panelTexture.Value,
+                new Vector2(position.X + width - 8f, position.Y),
+                new Rectangle(16, 0, 8, panelTexture.Height()),
+                Color.White
+            );
+        }
+
+#region List Edit
+        [OnLoad]
+        private static void Load()
+        {
+            IL_UIElement.Recalculate += IL_UIElement_Recalculate;
+        }
+
+        // Maybe make a generic horizontal list element if this is the amount of effort I put into UI.
+        private static void IL_UIElement_Recalculate(ILContext il)
+        {
+            var c = new ILCursor(il);
+
+            ILLabel? jumpUiListCheckTarget = null;
+            c.GotoNext(
+                MoveType.Before,
+                i => i.MatchLdarg0(),
+                i => i.MatchCall<UIElement>($"get_{nameof(Parent)}"),
+                i => i.MatchIsinst<UIList>(),
+                i => i.MatchBrfalse(out jumpUiListCheckTarget)
+            );
+            Debug.Assert(jumpUiListCheckTarget is not null);
+
+            c.EmitLdarg0();
+            c.EmitLdloca(0);
+            c.EmitDelegate(
+                (UIElement elem, ref CalculatedStyle parentDimensions) =>
+                {
+                    if (elem is not ScrollableIconPanel)
+                    {
+                        return false;
+                    }
+
+                    // parentDimensions.Width = float.MaxValue;
+                    return true;
+                }
+            );
+
+            c.EmitBrtrue(jumpUiListCheckTarget);
+        }
+#endregion
     }
-    
+
     private static List<PlayerIcon> playerIcons = [];
     private static List<WorldIcon> worldIcons = [];
 
@@ -311,17 +429,19 @@ internal static class InfoIcons
             return;
         }
 
-        IL_UIWorldListItem.ctor += ctor_WorldInfoIconPanel;
-        On_UIWorldListItem.DrawSelf += DrawSelf_WorldIconTooltip;
+        IL_UIWorldListItem.ctor += Ctor_WorldInfoIconPanel;
+        On_UIWorldListItem.DrawSelf += DrawSelf_AdjustListForText;
     }
 
-    private static void ctor_WorldInfoIconPanel(ILContext il)
+    private static void Ctor_WorldInfoIconPanel(ILContext il)
     {
         var c = new ILCursor(il);
 
-        c.GotoNext(MoveType.After,
+        c.GotoNext(
+            MoveType.After,
             i => i.MatchLdfld<UIWorldListItem>(nameof(UIWorldListItem._deleteButtonLabel)),
-            i => i.MatchCall<UIElement>(nameof(UIElement.Append)));
+            i => i.MatchCall<UIElement>(nameof(UIElement.Append))
+        );
 
         c.EmitLdarg0();
         c.EmitLdloc0();
@@ -329,25 +449,36 @@ internal static class InfoIcons
         c.EmitDelegate(
             (UIWorldListItem elem, float totalWidth) =>
             {
+                /*
                 elem.RemoveChild(elem._buttonLabel);
                 elem.RemoveChild(elem._deleteButtonLabel);
+                */
 
-                var iconList = new ScrollableIconPanel(worldIcons);
+                var listContainer = new UIElement();
                 {
-                    iconList.MarginLeft = totalWidth;
-                    iconList.MarginRight = 30f;
+                    listContainer.MarginLeft = totalWidth;
+                    listContainer.MarginRight = 30f;
 
-                    iconList.VAlign = 1f;
+                    listContainer.VAlign = 1f;
 
-                    iconList.Width.Set(0f, 1f);
-                    iconList.Height.Set(22f, 0f);
+                    listContainer.Width.Set(-totalWidth - elem._deleteButton.Width.Pixels - 6f, 1f);
+                    listContainer.Height.Set(27f, 0f);
+                    listContainer.Top.Set(2f, 0f);
                 }
-                elem.Append(iconList);
+                elem.Append(listContainer);
+
+                var icons = worldIcons.Where(x => x.IsVisible(elem.Data));
+                var iconList = new ScrollableIconPanel(icons);
+                {
+                    iconList.Width.Set(0f, 1f);
+                    iconList.Height.Set(0f, 1f);
+                }
+                listContainer.Append(iconList);
             }
         );
     }
 
-    private static void DrawSelf_WorldIconTooltip(
+    private static void DrawSelf_AdjustListForText(
         On_UIWorldListItem.orig_DrawSelf orig,
         UIWorldListItem self,
         SpriteBatch spriteBatch
@@ -355,13 +486,36 @@ internal static class InfoIcons
     {
         orig(self, spriteBatch);
 
-        if (self._buttonLabel.Text != string.Empty)
+        if (
+            self.Children.FirstOrDefault(x => x.Children.Any(y => y is ScrollableIconPanel)) is { } container
+         && container.Children.FirstOrDefault(x => x is ScrollableIconPanel) is ScrollableIconPanel panel
+        )
         {
-            UICommon.TooltipMouseText(self._buttonLabel.Text);
-        }
-        else if (self._deleteButtonLabel.Text != string.Empty)
-        {
-            UICommon.TooltipMouseText(self._deleteButtonLabel.Text);
+            panel.Left.Set(0f, 0f);
+            panel.Width.Set(0f, 1f);
+
+            if (self._buttonLabel.Text != string.Empty)
+            {
+                var size = FontAssets.MouseText.Value.MeasureString(self._buttonLabel.Text);
+                {
+                    size.X += 6f;
+                }
+
+                panel.Left.Set(size.X, 0f);
+                panel.Width.Set(-size.X, 1f);
+            }
+            else if (self._deleteButtonLabel.Text != string.Empty)
+            {
+                var size = FontAssets.MouseText.Value.MeasureString(self._deleteButtonLabel.Text);
+                {
+                    size.X += 6f;
+                }
+
+                panel.Left.Set(0f, 0f);
+                panel.Width.Set(-size.X, 1f);
+            }
+
+            self.Recalculate();
         }
     }
 }
