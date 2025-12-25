@@ -2,6 +2,7 @@
 using Daybreak.Common.Rendering;
 using Daybreak.Common.UI;
 using Daybreak.Core;
+using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
@@ -193,12 +194,6 @@ internal static class InfoIcons
 
         public ScrollableIconPanel(IEnumerable<InfoIcon> icons)
         {
-            var startPaddingElement = new UIElement();
-            {
-                startPaddingElement.Width.Set(0f, 0f);
-            };
-            Add(startPaddingElement);
-
             foreach (var icon in icons)
             {
                 if (!ModContent.RequestIfExists<Texture2D>(icon.Texture, out var texture))
@@ -219,63 +214,6 @@ internal static class InfoIcons
                     };
                 }
                 Add(element);
-            }
-        }
-
-        public override void OnActivate()
-        {
-            var dims = this.Dimensions;
-
-            if (innerListWidth <= dims.Width)
-            {
-                return;
-            }
-
-            const float button_padding = 24f;
-            const float scroll_amount = 6f;
-
-            // PaddingLeft += button_padding;
-
-            AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Wait();
-            AssetReferences.Assets.Images.UI.InfoIcon_Left_Hover.Asset.Wait();
-
-            var leftButton = new UIImageButton(AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset);
-            {
-                leftButton.SetHoverImage(AssetReferences.Assets.Images.UI.InfoIcon_Left_Hover.Asset);
-                leftButton._visibilityInactive = 1f;
-
-                leftButton.MarginLeft -= button_padding;
-
-                leftButton.OnUpdate += (elem) => ScrollList(elem, -scroll_amount);
-            }
-            Append(leftButton);
-
-            // PaddingRight += button_padding;
-
-            AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset.Wait();
-            AssetReferences.Assets.Images.UI.InfoIcon_Right_Hover.Asset.Wait();
-
-            var rightButton = new UIImageButton(AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset);
-            {
-                rightButton.SetHoverImage(AssetReferences.Assets.Images.UI.InfoIcon_Right_Hover.Asset);
-                rightButton._visibilityInactive = 1f;
-
-                rightButton.MarginRight -= button_padding;
-
-                rightButton.HAlign = 1f;
-
-                rightButton.OnUpdate += elem => ScrollList(elem, scroll_amount);
-            }
-            Append(rightButton);
-
-            return;
-
-            void ScrollList(UIElement element, float amount)
-            {
-                if (element.IsMouseHovering && Main.mouseLeft)
-                {
-                    horizontalViewPosition = Math.Clamp(horizontalViewPosition + amount, 0f, innerListWidth - this.Dimensions.Width);
-                }
             }
         }
 
@@ -315,14 +253,100 @@ internal static class InfoIcons
         {
             var dims = this.Dimensions;
 
+            PaddingLeft = 5f;
+            PaddingRight = 0f;
+
             if (innerListWidth > dims.Width)
             {
                 _innerList.Left.Set(-horizontalViewPosition, 0f);
+
+                const float button_padding = 16f;
+
+                PaddingLeft = button_padding;
+                PaddingRight = button_padding;
             }
 
             Recalculate();
 
             DrawPanel(spriteBatch, dims.TopLeft(), MathF.Min(innerListWidth, dims.Width));
+
+            if (innerListWidth > dims.Width)
+            {
+                const float scroll_amount = 6f;
+
+                AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Wait();
+                AssetReferences.Assets.Images.UI.InfoIcon_Left_Hover.Asset.Wait();
+
+                var leftPos = new Vector2(
+                    dims.Left + 2f,
+                    dims.Top + dims.Height / 2f
+                 );
+
+                var leftHitbox = AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Frame();
+                {
+                    leftHitbox.X = (int)leftPos.X;
+                    leftHitbox.Y = (int)leftPos.Y - AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Height() / 2;
+                }
+
+                var leftHovered = leftHitbox.Contains(Main.MouseScreen.ToPoint());
+                var leftAsset = leftHovered
+                    ? AssetReferences.Assets.Images.UI.InfoIcon_Left_Hover.Asset
+                    : AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset;
+
+                spriteBatch.Draw(
+                    new DrawParameters(leftAsset)
+                    {
+                        Position = leftPos,
+                        Origin = Vector2.UnitY * leftAsset.Height() / 2f,
+                    }
+                );
+
+                AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset.Wait();
+                AssetReferences.Assets.Images.UI.InfoIcon_Right_Hover.Asset.Wait();
+
+                var rightPos = new Vector2(
+                    dims.Right - AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset.Width() - 2f,
+                    dims.Top + dims.Height / 2f
+                );
+
+                var rightHitbox = AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Frame();
+                {
+                    rightHitbox.X = (int)rightPos.X;
+                    rightHitbox.Y = (int)rightPos.Y - AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Height() / 2;
+                }
+
+                var rightHovered = rightHitbox.Contains(Main.MouseScreen.ToPoint());
+                var rightAsset = rightHovered
+                    ? AssetReferences.Assets.Images.UI.InfoIcon_Right_Hover.Asset
+                    : AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset;
+
+                spriteBatch.Draw(
+                    new DrawParameters(rightAsset)
+                    {
+                        Position = rightPos,
+                        Origin = Vector2.UnitY * rightAsset.Height() / 2f,
+                    }
+                );
+
+                if (Main.mouseLeft)
+                {
+                    if (leftHovered)
+                    {
+                        ScrollList(-scroll_amount);
+                    }
+                    else if (rightHovered)
+                    {
+                        ScrollList(scroll_amount);
+                    }
+                }
+            }
+
+            return;
+
+            void ScrollList(float amount)
+            {
+                horizontalViewPosition = Math.Clamp(horizontalViewPosition + amount, 0f, innerListWidth - this.Dimensions.Width);
+            }
         }
 
         private static void DrawPanel(SpriteBatch spriteBatch, Vector2 position, float width)
