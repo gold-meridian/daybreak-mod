@@ -234,7 +234,7 @@ internal static class InfoIcons
             const float button_padding = 24f;
             const float scroll_amount = 6f;
 
-            PaddingLeft += button_padding;
+            // PaddingLeft += button_padding;
 
             AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Wait();
             AssetReferences.Assets.Images.UI.InfoIcon_Left_Hover.Asset.Wait();
@@ -250,7 +250,7 @@ internal static class InfoIcons
             }
             Append(leftButton);
 
-            PaddingRight += button_padding;
+            // PaddingRight += button_padding;
 
             AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset.Wait();
             AssetReferences.Assets.Images.UI.InfoIcon_Right_Hover.Asset.Wait();
@@ -322,7 +322,7 @@ internal static class InfoIcons
 
             Recalculate();
 
-            DrawPanel(spriteBatch, dims.TopLeft(), innerListWidth);
+            DrawPanel(spriteBatch, dims.TopLeft(), MathF.Min(innerListWidth, dims.Width));
         }
 
         private static void DrawPanel(SpriteBatch spriteBatch, Vector2 position, float width)
@@ -467,8 +467,8 @@ internal static class InfoIcons
                 }
                 elem.Append(listContainer);
 
-                var icons = worldIcons.Where(x => x.IsVisible(elem.Data));
-                var iconList = new ScrollableIconPanel(icons);
+                var icons = worldIcons.Where(x => x.IsVisible(elem.Data)).ToArray();
+                var iconList = new ScrollableIconPanel(icons.Concat(icons).Concat(icons).Concat(icons).Concat(icons));
                 {
                     iconList.Width.Set(0f, 1f);
                     iconList.Height.Set(0f, 1f);
