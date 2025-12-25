@@ -2,7 +2,6 @@
 using Daybreak.Common.Rendering;
 using Daybreak.Common.UI;
 using Daybreak.Core;
-using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
@@ -155,7 +154,7 @@ public abstract class WorldIcon : InfoIcon
     public abstract bool IsVisible(WorldFileData worldFile);
 }
 
-internal sealed class S : WorldIcon
+internal sealed class S : PlayerIcon
 {
     [OnLoad]
     private static void Load()
@@ -163,25 +162,11 @@ internal sealed class S : WorldIcon
         ModContent.GetInstance<ModImpl>().AddContent(new S());
         ModContent.GetInstance<ModImpl>().AddContent(new S());
         ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
-        // ModContent.GetInstance<ModImpl>().AddContent(new S());
     }
 
     public override string Texture => AssetReferences.Assets.Images.UI.InfoIconTEST.KEY;
 
-    public override bool IsVisible(WorldFileData worldFile) => true;
+    public override bool IsVisible(PlayerFileData worldFile) => true;
 }
 
 [Autoload(Side = ModSide.Client)]
@@ -220,7 +205,7 @@ internal static class InfoIcons
         public override void RecalculateChildren()
         {
             // Manually recalculate child elements.
-            foreach (UIElement element in Elements)
+            foreach (var element in Elements)
             {
                 var tempParent = new UIElement
                 {
@@ -232,18 +217,16 @@ internal static class InfoIcons
                 element.Parent = this;
             }
 
-            float totalWidth = 0f;
-            for (int i = 0; i < _items.Count; i++)
+            var totalWidth = 0f;
+            foreach (var item in _items)
             {
-                float padding = (_items.Count == 1) ? 0f : ListPadding;
-
-                var item = _items[i];
+                var padding = (_items.Count == 1) ? 0f : ListPadding;
 
                 // item.Top.Set((this.Dimensions.Height - item.Dimensions.Height) / 2f, 0f);
                 item.Left.Set(totalWidth, 0f);
                 item.Recalculate();
 
-                totalWidth += _items[i].GetOuterDimensions().Width + padding;
+                totalWidth += item.GetOuterDimensions().Width + padding;
             }
 
             innerListWidth = totalWidth;
@@ -270,75 +253,79 @@ internal static class InfoIcons
 
             DrawPanel(spriteBatch, dims.TopLeft(), MathF.Min(innerListWidth + 5, dims.Width));
 
-            if (innerListWidth > dims.Width)
+            if (innerListWidth <= dims.Width)
             {
-                const float scroll_amount = 6f;
+                return;
+            }
 
-                AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Wait();
-                AssetReferences.Assets.Images.UI.InfoIcon_Left_Hover.Asset.Wait();
+            const float scroll_amount = 6f;
 
-                var leftPos = new Vector2(
-                    dims.Left + 2f,
-                    dims.Top + dims.Height / 2f
-                 );
+            AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Wait();
+            AssetReferences.Assets.Images.UI.InfoIcon_Left_Hover.Asset.Wait();
 
-                var leftHitbox = AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Frame();
+            var leftPos = new Vector2(
+                dims.Left + 2f,
+                dims.Top + dims.Height / 2f
+            );
+
+            var leftHitbox = AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Frame();
+            {
+                leftHitbox.X = (int)leftPos.X;
+                leftHitbox.Y = (int)leftPos.Y - AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Height() / 2;
+            }
+
+            var leftHovered = leftHitbox.Contains(Main.MouseScreen.ToPoint());
+            var leftAsset = leftHovered
+                ? AssetReferences.Assets.Images.UI.InfoIcon_Left_Hover.Asset
+                : AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset;
+
+            spriteBatch.Draw(
+                new DrawParameters(leftAsset)
                 {
-                    leftHitbox.X = (int)leftPos.X;
-                    leftHitbox.Y = (int)leftPos.Y - AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Height() / 2;
+                    Position = leftPos,
+                    Origin = Vector2.UnitY * leftAsset.Height() / 2f,
                 }
+            );
 
-                var leftHovered = leftHitbox.Contains(Main.MouseScreen.ToPoint());
-                var leftAsset = leftHovered
-                    ? AssetReferences.Assets.Images.UI.InfoIcon_Left_Hover.Asset
-                    : AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset;
+            AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset.Wait();
+            AssetReferences.Assets.Images.UI.InfoIcon_Right_Hover.Asset.Wait();
 
-                spriteBatch.Draw(
-                    new DrawParameters(leftAsset)
-                    {
-                        Position = leftPos,
-                        Origin = Vector2.UnitY * leftAsset.Height() / 2f,
-                    }
-                );
+            var rightPos = new Vector2(
+                dims.Right - AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset.Width() - 2f,
+                dims.Top + dims.Height / 2f
+            );
 
-                AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset.Wait();
-                AssetReferences.Assets.Images.UI.InfoIcon_Right_Hover.Asset.Wait();
+            var rightHitbox = AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Frame();
+            {
+                rightHitbox.X = (int)rightPos.X;
+                rightHitbox.Y = (int)rightPos.Y - AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Height() / 2;
+            }
 
-                var rightPos = new Vector2(
-                    dims.Right - AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset.Width() - 2f,
-                    dims.Top + dims.Height / 2f
-                );
+            var rightHovered = rightHitbox.Contains(Main.MouseScreen.ToPoint());
+            var rightAsset = rightHovered
+                ? AssetReferences.Assets.Images.UI.InfoIcon_Right_Hover.Asset
+                : AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset;
 
-                var rightHitbox = AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Frame();
+            spriteBatch.Draw(
+                new DrawParameters(rightAsset)
                 {
-                    rightHitbox.X = (int)rightPos.X;
-                    rightHitbox.Y = (int)rightPos.Y - AssetReferences.Assets.Images.UI.InfoIcon_Left.Asset.Height() / 2;
+                    Position = rightPos,
+                    Origin = Vector2.UnitY * rightAsset.Height() / 2f,
                 }
+            );
 
-                var rightHovered = rightHitbox.Contains(Main.MouseScreen.ToPoint());
-                var rightAsset = rightHovered
-                    ? AssetReferences.Assets.Images.UI.InfoIcon_Right_Hover.Asset
-                    : AssetReferences.Assets.Images.UI.InfoIcon_Right.Asset;
+            if (!Main.mouseLeft)
+            {
+                return;
+            }
 
-                spriteBatch.Draw(
-                    new DrawParameters(rightAsset)
-                    {
-                        Position = rightPos,
-                        Origin = Vector2.UnitY * rightAsset.Height() / 2f,
-                    }
-                );
-
-                if (Main.mouseLeft)
-                {
-                    if (leftHovered)
-                    {
-                        ScrollList(-scroll_amount);
-                    }
-                    else if (rightHovered)
-                    {
-                        ScrollList(scroll_amount);
-                    }
-                }
+            if (leftHovered)
+            {
+                ScrollList(-scroll_amount);
+            }
+            else if (rightHovered)
+            {
+                ScrollList(scroll_amount);
             }
 
             return;
@@ -454,7 +441,10 @@ internal static class InfoIcons
         }
 
         IL_UIWorldListItem.ctor += Ctor_WorldInfoIconPanel;
-        On_UIWorldListItem.DrawSelf += DrawSelf_AdjustListForText;
+        On_UIWorldListItem.DrawSelf += DrawSelf_WorldInfoAdjustListForText;
+
+        IL_UICharacterListItem.ctor += Ctor_PlayerInfoIconPanel;
+        On_UICharacterListItem.DrawSelf += DrawSelf_PlayerInfoAdjustListForText;
     }
 
     private static void Ctor_WorldInfoIconPanel(ILContext il)
@@ -502,7 +492,7 @@ internal static class InfoIcons
         );
     }
 
-    private static void DrawSelf_AdjustListForText(
+    private static void DrawSelf_WorldInfoAdjustListForText(
         On_UIWorldListItem.orig_DrawSelf orig,
         UIWorldListItem self,
         SpriteBatch spriteBatch
@@ -511,35 +501,125 @@ internal static class InfoIcons
         orig(self, spriteBatch);
 
         if (
-            self.Children.FirstOrDefault(x => x.Children.Any(y => y is ScrollableIconPanel)) is { } container
-         && container.Children.FirstOrDefault(x => x is ScrollableIconPanel) is ScrollableIconPanel panel
+            self.Children.FirstOrDefault(x => x.Children.Any(y => y is ScrollableIconPanel)) is not { } container
+         || container.Children.FirstOrDefault(x => x is ScrollableIconPanel) is not ScrollableIconPanel panel
         )
         {
-            panel.Left.Set(0f, 0f);
-            panel.Width.Set(0f, 1f);
-
-            if (self._buttonLabel.Text != string.Empty)
-            {
-                var size = FontAssets.MouseText.Value.MeasureString(self._buttonLabel.Text);
-                {
-                    size.X += 6f;
-                }
-
-                panel.Left.Set(size.X, 0f);
-                panel.Width.Set(-size.X, 1f);
-            }
-            else if (self._deleteButtonLabel.Text != string.Empty)
-            {
-                var size = FontAssets.MouseText.Value.MeasureString(self._deleteButtonLabel.Text);
-                {
-                    size.X += 6f;
-                }
-
-                panel.Left.Set(0f, 0f);
-                panel.Width.Set(-size.X, 1f);
-            }
-
-            self.Recalculate();
+            return;
         }
+
+        panel.Left.Set(0f, 0f);
+        panel.Width.Set(0f, 1f);
+
+        if (self._buttonLabel.Text != string.Empty)
+        {
+            var size = FontAssets.MouseText.Value.MeasureString(self._buttonLabel.Text);
+            {
+                size.X += 6f;
+            }
+
+            panel.Left.Set(size.X, 0f);
+            panel.Width.Set(-size.X, 1f);
+        }
+        else if (self._deleteButtonLabel.Text != string.Empty)
+        {
+            var size = FontAssets.MouseText.Value.MeasureString(self._deleteButtonLabel.Text);
+            {
+                size.X += 6f;
+            }
+
+            panel.Left.Set(0f, 0f);
+            panel.Width.Set(-size.X, 1f);
+        }
+
+        self.Recalculate();
+    }
+
+    private static void Ctor_PlayerInfoIconPanel(ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        c.GotoNext(
+            MoveType.After,
+            i => i.MatchLdfld<UICharacterListItem>(nameof(UICharacterListItem._deleteButtonLabel)),
+            i => i.MatchCall<UIElement>(nameof(UIElement.Append))
+        );
+
+        c.EmitLdarg0();
+        c.EmitLdloc0();
+
+        c.EmitDelegate(
+            (UICharacterListItem elem, float totalWidth) =>
+            {
+                /*
+                elem.RemoveChild(elem._buttonLabel);
+                elem.RemoveChild(elem._deleteButtonLabel);
+                */
+
+                var listContainer = new UIElement();
+                {
+                    listContainer.MarginLeft = totalWidth;
+                    listContainer.MarginRight = 30f;
+
+                    listContainer.VAlign = 1f;
+
+                    listContainer.Width.Set(-totalWidth - elem._deleteButton.Width.Pixels - 6f, 1f);
+                    listContainer.Height.Set(27f, 0f);
+                    listContainer.Top.Set(2f, 0f);
+                }
+                elem.Append(listContainer);
+
+                var icons = playerIcons.Where(x => x.IsVisible(elem.Data)).ToArray();
+                var iconList = new ScrollableIconPanel(icons.Concat(icons).Concat(icons).Concat(icons).Concat(icons));
+                {
+                    iconList.Width.Set(0f, 1f);
+                    iconList.Height.Set(0f, 1f);
+                }
+                listContainer.Append(iconList);
+            }
+        );
+    }
+
+    private static void DrawSelf_PlayerInfoAdjustListForText(
+        On_UICharacterListItem.orig_DrawSelf orig,
+        UICharacterListItem self,
+        SpriteBatch spriteBatch
+    )
+    {
+        orig(self, spriteBatch);
+
+        if (
+            self.Children.FirstOrDefault(x => x.Children.Any(y => y is ScrollableIconPanel)) is not { } container
+         || container.Children.FirstOrDefault(x => x is ScrollableIconPanel) is not ScrollableIconPanel panel
+        )
+        {
+            return;
+        }
+
+        panel.Left.Set(0f, 0f);
+        panel.Width.Set(0f, 1f);
+
+        if (self._buttonLabel.Text != string.Empty)
+        {
+            var size = FontAssets.MouseText.Value.MeasureString(self._buttonLabel.Text);
+            {
+                size.X += 6f;
+            }
+
+            panel.Left.Set(size.X, 0f);
+            panel.Width.Set(-size.X, 1f);
+        }
+        else if (self._deleteButtonLabel.Text != string.Empty)
+        {
+            var size = FontAssets.MouseText.Value.MeasureString(self._deleteButtonLabel.Text);
+            {
+                size.X += 6f;
+            }
+
+            panel.Left.Set(0f, 0f);
+            panel.Width.Set(-size.X, 1f);
+        }
+
+        self.Recalculate();
     }
 }
