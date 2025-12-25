@@ -221,7 +221,7 @@ internal static class InfoIcons
         {
             var dims = this.Dimensions;
 
-            if (innerListWidth == 0)
+            if (_items.Count <= 0)
             {
                 return;
             }
@@ -241,7 +241,8 @@ internal static class InfoIcons
 
             Recalculate();
 
-            DrawPanel(spriteBatch, dims.TopLeft(), MathF.Min(innerListWidth + 5, dims.Width));
+            var extraOffset = _items.Count > 1 ? 5 : 10;
+            DrawPanel(spriteBatch, dims.TopLeft(), MathF.Min(innerListWidth + extraOffset, dims.Width));
 
             if (innerListWidth <= dims.Width)
             {
