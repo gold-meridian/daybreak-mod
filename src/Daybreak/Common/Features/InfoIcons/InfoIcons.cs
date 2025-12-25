@@ -221,6 +221,11 @@ internal static class InfoIcons
         {
             var dims = this.Dimensions;
 
+            if (innerListWidth == 0)
+            {
+                return;
+            }
+
             PaddingLeft = 5f;
             PaddingRight = 5f;
 
