@@ -57,7 +57,7 @@ public abstract class PlayerIcon : InfoIcon
     protected sealed override void Register()
     {
         InfoIcons.Register(this);
-        ModTypeLookup<PlayerIcon>.Register(this);
+        // ModTypeLookup<PlayerIcon>.Register(this);
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ public abstract class WorldIcon : InfoIcon
     protected sealed override void Register()
     {
         InfoIcons.Register(this);
-        ModTypeLookup<WorldIcon>.Register(this);
+        // ModTypeLookup<WorldIcon>.Register(this);
     }
 
     /// <summary>
