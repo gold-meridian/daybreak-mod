@@ -332,7 +332,7 @@ internal static class InfoIcons
 
             void ScrollList(float amount)
             {
-                horizontalViewPosition = Math.Clamp(horizontalViewPosition + amount, 0f, innerListWidth - this.Dimensions.Width);
+                horizontalViewPosition = Math.Clamp(horizontalViewPosition + amount, 0f, innerListWidth - this.Dimensions.Width + 5f);
             }
         }
 
