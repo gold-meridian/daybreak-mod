@@ -254,7 +254,7 @@ internal static class InfoIcons
             var dims = this.Dimensions;
 
             PaddingLeft = 5f;
-            PaddingRight = 0f;
+            PaddingRight = 5f;
 
             if (innerListWidth > dims.Width)
             {
@@ -268,7 +268,7 @@ internal static class InfoIcons
 
             Recalculate();
 
-            DrawPanel(spriteBatch, dims.TopLeft(), MathF.Min(innerListWidth, dims.Width));
+            DrawPanel(spriteBatch, dims.TopLeft(), MathF.Min(innerListWidth + 5, dims.Width));
 
             if (innerListWidth > dims.Width)
             {
@@ -492,7 +492,7 @@ internal static class InfoIcons
                 elem.Append(listContainer);
 
                 var icons = worldIcons.Where(x => x.IsVisible(elem.Data)).ToArray();
-                var iconList = new ScrollableIconPanel(icons.Concat(icons).Concat(icons).Concat(icons).Concat(icons));
+                var iconList = new ScrollableIconPanel(icons.Concat(icons).Concat(icons));
                 {
                     iconList.Width.Set(0f, 1f);
                     iconList.Height.Set(0f, 1f);
