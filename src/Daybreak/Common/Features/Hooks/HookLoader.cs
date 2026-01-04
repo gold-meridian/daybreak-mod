@@ -126,7 +126,7 @@ internal static class HookLoader
         ContractEnforcer.ValidateLoadable(instance);
 
         ResolveInstancedHooks(instance);
-        CallOnLoads(instance);
+        CallOnLoads(instance, self);
         return true;
     }
 
@@ -311,9 +311,12 @@ internal static class HookLoader
         );
     }
 
-    private static void CallOnLoads(ILoadable instance)
+    private static void CallOnLoads(ILoadable instance, Mod mod)
     {
-        Debug.Assert(currentlyLoadingMod is not null);
+        // Normally we would use currentlyLoadingMod, but tPackBuilder breaks
+        // with this approach because it independently fucks up load orders.  We
+        // can just use the Mod instance passed to AddContent, thankfully.
+        // Debug.Assert(currentlyLoadingMod is not null);
 
         var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         foreach (var method in methods)
@@ -340,7 +343,7 @@ internal static class HookLoader
             }
 
             HookSubscriber.BuildWrapper<OnLoadHook.Definition>(method, instance)
-                          .Invoke(currentlyLoadingMod);
+                          .Invoke(/*currentlyLoadingMod*/ mod);
         }
     }
 
