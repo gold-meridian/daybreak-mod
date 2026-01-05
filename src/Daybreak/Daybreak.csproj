@@ -8,13 +8,12 @@
     <ItemGroup>
         <Publicize Include="FNA" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
         <Publicize Include="ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
+        <Publicize Include="Luminance" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Daybreak.CodeAnalysis\Daybreak.CodeAnalysis.csproj"
-                          PrivateAssets="All"
-                          ReferenceOutputAssembly="false"
-                          OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\Daybreak.SourceGen\Daybreak.SourceGen.csproj" PrivateAssets="All" ReferenceOutputAssembly="false" OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\Daybreak.CodeAnalysis\Daybreak.CodeAnalysis.csproj" PrivateAssets="All" ReferenceOutputAssembly="false" OutputItemType="Analyzer"/>
     </ItemGroup>
 
 </Project>

@@ -186,7 +186,10 @@ public static class InvalidHookParameters
                     continue;
                 }
 
-                if (originalNameMap.TryGetValue(hookParameter.Name, out var originalSymbol) && SymbolEqualityComparer.Default.Equals(hookParameter.Type, originalSymbol.Type))
+                if (
+                    originalNameMap.TryGetValue(hookParameter.Name, out var originalSymbol)
+                 && ParameterSignatureEquals(hookParameter, originalSymbol)
+                )
                 {
                     continue;
                 }
@@ -381,7 +384,6 @@ public static class InvalidHookParameters
             }
             else
             {
-                
                 newReturnType = (TypeSyntax)editor.Generator.TypeExpression(sigInfo.HookReturnType);
             }
 
@@ -416,7 +418,7 @@ public static class InvalidHookParameters
                 return doc;
             }
 
-            var hookParamMap = sigInfo.HookParameters.ToDictionary(x => x.Name);
+            // var hookParamMap = sigInfo.HookParameters.ToDictionary(x => x.Name);
 
             var originalNames = new Dictionary<string, string>();
             foreach (var parameter in methodSymbol.Parameters)
@@ -460,9 +462,10 @@ public static class InvalidHookParameters
                 var oldParamSyntax = decl.ParameterList.Parameters
                                          .FirstOrDefault(x => x.Identifier.Text == userName);
 
-                var newParamSyntax = SyntaxFactory.Parameter(
-                    SyntaxFactory.Identifier(userName)
-                ).WithType(newType);
+                var newParamSyntax = SyntaxFactory
+                                    .Parameter(SyntaxFactory.Identifier(userName))
+                                    .WithType(newType)
+                                    .WithModifiers(GetModifiers(hookParam));
 
                 if (oldParamSyntax is not null)
                 {
@@ -482,6 +485,133 @@ public static class InvalidHookParameters
             editor.ReplaceNode(decl.ParameterList, newParamList);
 
             return editor.GetChangedDocument();
+
+            static SyntaxTokenList GetModifiers(IParameterSymbol parameter)
+            {
+                var tokens = new List<SyntaxToken>();
+
+                // TODO: ScopedKind...
+                // if p.ScopedKind != None { tokens.Add(SF.Token(ScopedKeyword))) }
+
+                var refToken = parameter.RefKind switch
+                {
+                    RefKind.Ref => SyntaxFactory.Token(SyntaxKind.RefKeyword),
+                    RefKind.Out => SyntaxFactory.Token(SyntaxKind.OutKeyword),
+                    RefKind.In => SyntaxFactory.Token(SyntaxKind.InKeyword),
+                    _ => default(SyntaxToken?),
+                };
+
+                if (refToken.HasValue)
+                {
+                    tokens.Add(refToken.Value);
+                }
+
+                /*
+                if (parameter.IsParams)
+                {
+                    tokens.Add(SyntaxFactory.Token(SyntaxKind.ParamsKeyword));
+                }
+                */
+
+                return SyntaxFactory.TokenList(tokens);
+            }
         }
+    }
+
+    private static bool ParameterSignatureEquals(
+        IParameterSymbol hook,
+        IParameterSymbol impl
+    )
+    {
+        // in/out/ref
+        if (hook.RefKind != impl.RefKind)
+        {
+            return false;
+        }
+
+        // TODO: Compare ScopedKind when we update.
+
+        // params can be included if we never need it
+        /*
+        if (hook.IsParams != impl.IsParams)
+        {
+            return false;
+        }
+        */
+
+        if (!TypeEquals(hook.Type, impl.Type))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool TypeEquals(ITypeSymbol a, ITypeSymbol b)
+    {
+        if (
+            a is IFunctionPointerTypeSymbol fa
+         && b is IFunctionPointerTypeSymbol fb
+        )
+        {
+            return FunctionPointerEquals(fa, fb);
+        }
+
+        return SymbolEqualityComparer.Default.Equals(a, b);
+    }
+
+    private static bool FunctionPointerEquals(
+        IFunctionPointerTypeSymbol a,
+        IFunctionPointerTypeSymbol b
+    )
+    {
+        var aSig = a.Signature;
+        var bSig = b.Signature;
+
+        if (!TypeEquals(aSig.ReturnType, bSig.ReturnType))
+        {
+            return false;
+        }
+
+        if (aSig.CallingConvention != bSig.CallingConvention)
+        {
+            return false;
+        }
+
+        if (aSig.Parameters.Length != bSig.Parameters.Length)
+        {
+            return false;
+        }
+
+        if (
+            !ImmutableArrayExtensions.SequenceEqual(
+                aSig.UnmanagedCallingConventionTypes,
+                bSig.UnmanagedCallingConventionTypes,
+                SymbolEqualityComparer.Default
+            )
+        )
+        {
+            return false;
+        }
+
+        for (var i = 0; i < aSig.Parameters.Length; i++)
+        {
+            var aParam = aSig.Parameters[i];
+            var bParam = bSig.Parameters[i];
+
+            if (aParam.RefKind != bParam.RefKind)
+            {
+                return false;
+            }
+
+            // TODO: Compare ScopedKind when we update.
+
+            if (!TypeEquals(aParam.Type, bParam.Type))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

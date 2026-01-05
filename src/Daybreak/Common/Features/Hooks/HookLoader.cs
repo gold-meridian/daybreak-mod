@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -27,6 +28,10 @@ internal static class HookLoader
     ///     terminating certain systems early.
     /// </summary>
     public static event Action<Mod>? OnEarlyModUnload;
+
+    private static readonly Dictionary<nint, bool> type_runs_cctor = [];
+    private static readonly Dictionary<Assembly, Type[]> loadable_types = [];
+    private static readonly string assembly_name = typeof(HookLoader).Assembly.GetName().Name ?? "Daybreak";
 
     public static Mod GetModOrThrow()
     {
@@ -103,6 +108,12 @@ internal static class HookLoader
     }
 #pragma warning restore CA2255
 
+    private static bool ModIsEligibleForDaybreakLoading(Mod mod)
+    {
+        // TODO: Could also walk the weakReferences/modReferences trees?
+        return mod is ModImpl || mod.Code.GetReferencedAssemblies().Any(x => x.Name == assembly_name);
+    }
+
     private static bool AddContent_ResolveInstancedHooks_CallOnLoads(Func<Mod, ILoadable, bool> orig, Mod self, ILoadable instance)
     {
         // Only attempt to resolve and apply hooks if the instance actually
@@ -115,7 +126,7 @@ internal static class HookLoader
         ContractEnforcer.ValidateLoadable(instance);
 
         ResolveInstancedHooks(instance);
-        CallOnLoads(instance);
+        CallOnLoads(instance, self);
         return true;
     }
 
@@ -123,18 +134,20 @@ internal static class HookLoader
     {
         orig(self);
 
-        if (self.Code is null)
+        if (self.Code is null || !ModIsEligibleForDaybreakLoading(self))
         {
             return;
         }
 
-        var loadableTypes = AssemblyManager.GetLoadableTypes(self.Code)
-                                           .Where(x => AutoloadAttribute.GetValue(x).NeedsAutoloading)
-                                           .OrderBy(x => x.FullName, StringComparer.InvariantCulture)
-                                           .ToArray();
+        var loadableTypes = loadable_types[self.Code] =
+            AssemblyManager.GetLoadableTypes(self.Code)
+                           .Where(x => !x.IsEnum && !x.IsSubclassOf(typeof(MulticastDelegate)) && AutoloadAttribute.GetValue(x).NeedsAutoloading)
+                           .OrderBy(x => x.FullName, StringComparer.InvariantCulture)
+                           .ToArray();
 
         LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, ResolveStaticHooks);
         LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, CallOnLoads);
+        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, RunStaticConstructors);
     }
 
     /*
@@ -186,10 +199,13 @@ internal static class HookLoader
         c.EmitDelegate(
             static (Mod mod) =>
             {
-                var loadableTypes = AssemblyManager.GetLoadableTypes(mod.Code)
-                                                   .Where(x => AutoloadAttribute.GetValue(x).NeedsAutoloading)
-                                                   .OrderBy(x => x.FullName, StringComparer.InvariantCulture)
-                                                   .ToArray();
+                if (!loadable_types.TryGetValue(mod.Code, out var loadableTypes))
+                {
+                    return;
+                }
+
+                loadableTypes = loadableTypes.AsEnumerable().Reverse().ToArray();
+
                 LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), CallOnUnloads);
             }
         );
@@ -295,9 +311,12 @@ internal static class HookLoader
         );
     }
 
-    private static void CallOnLoads(ILoadable instance)
+    private static void CallOnLoads(ILoadable instance, Mod mod)
     {
-        Debug.Assert(currentlyLoadingMod is not null);
+        // Normally we would use currentlyLoadingMod, but tPackBuilder breaks
+        // with this approach because it independently fucks up load orders.  We
+        // can just use the Mod instance passed to AddContent, thankfully.
+        // Debug.Assert(currentlyLoadingMod is not null);
 
         var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         foreach (var method in methods)
@@ -324,7 +343,7 @@ internal static class HookLoader
             }
 
             HookSubscriber.BuildWrapper<OnLoadHook.Definition>(method, instance)
-                          .Invoke(currentlyLoadingMod);
+                          .Invoke(/*currentlyLoadingMod*/ mod);
         }
     }
 
@@ -376,6 +395,33 @@ internal static class HookLoader
 
                 attribute.Apply(method, instance);
             }
+        }
+    }
+
+    private static void RunStaticConstructors(Type type)
+    {
+        var fields = type.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+
+        foreach (var field in fields)
+        {
+            var handle = field.FieldType.TypeHandle.Value;
+            if (!type_runs_cctor.TryGetValue(handle, out var runsStaticCtor))
+            {
+                runsStaticCtor = type_runs_cctor[handle] = field.FieldType.GetCustomAttribute<RunsStaticConstructorsAttribute>(inherit: false) is not null;
+            }
+
+            if (!runsStaticCtor)
+            {
+                continue;
+            }
+
+            if (field.GetCustomAttribute<DontForceStaticConstructorAttribute>(inherit: false) is not null)
+            {
+                continue;
+            }
+
+            RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+            return;
         }
     }
 }

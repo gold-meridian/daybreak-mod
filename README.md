@@ -2,7 +2,7 @@
 
 ---
 
-**DAYBREAK** is a library mod purpose-build for NIGHTSHADE and Wrath of the Gods. It mostly features APIs for advanced vanilla integration (focusing on perfectly replicating vanilla features or concepts) and utilities for obscure tasks, including rendering and IL editing.
+**DAYBREAK** is a library mod purpose-built for NIGHTSHADE and Wrath of the Gods. It mostly features APIs for advanced vanilla integration (focusing on perfectly replicating vanilla features or concepts) and utilities for obscure tasks, including rendering and IL editing.
 
 Current features:
 - transient asset replacement,
