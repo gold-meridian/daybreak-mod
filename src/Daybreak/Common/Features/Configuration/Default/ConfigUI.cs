@@ -6,6 +6,7 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Daybreak.Content.UI;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
@@ -29,27 +30,42 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
     public IConfigEntry? TargetEntry { get; protected set; }
 
-    protected UIElement? baseElement;
-    protected UIPanel? backPanel;
-    protected SplitDraggableElement? splitElement;
-    protected UIPanel? descriptionPanel;
-    protected UIText? descriptionText;
-    protected UIPanel? metadataPanel;
-    protected UIText? metadataText;
-    protected TabList? tabs;
-    protected UIScrollbar? tabScrollbar;
-    protected UIScrollbar? configScrollbar;
-    protected UITextPanel<LocalizedText>? headerPanel;
-    protected UITextPanel<LocalizedText>? backButton;
-    protected UITextPanel<LocalizedText>? saveButton;
-    protected SearchBar? searchBar;
+#region Elements
+    protected UIElement? BaseElement { get; set; }
+
+    protected UIPanel? BackPanel { get; set; }
+
+    protected SplitDraggableElement? SplitElement { get; set; }
+
+    protected UIPanel? DescriptionPanel { get; set; }
+
+    protected UIText? DescriptionText { get; set; }
+
+    protected UIPanel? MetadataPanel { get; set; }
+
+    protected UIText? MetadataText { get; set; }
+
+    protected TabList? Tabs { get; set; }
+
+    protected UIScrollbar? TabScrollbar { get; set; }
+
+    protected UIScrollbar? ConfigScrollbar { get; set; }
+
+    protected UITextPanel<LocalizedText>? HeaderPanel { get; set; }
+
+    protected UITextPanel<LocalizedText>? BackButton { get; set; }
+
+    protected UITextPanel<LocalizedText>? SaveButton { get; set; }
+
+    protected SearchBar? SearchBar { get; set; }
+#endregion
 
     private readonly Action? exitAction;
 
     // Not used in favor of exitAction.
     UIState? IHaveBackButtonCommand.PreviousUIState { get; set; } = null;
 
-    public ConfigState(
+    protected ConfigState(
         ConfigRepository repository,
         ConfigCategoryHandle? category = null,
         ConfigEntryHandle? entry = null,
@@ -91,162 +107,165 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         const float default_max_ratio = 0.5f;
         const float default_ratio = 1f / 3f;
 
-        baseElement = new UIElement();
+        BaseElement = new UIElement();
         {
-            baseElement.Width.Set(0f, 0.8f);
-            baseElement.MinWidth.Set(min_panel_width, 0f);
-            baseElement.MaxWidth.Set(max_panel_width, 0f);
+            BaseElement.Width.Set(0f, 0.8f);
+            BaseElement.MinWidth.Set(min_panel_width, 0f);
+            BaseElement.MaxWidth.Set(max_panel_width, 0f);
 
-            baseElement.Top.Set(vertical_margin, 0f);
-            baseElement.Height.Set(0f, 1f);
+            BaseElement.Top.Set(vertical_margin, 0f);
+            BaseElement.Height.Set(0f, 1f);
 
-            baseElement.HAlign = 0.5f;
+            BaseElement.HAlign = 0.5f;
         }
-        Append(baseElement);
+        Append(BaseElement);
 
-        backPanel = new UIPanel();
+        BackPanel = new UIPanel();
         {
-            backPanel.Width = StyleDimension.Fill;
-            backPanel.Height.Set(-vertical_margin * 1.75f, 1f);
-            backPanel.BackgroundColor = new Color(33, 43, 79) * 0.8f;
+            BackPanel.Width = StyleDimension.Fill;
+            BackPanel.Height.Set(-vertical_margin * 1.75f, 1f);
+            BackPanel.BackgroundColor = new Color(33, 43, 79) * 0.8f;
         }
-        baseElement.Append(backPanel);
+        BaseElement.Append(BackPanel);
 
-        splitElement = new SplitDraggableElement(default_min_ratio, default_max_ratio, default_ratio);
+        SplitElement = new SplitDraggableElement();
         {
-            splitElement.Height.Set(0f, 1f);
-            splitElement.Width.Set(0f, 1f);
+            SplitElement.MinRatio = default_min_ratio;
+            SplitElement.MaxRatio = default_max_ratio;
+            SplitElement.Ratio = default_ratio;
+            SplitElement.Height.Set(0f, 1f);
+            SplitElement.Width.Set(0f, 1f);
         }
-        backPanel.Append(splitElement);
+        BackPanel.Append(SplitElement);
 
-        descriptionPanel = new UIPanel();
+        DescriptionPanel = new UIPanel();
         {
-            descriptionPanel.Width.Set(0f, 1f);
-            descriptionPanel.Height.Set(64, 0f);
-            descriptionPanel.VAlign = 1f;
-            descriptionPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
-            descriptionPanel.BackgroundColor = DescriptionPanelColor;
-            descriptionPanel.BorderColor = Color.Transparent;
+            DescriptionPanel.Width.Set(0f, 1f);
+            DescriptionPanel.Height.Set(64, 0f);
+            DescriptionPanel.VAlign = 1f;
+            DescriptionPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
+            DescriptionPanel.BackgroundColor = DescriptionPanelColor;
+            DescriptionPanel.BorderColor = Color.Transparent;
 
-            descriptionText = new UIText(
+            DescriptionText = new UIText(
                 Mods.Daybreak.UI.DefaultConfigDescription.GetText()
             );
             {
-                descriptionText.Width.Set(0f, 1f);
-                descriptionText.Height.Set(0f, 1f);
-                descriptionText.IsWrapped = true;
+                DescriptionText.Width.Set(0f, 1f);
+                DescriptionText.Height.Set(0f, 1f);
+                DescriptionText.IsWrapped = true;
             }
-            descriptionPanel.Append(descriptionText);
+            DescriptionPanel.Append(DescriptionText);
         }
-        splitElement.Right.Append(descriptionPanel);
+        SplitElement.RightElement.Append(DescriptionPanel);
 
-        metadataPanel = new UIPanel();
+        MetadataPanel = new UIPanel();
         {
-            metadataPanel.Width.Set(0f, 1f);
-            metadataPanel.MinWidth.Set(110f, 0f);
-            metadataPanel.Height.Set(64, 0f);
-            metadataPanel.VAlign = 1f;
-            metadataPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
-            metadataPanel.BackgroundColor = DescriptionPanelColor;
-            metadataPanel.BorderColor = Color.Transparent;
+            MetadataPanel.Width.Set(0f, 1f);
+            MetadataPanel.MinWidth.Set(110f, 0f);
+            MetadataPanel.Height.Set(64, 0f);
+            MetadataPanel.VAlign = 1f;
+            MetadataPanel._backgroundTexture = AssetReferences.Assets.Images.UI.ConfigDescriptionPanel.Asset;
+            MetadataPanel.BackgroundColor = DescriptionPanelColor;
+            MetadataPanel.BorderColor = Color.Transparent;
 
-            metadataText = new UIText(
+            MetadataText = new UIText(
                 Mods.Daybreak.UI.DefaultMetadataDescription.GetText()
             );
             {
-                metadataText.Width.Set(0f, 1f);
-                metadataText.Height.Set(0f, 1f);
-                metadataText.IsWrapped = true;
-                metadataText.TextColor = Color.DarkGray;
+                MetadataText.Width.Set(0f, 1f);
+                MetadataText.Height.Set(0f, 1f);
+                MetadataText.IsWrapped = true;
+                MetadataText.TextColor = Color.DarkGray;
             }
-            metadataPanel.Append(metadataText);
+            MetadataPanel.Append(MetadataText);
         }
-        splitElement.Left.Append(metadataPanel);
+        SplitElement.LeftElement.Append(MetadataPanel);
 
-        searchBar = new(Language.GetText("UI.PlayerNameSlot"));
+        SearchBar = new SearchBar(Language.GetText("UI.PlayerNameSlot"));
         {
-            searchBar.MinWidth.Set(110f, 0f);
+            SearchBar.MinWidth.Set(110f, 0f);
         }
-        splitElement.Left.Append(searchBar);
+        SplitElement.LeftElement.Append(SearchBar);
 
-        float searchBarOffset = searchBar.Height.Pixels + 6f;
+        var searchBarOffset = SearchBar.Height.Pixels + 6f;
 
-        tabScrollbar = new UIScrollbar();
+        TabScrollbar = new UIScrollbar();
         {
             // It overflows by this amount of pixels vertically on the top and
             // bottom, for some reason.
             const float vertical_adjust = 6f;
 
-            tabScrollbar.Height.Set(-64f - backPanel.PaddingTop - searchBarOffset - (vertical_adjust * 2f), 1f);
-            tabScrollbar.Top.Set(searchBarOffset + vertical_adjust, 0f);
-            tabScrollbar.HAlign = 1f;
+            TabScrollbar.Height.Set(-64f - BackPanel.PaddingTop - searchBarOffset - (vertical_adjust * 2f), 1f);
+            TabScrollbar.Top.Set(searchBarOffset + vertical_adjust, 0f);
+            TabScrollbar.HAlign = 1f;
         }
-        splitElement.Left.Append(tabScrollbar);
+        SplitElement.LeftElement.Append(TabScrollbar);
 
         // Panel tabs
         {
             var container = new UIElement();
             {
-                container.Width.Set(-tabScrollbar.Width.Pixels - 4f, 1f);
-                container.Height.Set(-64f - backPanel.PaddingTop - searchBarOffset, 1f);
+                container.Width.Set(-TabScrollbar.Width.Pixels - 4f, 1f);
+                container.Height.Set(-64f - BackPanel.PaddingTop - searchBarOffset, 1f);
                 container.Top.Set(searchBarOffset, 0f);
             }
-            splitElement.Left.Append(container);
+            SplitElement.LeftElement.Append(container);
 
-            tabs = new TabList(Repository, TargetCategory, TargetEntry);
+            Tabs = new TabList(Repository, TargetCategory, TargetEntry);
             {
-                tabs.Width.Set(0f, 1f);
-                tabs.Height.Set(0f, 1f);
-                tabs.HAlign = 1f;
-                tabs.SetScrollbar(tabScrollbar);
+                Tabs.Width.Set(0f, 1f);
+                Tabs.Height.Set(0f, 1f);
+                Tabs.HAlign = 1f;
+                Tabs.SetScrollbar(TabScrollbar);
             }
-            container.Append(tabs);
+            container.Append(Tabs);
         }
 
-        headerPanel = new UITextPanel<LocalizedText>(
+        HeaderPanel = new UITextPanel<LocalizedText>(
             Repository.DisplayName,
             textScale: 0.8f,
             large: true
         );
         {
-            headerPanel.SetPadding(13f);
-            headerPanel.Top.Set(-44f, 0f);
-            headerPanel.HAlign = 0.5f;
-            headerPanel.BackgroundColor = UICommon.DefaultUIBlue;
+            HeaderPanel.SetPadding(13f);
+            HeaderPanel.Top.Set(-44f, 0f);
+            HeaderPanel.HAlign = 0.5f;
+            HeaderPanel.BackgroundColor = UICommon.DefaultUIBlue;
         }
-        backPanel.Append(headerPanel);
+        BackPanel.Append(HeaderPanel);
 
-        backButton = new UITextPanel<LocalizedText>(
+        BackButton = new UITextPanel<LocalizedText>(
             Language.GetText("UI.Back"),
             textScale: 0.7f,
             large: true
         );
         {
-            backButton.Width.Set(-8f, 0.5f);
-            backButton.Height.Set(50f, 0f);
-            backButton.Top.Set(-vertical_margin - 50, 0f);
-            backButton.VAlign = 1f;
-            backButton.HAlign = 0f;
-            backButton.OnLeftMouseDown += GoBackClick;
-            backButton.WithFadedMouseOver();
+            BackButton.Width.Set(-8f, 0.5f);
+            BackButton.Height.Set(50f, 0f);
+            BackButton.Top.Set(-vertical_margin - 50, 0f);
+            BackButton.VAlign = 1f;
+            BackButton.HAlign = 0f;
+            BackButton.OnLeftMouseDown += GoBackClick;
+            BackButton.WithFadedMouseOver();
         }
-        baseElement.Append(backButton);
+        BaseElement.Append(BackButton);
 
-        saveButton = new UITextPanel<LocalizedText>(
+        SaveButton = new UITextPanel<LocalizedText>(
             Language.GetText("tModLoader.ModConfigSaveConfig"),
             textScale: 0.7f,
             large: true
         );
         {
-            saveButton.Width.Set(-8f, 0.5f);
-            saveButton.Height.Set(50, 0f);
-            saveButton.Top.Set(-vertical_margin - 50, 0f);
-            saveButton.VAlign = 1f;
-            saveButton.HAlign = 1f;
-            saveButton.OnLeftMouseDown += GoBackClick;
-            saveButton.WithFadedMouseOver();
+            SaveButton.Width.Set(-8f, 0.5f);
+            SaveButton.Height.Set(50, 0f);
+            SaveButton.Top.Set(-vertical_margin - 50, 0f);
+            SaveButton.VAlign = 1f;
+            SaveButton.HAlign = 1f;
+            SaveButton.OnLeftMouseDown += GoBackClick;
+            SaveButton.WithFadedMouseOver();
         }
-        baseElement.Append(saveButton);
+        BaseElement.Append(SaveButton);
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -256,7 +275,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         UILinkPointNavigator.Shortcuts.BackButtonCommand = 7;
     }
 
-    protected void ExitState()
+    private void ExitState()
     {
         SoundEngine.PlaySound(in SoundID.MenuClose);
 
@@ -273,6 +292,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
     }
 
 #region Buttons
+    /*
     private void DescriptionMouseOver(UIMouseEvent evt, UIElement listeningElement)
     {
         // TODO
@@ -280,8 +300,9 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
     private void DescriptionMouseOut(UIMouseEvent evt, UIElement listeningElement)
     {
-        descriptionText?.SetText(Mods.Daybreak.UI.DefaultConfigDescription.GetText());
+        DescriptionText?.SetText(Mods.Daybreak.UI.DefaultConfigDescription.GetText());
     }
+    */
 
     void IHaveBackButtonCommand.HandleBackButtonUsage()
     {
@@ -295,7 +316,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 #endregion
 }
 
-internal class TabList : FadedList
+internal sealed class TabList : FadedList
 {
     public event Action<ConfigCategory>? OnCategorySelected;
 
@@ -305,10 +326,7 @@ internal class TabList : FadedList
 
         set
         {
-            if (Category is not null)
-            {
-                this[Category.Handle.Mod]?.Selected = false;
-            }
+            this[Category.Handle.Mod]?.Selected = false;
 
             OpenCategory(value);
 
@@ -401,12 +419,14 @@ internal class TabList : FadedList
 
     private void ModGroup_OnCategorySelected(ConfigCategory category)
     {
-        if (Category != category)
+        if (Category == category)
         {
-            Category = category;
-            OnCategorySelected?.Invoke(Category);
-            SoundEngine.PlaySound(SoundID.MenuOpen);
+            return;
         }
+
+        Category = category;
+        OnCategorySelected?.Invoke(Category);
+        SoundEngine.PlaySound(SoundID.MenuOpen);
     }
 
     public override void OnActivate()
@@ -414,11 +434,11 @@ internal class TabList : FadedList
         OpenCategory(Category, true);
     }
 
-    public void OpenCategory(ConfigCategory category, bool scroll = false)
+    private void OpenCategory(ConfigCategory category, bool scroll = false)
     {
-        var elem = _items.FirstOrDefault(m => m is ModGroup group && group.Mod == category.Handle.Mod);
+        var elem = _items.FirstOrDefault(m => m is ModGroup g && g.Mod == category.Handle.Mod);
 
-        if (elem is null || elem is not ModGroup group)
+        if (elem is not ModGroup group)
         {
             return;
         }
@@ -433,9 +453,9 @@ internal class TabList : FadedList
         }
     }
 
-    protected abstract class TextTab<T> : UIAutoScaleTextTextPanel<T>
+    private abstract class TextTab<T> : UIAutoScaleTextTextPanel<T>
     {
-        public TextTab(T text, Asset<Texture2D>? icon = null) : base(text, 1f, false)
+        protected TextTab(T text, Asset<Texture2D>? icon = null) : base(text)
         {
             BackgroundColor = Color.Transparent;
             BorderColor = Color.Transparent;
@@ -449,7 +469,7 @@ internal class TabList : FadedList
             // Makes the text respond to padding.
             UseInnerDimensions = true;
 
-            bool useIcon = icon is not null;
+            var useIcon = icon is not null;
 
             // Icon
             {
@@ -472,6 +492,11 @@ internal class TabList : FadedList
             }
 
             Recalculate();
+        }
+
+        public sealed override void Recalculate()
+        {
+            base.Recalculate();
         }
 
         protected sealed class Icon : UIElement
@@ -510,7 +535,7 @@ internal class TabList : FadedList
         }
     }
 
-    protected class ModGroup : TextTab<string>
+    private sealed class ModGroup : TextTab<string>
     {
         private const float tab_height = 32f;
 
@@ -556,18 +581,16 @@ internal class TabList : FadedList
 
         public bool Open { get; private set; }
 
-        protected bool hoveringHeader;
+        private bool hoveringHeader;
 
         private int hoverProgress;
         private int openProgress;
 
         private readonly UIHorizontalSeparator dimDivider;
         private readonly UIHorizontalSeparator highlightDivider;
-
-        protected readonly Icon dropdownIcon;
-
-        protected readonly UIElement listContainer;
-        protected readonly UIList list;
+        private readonly Icon dropdownIcon;
+        private readonly UIElement listContainer;
+        private readonly UIList list;
 
         public ModGroup(Mod? mod, IEnumerable<ConfigCategory> categories, ConfigCategory? targetCategory) : base(mod?.DisplayName ?? "Terraria", GetModSmallIcon(mod))
         {
@@ -671,15 +694,19 @@ internal class TabList : FadedList
 
             list.MinHeight.Set(list.GetTotalHeight(), 0f);
 
+            return;
+
             void OnClickTab(UIMouseEvent evt, UIElement listeningElement)
             {
-                if (listeningElement is CategoryTab tab)
+                if (listeningElement is not CategoryTab tab)
                 {
-                    Selected = true;
-                    tab.Selected = true;
-
-                    OnCategorySelected?.Invoke(tab.Category);
+                    return;
                 }
+
+                Selected = true;
+                tab.Selected = true;
+
+                OnCategorySelected?.Invoke(tab.Category);
             }
         }
 
@@ -689,29 +716,26 @@ internal class TabList : FadedList
             {
                 return AssetReferences.Assets.Images.Configuration.ModIcon_Terraria.Asset;
             }
-            else if (mod is ModLoaderMod)
+
+            if (mod is ModLoaderMod)
             {
                 return AssetReferences.Assets.Images.Configuration.ModIcon_ModLoader.Asset;
             }
 
-            if (mod.RequestAssetIfExists<Texture2D>("icon_small", out var iconSmall))
-            {
-                return iconSmall;
-            }
-
-            return null;
+            return mod.RequestAssetIfExists<Texture2D>("icon_small", out var iconSmall) ? iconSmall : null;
         }
 
         public override void LeftMouseDown(UIMouseEvent evt)
         {
             base.LeftMouseDown(evt);
 
-            if (!Selected && hoveringHeader)
+            if (Selected || !hoveringHeader)
             {
-                Open = !Open;
-
-                SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
+                return;
             }
+
+            Open = !Open;
+            SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
         }
 
         public override void Update(GameTime gameTime)
@@ -720,7 +744,7 @@ internal class TabList : FadedList
 
             var mousePosition = UserInterface.ActiveInstance.MousePosition;
 
-            bool wasHoveringHeader = hoveringHeader;
+            var wasHoveringHeader = hoveringHeader;
             hoveringHeader = IsMouseHovering && this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
 
             if (!Selected && hoveringHeader && !wasHoveringHeader)
@@ -747,11 +771,11 @@ internal class TabList : FadedList
             {
                 openProgress = MathHelper.Clamp(openProgress + Open.ToDirectionInt(), 0, open_frames);
 
-                float eased = Ease(openProgress / (float)open_frames);
+                var eased = Ease(openProgress / (float)open_frames);
 
                 dropdownIcon.Rotation = MathHelper.PiOver2 * eased;
 
-                float height = list.GetTotalHeight() * eased;
+                var height = list.GetTotalHeight() * eased;
 
                 listContainer.MinHeight.Set(height, 0f);
                 listContainer.MaxHeight.Set(height, 0f);
@@ -769,7 +793,7 @@ internal class TabList : FadedList
         }
     }
 
-    protected class CategoryTab : TextTab<LocalizedText>
+    private sealed class CategoryTab : TextTab<LocalizedText>
     {
         private static Color SelectedColor => Color.White;
 
@@ -817,7 +841,7 @@ internal class TabList : FadedList
         private readonly UIHorizontalSeparator highlightDivider;
         private readonly UIHorizontalSeparator selectDivider;
 
-        public ConfigCategory Category;
+        public ConfigCategory Category { get; }
 
         public CategoryTab(ConfigCategory category) : base(category.DisplayName)
         {
@@ -886,6 +910,8 @@ internal class TabList : FadedList
                 highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
                 selectDivider.Width.Set(0f, Ease(selectProgress / (float)hover_frames));
             }
+
+            return;
 
             static float Ease(float x)
             {

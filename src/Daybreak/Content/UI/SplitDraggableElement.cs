@@ -1,5 +1,7 @@
-﻿using Daybreak.Common.Features.Hooks;
-using Daybreak.Core;
+﻿using System;
+using Daybreak.Common.Features.Hooks;
+using Daybreak.Common.Rendering;
+using Daybreak.Common.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
@@ -9,62 +11,56 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace Daybreak.Common.UI;
+namespace Daybreak.Content.UI;
 
-public class SplitDraggableElement : UIElement
+internal class SplitDraggableElement : UIElement
 {
-    protected const float divider_width = 6f;
+    private const float divider_width = 6f;
+    private static readonly Color base_divider_color = new(85, 88, 159);
 
-    protected static Color baseDividerColor { get; } = new Color(85, 88, 159);
+    public float MinRatio { get; set; }
 
-    public float MinRatio { get; protected set; }
+    public float MaxRatio { get; set; }
 
-    public float MaxRatio { get; protected set; }
+    public float Ratio { get; set; }
 
-    public float Ratio { get; protected set; }
+    public UIElement LeftElement { get; }
 
-    public readonly UIElement Left;
-    public readonly UIElement Right;
+    public UIElement RightElement { get; }
 
-    protected readonly UIElement dividerContainer;
+    private readonly UIElement dividerContainer;
+    private bool isDragging;
+    private static bool showCursor;
 
-    protected bool isDragging;
-
-    protected static bool showCursor;
-
-    public SplitDraggableElement(float minRatio, float maxRatio, float ratio)
+    public SplitDraggableElement()
     {
-        MinRatio = minRatio;
-        MaxRatio = maxRatio;
+        const float horizontal_padding = divider_width * 0.5f + 2f;
 
-        Ratio = ratio;
-
-        float horizontalPadding = (divider_width * 0.5f) + 2f;
-
-        Left = new UIElement();
+        LeftElement = new UIElement();
         {
-            Left.PaddingRight += horizontalPadding;
+            LeftElement.PaddingRight += horizontal_padding;
 
-            Left.Height.Set(0f, 1f);
-            Left.Width.Set(0, Ratio);
-            Left.OverflowHidden = true;
+            LeftElement.Height.Set(0f, 1f);
+            LeftElement.Width.Set(0, Ratio);
+            LeftElement.OverflowHidden = true;
         }
-        Append(Left);
+        Append(LeftElement);
 
-        Right = new UIElement();
+        RightElement = new UIElement();
         {
-            Right.PaddingLeft += horizontalPadding;
+            RightElement.PaddingLeft += horizontal_padding;
 
-            Right.Height.Set(0f, 1f);
-            Right.Width.Set(0, 1f - Ratio);
-            Right.HAlign = 1f;
-            Right.OverflowHidden = true;
+            RightElement.Height.Set(0f, 1f);
+            RightElement.Width.Set(0, 1f - Ratio);
+            RightElement.HAlign = 1f;
+            RightElement.OverflowHidden = true;
         }
-        Append(Right);
+        Append(RightElement);
 
         // Divider
         {
-            // Use a container element to adjust the spacing of the divider and allow inputs on it.
+            // Use a container element to adjust the spacing of the divider and
+            // allow inputs on it.
             dividerContainer = new UIElement();
             {
                 dividerContainer.Width.Set(divider_width, 0f);
@@ -84,10 +80,12 @@ public class SplitDraggableElement : UIElement
 
                 divider.HAlign = 0.5f;
 
-                divider.Color = baseDividerColor;
+                divider.Color = base_divider_color;
             }
             dividerContainer.Append(divider);
         }
+
+        return;
 
         void HoverDivider(UIMouseEvent evt, UIElement listeningElement)
         {
@@ -118,26 +116,26 @@ public class SplitDraggableElement : UIElement
         }
 
         var dims = this.Dimensions;
+        var mousePosition = UserInterface.ActiveInstance.MousePosition;
+        var mouseRatio = (mousePosition.X - dims.X) / dims.Width;
 
-        Vector2 mousePosition = UserInterface.ActiveInstance.MousePosition;
+        var min = MathHelper.Max(LeftElement.MinWidth.GetValue(dims.Width) / dims.Width, MinRatio);
+        var max = MathHelper.Min(1f - RightElement.MinWidth.GetValue(dims.Width) / dims.Width, MaxRatio);
 
-        float mouseRatio = (mousePosition.X - dims.X) / dims.Width;
-
-        float min = MathHelper.Max(Left.MinWidth.GetValue(dims.Width) / dims.Width, MinRatio);
-        float max = MathHelper.Min(1f - (Right.MinWidth.GetValue(dims.Width) / dims.Width), MaxRatio);
-
-        float oldRatio = Ratio;
+        var oldRatio = Ratio;
         Ratio = MathHelper.Clamp(mouseRatio, min, max);
 
-        if (Ratio != oldRatio)
+        if (Math.Abs(Ratio - oldRatio) <= 0.001f)
         {
-            dividerContainer.Left.Set(-divider_width * 0.5f, Ratio);
-
-            Left.Width.Set(0, Ratio);
-            Right.Width.Set(0, 1f - Ratio);
-
-            Recalculate();
+            return;
         }
+
+        dividerContainer.Left.Set(-divider_width * 0.5f, Ratio);
+
+        LeftElement.Width.Set(0, Ratio);
+        RightElement.Width.Set(0, 1f - Ratio);
+
+        Recalculate();
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -148,11 +146,9 @@ public class SplitDraggableElement : UIElement
     }
 
 #region Cursor Edit
-
     [OnLoad]
-    private static void Load()
+    private static void ApplyHooks()
     {
-        // IL_Main.DrawInterface_36_Cursor += DrawInterface_36_Cursor_DrawHorizontalDragCursor;
         IL_Main.DrawMenu += DrawMenu_DrawHorizontalDragCursor;
     }
 
@@ -162,9 +158,7 @@ public class SplitDraggableElement : UIElement
 
         var jumpDrawCursorTarget = c.DefineLabel();
 
-        c.GotoNext(MoveType.Before,
-            i => i.MatchLdcI4(0),
-            i => i.MatchCall<Main>(nameof(Main.DrawThickCursor)));
+        c.GotoNext(MoveType.Before, x => x.MatchCall<Main>(nameof(Main.DrawThickCursor)));
 
         c.EmitDelegate(
             () =>
@@ -174,40 +168,33 @@ public class SplitDraggableElement : UIElement
                     return false;
                 }
 
-                Texture2D texture = AssetReferences.Assets.Images.UI.HorizontalDragCursor.Asset.Value;
-
+                var texture = Assets.Images.UI.HorizontalDragCursor.Asset.Value;
                 var position = new Vector2(Main.mouseX, Main.mouseY);
-
                 var origin = texture.Size() * 0.5f;
 
                 Main.spriteBatch.Draw(
-                    texture,
-                    position,
-                    null,
-                    Color.White,
-                    0f,
-                    origin,
-                    Main.cursorScale,
-                    SpriteEffects.None,
-                    0f);
+                    new DrawParameters(texture)
+                    {
+                        Position = position,
+                        Origin = origin,
+                        Scale = new Vector2(Main.cursorScale),
+                    }
+                );
 
                 showCursor = false;
-
                 return true;
             }
         );
 
         c.EmitBrtrue(jumpDrawCursorTarget);
 
-        c.GotoNext(MoveType.After,
-            i => i.MatchLdcI4(0),
-            i => i.MatchCall<Main>(nameof(Main.DrawCursor)));
+        c.GotoNext(MoveType.After, x => x.MatchCall<Main>(nameof(Main.DrawCursor)));
 
         c.MarkLabel(jumpDrawCursorTarget);
     }
 
+    // Only works in-game?
     /*
-     * Only works ingame ??
     private static void DrawInterface_36_Cursor_DrawHorizontalDragCursor(ILContext il)
     {
         var c = new ILCursor(il);
@@ -255,6 +242,5 @@ public class SplitDraggableElement : UIElement
         c.MarkLabel(jumpRetTarget);
     }
     */
-
 #endregion
 }

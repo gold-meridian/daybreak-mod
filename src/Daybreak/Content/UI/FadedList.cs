@@ -1,13 +1,14 @@
 ﻿using Daybreak.Common.Rendering;
+using Daybreak.Common.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 
-namespace Daybreak.Common.UI;
+namespace Daybreak.Content.UI;
 
-public class FadedList : UIList
+internal class FadedList : UIList
 {
     protected override void DrawChildren(SpriteBatch spriteBatch)
     {

@@ -2,54 +2,88 @@
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.Localization;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
 namespace Daybreak.Common.UI;
 
+/// <summary>
+///     An interface panel accepting complex text input.
+/// </summary>
 public class InputField : UIPanel
 {
-    private readonly float textScale;
+    /// <summary>
+    ///     The scale of the text in the field.
+    /// </summary>
+    public float TextScale { get; set; } = 1f;
 
-    protected int mousePosition;
+    /// <summary>
+    ///     The text within the field.
+    /// </summary>
+    public string Text { get; set; } = string.Empty;
 
-    protected bool writing;
+    /// <summary>
+    ///     The hint to display when there is no text.
+    /// </summary>
+    public Func<string> Hint { get; }
 
-    // The text from before writing started.
-    private string lastText = string.Empty;
+    /// <summary>
+    ///     The maximum number of characters allowed to be entered.
+    /// </summary>
+    public int MaxChars { get; set; } = 100;
 
-    private string oldText;
+    /// <summary>
+    ///     Any characters which may not be entered into the field.
+    /// </summary>
+    public HashSet<char> BlacklistedChars { get; } = [];
 
-    public string Text;
+    /// <summary>
+    ///     If populated, only these characters will be allowed to be entered in
+    ///     the field.  Any characters that are also in
+    ///     <see cref="BlacklistedChars"/> will still be ignored.
+    /// </summary>
+    public HashSet<char> WhitelistedChars { get; } = [];
 
-    public string Hint;
+    /// <summary>
+    ///     The horizontal alignment of text within the field, represented as a
+    ///     [0,1] float serving as a percentage.
+    /// </summary>
+    public float TextAlignX { get; set; }
 
-    public int MaxChars;
-
-    public char[] BlacklistedChars = [];
-
-    public char[] WhitelistedChars = [];
-
-    public float TextAlignX;
-
+    /// <summary>
+    ///     Ran on the frame that this field begins capturing input.
+    /// </summary>
     public event Action<InputField>? OnEnter;
 
-    public event Action<InputField>? OnTextChanged;
-
+    /// <summary>
+    ///     Ran of the frame that this field stops capturing input.
+    /// </summary>
     public event Action<InputField>? OnEscape;
 
-    public InputField(string hint, int maxChars, float textScale = 1f)
-    {
-        Text = string.Empty;
-        Hint = hint;
-        MaxChars = maxChars;
+    /// <summary>
+    ///     Ran every time the text is modified.
+    /// </summary>
+    public event Action<InputField>? OnTextChanged;
 
-        this.textScale = textScale;
+    private int mousePosition;
+    private bool currentlyWriting;
+
+    // The text from before writing started.
+    private string? lastText;
+    private string? oldText;
+
+    /// <summary>
+    ///     Initializes this input field with some default styling.
+    /// </summary>
+    public InputField(Func<string> hint)
+    {
+        Hint = hint;
 
         _backgroundTexture = AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
         BorderColor = Color.Transparent;
@@ -63,28 +97,37 @@ public class InputField : UIPanel
         PaddingRight = 6f;
     }
 
+    /// <inheritdoc />
+    public InputField(string hint) : this(() => hint) { }
+
+    /// <inheritdoc />
+    public InputField(LocalizedText text) : this(() => text.Value) { }
+
+    /// <inheritdoc />
     public override void LeftMouseDown(UIMouseEvent evt)
     {
         base.LeftMouseDown(evt);
 
-        if (evt.Target != this ||
-            !this.InnerDimensions.Contains(evt.MousePosition.ToPoint()))
+        if (evt.Target != this || !this.InnerDimensions.Contains(evt.MousePosition.ToPoint()))
         {
-            writing = false;
+            currentlyWriting = false;
             return;
         }
 
-        writing = true;
+        currentlyWriting = true;
         lastText = Text;
 
         InputHelpers.CursorPositon = 0;
 
         if (Text.Length <= 0)
+        {
             return;
+        }
 
         InputHelpers.CursorPositon = mousePosition;
     }
 
+    /// <inheritdoc />
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
@@ -96,8 +139,7 @@ public class InputField : UIPanel
 
         oldText = Text;
 
-        int cap = MaxChars;
-
+        var cap = MaxChars;
         if (Text.Length > cap)
         {
             Text = Text[..cap];
@@ -105,99 +147,109 @@ public class InputField : UIPanel
             mousePosition = Math.Min(mousePosition, cap);
         }
 
-        bool clickedOff =
-            !Main.hasFocus ||
-            (Main.mouseLeft &&
-            !IsMouseHovering);
-
-        if (clickedOff && writing)
+        var clickedOff = !Main.hasFocus || (Main.mouseLeft && !IsMouseHovering);
+        if (!clickedOff || !currentlyWriting)
         {
-            OnEnter?.Invoke(this);
-            writing = false;
+            return;
         }
+
+        OnEnter?.Invoke(this);
+        currentlyWriting = false;
     }
 
     private void HandleInput()
     {
         InputHelpers.WritingText = true;
 
-        switch (InputHelpers.GetInput(Text, out string newText, false, BlacklistedChars, WhitelistedChars))
+        var cancellationType = InputHelpers.GetInput(
+            Text,
+            out var newText,
+            false,
+            BlacklistedChars,
+            WhitelistedChars
+        );
+        switch (cancellationType)
         {
             case InputCancellationType.Confirmed:
                 Text = newText;
                 OnEnter?.Invoke(this);
-                writing = false;
+                currentlyWriting = false;
                 break;
 
             case InputCancellationType.Escaped:
-                Text = lastText;
+                Text = lastText ?? string.Empty;
                 OnEscape?.Invoke(this);
-                writing = false;
+                currentlyWriting = false;
                 break;
 
+            case InputCancellationType.None:
             default:
                 Text = newText;
                 break;
         }
     }
 
+    /// <inheritdoc />
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
         base.DrawSelf(spriteBatch);
-
-        Rectangle dims = this.InnerDimensions;
 
         spriteBatch.End(out var ss);
 
         var oldScissor = spriteBatch.GraphicsDevice.ScissorRectangle;
         spriteBatch.GraphicsDevice.ScissorRectangle = GetClippingRectangle(spriteBatch);
 
-        float cursorMargin = 5f * textScale;
-
-        dims.Width -= (int)cursorMargin;
+        var dims = this.InnerDimensions;
+        var cursorMargin = 5f * TextScale;
+        {
+            dims.Width -= (int)cursorMargin;
+        }
 
         spriteBatch.Begin(ss with { RasterizerState = OverflowHiddenRasterizerState });
         {
-            DynamicSpriteFont font = FontAssets.MouseText.Value;
+            var hint = Hint();
 
-            Vector2 position = new(dims.X + (dims.Width * TextAlignX), dims.Y + (dims.Height * .5f) + 4);
-
-            Vector2 textSize = font.MeasureString(Text == string.Empty ? Hint : Text);
-            Vector2 origin = new(textSize.X * TextAlignX, textSize.Y * .5f);
+            var font = FontAssets.MouseText.Value;
+            var position = new Vector2(dims.X + dims.Width * TextAlignX, dims.Y + dims.Height * 0.5f + 4);
+            var textSize = font.MeasureString(Text == string.Empty ? hint : Text);
+            var origin = new Vector2(textSize.X * TextAlignX, textSize.Y * 0.5f);
 
             if (Text == string.Empty)
             {
                 ChatManager.DrawColorCodedStringWithShadow(
                     spriteBatch,
                     font,
-                    Hint,
+                    hint,
                     position,
                     Color.Gray,
                     0f,
                     origin,
-                    new(textScale));
+                    new Vector2(TextScale)
+                );
             }
             else
             {
-                int cursorIndex = Math.Min(InputHelpers.CursorPositon, Text.Length);
+                var cursorIndex = Math.Min(InputHelpers.CursorPositon, Text.Length);
 
-                // Move the text position based on the cursor when text is out of the frame.
-                if (writing && textSize.X >= dims.Width)
+                // Move the text position based on the cursor when text is out
+                // of the frame.
+                if (currentlyWriting && textSize.X >= dims.Width)
                 {
-                    float cursorPosition = font.MeasureString(Text[..cursorIndex]).X;
+                    var cursorPosition = font.MeasureString(Text[..cursorIndex]).X;
+                    {
+                        cursorPosition -= origin.X;
+                    }
 
-                    cursorPosition -= origin.X;
+                    var offset = cursorPosition * TextScale;
 
-                    float offset = cursorPosition * textScale;
-
-                    float width =
-                        Math.Sign(offset) <= 0 ?
-                        (dims.Width * TextAlignX) :
-                        (dims.Width * (1f - TextAlignX));
+                    var width = Math.Sign(offset) <= 0
+                        ? (dims.Width * TextAlignX)
+                        : (dims.Width * (1f - TextAlignX));
 
                     offset = Utils.Remap(Math.Abs(offset), width, textSize.X, 0f, textSize.X - width) * Math.Sign(offset);
-
-                    position.X -= offset;
+                    {
+                        position.X -= offset;
+                    }
                 }
 
                 spriteBatch.DrawInputStringWithShadow(
@@ -208,10 +260,11 @@ public class InputField : UIPanel
                     Color.White,
                     0f,
                     origin,
-                    new(textScale),
+                    new Vector2(TextScale),
                     out mousePosition,
-                    writing,
-                    cursorIndex);
+                    currentlyWriting,
+                    cursorIndex
+                );
             }
         }
         spriteBatch.End();
@@ -220,7 +273,7 @@ public class InputField : UIPanel
 
         spriteBatch.Begin(in ss);
 
-        if (writing)
+        if (currentlyWriting)
         {
             HandleInput();
         }

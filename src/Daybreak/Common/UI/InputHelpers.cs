@@ -13,7 +13,6 @@ using Terraria;
 using Terraria.GameInput;
 using Terraria.Initializers;
 using Terraria.UI.Chat;
-using static ReLogic.Graphics.DynamicSpriteFont;
 
 namespace Daybreak.Common.UI;
 
@@ -21,12 +20,13 @@ internal enum InputCancellationType : byte
 {
     None,
     Escaped,
-    Confirmed
+    Confirmed,
 }
 
 /// <summary>
-/// Simpler input system based on Vanilla's <see cref="Main.GetInputText"/>;
-/// with logic for input cancellation via the <see cref="InputCancellationType"/> enum.
+///     Simpler input system based on Vanilla's <see cref="Main.GetInputText"/>
+///     with logic for input cancellation via the
+///     <see cref="InputCancellationType"/> enum.
 /// </summary>
 internal static class InputHelpers
 {
@@ -36,7 +36,7 @@ internal static class InputHelpers
 
     private static readonly char[] invalidChars =
         [.. Enumerable.Range('\x0', '\x1F' + 1).Select(i => (char)i), // Invisible characters from Null to Unit Separator, stopping before Space.
-        '\x7F' // Delete.
+        '\x7F',                                                       // Delete.
         ];
 
     private static int backspaceTimer = key_timer_delay;
@@ -45,7 +45,7 @@ internal static class InputHelpers
 
     private static int rightArrowTimer = key_timer_delay;
 
-    private static readonly StringBuilder keyStroke = new();
+    private static readonly StringBuilder keyStroke = new StringBuilder();
 
     // Stores the state of WritingText for use outside of drawing scopes.
     private static bool wasWritingText;
@@ -89,7 +89,9 @@ internal static class InputHelpers
     {
         if (WritingText &&
             keyStroke.Length <= max_stroke_length)
+        {
             keyStroke.Append(key);
+        }
     }
 
     private static void FancyExit_IgnoreExitIfWriting(On_UILinksInitializer.orig_FancyExit orig)
@@ -116,7 +118,9 @@ internal static class InputHelpers
         WritingText &= Main.hasFocus;
 
         if (!WritingText)
+        {
             return InputCancellationType.None;
+        }
 
         Main.instance.HandleIME();
 
@@ -163,13 +167,13 @@ internal static class InputHelpers
 
         // Special actions
         {
-            bool controlPressed =
+            var controlPressed =
                 (Keys.LeftControl.Pressed ||
                 Keys.RightControl.Pressed) &&
                 !Keys.LeftAlt.Pressed &&
                 !Keys.RightAlt.Pressed;
 
-            bool shiftPressed =
+            var shiftPressed =
                 Keys.LeftShift.Pressed ||
                 Keys.RightShift.Pressed;
 
@@ -198,7 +202,7 @@ internal static class InputHelpers
                 (controlPressed && Keys.V.JustPressed) ||
                 (shiftPressed && Keys.Insert.JustPressed))
             {
-                string paste = RemoveInvalidCharacters(GetPaste(output, allowLineBreaks));
+                var paste = RemoveInvalidCharacters(GetPaste(output, allowLineBreaks));
 
                 output = output.Insert(CursorPositon, paste);
 
@@ -210,7 +214,7 @@ internal static class InputHelpers
         {
             if (keyStroke.Length >= 1)
             {
-                string stroke = RemoveInvalidCharacters(keyStroke.ToString());
+                var stroke = RemoveInvalidCharacters(keyStroke.ToString());
 
                 keyStroke.Clear();
 
@@ -265,7 +269,7 @@ internal static class InputHelpers
 
         string RemoveInvalidCharacters(string input)
         {
-            foreach (char c in blacklistedChars)
+            foreach (var c in blacklistedChars)
             {
                 input = input.Replace(c.ToString(), string.Empty);
             }
@@ -273,7 +277,7 @@ internal static class InputHelpers
             if (whitelistedChars is not null &&
                 whitelistedChars.Any())
             {
-                input = new(input.Where(c => whitelistedChars.Contains(c)).ToArray());
+                input = new string(input.Where(c => whitelistedChars.Contains(c)).ToArray());
             }
 
             return input;
@@ -337,7 +341,7 @@ internal static class InputHelpers
         float spread = 2f)
     {
         // Mirrors the matrix created by DynamicSpriteFont.InternalDraw.
-        Matrix matrix = Matrix.CreateTranslation(-origin.X * scale.X, -origin.Y * scale.Y, 0f) * Matrix.CreateRotationZ(rotation);
+        var matrix = Matrix.CreateTranslation(-origin.X * scale.X, -origin.Y * scale.Y, 0f) * Matrix.CreateRotationZ(rotation);
 
         spriteBatch.DrawStringWithShadow(font, text, position, color, shadowColor, rotation, origin, scale, spread);
 
@@ -345,9 +349,9 @@ internal static class InputHelpers
             blinkerIndex != -1 &&
             Main.GlobalTimeWrappedHourly % .666f > .333f)
         {
-            float blinkerX = font.MeasureString(text[..blinkerIndex]).X;
+            var blinkerX = font.MeasureString(text[..blinkerIndex]).X;
 
-            Vector2 blinkerPosition = position + Vector2.Transform(new(blinkerX, 0), matrix);
+            var blinkerPosition = position + Vector2.Transform(new Vector2(blinkerX, 0), matrix);
 
             spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, shadowColor, rotation, Vector2.Zero, scale, spread);
         }
@@ -357,18 +361,18 @@ internal static class InputHelpers
             mousePosition -= position;
             mousePosition = Vector2.Transform(mousePosition, matrix);
 
-            bool first = true;
-            float lastKerning = 0f;
+            var first = true;
+            var lastKerning = 0f;
 
-            float totalWidth = -origin.X * 2;
+            var totalWidth = -origin.X * 2;
 
             hoveredChar = 0;
 
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
-                char c = text[i];
+                var c = text[i];
 
-                Vector2 charSize = font.MeasureChar(c, first, scale, lastKerning, out lastKerning);
+                var charSize = font.MeasureChar(c, first, scale, lastKerning, out lastKerning);
 
                 if (mousePosition.X >= totalWidth && mousePosition.X <= totalWidth + charSize.X)
                 {
@@ -400,7 +404,7 @@ internal static class InputHelpers
     {
         if (spread > 0f)
         {
-            for (int i = 0; i < ChatManager.ShadowDirections.Length; i++)
+            for (var i = 0; i < ChatManager.ShadowDirections.Length; i++)
                 spriteBatch.DrawString(font, text, position + ChatManager.ShadowDirections[i] * spread, shadowColor, rotation, origin, scale, SpriteEffects.None, 0f);
         }
 
@@ -409,16 +413,20 @@ internal static class InputHelpers
 
     private static Vector2 MeasureChar(this DynamicSpriteFont font, char c, bool firstChar, Vector2 scale, float lastKerning, out float kerningZ)
     {
-        Vector2 output = Vector2.Zero;
+        var output = Vector2.Zero;
         output.Y = font.LineSpacing;
 
-        SpriteCharacterData characterData = font.GetCharacterData(c);
-        Vector3 kerning = characterData.Kerning;
+        var characterData = font.GetCharacterData(c);
+        var kerning = characterData.Kerning;
 
         if (firstChar)
+        {
             kerning.X = Math.Max(kerning.X, 0f);
+        }
         else
+        {
             output.X += font.CharacterSpacing + lastKerning;
+        }
 
         output.X += kerning.X + kerning.Y;
 
