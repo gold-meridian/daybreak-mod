@@ -783,7 +783,7 @@ internal sealed class TabList : FadedList
             {
                 openProgress = MathHelper.Clamp(openProgress + Open.ToDirectionInt(), 0, open_frames);
 
-                var eased = Ease(openProgress / (float)open_frames);
+                var eased = Open ? Ease(openProgress / (float)open_frames) : EaseClose(openProgress / (float)open_frames);
 
                 dropdownIcon.Rotation = MathHelper.PiOver2 * eased;
 
@@ -801,7 +801,17 @@ internal sealed class TabList : FadedList
         private static float Ease(float x)
         {
             // return x < 0.5f ? 4 * x * x * x : 1 - MathF.Pow(-2 * x + 2, 3) / 2;
-            return 1 - MathF.Pow(1 - x, 5);
+            return MathF.Sqrt(1 - MathF.Pow(x - 1, 2));
+        }
+
+        private static float EaseClose(float x)
+        {
+            return x * x;
+        }
+
+        private static float InverseEase(float x)
+        {
+            return 1f - Ease(1f - x);
         }
     }
 
