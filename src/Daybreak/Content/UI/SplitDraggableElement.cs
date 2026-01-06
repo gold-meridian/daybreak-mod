@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.UI;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.UI;
@@ -158,7 +159,8 @@ internal class SplitDraggableElement : UIElement
 
         var jumpDrawCursorTarget = c.DefineLabel();
 
-        c.GotoNext(MoveType.Before, x => x.MatchCall<Main>(nameof(Main.DrawThickCursor)));
+        c.GotoNext(x => x.MatchCall<Main>(nameof(Main.DrawThickCursor)));
+        c.GotoPrev(MoveType.After, x => x.MatchCallvirt<IssueReportsIndicator>(nameof(IssueReportsIndicator.Draw)));
 
         c.EmitDelegate(
             () =>
