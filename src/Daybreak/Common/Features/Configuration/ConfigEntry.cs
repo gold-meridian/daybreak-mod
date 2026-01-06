@@ -65,7 +65,7 @@ public interface IConfigEntry : IConfigEntryMetadata
     ///     entry and obtain it as necessary.
     /// </summary>
     ConfigEntryHandle Handle { get; }
-    
+
     /// <summary>
     ///     Commits any pending values to this entry and performs necessary
     ///     saving and syncing of data.
@@ -235,7 +235,7 @@ public interface IConfigEntry<T> : IConfigEntryValues<T>
     ///     no value, and it will be skipped.
     /// </summary>
     JToken? Serialize(ConfigValue<T> value);
-    
+
     JToken? IConfigEntry.BoxedDefaultSerialize(ConfigValueLayer layer)
     {
         return Serialize(GetLayerValue(layer));
@@ -584,9 +584,12 @@ public class ConfigEntry<T> : IConfigEntry<T>
             : throw new InvalidOperationException("Config entries must be supplied at least one category: " + Handle);
 
         values = new TransformableValueStack<T>(this);
+
+        var defaultValue = Options.DefaultValue?.Invoke(this) ?? ConfigValue<T>.Set(default(T)!);
+
         values.Set(
             ConfigValueLayer.Default,
-            Options.DefaultValue is null ? default(T)! : Options.DefaultValue.Invoke(this)!
+            ValidateValue(defaultValue).Value
         );
     }
 
@@ -667,7 +670,7 @@ public sealed class ConfigEntryOptions<T>
 #endregion
 
 #region IConfigEntryValues
-    public Func<ConfigEntry<T>, T?>? DefaultValue { get; set; }
+    public Func<ConfigEntry<T>, ConfigValue<T>>? DefaultValue { get; set; }
 
     public (Getter Getter, Setter Setter)? ValueTransformer { get; set; }
 #endregion
@@ -741,9 +744,14 @@ public static class ConfigEntryOptionsExtensions
             return options.With(x => x.Categories = _ => categories);
         }
 
-        public ConfigEntryOptions<T> WithDefaultValue(Func<ConfigEntry<T>, T?>? defaultValue)
+        public ConfigEntryOptions<T> WithDefaultValue(Func<ConfigEntry<T>, ConfigValue<T>>? defaultValue)
         {
             return options.With(x => x.DefaultValue = defaultValue);
+        }
+        
+        public ConfigEntryOptions<T> WithDefaultValue(Func<ConfigEntry<T>, T> defaultValue)
+        {
+            return options.With(x => x.DefaultValue = e => ConfigValue<T>.Set(defaultValue(e)));
         }
 
         public ConfigEntryOptions<T> WithValueTransformer(ConfigEntryOptions<T>.Getter getter, ConfigEntryOptions<T>.Setter setter)
