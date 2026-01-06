@@ -356,7 +356,7 @@ internal sealed class TabList : FadedList
         IConfigEntry? targetEntry
     )
     {
-        ListPadding = 16f;
+        ListPadding = 6f;
 
         _innerList.MinWidth.Set(150f, 0f);
 
@@ -674,9 +674,7 @@ internal sealed class TabList : FadedList
             {
                 list.Width.Set(0f, 1f);
                 list.Height.Set(0f, 1f);
-
                 list.VAlign = 1f;
-
                 list.ListPadding = 4f;
 
                 foreach (var category in categories)
@@ -695,6 +693,14 @@ internal sealed class TabList : FadedList
                     }
                     list.Add(tab);
                 }
+
+                // Add some extra padding to the list to help visually separate
+                // the UI.
+                var paddingElement = new UIElement();
+                {
+                    paddingElement.Height.Set(6f, 0f);
+                }
+                list.Add(paddingElement);
             }
             listContainer.Append(list);
 
