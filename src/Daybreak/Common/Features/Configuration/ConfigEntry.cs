@@ -169,12 +169,12 @@ public interface IConfigEntryValues<T> : IConfigEntry
 /// </summary>
 public sealed class ConfigPendingState<T>
 {
-    public Dictionary<ConfigValueLayer, ConfigValue<T>> Pending { get; } = [];
+    private readonly Dictionary<ConfigValueLayer, ConfigValue<T>> pending = [];
 
     /// <summary>
     ///     Whether there is are pending states.
     /// </summary>
-    public bool IsEmpty => Pending.Count == 0;
+    public bool IsEmpty => pending.Count == 0;
 
     /// <summary>
     ///     Whether this layer has pending changes.
@@ -183,7 +183,7 @@ public sealed class ConfigPendingState<T>
     /// <returns></returns>
     public bool HasPending(ConfigValueLayer layer)
     {
-        return Pending.ContainsKey(layer);
+        return pending.ContainsKey(layer);
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public sealed class ConfigPendingState<T>
     /// </summary>
     public ConfigValue<T> GetPending(ConfigValueLayer layer)
     {
-        return Pending.TryGetValue(layer, out var value) ? value : ConfigValue<T>.Unset();
+        return pending.TryGetValue(layer, out var value) ? value : ConfigValue<T>.Unset();
     }
 
     /// <summary>
@@ -200,7 +200,7 @@ public sealed class ConfigPendingState<T>
     /// </summary>
     public void SetPending(ConfigValueLayer layer, ConfigValue<T> value)
     {
-        Pending[layer] = value;
+        pending[layer] = value;
     }
 
     /// <summary>
@@ -208,7 +208,15 @@ public sealed class ConfigPendingState<T>
     /// </summary>
     public void ClearPending(ConfigValueLayer layer)
     {
-        Pending.Remove(layer);
+        pending.Remove(layer);
+    }
+
+    /// <summary>
+    ///     Clears all pending values.
+    /// </summary>
+    public void ClearAll()
+    {
+        pending.Clear();
     }
 
     /// <summary>
@@ -216,7 +224,7 @@ public sealed class ConfigPendingState<T>
     /// </summary>
     public IEnumerable<(ConfigValueLayer, ConfigValue<T>)> GetPendingValues()
     {
-        foreach (var (layer, value) in Pending)
+        foreach (var (layer, value) in pending)
         {
             yield return (layer, value);
         }
@@ -423,14 +431,7 @@ public class ConfigEntry<T> : IConfigEntry<T>
     /// <inheritdoc />
     public ConfigValue<T> GetLayerValue(ConfigValueLayer layer)
     {
-        var value = values.Get(layer);
-
-        if (Options.ValueTransformer is null)
-        {
-            return value;
-        }
-
-        return Options.ValueTransformer.Value.Getter(this, layer, value);
+        return values.Get(layer);
     }
 #endregion
 
@@ -526,7 +527,7 @@ public class ConfigEntry<T> : IConfigEntry<T>
             }
         }
 
-        PendingState.Pending.Clear();
+        PendingState.ClearAll();
 
         if (bulk)
         {
@@ -574,7 +575,12 @@ public class ConfigEntry<T> : IConfigEntry<T>
             return deserializer(this, token);
         }
 
-        if (token is null || token.Type == JTokenType.Null)
+        if (token is null)
+        {
+            return ConfigValue<T>.Unset();
+        }
+        
+        if (token.Type == JTokenType.Null)
         {
             return ValidateValue(GetLayerValue(ConfigValueLayer.Default));
         }
@@ -613,7 +619,7 @@ public class ConfigEntry<T> : IConfigEntry<T>
 
         values = new TransformableValueStack<T>(this);
 
-        var defaultValue = Options.DefaultValue?.Invoke(this) ?? ConfigValue<T>.Set(default(T)!);
+        var defaultValue = Options.DefaultValue?.Invoke(this) ?? ConfigValue<T>.Unset();
 
         values.Set(
             ConfigValueLayer.Default,
