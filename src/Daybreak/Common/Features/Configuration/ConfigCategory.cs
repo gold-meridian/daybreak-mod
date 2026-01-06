@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using Terraria.Localization;
 using Terraria.ModLoader;

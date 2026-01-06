@@ -16,7 +16,6 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
-using Terraria.GameContent;
 
 namespace Daybreak.Common.Features.Configuration;
 
