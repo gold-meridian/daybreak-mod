@@ -210,7 +210,7 @@ public class InputField : UIPanel
             var hint = Hint();
 
             var font = FontAssets.MouseText.Value;
-            var position = new Vector2(dims.X + dims.Width * TextAlignX, dims.Y + dims.Height * 0.5f + 4);
+            var position = new Vector2(dims.X + dims.Width * TextAlignX + 2f, dims.Y + dims.Height * 0.5f + 4);
             var textSize = font.MeasureString(Text == string.Empty ? hint : Text);
             var origin = new Vector2(textSize.X * TextAlignX, textSize.Y * 0.5f);
 
