@@ -302,6 +302,7 @@ internal class TabList : FadedList
     public ConfigCategory Category
     {
         get;
+
         set
         {
             if (Category is not null)
@@ -520,6 +521,7 @@ internal class TabList : FadedList
         public bool Selected
         {
             get;
+
             set
             {
                 field = value;
@@ -528,6 +530,7 @@ internal class TabList : FadedList
                 {
                     openProgress = 12;
                     Open = true;
+                    UpdateHeight();
                     return;
                 }
 
@@ -732,6 +735,14 @@ internal class TabList : FadedList
                 highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
             }
 
+            UpdateHeight();
+        }
+
+        // Separated because this needs to be immediately enforced in Selected
+        // when it's explicitly set to be fully opened (otherwise it lags
+        // behind a frame).
+        private void UpdateHeight()
+        {
             const int open_frames = 12;
             {
                 openProgress = MathHelper.Clamp(openProgress + Open.ToDirectionInt(), 0, open_frames);
@@ -749,12 +760,12 @@ internal class TabList : FadedList
 
                 PaddingBottom = height;
             }
+        }
 
-            static float Ease(float x)
-            {
-                // return x < 0.5f ? 4 * x * x * x : 1 - MathF.Pow(-2 * x + 2, 3) / 2;
-                return 1 - MathF.Pow(1 - x, 5);
-            }
+        private static float Ease(float x)
+        {
+            // return x < 0.5f ? 4 * x * x * x : 1 - MathF.Pow(-2 * x + 2, 3) / 2;
+            return 1 - MathF.Pow(1 - x, 5);
         }
     }
 
@@ -769,6 +780,7 @@ internal class TabList : FadedList
         public bool Selected
         {
             get;
+
             set
             {
                 field = value;
@@ -787,6 +799,7 @@ internal class TabList : FadedList
         private Color TextTargetColor
         {
             get;
+
             set
             {
                 field = value;
