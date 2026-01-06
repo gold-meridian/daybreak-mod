@@ -279,7 +279,7 @@ internal sealed class TransformableValueStack<T>(ConfigEntry<T> entry) : ConfigV
             return;
         }
 
-        transformer.Setter(entry, layer, ref Values[(int)layer], Values[(int)layer]);
+        transformer.Setter(entry, layer, ref Values[(int)layer], ConfigValue<T>.Set(value));
     }
 
     public override void Unset(ConfigValueLayer layer)
@@ -454,7 +454,7 @@ public class ConfigEntry<T> : IConfigEntry<T>
                 return Options.DirtyState.Invoke(this, userValue, editedValue);
             }
 
-            return !Equals(userValue.Value, editedValue.Value) ? DirtyState.Clean : DirtyState.Dirty;
+            return Equals(userValue.Value, editedValue.Value) ? DirtyState.Clean : DirtyState.Dirty;
         }
     }
 
@@ -718,7 +718,7 @@ public static class ConfigEntryOptionsExtensions
 
         public ConfigEntryOptions<T> DisallowNull()
         {
-            return options.With(x => x.Nullability = _ => ConfigNullability.AllowNull);
+            return options.With(x => x.Nullability = _ => ConfigNullability.DisallowNull);
         }
 
         public ConfigEntryOptions<T> WithDisplayName(Func<ConfigEntry<T>, LocalizedText>? displayName)
