@@ -114,6 +114,7 @@ public class InputField : UIPanel
             return;
         }
 
+        InputHelpers.SyncBlinkerStartTime();
         currentlyWriting = true;
         lastText = Text;
 

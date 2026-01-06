@@ -50,6 +50,8 @@ internal static class InputHelpers
     // Stores the state of WritingText for use outside of drawing scopes.
     private static bool wasWritingText;
 
+    private static float blinkerStartTime;
+
     public static bool WritingText
     {
         get => PlayerInput.WritingText;
@@ -345,9 +347,10 @@ internal static class InputHelpers
 
         spriteBatch.DrawStringWithShadow(font, text, position, color, shadowColor, rotation, origin, scale, spread);
 
-        if (drawBlinker &&
-            blinkerIndex != -1 &&
-            Main.GlobalTimeWrappedHourly % .666f > .333f)
+        const float blink_duration_in_seconds = 2f / 3f;
+        const float blink_percent = 0.5f;
+        var blinkTimer = MathF.Max(0f, (Main.GlobalTimeWrappedHourly - blinkerStartTime) % blink_duration_in_seconds);
+        if (drawBlinker && blinkerIndex != -1 && blinkTimer < blink_duration_in_seconds * blink_percent)
         {
             var blinkerX = font.MeasureString(text[..blinkerIndex]).X - 2f;
 
@@ -441,6 +444,11 @@ internal static class InputHelpers
         kerningZ *= scale.X;
 
         return output;
+    }
+
+    public static void SyncBlinkerStartTime()
+    {
+        blinkerStartTime = Main.GlobalTimeWrappedHourly;
     }
 
     extension(Keys key)
