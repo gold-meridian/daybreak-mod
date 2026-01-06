@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -166,17 +167,60 @@ public interface IConfigEntryValues<T> : IConfigEntry
 ///     The pending state of a config entry, for manipulation through external
 ///     sources such as a UI.
 /// </summary>
-public sealed class ConfigEditState<T>
+public sealed class ConfigPendingState<T>
 {
-    /// <summary>
-    ///     The pending, edited value.
-    /// </summary>
-    public ConfigValue<T> EditedValue { get; set; } = ConfigValue<T>.Unset();
+    public Dictionary<ConfigValueLayer, ConfigValue<T>> Pending { get; } = [];
 
     /// <summary>
-    ///     Whether the option is currently being edited.
+    ///     Whether there is are pending states.
     /// </summary>
-    public bool IsEditing { get; set; }
+    public bool IsEmpty => Pending.Count == 0;
+
+    /// <summary>
+    ///     Whether this layer has pending changes.
+    /// </summary>
+    /// <param name="layer"></param>
+    /// <returns></returns>
+    public bool HasPending(ConfigValueLayer layer)
+    {
+        return Pending.ContainsKey(layer);
+    }
+
+    /// <summary>
+    ///     Gets the pending value for a layer.  The layer will be unset if
+    ///     there are no pending changes.
+    /// </summary>
+    public ConfigValue<T> GetPending(ConfigValueLayer layer)
+    {
+        return Pending.TryGetValue(layer, out var value) ? value : ConfigValue<T>.Unset();
+    }
+
+    /// <summary>
+    ///     Sets the pending value for a layer.
+    /// </summary>
+    public void SetPending(ConfigValueLayer layer, ConfigValue<T> value)
+    {
+        Pending[layer] = value;
+    }
+
+    /// <summary>
+    ///     Clears the pending layer status.
+    /// </summary>
+    public void ClearPending(ConfigValueLayer layer)
+    {
+        Pending.Remove(layer);
+    }
+
+    /// <summary>
+    ///     Iterates over all pending values.
+    /// </summary>
+    public IEnumerable<(ConfigValueLayer, ConfigValue<T>)> GetPendingValues()
+    {
+        foreach (var (layer, value) in Pending)
+        {
+            yield return (layer, value);
+        }
+    }
 }
 
 /// <summary>
@@ -207,16 +251,9 @@ public enum DirtyState
 public interface IConfigEntry<T> : IConfigEntryValues<T>
 {
     /// <summary>
-    ///     The editing state of this entry.
+    ///     The pending state of this entry.
     /// </summary>
-    ConfigEditState<T> EditState { get; }
-
-    /// <summary>
-    ///     The state of the value being edited, or just the
-    ///     <see cref="IConfigEntryValues{T}.Value"/> if nothing is being
-    ///     edited.
-    /// </summary>
-    ConfigValue<T> EditValue { get; set; }
+    ConfigPendingState<T> PendingState { get; }
 
     /// <summary>
     ///     The value to display, which may be overridden when the value is
@@ -245,16 +282,6 @@ public interface IConfigEntry<T> : IConfigEntryValues<T>
     ///     Deserializes the token to a value.
     /// </summary>
     ConfigValue<T> Deserialize(JToken? token);
-
-    /// <summary>
-    ///     Applies the value as a preset.
-    /// </summary>
-    void ApplyPreset(ConfigValue<T> value);
-
-    /// <summary>
-    ///     Clears the preset value.
-    /// </summary>
-    void ClearPreset();
 }
 
 internal sealed class TransformableValueStack<T>(ConfigEntry<T> entry) : ConfigValueStack<T>
@@ -409,77 +436,97 @@ public class ConfigEntry<T> : IConfigEntry<T>
 
 #region IConfigEntry
     /// <inheritdoc />
-    public ConfigEditState<T> EditState { get; } = new();
+    public ConfigPendingState<T> PendingState { get; } = new();
 
     /// <inheritdoc />
-    public ConfigValue<T> EditValue
+    public virtual ConfigValue<T> DisplayValue
     {
-        get => EditState.IsEditing
-            ? EditState.EditedValue
-            : ConfigValue<T>.Set(Value);
-
-        set
+        get
         {
-            EditState.EditedValue = ValidateValue(value);
-            EditState.IsEditing = true;
+            foreach (var layer in ConfigValueResolver.PendingLayersByPriority)
+            {
+                var pending = PendingState.GetPending(layer);
+                if (pending.IsSet)
+                {
+                    return pending;
+                }
+            }
+
+            return GetLayerValue(ActiveLayer);
         }
     }
-
-    /// <inheritdoc />
-    public virtual ConfigValue<T> DisplayValue =>
-        EditState.IsEditing
-            ? EditState.EditedValue
-            : GetLayerValue(ActiveLayer);
 
     /// <inheritdoc />
     public virtual DirtyState DirtyState
     {
         get
         {
-            if (!EditState.IsEditing)
+            if (PendingState.IsEmpty)
             {
                 return DirtyState.Clean;
             }
 
-            var userValue = GetLayerValue(ConfigValueLayer.User);
-            var editedValue = EditState.EditedValue;
+            // var baseValue = GetLayerValue(ConfigValueLayer.User);
+            var worst = DirtyState.Clean;
 
-            if (!editedValue.IsSet)
+            foreach (var (layer, pending) in PendingState.GetPendingValues())
             {
-                return DirtyState.Clean;
+                var before = GetLayerValue(layer);
+
+                DirtyState state;
+                if (Options.DirtyState is { } dirtyState)
+                {
+                    state = dirtyState(this, layer, before, pending);
+                }
+                else
+                {
+                    if (!before.IsSet && !pending.IsSet)
+                    {
+                        state = DirtyState.Clean;
+                    }
+                    else if (before.IsSet && !pending.IsSet || (!before.IsSet && pending.IsSet))
+                    {
+                        state = DirtyState.Dirty;
+                    }
+                    else
+                    {
+                        state = Equals(before.Value, pending.Value) ? DirtyState.Clean : DirtyState.Dirty;
+                    }
+                }
+
+                worst = Max(worst, state);
             }
 
-            if (Options.DirtyState is not null)
-            {
-                return Options.DirtyState.Invoke(this, userValue, editedValue);
-            }
+            return worst;
 
-            return Equals(userValue.Value, editedValue.Value) ? DirtyState.Clean : DirtyState.Dirty;
+            static DirtyState Max(DirtyState a, DirtyState b)
+            {
+                return (DirtyState)Math.Max((int)a, (int)b);
+            }
         }
     }
 
     /// <inheritdoc />
     public bool CommitPendingChanges(bool bulk)
     {
-        var changed = DirtyState != DirtyState.Clean;
-        if (!changed)
+        if (PendingState.IsEmpty)
         {
             return false;
         }
 
-        // var old = values.Get(ConfigValueLayer.User);
-        var next = EditState.EditedValue;
-
-        if (next.IsSet)
+        foreach (var (layer, value) in PendingState.GetPendingValues())
         {
-            values.Set(ConfigValueLayer.User, next.Value);
-        }
-        else
-        {
-            values.Unset(ConfigValueLayer.User);
+            if (value.IsSet)
+            {
+                values.Set(layer, value.Value);
+            }
+            else
+            {
+                values.Unset(layer);
+            }
         }
 
-        EditState.IsEditing = false;
+        PendingState.Pending.Clear();
 
         if (bulk)
         {
@@ -540,25 +587,6 @@ public class ConfigEntry<T> : IConfigEntry<T>
         {
             return ValidateValue(ConfigValue<T>.Set(ConfigSerialization.FallbackDeserialize(token, this)!));
         }
-    }
-
-    /// <inheritdoc />
-    public void ApplyPreset(ConfigValue<T> value)
-    {
-        if (value.IsSet)
-        {
-            values.Set(ConfigValueLayer.Preset, value.Value);
-        }
-        else
-        {
-            values.Unset(ConfigValueLayer.Preset);
-        }
-    }
-
-    /// <inheritdoc />
-    public void ClearPreset()
-    {
-        values.Unset(ConfigValueLayer.Preset);
     }
 #endregion
 
@@ -653,6 +681,7 @@ public sealed class ConfigEntryOptions<T>
 
     public delegate DirtyState DirtyEvaluator(
         ConfigEntry<T> entry,
+        ConfigValueLayer layer,
         ConfigValue<T> before,
         ConfigValue<T> after
     );
@@ -748,7 +777,7 @@ public static class ConfigEntryOptionsExtensions
         {
             return options.With(x => x.DefaultValue = defaultValue);
         }
-        
+
         public ConfigEntryOptions<T> WithDefaultValue(Func<ConfigEntry<T>, T> defaultValue)
         {
             return options.With(x => x.DefaultValue = e => ConfigValue<T>.Set(defaultValue(e)));

@@ -160,6 +160,12 @@ public static class ConfigValueResolver
 {
     internal static int LayerCount { get; } = Enum.GetValues<ConfigValueLayer>().Length;
 
+    internal static ConfigValueLayer[] PendingLayersByPriority { get; } =
+    [
+        ConfigValueLayer.User,
+        ConfigValueLayer.Preset,
+    ];
+
     /// <summary>
     ///     Resolves a <see cref="ConfigResolvedValue{T}"/> from a
     ///     <see cref="ConfigValueStack{T}"/>.
