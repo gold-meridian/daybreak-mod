@@ -179,18 +179,24 @@ public static class ConfigSystem
     )
     {
         ConfigEntry<T>.Define()
+                       /*
+                      .WithValueTransformer(
+                           getter: (_, _, value) => value,
+                           setter: (_, layer, value) => { }
+                       )
                       .WithLocalValue(
                            getter: (_, value) => value,
                            setter: (_, ref value, newValue) => value = newValue
                        )
+                       */
                       .WithSerialization(
-                           serializer: (_, _, _) => null,
-                           deserializer: (e, _, _) => e.DefaultValue
+                           serializer: (_, _) => null,
+                           deserializer: (e, _) => e.GetLayerValue(ConfigValueLayer.Default)
                        )
                       .WithDisplayName(_ => Language.GetText(labelKey))
                       .WithDescription(_ => Language.GetText(tooltipKey))
                       .WithCategories(category)
-                      .WithConfigSide(_ => side)
+                      .WithConfigSide(side)
                       .Register(ConfigRepository.Default, mod, category.Handle.Name + '_' + wrapper.Name);
     }
 

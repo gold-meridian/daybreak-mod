@@ -51,16 +51,45 @@ public readonly record struct ConfigEntryHandle(
 }
 
 /// <summary>
-///     The type-generic config entry contract.
+///     Untyped config entry contract.
 /// </summary>
-public interface IConfigEntry
+public interface IConfigEntry : IConfigEntryMetadata
 {
+    /// <summary>
+    ///     The type this config entry wraps.
+    /// </summary>
+    Type EntryType { get; }
+
     /// <summary>
     ///     The config entry handle which may be used to uniquely identify this
     ///     entry and obtain it as necessary.
     /// </summary>
     ConfigEntryHandle Handle { get; }
+    
+    /// <summary>
+    ///     Commits any pending values to this entry and performs necessary
+    ///     saving and syncing of data.
+    /// </summary>
+    /// <param name="bulk">
+    ///     Whether this entry is being committed as part of a bulk operation
+    ///     over multiple entries.
+    /// </param>
+    /// <returns>Whether any changes were made.</returns>
+    bool CommitPendingChanges(bool bulk);
 
+    /// <summary>
+    ///     Untyped <see cref="IConfigEntry{T}.Serialize"/> proxy.
+    /// </summary>
+    /// <param name="layer"></param>
+    /// <returns></returns>
+    JToken? BoxedDefaultSerialize(ConfigValueLayer layer);
+}
+
+/// <summary>
+///     Untyped metadata for a config entry.
+/// </summary>
+public interface IConfigEntryMetadata
+{
     /// <summary>
     ///     This entry's side, which controls syncing and which version of the
     ///     config to use and display.
@@ -68,52 +97,9 @@ public interface IConfigEntry
     ConfigSide Side { get; }
 
     /// <summary>
-    ///     The most up-to-date value of this entry.  If this entry is synced
-    ///     to both the client and server, it will use the value the server
-    ///     provides.  If this value is not synced, it will solely use the local
-    ///     value provided by this instance.
-    ///     <br />
-    ///     This value cannot be directly modified, you should queue your
-    ///     changes to <see cref="PendingValue"/> and commit them.
+    ///     The nullability contract for this config entry.
     /// </summary>
-    object? Value { get; }
-
-    /// <summary>
-    ///     The config value local to this instance.  Multiplayer clients,
-    ///     singleplayer clients, and servers all have a local value.
-    /// </summary>
-    object? LocalValue { get; set; }
-
-    /// <summary>
-    ///     The config value supplied by a remote host.  Only used when
-    ///     receiving a server-controlled value from a multiplayer client.
-    /// </summary>
-    object? RemoteValue { get; set; }
-
-    /// <summary>
-    ///     The pending value represents the future state of a config entry, and
-    ///     is stored until it is committed as a real value.
-    ///     <br />
-    ///     This should be kept up-to-date with <see cref="LocalValue"/> if it's
-    ///     changed, and is preferred over <see cref="LocalValue"/> when
-    ///     retrieving the current state from <see cref="Value"/>.
-    /// </summary>
-    object? PendingValue { get; set; }
-
-    /// <summary>
-    ///     The default value.
-    /// </summary>
-    object? DefaultValue { get; }
-
-    /// <summary>
-    ///     Whether this entry's value does not match its pending value.
-    /// </summary>
-    bool Dirty { get; }
-
-    /// <summary>
-    ///     Whether a modification to this entry necessitates a reload.
-    /// </summary>
-    bool ReloadRequired { get; }
+    ConfigNullability Nullability { get; }
 
     /// <summary>
     ///     The display name of this config entry.
@@ -140,92 +126,210 @@ public interface IConfigEntry
     ///     The main category of this entry, derived from the first item in
     ///     <see cref="Categories"/>.
     /// </summary>
-    ConfigCategoryHandle MainCategory => Categories[0];
+    ConfigCategoryHandle MainCategory { get; }
+}
+
+/// <summary>
+///     Typed data pertaining to config values.
+/// </summary>
+public interface IConfigEntryValues<T> : IConfigEntry
+{
+    Type IConfigEntry.EntryType => typeof(T);
 
     /// <summary>
-    ///     Commits pending changes from <see cref="PendingValue"/> to
-    ///     <see cref="LocalValue"/>.
-    ///     <br />
-    ///     This triggers the owning <see cref="ConfigRepository"/> to save and
-    ///     synchronize itself as necessary to reflect these changes.
+    ///     The resolved config value.
     /// </summary>
-    /// <param name="bulk">
-    ///     Whether this pending commit change is part of a bulk operation over
-    ///     the entire <see cref="ConfigRepository"/>.
-    ///     <br />
-    ///     If this value is <see langword="true"/>, only values should be
-    ///     updated.
-    ///     <br />
-    ///     If this value is <see langword="false"/>, it is valid to manually
-    ///     call <see cref="ConfigRepository.SerializeCategories"/> and
-    ///     <see cref="ConfigRepository.SynchronizeEntries"/>.
-    /// </param>
-    /// <returns>
-    ///     Whether an observable change has occured to <see cref="LocalValue"/>
-    ///     based on the value of <see cref="PendingValue"/>, necessitating this
-    ///     value to be synchronized and overwritten in a
-    ///     <paramref name="bulk"/> operation.
-    /// </returns>
-    /// <remarks>
-    ///     <see cref="CommitPendingChanges"/> may be called despite no changes
-    ///     between <see cref="PendingValue"/> and <see cref="LocalValue"/>.  It
-    ///     is expected in this scenario to make no observable changes and to
-    ///     return <see langword="false"/>.
-    /// </remarks>
-    bool CommitPendingChanges(bool bulk);
+    ConfigResolvedValue<T> Resolved { get; }
+
+    /// <summary>
+    ///     The layer of the resolved config value.
+    /// </summary>
+    ConfigValueLayer ActiveLayer { get; }
+
+    /// <summary>
+    ///     The direct value of the resolved config value.
+    /// </summary>
+    T Value { get; }
+
+    /// <summary>
+    ///     Whether a value is set for the layer.
+    /// </summary>
+    bool HasLayerValue(ConfigValueLayer layer);
+
+    /// <summary>
+    ///     Gets the config value for the layer.
+    /// </summary>
+    ConfigValue<T> GetLayerValue(ConfigValueLayer layer);
+}
+
+/// <summary>
+///     The pending state of a config entry, for manipulation through external
+///     sources such as a UI.
+/// </summary>
+public sealed class ConfigEditState<T>
+{
+    /// <summary>
+    ///     The pending, edited value.
+    /// </summary>
+    public ConfigValue<T> EditedValue { get; set; } = ConfigValue<T>.Unset();
+
+    /// <summary>
+    ///     Whether the option is currently being edited.
+    /// </summary>
+    public bool IsEditing { get; set; }
+}
+
+/// <summary>
+///     The dirty state for a config entry.
+/// </summary>
+public enum DirtyState
+{
+    /// <summary>
+    ///     No changes have been made.
+    /// </summary>
+    Clean,
+
+    /// <summary>
+    ///     The entry is dirtied and needs saving.
+    /// </summary>
+    Dirty,
+
+    /// <summary>
+    ///     The entry is dirtied and needs saving, but requires the mod to
+    ///     reload to safely apply the changes.
+    /// </summary>
+    DirtyRequiresReload,
+}
+
+/// <summary>
+///     The complete description of a config entry's behavior.
+/// </summary>
+public interface IConfigEntry<T> : IConfigEntryValues<T>
+{
+    /// <summary>
+    ///     The editing state of this entry.
+    /// </summary>
+    ConfigEditState<T> EditState { get; }
+
+    /// <summary>
+    ///     The state of the value being edited, or just the
+    ///     <see cref="IConfigEntryValues{T}.Value"/> if nothing is being
+    ///     edited.
+    /// </summary>
+    ConfigValue<T> EditValue { get; set; }
+
+    /// <summary>
+    ///     The value to display, which may be overridden when the value is
+    ///     being edited.
+    /// </summary>
+    ConfigValue<T> DisplayValue { get; }
+
+    /// <summary>
+    ///     Whether this entry is dirtied and needs saving or syncing.
+    /// </summary>
+    DirtyState DirtyState { get; }
 
     /// <summary>
     ///     Serializes the value to a token.  If the token is
     ///     <see langword="null"/>, then this entry is considered as providing
     ///     no value, and it will be skipped.
     /// </summary>
-    JToken? Serialize(ConfigSerialization.Mode mode, object? value);
+    JToken? Serialize(ConfigValue<T> value);
+    
+    JToken? IConfigEntry.BoxedDefaultSerialize(ConfigValueLayer layer)
+    {
+        return Serialize(GetLayerValue(layer));
+    }
 
     /// <summary>
     ///     Deserializes the token to a value.
     /// </summary>
-    object? Deserialize(ConfigSerialization.Mode mode, JToken? token);
+    ConfigValue<T> Deserialize(JToken? token);
+
+    /// <summary>
+    ///     Applies the value as a preset.
+    /// </summary>
+    void ApplyPreset(ConfigValue<T> value);
+
+    /// <summary>
+    ///     Clears the preset value.
+    /// </summary>
+    void ClearPreset();
+}
+
+internal sealed class TransformableValueStack<T>(ConfigEntry<T> entry) : ConfigValueStack<T>
+{
+    public override ConfigValue<T> Get(ConfigValueLayer layer)
+    {
+        var value = base.Get(layer);
+
+        if (entry.Options.ValueTransformer is not { } transformer)
+        {
+            return value;
+        }
+
+        return transformer.Getter(entry, layer, value);
+    }
+
+    public override void Set(ConfigValueLayer layer, T value)
+    {
+        if (entry.Options.ValueTransformer is not { } transformer)
+        {
+            base.Set(layer, value);
+            return;
+        }
+
+        transformer.Setter(entry, layer, ref Values[(int)layer], Values[(int)layer]);
+    }
+
+    public override void Unset(ConfigValueLayer layer)
+    {
+        if (entry.Options.ValueTransformer is not { } transformer)
+        {
+            base.Unset(layer);
+            return;
+        }
+
+        transformer.Setter(entry, layer, ref Values[(int)layer], ConfigValue<T>.Unset());
+    }
+
+    public override bool IsSet(ConfigValueLayer layer)
+    {
+        return Get(layer).IsSet;
+    }
 }
 
 /// <summary>
 ///     The type-safe implementation of <see cref="IConfigEntry"/>.
 /// </summary>
-public sealed class ConfigEntry<T> : IConfigEntry
+public class ConfigEntry<T> : IConfigEntry<T>
 {
-    object? IConfigEntry.Value => Value;
-
-    object? IConfigEntry.LocalValue
-    {
-        get => LocalValue;
-        set => LocalValue = (T?)value;
-    }
-
-    object? IConfigEntry.RemoteValue
-    {
-        get => RemoteValue;
-        set => RemoteValue = (T?)value;
-    }
-
-    object? IConfigEntry.PendingValue
-    {
-        get => PendingValue;
-        set => PendingValue = (T?)value;
-    }
-
-    object? IConfigEntry.DefaultValue => DefaultValue;
-
+#region IConfigEntry
     /// <inheritdoc />
     public ConfigEntryHandle Handle { get; }
+#endregion
 
-    /// <summary>
-    ///     The descriptor which dictates the behavior of this entry.
-    /// </summary>
-    public ConfigEntryOptions<T> Options { get; }
+#region IConfigEntryMetadata
+    /// <inheritdoc />
+    public virtual ConfigSide Side =>
+        Options.Side?.Invoke(this)
+     ?? ConfigSideFromModSide(Handle.Mod?.Side ?? ModSide.NoSync);
 
     /// <inheritdoc />
-    public ConfigSide Side =>
-        Options.ConfigSide?.Invoke(this)
-     ?? ConfigSideFromModSide(Handle.Mod?.Side ?? ModSide.NoSync);
+    public virtual ConfigNullability Nullability
+    {
+        get
+        {
+            if (Options.Nullability is null)
+            {
+                return default(T) is null
+                    ? ConfigNullability.AllowNull
+                    : ConfigNullability.DisallowNull;
+            }
+
+            return Options.Nullability.Invoke(this);
+        }
+    }
 
     /// <inheritdoc />
     public LocalizedText DisplayName =>
@@ -252,70 +356,218 @@ public sealed class ConfigEntry<T> : IConfigEntry
     /// <inheritdoc />
     public ConfigCategoryHandle[] Categories { get; }
 
-    /// <inheritdoc cref="IConfigEntry.Value"/>
-    public T? Value
+    /// <inheritdoc />
+    public ConfigCategoryHandle MainCategory => Categories.First();
+#endregion
+
+#region IConfigEntryValues
+    /// <inheritdoc />
+    public ConfigResolvedValue<T> Resolved
     {
         get
         {
-            T? value;
-            if (Side == ConfigSide.Both && Main.netMode == NetmodeID.MultiplayerClient)
+            var resolved = ConfigValueResolver.Resolve(
+                values,
+                Side,
+                Main.netMode == NetmodeID.MultiplayerClient
+            );
+
+            if (Options.ValueTransformer is null)
             {
-                value = RemoteValue;
-            }
-            else if (!Equals(LocalValue, PendingValue))
-            {
-                value = PendingValue;
-            }
-            else
-            {
-                value = LocalValue;
+                return resolved;
             }
 
-            if (Options.Value is { } valueProvider)
-            {
-                return valueProvider(this, value);
-            }
-
-            return value;
+            return resolved with { Value = Options.ValueTransformer.Value.Getter(this, resolved.Layer, resolved.Value) };
         }
     }
 
-    /// <inheritdoc cref="IConfigEntry.LocalValue"/>
-    public T? LocalValue
-    {
-        get => GetValue(field, Options.LocalValue?.Getter);
-        set => field = SetValue(field, value, Options.LocalValue?.Setter);
-    }
-
-    /// <inheritdoc cref="IConfigEntry.RemoteValue"/>
-    public T? RemoteValue
-    {
-        get => GetValue(field, Options.RemoteValue?.Getter);
-        set => field = SetValue(field, value, Options.RemoteValue?.Setter);
-    }
-
-    /// <inheritdoc cref="IConfigEntry.PendingValue"/>
-    public T? PendingValue
-    {
-        get => GetValue(field, Options.PendingValue?.Getter);
-        set => field = SetValue(field, value, Options.PendingValue?.Setter);
-    }
-
-    // The compiler doesn't know how to lift a conditional access
-    // (provider?.Invoke()) to a T? for some reason.
-    /// <inheritdoc cref="IConfigEntry.DefaultValue"/>
-    public T? DefaultValue =>
-        Options.DefaultValue is { } provider
-            ? provider.Invoke(this)
-            : default(T);
+    /// <inheritdoc />
+    public ConfigValueLayer ActiveLayer => Resolved.Layer;
 
     /// <inheritdoc />
-    public bool Dirty =>
-        Options.Dirtied?.Invoke(this) ?? !Equals(LocalValue, PendingValue);
+    public T Value => Resolved.Value.Value;
 
     /// <inheritdoc />
-    public bool ReloadRequired =>
-        Options.ReloadRequired?.Invoke(this) ?? false;
+    public bool HasLayerValue(ConfigValueLayer layer)
+    {
+        return values.IsSet(layer);
+    }
+
+    /// <inheritdoc />
+    public ConfigValue<T> GetLayerValue(ConfigValueLayer layer)
+    {
+        var value = values.Get(layer);
+
+        if (Options.ValueTransformer is null)
+        {
+            return value;
+        }
+
+        return Options.ValueTransformer.Value.Getter(this, layer, value);
+    }
+#endregion
+
+#region IConfigEntry
+    /// <inheritdoc />
+    public ConfigEditState<T> EditState { get; } = new();
+
+    /// <inheritdoc />
+    public ConfigValue<T> EditValue
+    {
+        get => EditState.IsEditing
+            ? EditState.EditedValue
+            : ConfigValue<T>.Set(Value);
+
+        set
+        {
+            EditState.EditedValue = ValidateValue(value);
+            EditState.IsEditing = true;
+        }
+    }
+
+    /// <inheritdoc />
+    public virtual ConfigValue<T> DisplayValue =>
+        EditState.IsEditing
+            ? EditState.EditedValue
+            : GetLayerValue(ActiveLayer);
+
+    /// <inheritdoc />
+    public virtual DirtyState DirtyState
+    {
+        get
+        {
+            if (!EditState.IsEditing)
+            {
+                return DirtyState.Clean;
+            }
+
+            var userValue = GetLayerValue(ConfigValueLayer.User);
+            var editedValue = EditState.EditedValue;
+
+            if (!editedValue.IsSet)
+            {
+                return DirtyState.Clean;
+            }
+
+            if (Options.DirtyState is not null)
+            {
+                return Options.DirtyState.Invoke(this, userValue, editedValue);
+            }
+
+            return !Equals(userValue.Value, editedValue.Value) ? DirtyState.Clean : DirtyState.Dirty;
+        }
+    }
+
+    /// <inheritdoc />
+    public bool CommitPendingChanges(bool bulk)
+    {
+        var changed = DirtyState != DirtyState.Clean;
+        if (!changed)
+        {
+            return false;
+        }
+
+        // var old = values.Get(ConfigValueLayer.User);
+        var next = EditState.EditedValue;
+
+        if (next.IsSet)
+        {
+            values.Set(ConfigValueLayer.User, next.Value);
+        }
+        else
+        {
+            values.Unset(ConfigValueLayer.User);
+        }
+
+        EditState.IsEditing = false;
+
+        if (bulk)
+        {
+            return true;
+        }
+
+        Handle.Repository.SerializeCategories(MainCategory);
+        Handle.Repository.SynchronizeEntries(Handle);
+        return true;
+    }
+
+    /// <inheritdoc />
+    public JToken? Serialize(ConfigValue<T> value)
+    {
+        if (Options.Serialization is { Serializer: { } serializer })
+        {
+            return serializer(this, value);
+        }
+
+        if (!value.IsSet)
+        {
+            return null;
+        }
+
+        if (value.Value is null)
+        {
+            return JValue.CreateNull();
+        }
+
+        try
+        {
+            return JToken.FromObject(value.Value);
+        }
+        catch
+        {
+            return new JValue(value.Value.ToString());
+        }
+    }
+
+    /// <inheritdoc />
+    public ConfigValue<T> Deserialize(JToken? token)
+    {
+        if (Options.Serialization is { Deserializer: { } deserializer })
+        {
+            return deserializer(this, token);
+        }
+
+        if (token is null || token.Type == JTokenType.Null)
+        {
+            return ValidateValue(GetLayerValue(ConfigValueLayer.Default));
+        }
+
+        try
+        {
+            return ValidateValue(ConfigValue<T>.Set(token.ToObject<T>()!));
+        }
+        catch
+        {
+            return ValidateValue(ConfigValue<T>.Set(ConfigSerialization.FallbackDeserialize(token, this)!));
+        }
+    }
+
+    /// <inheritdoc />
+    public void ApplyPreset(ConfigValue<T> value)
+    {
+        if (value.IsSet)
+        {
+            values.Set(ConfigValueLayer.Preset, value.Value);
+        }
+        else
+        {
+            values.Unset(ConfigValueLayer.Preset);
+        }
+    }
+
+    /// <inheritdoc />
+    public void ClearPreset()
+    {
+        values.Unset(ConfigValueLayer.Preset);
+    }
+#endregion
+
+    /// <summary>
+    ///     Options that configure the default behavior of this entry.
+    /// </summary>
+    public ConfigEntryOptions<T> Options { get; }
+
+    private readonly TransformableValueStack<T> values;
 
     /// <summary>
     ///     Initializes this entry with its default value.
@@ -327,94 +579,15 @@ public sealed class ConfigEntry<T> : IConfigEntry
     {
         Handle = handle;
         Options = options;
-        LocalValue = DefaultValue;
-        RemoteValue = DefaultValue;
-        PendingValue = DefaultValue;
         Categories = Options.Categories?.Invoke(this).ToArray() is { Length: >= 1 } categories
             ? categories
             : throw new InvalidOperationException("Config entries must be supplied at least one category: " + Handle);
-    }
 
-    private T? GetValue(T? storedValue, ConfigEntryOptions<T>.Getter? getter)
-    {
-        if (getter is not null)
-        {
-            return getter(this, storedValue);
-        }
-
-        return storedValue;
-    }
-
-    private T? SetValue(T? storedValue, T? incomingValue, ConfigEntryOptions<T>.Setter? setter)
-    {
-        if (setter is not null)
-        {
-            setter(this, ref storedValue, incomingValue);
-            return storedValue;
-        }
-
-        return incomingValue;
-    }
-
-    /// <inheritdoc />
-    public bool CommitPendingChanges(bool bulk)
-    {
-        var dirty = Dirty;
-        {
-            LocalValue = PendingValue;
-        }
-
-        if (dirty && !bulk)
-        {
-            Handle.Repository.SerializeCategories(((IConfigEntry)this).MainCategory);
-            Handle.Repository.SynchronizeEntries(Handle);
-        }
-
-        return dirty;
-    }
-
-    JToken? IConfigEntry.Serialize(ConfigSerialization.Mode mode, object? value)
-    {
-        if (Options.Serialization is { Serializer: { } serializer })
-        {
-            return serializer(this, mode, (T?)value);
-        }
-
-        if (value is null)
-        {
-            return JValue.CreateNull();
-        }
-
-        try
-        {
-            return JToken.FromObject(value);
-        }
-        catch
-        {
-            return new JValue(value.ToString());
-        }
-    }
-
-    object? IConfigEntry.Deserialize(ConfigSerialization.Mode mode, JToken? token)
-    {
-        if (Options.Serialization is { Deserializer: { } deserializer })
-        {
-            return deserializer(this, mode, token);
-        }
-
-        if (token is null || token.Type == JTokenType.Null)
-        {
-            return DefaultValue;
-        }
-
-        try
-        {
-            return token.ToObject<T>();
-        }
-        catch
-        {
-            return ConfigSerialization.FallbackDeserialize<T>(token, this);
-        }
+        values = new TransformableValueStack<T>(this);
+        values.Set(
+            ConfigValueLayer.Default,
+            Options.DefaultValue is null ? default(T)! : Options.DefaultValue.Invoke(this)!
+        );
     }
 
     private static ConfigSide ConfigSideFromModSide(ModSide modSide)
@@ -427,6 +600,23 @@ public sealed class ConfigEntry<T> : IConfigEntry
             ModSide.NoSync => ConfigSide.NoSync,
             _ => throw new ArgumentOutOfRangeException(nameof(modSide), modSide, null),
         };
+    }
+
+    private ConfigValue<T> ValidateValue(ConfigValue<T> value)
+    {
+        if (!value.IsSet)
+        {
+            return value;
+        }
+
+        if (value.Value is null && Nullability == ConfigNullability.DisallowNull)
+        {
+            throw new InvalidOperationException(
+                $"Entry \"{Handle.FullName}\" does not allow null values"
+            );
+        }
+
+        return value;
     }
 
     /// <summary>
@@ -445,33 +635,48 @@ public sealed class ConfigEntry<T> : IConfigEntry
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public sealed class ConfigEntryOptions<T>
 {
-    public delegate T? Getter(ConfigEntry<T> entry, T? storedValue);
+    public delegate ConfigValue<T> Getter(
+        ConfigEntry<T> entry,
+        ConfigValueLayer layer,
+        ConfigValue<T> storedValue
+    );
 
-    public delegate void Setter(ConfigEntry<T> entry, ref T? storedValue, T? newValue);
+    public delegate void Setter(
+        ConfigEntry<T> entry,
+        ConfigValueLayer layer,
+        ref ConfigValue<T> storedValue,
+        ConfigValue<T> newValue
+    );
+
+    public delegate DirtyState DirtyEvaluator(
+        ConfigEntry<T> entry,
+        ConfigValue<T> before,
+        ConfigValue<T> after
+    );
+
+#region IConfigEntryMetadata
+    public Func<ConfigEntry<T>, ConfigSide>? Side { get; set; }
+
+    public Func<ConfigEntry<T>, ConfigNullability>? Nullability { get; set; }
 
     public Func<ConfigEntry<T>, LocalizedText>? DisplayName { get; set; }
 
     public Func<ConfigEntry<T>, LocalizedText>? Description { get; set; }
 
-    public Func<ConfigEntry<T>, ConfigSide>? ConfigSide { get; set; }
-
     public Func<ConfigEntry<T>, IEnumerable<ConfigCategoryHandle>>? Categories { get; set; }
+#endregion
 
+#region IConfigEntryValues
     public Func<ConfigEntry<T>, T?>? DefaultValue { get; set; }
 
-    public (Getter Getter, Setter Setter)? LocalValue { get; set; }
+    public (Getter Getter, Setter Setter)? ValueTransformer { get; set; }
+#endregion
 
-    public (Getter Getter, Setter Setter)? RemoteValue { get; set; }
-
-    public (Getter Getter, Setter Setter)? PendingValue { get; set; }
+#region IConfigEntry
+    public DirtyEvaluator? DirtyState { get; set; }
 
     public (ConfigSerialization.Serialize<T> Serializer, ConfigSerialization.Deserialize<T> Deserializer)? Serialization { get; set; }
-
-    public Getter? Value { get; set; }
-
-    public Func<ConfigEntry<T>, bool>? Dirtied { get; set; }
-
-    public Func<ConfigEntry<T>, bool>? ReloadRequired { get; set; }
+#endregion
 
     public ConfigEntryOptions<T> With(Action<ConfigEntryOptions<T>> apply)
     {
@@ -501,6 +706,21 @@ public static class ConfigEntryOptionsExtensions
 {
     extension<T>(ConfigEntryOptions<T> options)
     {
+        public ConfigEntryOptions<T> WithConfigSide(ConfigSide side)
+        {
+            return options.With(x => x.Side = _ => side);
+        }
+
+        public ConfigEntryOptions<T> AllowNull()
+        {
+            return options.With(x => x.Nullability = _ => ConfigNullability.AllowNull);
+        }
+
+        public ConfigEntryOptions<T> DisallowNull()
+        {
+            return options.With(x => x.Nullability = _ => ConfigNullability.AllowNull);
+        }
+
         public ConfigEntryOptions<T> WithDisplayName(Func<ConfigEntry<T>, LocalizedText>? displayName)
         {
             return options.With(x => x.DisplayName = displayName);
@@ -509,11 +729,6 @@ public static class ConfigEntryOptionsExtensions
         public ConfigEntryOptions<T> WithDescription(Func<ConfigEntry<T>, LocalizedText>? description)
         {
             return options.With(x => x.Description = description);
-        }
-
-        public ConfigEntryOptions<T> WithConfigSide(Func<ConfigEntry<T>, ConfigSide>? configSide)
-        {
-            return options.With(x => x.ConfigSide = configSide);
         }
 
         public ConfigEntryOptions<T> WithCategories(Func<ConfigEntry<T>, IEnumerable<ConfigCategoryHandle>>? categories)
@@ -531,39 +746,19 @@ public static class ConfigEntryOptionsExtensions
             return options.With(x => x.DefaultValue = defaultValue);
         }
 
-        public ConfigEntryOptions<T> WithLocalValue(ConfigEntryOptions<T>.Getter getter, ConfigEntryOptions<T>.Setter setter)
+        public ConfigEntryOptions<T> WithValueTransformer(ConfigEntryOptions<T>.Getter getter, ConfigEntryOptions<T>.Setter setter)
         {
-            return options.With(x => x.LocalValue = (getter, setter));
+            return options.With(x => x.ValueTransformer = (getter, setter));
         }
 
-        public ConfigEntryOptions<T> WithRemoteValue(ConfigEntryOptions<T>.Getter getter, ConfigEntryOptions<T>.Setter setter)
+        public ConfigEntryOptions<T> WithDirtyPolicy(ConfigEntryOptions<T>.DirtyEvaluator dirtyProvider)
         {
-            return options.With(x => x.RemoteValue = (getter, setter));
-        }
-
-        public ConfigEntryOptions<T> WithPendingValue(ConfigEntryOptions<T>.Getter getter, ConfigEntryOptions<T>.Setter setter)
-        {
-            return options.With(x => x.PendingValue = (getter, setter));
+            return options.With(x => x.DirtyState = dirtyProvider);
         }
 
         public ConfigEntryOptions<T> WithSerialization(ConfigSerialization.Serialize<T> serializer, ConfigSerialization.Deserialize<T> deserializer)
         {
             return options.With(x => x.Serialization = (serializer, deserializer));
-        }
-
-        public ConfigEntryOptions<T> WithValue(ConfigEntryOptions<T>.Getter? getter)
-        {
-            return options.With(x => x.Value = getter);
-        }
-
-        public ConfigEntryOptions<T> WithDirtied(Func<ConfigEntry<T>, bool>? dirtied)
-        {
-            return options.With(x => x.Dirtied = dirtied);
-        }
-
-        public ConfigEntryOptions<T> WithReloadRequired(Func<ConfigEntry<T>, bool>? reloadRequired)
-        {
-            return options.With(x => x.ReloadRequired = reloadRequired);
         }
     }
 }

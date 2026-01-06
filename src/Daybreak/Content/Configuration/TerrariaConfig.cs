@@ -18,18 +18,34 @@ internal static class TerrariaConfig
               .Define()
                // These values are handled separately and should not be synced
                // by us.
-              .WithConfigSide(_ => ConfigSide.NoSync)
+              .WithConfigSide(ConfigSide.NoSync)
                // These values already exist elsewhere, so we just need to
                // provide a way to get and set them.
-              .WithLocalValue(
-                   getter: (_, _) => value(),
-                   setter: (_, ref storedValue, newValue) => storedValue = value() = newValue
+              .WithValueTransformer(
+                   getter: (_, layer, localValue) =>
+                   {
+                       if (layer == ConfigValueLayer.User)
+                       {
+                           return ConfigValue<T>.Set(value()!);
+                       }
+
+                       return localValue;
+                   },
+                   setter: (_, layer, ref storedValue, newValue) =>
+                   {
+                       if (layer == ConfigValueLayer.User)
+                       {
+                           value() = newValue.Value;
+                       }
+
+                       storedValue = newValue;
+                   }
                )
                // These values are saved externally, and we should never have to
                // read or write them.
               .WithSerialization(
-                   serializer: (_, _, _) => null,
-                   deserializer: (entry, _, _) => entry.LocalValue
+                   serializer: (_, _) => null,
+                   deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
                );
     }
 

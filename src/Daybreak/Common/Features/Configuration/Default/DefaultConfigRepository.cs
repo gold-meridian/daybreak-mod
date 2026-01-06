@@ -74,16 +74,18 @@ internal sealed class DefaultConfigRepository : ConfigRepository
                 continue;
             }
 
+            // TODO
+            /*
             var fileName = $"{LanguageHelpers.GetModName(categoryHandle.Mod)}_{categoryHandle.Name}.json";
             File.WriteAllText(
                 Path.Combine(dir, fileName),
                 ConfigSerialization.SerializeCategory(
                     this,
                     category,
-                    ConfigSerialization.Mode.File,
                     Entries.Where(x => x.MainCategory == categoryHandle)
                 )
             );
+            */
         }
 
         // TODO: Put this in the UI when we make it.
@@ -98,6 +100,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
             return;
         }
 
+        // TODO
         var entryTokens = new Dictionary<IConfigEntry, JToken?>();
         foreach (var entryHandle in entries)
         {
@@ -114,7 +117,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
                 continue;
             }
 
-            entryTokens[entry] = ConfigSerialization.SerializeEntry(entry, ConfigSerialization.Mode.Network);
+            entryTokens[entry] = ConfigSerialization.SerializeEntry(entry);
         }
     }
 
