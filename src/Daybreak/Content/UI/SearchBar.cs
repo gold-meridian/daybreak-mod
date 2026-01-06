@@ -17,7 +17,7 @@ namespace Daybreak.Content.UI;
 /// </summary>
 internal sealed class SearchBar : InputField
 {
-    private sealed class BetterImageButton(Asset<Texture2D> asset) : UIElement
+    private sealed class BetterImageButton : UIElement
     {
         public Asset<Texture2D> Asset
         {
@@ -30,13 +30,18 @@ internal sealed class SearchBar : InputField
                 Width.Set(value.Width(), 0f);
                 Height.Set(value.Height(), 0f);
             }
-        } = asset;
+        }
 
         public Asset<Texture2D>? HoverImage { get; set; }
 
         public float VisibilityActive { get; set; } = 1f;
 
         public float VisibilityInactive { get; set; } = 0.4f;
+
+        public BetterImageButton(Asset<Texture2D> asset)
+        {
+            Asset = asset;
+        }
 
         public override void MouseOver(UIMouseEvent evt)
         {
@@ -84,7 +89,7 @@ internal sealed class SearchBar : InputField
 
         OnEscape += OnEscape_CancelText;
 
-        var searchButtonAsset = AssetReferences.Assets.Images.UI.SearchIcon.Asset;
+        var searchButtonAsset = Assets.Images.UI.SearchIcon.Asset;
         {
             searchButtonAsset.Wait();
         }
@@ -95,7 +100,7 @@ internal sealed class SearchBar : InputField
         }
         Append(searchButton);
 
-        var searchCancelAsset = AssetReferences.Assets.Images.UI.SearchCancel.Asset;
+        var searchCancelAsset = Assets.Images.UI.SearchCancel.Asset;
         {
             searchCancelAsset.Wait();
         }

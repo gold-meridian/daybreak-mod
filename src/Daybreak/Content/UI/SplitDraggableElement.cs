@@ -33,9 +33,13 @@ internal class SplitDraggableElement : UIElement
     private bool isDragging;
     private static bool showCursor;
 
-    public SplitDraggableElement()
+    public SplitDraggableElement(float minRatio, float maxRatio, float ratio)
     {
         const float horizontal_padding = divider_width * 0.5f + 2f;
+
+        MinRatio = minRatio;
+        MaxRatio = maxRatio;
+        Ratio = ratio;
 
         LeftElement = new UIElement();
         {

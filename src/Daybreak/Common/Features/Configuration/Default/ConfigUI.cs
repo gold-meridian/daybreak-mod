@@ -129,11 +129,12 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         }
         BaseElement.Append(BackPanel);
 
-        SplitElement = new SplitDraggableElement();
+        SplitElement = new SplitDraggableElement(
+            default_min_ratio,
+            default_max_ratio,
+            default_ratio
+        );
         {
-            SplitElement.MinRatio = default_min_ratio;
-            SplitElement.MaxRatio = default_max_ratio;
-            SplitElement.Ratio = default_ratio;
             SplitElement.Height.Set(0f, 1f);
             SplitElement.Width.Set(0f, 1f);
         }
