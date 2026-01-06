@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Daybreak.Content.UI;
 using Terraria;
@@ -320,13 +321,17 @@ internal sealed class TabList : FadedList
 {
     public event Action<ConfigCategory>? OnCategorySelected;
 
+    [field: MaybeNull]
     public ConfigCategory Category
     {
         get;
 
         set
         {
-            this[Category.Handle.Mod]?.Selected = false;
+            if (field is not null)
+            {
+                this[field.Handle.Mod]?.Selected = false;
+            }
 
             OpenCategory(value);
 
