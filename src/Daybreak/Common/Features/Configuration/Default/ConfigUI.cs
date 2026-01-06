@@ -184,7 +184,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         }
         SplitElement.LeftElement.Append(MetadataPanel);
 
-        SearchBar = new SearchBar(Language.GetText("UI.PlayerNameSlot"));
+        SearchBar = new SearchBar(Mods.Daybreak.UI.ConfigSearchHint.GetText());
         {
             SearchBar.MinWidth.Set(110f, 0f);
         }

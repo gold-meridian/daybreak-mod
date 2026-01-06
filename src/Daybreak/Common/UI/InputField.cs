@@ -227,45 +227,43 @@ public class InputField : UIPanel
                     new Vector2(TextScale)
                 );
             }
-            else
+
+            var cursorIndex = Math.Min(InputHelpers.CursorPositon, Text.Length);
+
+            // Move the text position based on the cursor when text is out
+            // of the frame.
+            if (currentlyWriting && textSize.X >= dims.Width)
             {
-                var cursorIndex = Math.Min(InputHelpers.CursorPositon, Text.Length);
-
-                // Move the text position based on the cursor when text is out
-                // of the frame.
-                if (currentlyWriting && textSize.X >= dims.Width)
+                var cursorPosition = font.MeasureString(Text[..cursorIndex]).X;
                 {
-                    var cursorPosition = font.MeasureString(Text[..cursorIndex]).X;
-                    {
-                        cursorPosition -= origin.X;
-                    }
-
-                    var offset = cursorPosition * TextScale;
-
-                    var width = Math.Sign(offset) <= 0
-                        ? (dims.Width * TextAlignX)
-                        : (dims.Width * (1f - TextAlignX));
-
-                    offset = Utils.Remap(Math.Abs(offset), width, textSize.X, 0f, textSize.X - width) * Math.Sign(offset);
-                    {
-                        position.X -= offset;
-                    }
+                    cursorPosition -= origin.X;
                 }
 
-                spriteBatch.DrawInputStringWithShadow(
-                    UserInterface.ActiveInstance.MousePosition,
-                    font,
-                    Text,
-                    position,
-                    Color.White,
-                    0f,
-                    origin,
-                    new Vector2(TextScale),
-                    out mousePosition,
-                    currentlyWriting,
-                    cursorIndex
-                );
+                var offset = cursorPosition * TextScale;
+
+                var width = Math.Sign(offset) <= 0
+                    ? (dims.Width * TextAlignX)
+                    : (dims.Width * (1f - TextAlignX));
+
+                offset = Utils.Remap(Math.Abs(offset), width, textSize.X, 0f, textSize.X - width) * Math.Sign(offset);
+                {
+                    position.X -= offset;
+                }
             }
+
+            spriteBatch.DrawInputStringWithShadow(
+                UserInterface.ActiveInstance.MousePosition,
+                font,
+                Text,
+                position,
+                Color.White,
+                0f,
+                origin,
+                new Vector2(TextScale),
+                out mousePosition,
+                currentlyWriting,
+                cursorIndex
+            );
         }
         spriteBatch.End();
 

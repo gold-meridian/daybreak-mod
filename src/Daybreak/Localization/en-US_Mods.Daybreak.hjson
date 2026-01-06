@@ -11,6 +11,7 @@ UI: {
 	SwitchToModLoader: Switch to the tModLoader settings UI
 	DefaultConfigDescription: Hover over an option for more information.
 	DefaultMetadataDescription: Item metadata will appear here.
+	ConfigSearchHint: Search settings...
 }
 
 ConfigRepository.Settings.DisplayName: Settings
