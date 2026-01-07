@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -31,26 +32,6 @@ internal sealed class DefaultConfigRepository : ConfigRepository
 
     private static string ConfigsDirectory => Path.Combine(Main.SavePath, "daybreak", "configs");
 
-    /*
-    public override ConfigCategory RegisterCategory(ConfigCategory category)
-    {
-        if (category.Handle.Mod is { } mod)
-        {
-            if (!ConfigManager.Configs.ContainsKey(mod))
-            {
-                ConfigManager.Configs.Add(mod, []);
-            }
-
-            if (!ConfigManager.loadTimeConfigs.ContainsKey(mod))
-            {
-                ConfigManager.loadTimeConfigs.Add(mod, []);
-            }
-        }
-
-        return base.RegisterCategory(category);
-    }
-    */
-
     public override void SerializeCategories(params ConfigCategoryHandle[] categories)
     {
         if (categories.Length == 0)
@@ -73,18 +54,16 @@ internal sealed class DefaultConfigRepository : ConfigRepository
                 continue;
             }
 
-            // TODO
-            /*
-            var fileName = $"{LanguageHelpers.GetModName(categoryHandle.Mod)}_{categoryHandle.Name}.json";
-            File.WriteAllText(
-                Path.Combine(dir, fileName),
-                ConfigSerialization.SerializeCategory(
-                    this,
-                    category,
-                    Entries.Where(x => x.MainCategory == categoryHandle)
-                )
+            var data = ConfigSerialization.SerializeCategory(
+                this,
+                category,
+                ConfigValueLayer.User,
+                Entries.Where(x => x.MainCategory == categoryHandle)
             );
-            */
+
+            var fileName = $"{LanguageHelpers.GetModName(categoryHandle.Mod)}_{categoryHandle.Name}.json";
+            using var fs = File.OpenWrite(fileName);
+            WellKnownConfigFormats.Json.Write(fs, ConfigValueLayer.User, data);
         }
 
         // TODO: Put this in the UI when we make it.
@@ -116,7 +95,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
                 continue;
             }
 
-            entryTokens[entry] = ConfigSerialization.SerializeEntry(entry);
+            entryTokens[entry] = ConfigSerialization.SerializeEntry(entry, ConfigValueLayer.Server);
         }
     }
 
