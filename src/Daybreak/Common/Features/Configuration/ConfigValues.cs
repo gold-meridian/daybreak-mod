@@ -59,23 +59,17 @@ public readonly record struct ConfigResolvedValue<T>(
 /// <summary>
 ///     Wraps a config value to provide information on whether a value is set.
 /// </summary>
-public readonly struct ConfigValue<T>
+public readonly record struct ConfigValue<T>(bool IsSet, T Value)
 {
     /// <summary>
     ///     Whether this value is set.
     /// </summary>
-    public bool IsSet { get; }
+    public bool IsSet { get; } = IsSet;
 
     /// <summary>
     ///     The value represented by this wrapper.
     /// </summary>
-    public T Value { get; }
-
-    private ConfigValue(bool isSet, T value)
-    {
-        IsSet = isSet;
-        Value = value;
-    }
+    public T Value { get; } = Value;
 
     /// <summary>
     ///     Initializes an unset value.

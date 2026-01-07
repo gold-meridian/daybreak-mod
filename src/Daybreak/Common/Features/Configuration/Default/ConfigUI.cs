@@ -29,6 +29,8 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
     public ConfigRepository Repository { get; protected set; }
 
+    public ConfigValue<Mod?> TargetMod { get; protected set; }
+
     public ConfigCategory? TargetCategory { get; protected set; }
 
     public IConfigEntry? TargetEntry { get; protected set; }
@@ -307,11 +309,11 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
         void OnCategorySelected_UpdateConfigList(ConfigCategory? category)
         {
-            Config.Mod = null;
+            Config.Mod = ConfigValue<Mod?>.Unset();
             Config.Category = category;
         }
 
-        void OnModSelected_UpdateConfigList(ValueTuple<Mod?>? mod)
+        void OnModSelected_UpdateConfigList(ConfigValue<Mod?> mod)
         {
             Config.Category = null;
             Config.Mod = mod;
@@ -370,7 +372,7 @@ internal sealed class TabList : FadedList
 {
     public event Action<ConfigCategory?>? OnCategorySelected;
 
-    public event Action<ValueTuple<Mod?>?>? OnModSelected;
+    public event Action<ConfigValue<Mod?>>? OnModSelected;
 
     public ConfigCategory? Category
     {
@@ -388,25 +390,25 @@ internal sealed class TabList : FadedList
             if (field is not null)
             {
                 OpenCategory(field);
-                Mod = null;
+                Mod = ConfigValue<Mod?>.Unset();
             }
         }
     }
 
-    public ValueTuple<Mod?>? Mod
+    public ConfigValue<Mod?> Mod
     {
         get;
 
         set
         {
-            if (field is not null)
+            if (field.IsSet)
             {
-                this[field.Value.Item1]?.IsHeaderSelected = false;
+                this[field.Value]?.IsHeaderSelected = false;
             }
 
             field = value;
             
-            if (field is not null)
+            if (field.IsSet)
             {
                 Category = null;
             }
@@ -443,17 +445,17 @@ internal sealed class TabList : FadedList
 
         ManualSortMethod = _ => { };
 
-        var categoriesByMod = new Dictionary<ValueTuple<Mod?>, List<ConfigCategory>>
+        var categoriesByMod = new Dictionary<ConfigValue<Mod?>, List<ConfigCategory>>
         {
-            [new ValueTuple<Mod?>(null)] = [],
-            [new ValueTuple<Mod?>(ModContent.GetInstance<ModLoaderMod>())] = [],
+            [ConfigValue<Mod?>.Set(null)] = [],
+            [ConfigValue<Mod?>.Set(ModContent.GetInstance<ModLoaderMod>())] = [],
         };
 
         foreach (var category in repository.Categories)
         {
-            if (!categoriesByMod.TryGetValue(new ValueTuple<Mod?>(category.Handle.Mod), out var categories))
+            if (!categoriesByMod.TryGetValue(ConfigValue<Mod?>.Set(category.Handle.Mod), out var categories))
             {
-                categoriesByMod[new ValueTuple<Mod?>(category.Handle.Mod)] = categories = [];
+                categoriesByMod[ConfigValue<Mod?>.Set(category.Handle.Mod)] = categories = [];
             }
 
             categories.Add(category);
@@ -461,7 +463,7 @@ internal sealed class TabList : FadedList
 
         foreach (var (mod, categories) in categoriesByMod)
         {
-            var modGroup = new ModGroup(mod.Item1, categories, targetCategory);
+            var modGroup = new ModGroup(mod.Value, categories, targetCategory);
             {
                 modGroup.OnCategorySelected += ModGroup_OnCategorySelected;
                 modGroup.OnModSelected += ModGroup_OnModSelected;
@@ -509,9 +511,9 @@ internal sealed class TabList : FadedList
         SoundEngine.PlaySound(SoundID.MenuOpen);
     }
 
-    private void ModGroup_OnModSelected(ValueTuple<Mod?>? mod)
+    private void ModGroup_OnModSelected(ConfigValue<Mod?> mod)
     {
-        if ((!Mod.HasValue && !mod.HasValue) || (Mod.HasValue && mod.HasValue && Mod.Value.Item1 == mod.Value.Item1))
+        if (Mod == mod)
         {
             return;
         }
@@ -641,7 +643,7 @@ internal sealed class TabList : FadedList
 
         public event Action<ConfigCategory>? OnCategorySelected;
 
-        public event Action<ValueTuple<Mod?>?>? OnModSelected;
+        public event Action<ConfigValue<Mod?>>? OnModSelected;
 
         public bool IsHeaderSelected
         {
@@ -880,7 +882,7 @@ internal sealed class TabList : FadedList
 
             IsHeaderSelected = true;
 
-            OnModSelected?.Invoke(new ValueTuple<Mod?>(Mod));
+            OnModSelected?.Invoke(ConfigValue<Mod?>.Set(Mod));
 
             SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
         }
@@ -1133,7 +1135,7 @@ internal sealed class ConfigList : FadedList
         }
     }
 
-    public ValueTuple<Mod?>? Mod
+    public ConfigValue<Mod?> Mod
     {
         get;
 
@@ -1183,14 +1185,12 @@ internal sealed class ConfigList : FadedList
         AddCategoryElements(Category, targetEntry);
     }
 
-    private void AddModElements(ValueTuple<Mod?>? modContainer)
+    private void AddModElements(ConfigValue<Mod?> mod)
     {
-        if (modContainer is not { } value)
+        if (!mod.IsSet)
         {
             return;
         }
-
-        var mod = value.Item1;
     }
 
     private void AddCategoryElements(
