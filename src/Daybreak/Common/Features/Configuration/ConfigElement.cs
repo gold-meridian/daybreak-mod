@@ -3,12 +3,6 @@ using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -44,12 +38,11 @@ public class ConfigElement : UIPanel
             LabelContainer.Width.Set(0f, 0.8f);
             LabelContainer.Height.Set(upper_height, 0f);
 
+            // Padding doesn't seem to apply automatically
             LabelContainer.Left.Set(PaddingLeft, 0f);
             LabelContainer.Top.Set(PaddingTop, 0f);
 
             LabelContainer.MinWidth.Set(30f, 0f);
-
-            //LabelContainer.OverflowHidden = true;
         }
         Append(LabelContainer);
 
@@ -78,7 +71,7 @@ public class ConfigElement : UIPanel
 
             Label.Width.Set(0f, 1f);
             Label.Height.Set(0f, 1f);
-            Label.MinWidth.Set(120f, 0f);
+            // Label.MinWidth.Set(120f, 0f);
 
             Label.TextOriginX = 0f;
 
