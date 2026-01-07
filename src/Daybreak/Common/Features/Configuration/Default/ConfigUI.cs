@@ -1,4 +1,6 @@
-﻿using Daybreak.Common.UI;
+﻿using Daybreak.Common.Mathematics;
+using Daybreak.Common.Rendering;
+using Daybreak.Common.UI;
 using Daybreak.Content.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
@@ -12,6 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -599,7 +602,7 @@ internal sealed class TabList : FadedList
 
             // Icon
             {
-                if (icon is not null)
+                if (icon is not null || forceIconPadding)
                 {
                     if (iconLeft)
                     {
@@ -625,7 +628,7 @@ internal sealed class TabList : FadedList
                         tabImage.MarginTop = -2f;
                         tabImage.Width.Set(30f, 0f);
                         tabImage.Height.Set(30f, 0f);
-                        tabImage.Texture = icon;
+                        tabImage.Texture = icon ?? TextureAssets.MagicPixel;
                     }
                     Append(tabImage);
                 }
@@ -655,21 +658,15 @@ internal sealed class TabList : FadedList
                 }
 
                 var dims = this.Dimensions;
-                var position = dims.Center();
-                var scale = dims.Size() / Texture.Value.Size();
-
-                var origin = Texture.Value.Size() * 0.5f;
+                var origin = dims.Size() * 0.5f;
 
                 spriteBatch.Draw(
-                    Texture.Value,
-                    position,
-                    null,
-                    Color.White,
-                    Rotation,
-                    origin,
-                    scale,
-                    SpriteEffects.None,
-                    0f
+                    new DrawParameters(Texture.Value)
+                    {
+                        Destination = new Rectangle(dims.Center.X, dims.Center.Y, dims.Width, dims.Height),
+                        Rotation = Angle.FromRadians(Rotation),
+                        Origin = origin,
+                    }
                 );
             }
         }
@@ -1074,7 +1071,7 @@ internal sealed class TabList : FadedList
 
         public ConfigCategory Category { get; }
 
-        public CategoryTab(ConfigCategory category) : base(category.DisplayName, icon: AssetReferences.Assets.Images.Configuration.ModIcon_Terraria.Asset, forceIconPadding: true, iconLeft: true)
+        public CategoryTab(ConfigCategory category) : base(category.DisplayName, icon: category.Icon ?? AssetReferences.Assets.Images.UI.DefaultCategoryIcon.Asset, forceIconPadding: true, iconLeft: true)
         {
             Category = category;
 

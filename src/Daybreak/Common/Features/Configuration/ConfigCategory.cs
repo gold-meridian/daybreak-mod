@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
@@ -80,6 +82,24 @@ public sealed class ConfigCategory(
             nameof(DisplayName),
             () => Handle.Name
         );
+    
+    /// <summary>
+    ///     The description of this category.
+    /// </summary>
+    public LocalizedText Description =>
+        Options.Description?.Invoke(this)
+     ?? LanguageHelpers.GetLocalization(
+            Handle.Mod,
+            Handle.Name,
+            nameof(ConfigCategory),
+            nameof(Description),
+            () => Handle.Name
+        );
+
+    /// <summary>
+    ///     The icon of this category.
+    /// </summary>
+    public Asset<Texture2D>? Icon => Options.Icon?.Invoke(this);
 
     /// <summary>
     ///     Derives the handle of this category.
@@ -106,6 +126,10 @@ public sealed class ConfigCategory(
 public sealed class ConfigCategoryOptions
 {
     public Func<ConfigCategory, LocalizedText>? DisplayName { get; set; }
+
+    public Func<ConfigCategory, LocalizedText>? Description { get; set; }
+
+    public Func<ConfigCategory, Asset<Texture2D>?>? Icon { get; set; }
 
     public ConfigCategoryOptions With(Action<ConfigCategoryOptions> apply)
     {
@@ -138,6 +162,31 @@ public static class ConfigCategoryDescriptorExtensions
         public ConfigCategoryOptions WithDisplayName(Func<ConfigCategory, LocalizedText>? displayName)
         {
             return options.With(x => x.DisplayName = displayName);
+        }
+
+        public ConfigCategoryOptions WithDisplayName(LocalizedText displayName)
+        {
+            return options.With(x => x.DisplayName = _ => displayName);
+        }
+
+        public ConfigCategoryOptions WithDescription(Func<ConfigCategory, LocalizedText>? description)
+        {
+            return options.With(x => x.Description = description);
+        }
+
+        public ConfigCategoryOptions WithDescription(LocalizedText description)
+        {
+            return options.With(x => x.Description = _ => description);
+        }
+
+        public ConfigCategoryOptions WithIcon(Func<ConfigCategory, Asset<Texture2D>?>? icon)
+        {
+            return options.With(x => x.Icon = icon);
+        }
+
+        public ConfigCategoryOptions WithIcon(Asset<Texture2D>? icon)
+        {
+            return options.With(x => x.Icon = _ => icon);
         }
     }
 }

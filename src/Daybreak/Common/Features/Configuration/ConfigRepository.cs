@@ -234,6 +234,7 @@ public abstract class ConfigRepository : ILocalizedModType
         CategoryMap[new CategoryKey(category.Handle)] = category;
         {
             _ = category.DisplayName;
+            _ = category.Description;
         }
 
         return category;
