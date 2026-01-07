@@ -11,6 +11,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
+using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 using TerrariaOverhaul;
 using TerrariaOverhaul.Common.ConfigurationScreen;
@@ -24,10 +25,42 @@ namespace Daybreak.Content.Compatibility;
 [ExtendsFromMod("TerrariaOverhaul")]
 internal static class TerrariaOverhaulCompat
 {
+    private sealed class RecalculableElement : UIElement
+    {
+        public event Action OnRecalculate;
+        
+        public override void Recalculate()
+        {
+            OnRecalculate?.Invoke();
+            base.Recalculate();
+        }
+    }
+    
     private sealed class SuperSpecialOverhaulCardPageProvider : IDefaultModPageProvider
     {
         void IDefaultModPageProvider.AddCategoriesToContainer(UIList container, ConfigCategory[] categories)
         {
+            var gridContainer = new RecalculableElement();
+            {
+                gridContainer.Width.Set(0f, 1f);
+                gridContainer.Height.Set(0f, 0f);
+            }
+            container.Add(gridContainer);
+
+            var grid = new FancyUIGrid();
+            {
+                grid.Width.Set(-20f, 1f);
+                grid.Height.Set(0f, 1f);
+                grid.ListPadding = 15f;
+                grid.PaddingRight = 15f;
+                
+                gridContainer.OnRecalculate += () =>
+                {
+                    gridContainer.Height.Set(grid.GetTotalHeight(), 0f);
+                };
+            }
+            gridContainer.Append(grid);
+            
             var i = 0;
             foreach (var category in categories.OrderBy(x => x.Handle.Name))
             {
@@ -42,8 +75,10 @@ internal static class TerrariaOverhaulCompat
                         // SetCategoryScreen(category);
                     };
                 }
-                container.Add(cardPanel);
+                grid.Add(cardPanel);
             }
+            
+            container.Recalculate();
         }
     }
 
