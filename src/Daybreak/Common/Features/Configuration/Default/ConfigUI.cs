@@ -908,11 +908,14 @@ internal sealed class TabList : FadedList
                 return;
             }
 
+            if (!IsHeaderSelected)
+            {
+                SoundEngine.PlaySound(SoundID.MenuOpen);
+            }
+
             IsHeaderSelected = true;
 
             OnModSelected?.Invoke(ConfigValue<Mod?>.Set(Mod));
-
-            SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
         }
 
         public override void LeftDoubleClick(UIMouseEvent evt)
@@ -925,6 +928,8 @@ internal sealed class TabList : FadedList
             }
 
             Open = !Open;
+
+            SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
         }
 
         public override void Update(GameTime gameTime)
