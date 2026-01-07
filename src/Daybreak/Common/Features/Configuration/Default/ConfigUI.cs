@@ -224,6 +224,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
                 Tabs.Height.Set(0f, 1f);
                 Tabs.HAlign = 1f;
                 Tabs.OnCategorySelected += OnCategorySelected_UpdateConfigList;
+                Tabs.OnModSelected += OnModSelected_UpdateConfigList;
                 Tabs.SetScrollbar(TabScrollbar);
             }
             container.Append(Tabs);
@@ -304,9 +305,16 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         }
         BaseElement.Append(SaveButton);
 
-        void OnCategorySelected_UpdateConfigList(ConfigCategory category)
+        void OnCategorySelected_UpdateConfigList(ConfigCategory? category)
         {
+            Config.Mod = null;
             Config.Category = category;
+        }
+
+        void OnModSelected_UpdateConfigList(ValueTuple<Mod?>? mod)
+        {
+            Config.Category = null;
+            Config.Mod = mod;
         }
     }
 
@@ -360,10 +368,11 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
 internal sealed class TabList : FadedList
 {
-    public event Action<ConfigCategory>? OnCategorySelected;
+    public event Action<ConfigCategory?>? OnCategorySelected;
 
-    [field: MaybeNull]
-    public ConfigCategory Category
+    public event Action<ValueTuple<Mod?>?>? OnModSelected;
+
+    public ConfigCategory? Category
     {
         get;
 
@@ -371,12 +380,36 @@ internal sealed class TabList : FadedList
         {
             if (field is not null)
             {
-                this[field.Handle.Mod]?.Selected = false;
+                this[field.Handle.Mod]?.IsACategorySelected = false;
             }
 
-            OpenCategory(value);
+            field = value;
+
+            if (field is not null)
+            {
+                OpenCategory(field);
+                Mod = null;
+            }
+        }
+    }
+
+    public ValueTuple<Mod?>? Mod
+    {
+        get;
+
+        set
+        {
+            if (field is not null)
+            {
+                this[field.Value.Item1]?.IsHeaderSelected = false;
+            }
 
             field = value;
+            
+            if (field is not null)
+            {
+                Category = null;
+            }
         }
     }
 
@@ -431,6 +464,7 @@ internal sealed class TabList : FadedList
             var modGroup = new ModGroup(mod.Item1, categories, targetCategory);
             {
                 modGroup.OnCategorySelected += ModGroup_OnCategorySelected;
+                modGroup.OnModSelected += ModGroup_OnModSelected;
             }
             Add(modGroup);
         }
@@ -475,14 +509,31 @@ internal sealed class TabList : FadedList
         SoundEngine.PlaySound(SoundID.MenuOpen);
     }
 
+    private void ModGroup_OnModSelected(ValueTuple<Mod?>? mod)
+    {
+        if ((!Mod.HasValue && !mod.HasValue) || (Mod.HasValue && mod.HasValue && Mod.Value.Item1 == mod.Value.Item1))
+        {
+            return;
+        }
+
+        Mod = mod;
+        OnModSelected?.Invoke(Mod);
+        SoundEngine.PlaySound(SoundID.MenuOpen);
+    }
+
     public override void OnActivate()
     {
         OnCategorySelected?.Invoke(Category);
         OpenCategory(Category, true);
     }
 
-    private void OpenCategory(ConfigCategory category, bool scroll = false)
+    private void OpenCategory(ConfigCategory? category, bool scroll = false)
     {
+        if (category is null)
+        {
+            return;
+        }
+
         var elem = _items.FirstOrDefault(m => m is ModGroup g && g.Mod == category.Handle.Mod);
 
         if (elem is not ModGroup group)
@@ -490,7 +541,7 @@ internal sealed class TabList : FadedList
             return;
         }
 
-        group.Selected = true;
+        group.IsACategorySelected = true;
 
         group[category]?.Selected = true;
 
@@ -590,7 +641,32 @@ internal sealed class TabList : FadedList
 
         public event Action<ConfigCategory>? OnCategorySelected;
 
-        public bool Selected
+        public event Action<ValueTuple<Mod?>?>? OnModSelected;
+
+        public bool IsHeaderSelected
+        {
+            get;
+
+            set
+            {
+                field = value;
+
+                if (value)
+                {
+                    foreach (var elem in list)
+                    {
+                        if (elem is CategoryTab tab)
+                        {
+                            tab.Selected = false;
+                        }
+                    }
+
+                    IsACategorySelected = false;
+                }
+            }
+        }
+
+        public bool IsACategorySelected
         {
             get;
 
@@ -616,6 +692,8 @@ internal sealed class TabList : FadedList
             }
         }
 
+        public bool IsAtAllSelected => IsHeaderSelected || IsACategorySelected;
+
         public CategoryTab? this[ConfigCategory category]
         {
             get
@@ -631,10 +709,12 @@ internal sealed class TabList : FadedList
         private bool hoveringHeader;
 
         private int hoverProgress;
+        private int selectProgress;
         private int openProgress;
 
         private readonly UIHorizontalSeparator dimDivider;
         private readonly UIHorizontalSeparator highlightDivider;
+        private readonly UIHorizontalSeparator selectDivider;
         private readonly Icon dropdownIcon;
         private readonly UIElement listContainer;
         private readonly UIList list;
@@ -692,6 +772,14 @@ internal sealed class TabList : FadedList
                     highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
                 }
                 dividerContainer.Append(highlightDivider);
+                
+                selectDivider = new UIHorizontalSeparator();
+                {
+                    selectDivider.Width = StyleDimension.Empty;
+                    selectDivider.Height.Set(2f, 0f);
+                    selectDivider.Color = Main.OurFavoriteColor;
+                }
+                dividerContainer.Append(selectDivider);
             }
 
             listContainer = new UIElement();
@@ -726,7 +814,7 @@ internal sealed class TabList : FadedList
 
                         if (category == targetCategory)
                         {
-                            Selected = true;
+                            IsACategorySelected = true;
                             tab.Selected = true;
                         }
                     }
@@ -754,7 +842,7 @@ internal sealed class TabList : FadedList
                     return;
                 }
 
-                Selected = true;
+                IsACategorySelected = true;
                 tab.Selected = true;
 
                 OnCategorySelected?.Invoke(tab.Category);
@@ -779,14 +867,34 @@ internal sealed class TabList : FadedList
         public override void LeftMouseDown(UIMouseEvent evt)
         {
             base.LeftMouseDown(evt);
+        }
 
-            if (Selected || !hoveringHeader)
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            base.LeftClick(evt);
+
+            if (/*Selected ||*/ !hoveringHeader)
+            {
+                return;
+            }
+
+            IsHeaderSelected = true;
+
+            OnModSelected?.Invoke(new ValueTuple<Mod?>(Mod));
+
+            SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
+        }
+
+        public override void LeftDoubleClick(UIMouseEvent evt)
+        {
+            base.LeftDoubleClick(evt);
+
+            if (/*IsAtAllSelected ||*/ !hoveringHeader)
             {
                 return;
             }
 
             Open = !Open;
-            SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
         }
 
         public override void Update(GameTime gameTime)
@@ -798,16 +906,18 @@ internal sealed class TabList : FadedList
             var wasHoveringHeader = hoveringHeader;
             hoveringHeader = IsMouseHovering && this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
 
-            if (!Selected && hoveringHeader && !wasHoveringHeader)
+            if (!IsHeaderSelected && hoveringHeader && !wasHoveringHeader)
             {
                 SoundEngine.PlaySound(in SoundID.MenuTick);
             }
 
             const int hover_frames = 8;
             {
-                hoverProgress = MathHelper.Clamp(hoverProgress + (hoveringHeader || Selected).ToDirectionInt(), 0, hover_frames);
+                hoverProgress = MathHelper.Clamp(hoverProgress + (hoveringHeader || IsAtAllSelected).ToDirectionInt(), 0, hover_frames);
+                selectProgress = MathHelper.Clamp(selectProgress + IsHeaderSelected.ToDirectionInt(), 0, hover_frames);
 
                 highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
+                selectDivider.Width.Set(0f, Ease(selectProgress / (float)hover_frames));
             }
 
             UpdateHeight();
@@ -1009,8 +1119,7 @@ internal sealed class TabList : FadedList
 
 internal sealed class ConfigList : FadedList
 {
-    [field: MaybeNull]
-    public ConfigCategory Category
+    public ConfigCategory? Category
     {
         get;
 
@@ -1019,6 +1128,20 @@ internal sealed class ConfigList : FadedList
             Clear();
 
             AddCategoryElements(value, null);
+
+            field = value;
+        }
+    }
+
+    public ValueTuple<Mod?>? Mod
+    {
+        get;
+
+        set
+        {
+            Clear();
+
+            AddModElements(value);
 
             field = value;
         }
@@ -1060,11 +1183,26 @@ internal sealed class ConfigList : FadedList
         AddCategoryElements(Category, targetEntry);
     }
 
+    private void AddModElements(ValueTuple<Mod?>? modContainer)
+    {
+        if (modContainer is not { } value)
+        {
+            return;
+        }
+
+        var mod = value.Item1;
+    }
+
     private void AddCategoryElements(
-        ConfigCategory category,
+        ConfigCategory? category,
         IConfigEntry? targetEntry
     )
     {
+        if (category is null)
+        {
+            return;
+        }
+
         // Extra padding at the start of the list to avoid the last item being
         // engulfed in the fade.
         var startPadElement = new UIElement();
