@@ -34,9 +34,20 @@ internal sealed class DefaultConfigRepository : ConfigRepository
 
     private static string ConfigsDirectory => Path.Combine(Main.SavePath, "daybreak", "configs");
 
+    private readonly Dictionary<ConfigValue<Mod?>, Func<IEnumerable<ConfigCategory>, IEnumerable<ConfigCategory>>> categorySorters = [];
     private readonly Dictionary<ConfigValue<Mod?>, IDefaultModPageProvider> modPageProviders = [];
     
     private static readonly IDefaultModPageProvider default_page_provider = new DefaultModPageProvider();
+
+    public void RegisterModCategorySorter(ConfigValue<Mod?> mod, Func<IEnumerable<ConfigCategory>, IEnumerable<ConfigCategory>> sortCallback)
+    {
+        categorySorters[mod] = sortCallback;
+    }
+
+    public Func<IEnumerable<ConfigCategory>, IEnumerable<ConfigCategory>>? GetModCategorySorter(ConfigValue<Mod?> mod)
+    {
+        return categorySorters.GetValueOrDefault(mod);
+    }
     
     public void RegisterModPageProvider(ConfigValue<Mod?> mod, IDefaultModPageProvider provider)
     {

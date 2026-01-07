@@ -57,6 +57,18 @@ public static class ConfigSystem
     }
 
     /// <summary>
+    ///     Registers a function that produces a sorted collection of config
+    ///     categories for display.
+    /// </summary>
+    public static void RegisterDefaultModCategorySorter(
+        ConfigValue<Mod?> mod,
+        Func<IEnumerable<ConfigCategory>, IEnumerable<ConfigCategory>> sorterCallback
+    )
+    {
+        ConfigRepository.DefaultRepository.RegisterModCategorySorter(mod, sorterCallback);
+    }
+
+    /// <summary>
     ///     Registers a <see cref="IDefaultModPageProvider"/> for the
     ///     <paramref name="mod"/>.  This allows mods to create custom UIs for
     ///     their mod category UI, which should contain the nested categories

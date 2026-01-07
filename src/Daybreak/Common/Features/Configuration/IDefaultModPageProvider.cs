@@ -1,4 +1,4 @@
-﻿using Terraria.UI;
+﻿using Terraria.GameContent.UI.Elements;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -13,12 +13,12 @@ public interface IDefaultModPageProvider
     ///     provide your arbitrary UI to display.
     /// </summary>
     void AddCategoriesToContainer(
-        UIElement container,
+        UIList container,
         ConfigCategory[] categories
     );
 }
 
 internal sealed class DefaultModPageProvider : IDefaultModPageProvider
 {
-    void IDefaultModPageProvider.AddCategoriesToContainer(UIElement container, ConfigCategory[] categories) { }
+    void IDefaultModPageProvider.AddCategoriesToContainer(UIList container, ConfigCategory[] categories) { }
 }

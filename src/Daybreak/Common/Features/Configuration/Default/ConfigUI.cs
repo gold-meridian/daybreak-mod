@@ -761,6 +761,11 @@ internal sealed class TabList : FadedList
 
         public ModGroup(Mod? mod, IEnumerable<ConfigCategory> categories, ConfigCategory? targetCategory) : base(mod?.DisplayName ?? "Terraria", GetModSmallIcon(mod))
         {
+            if (ConfigRepository.DefaultRepository.GetModCategorySorter(ConfigValue<Mod?>.Set(mod)) is { } sorter)
+            {
+                categories = sorter(categories);
+            }
+
             Mod = mod;
 
             Width = StyleDimension.Fill;
@@ -844,6 +849,7 @@ internal sealed class TabList : FadedList
 
             list = [];
             {
+                list.ManualSortMethod = _ => { };
                 list.Width.Set(0f, 1f);
                 list.Height.Set(0f, 1f);
                 list.VAlign = 1f;

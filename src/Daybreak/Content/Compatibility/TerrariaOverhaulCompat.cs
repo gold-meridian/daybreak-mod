@@ -5,10 +5,15 @@ using System.Reflection;
 using Daybreak.Common.Features.Configuration;
 using Daybreak.Common.Features.Hooks;
 using MonoMod.Cil;
+using Terraria.Audio;
+using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
+using Terraria.UI;
 using TerrariaOverhaul;
+using TerrariaOverhaul.Common.ConfigurationScreen;
 
 namespace Daybreak.Content.Compatibility;
 
@@ -19,6 +24,29 @@ namespace Daybreak.Content.Compatibility;
 [ExtendsFromMod("TerrariaOverhaul")]
 internal static class TerrariaOverhaulCompat
 {
+    private sealed class SuperSpecialOverhaulCardPageProvider : IDefaultModPageProvider
+    {
+        void IDefaultModPageProvider.AddCategoriesToContainer(UIList container, ConfigCategory[] categories)
+        {
+            var i = 0;
+            foreach (var category in categories.OrderBy(x => x.Handle.Name))
+            {
+                var cardPanel = new CategoryCardPanel(category.Handle.Name, CommonAssets.GetBackgroundTexture(i++))
+                {
+                    UserObject = category.Handle.Name,
+                };
+                {
+                    cardPanel.OnLeftClick += (_, _) =>
+                    {
+                        SoundEngine.PlaySound(SoundID.MenuOpen);
+                        // SetCategoryScreen(category);
+                    };
+                }
+                container.Add(cardPanel);
+            }
+        }
+    }
+
     [OnLoad]
     private static void ApplyHooks()
     {
@@ -39,6 +67,20 @@ internal static class TerrariaOverhaulCompat
         MonoModHooks.Modify(
             typeof(TerrariaOverhaul.Core.Configuration.ConfigSystem).GetMethod(nameof(TerrariaOverhaul.Core.Configuration.ConfigSystem.ForceInitializeStaticConstructors), BindingFlags.NonPublic | BindingFlags.Instance)!,
             ForceInitializeStaticConstructors_FixLoadErrors
+        );
+    }
+
+    [ModSystemHooks.PostSetupContent]
+    private static void AddConfigProperties()
+    {
+        ConfigSystem.RegisterDefaultModCategorySorter(
+            ConfigValue<Mod?>.Set(ModLoader.GetMod("TerrariaOverhaul")),
+            categories => categories.OrderBy(x => x.Handle.Name)
+        );
+
+        ConfigSystem.RegisterDefaultModPageProvider(
+            ConfigValue<Mod?>.Set(ModLoader.GetMod("TerrariaOverhaul")),
+            new SuperSpecialOverhaulCardPageProvider()
         );
     }
 
