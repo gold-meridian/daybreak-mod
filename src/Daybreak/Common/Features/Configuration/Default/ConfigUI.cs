@@ -583,7 +583,7 @@ internal sealed class TabList : FadedList
 
     private abstract class TextTab<T> : UIAutoScaleTextTextPanel<T>
     {
-        protected TextTab(T text, Asset<Texture2D>? icon = null) : base(text)
+        protected TextTab(T text, Asset<Texture2D>? icon = null, bool forceIconPadding = false, bool iconLeft = false) : base(text)
         {
             BackgroundColor = Color.Transparent;
             BorderColor = Color.Transparent;
@@ -597,19 +597,31 @@ internal sealed class TabList : FadedList
             // Makes the text respond to padding.
             UseInnerDimensions = true;
 
-            var useIcon = icon is not null;
-
             // Icon
             {
-                if (useIcon)
+                if (icon is not null)
                 {
-                    PaddingRight += 30f;
+                    if (iconLeft)
+                    {
+                        PaddingLeft += 30f;
+                    }
+                    else
+                    {
+                        PaddingRight += 30f;
+                    }
 
                     var tabImage = new Icon();
                     {
                         tabImage.VAlign = 0.5f;
-                        tabImage.HAlign = 1f;
-                        tabImage.MarginRight = -PaddingRight;
+                        tabImage.HAlign = iconLeft ? 0f : 1f;
+                        if (iconLeft)
+                        {
+                            tabImage.MarginLeft = -PaddingLeft;
+                        }
+                        else
+                        {
+                            tabImage.MarginRight = -PaddingRight;
+                        }
                         tabImage.MarginTop = -2f;
                         tabImage.Width.Set(30f, 0f);
                         tabImage.Height.Set(30f, 0f);
@@ -819,7 +831,7 @@ internal sealed class TabList : FadedList
 
             listContainer = new UIElement();
             {
-                const float list_margin = 15f;
+                const float list_margin = 0f;
 
                 listContainer.MarginLeft = -PaddingLeft + list_margin;
                 listContainer.MarginRight = -PaddingRight;
@@ -838,6 +850,12 @@ internal sealed class TabList : FadedList
                 list.Height.Set(0f, 1f);
                 list.VAlign = 1f;
                 list.ListPadding = 4f;
+
+                var topPaddingElement = new UIElement();
+                {
+                    topPaddingElement.Height.Set(0f, 0f);
+                }
+                list.Add(topPaddingElement);
 
                 foreach (var category in categories)
                 {
@@ -1056,7 +1074,7 @@ internal sealed class TabList : FadedList
 
         public ConfigCategory Category { get; }
 
-        public CategoryTab(ConfigCategory category) : base(category.DisplayName)
+        public CategoryTab(ConfigCategory category) : base(category.DisplayName, icon: AssetReferences.Assets.Images.Configuration.ModIcon_Terraria.Asset, forceIconPadding: true, iconLeft: true)
         {
             Category = category;
 
@@ -1067,7 +1085,8 @@ internal sealed class TabList : FadedList
                 dividerContainer.MarginLeft = -PaddingLeft;
                 dividerContainer.MarginRight = -PaddingRight;
 
-                dividerContainer.Width.Set(PaddingLeft + PaddingRight, 1f);
+                dividerContainer.Left.Set(30f, 0f);
+                dividerContainer.Width.Set(PaddingLeft + PaddingRight - 30f, 1f);
                 dividerContainer.MaxWidth.Set(PaddingLeft + PaddingRight, 1f);
 
                 dividerContainer.Height.Set(2f, 0f);
