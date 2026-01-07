@@ -768,6 +768,11 @@ internal sealed class TabList : FadedList
                 dropdownIcon.Width.Set(12f, 0f);
                 dropdownIcon.Height.Set(12f, 0f);
                 dropdownIcon.Texture = AssetReferences.Assets.Images.UI.Dropdown.Asset;
+                dropdownIcon.OnLeftClick += (_, _) =>
+                {
+                    Open = !Open;
+                    SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
+                };
             }
             Append(dropdownIcon);
 
@@ -879,6 +884,11 @@ internal sealed class TabList : FadedList
             }
         }
 
+        private void DropdownIcon_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
+        {
+            throw new NotImplementedException();
+        }
+
         private static Asset<Texture2D>? GetModSmallIcon(Mod? mod)
         {
             if (mod is null)
@@ -936,7 +946,7 @@ internal sealed class TabList : FadedList
             var mousePosition = UserInterface.ActiveInstance.MousePosition;
 
             var wasHoveringHeader = hoveringHeader;
-            hoveringHeader = IsMouseHovering && this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
+            hoveringHeader = IsMouseHovering && !dropdownIcon.IsMouseHovering && this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
 
             if (!IsHeaderSelected && hoveringHeader && !wasHoveringHeader)
             {
