@@ -74,12 +74,14 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
     protected ConfigState(
         ConfigRepository repository,
+        ConfigValue<Mod?> mod,
         ConfigCategoryHandle? category = null,
         ConfigEntryHandle? entry = null,
         Action? onExit = null
     )
     {
         Repository = repository;
+        TargetMod = mod;
 
         if (category.HasValue && Repository.TryGetCategory(category.Value, out var theCategory))
         {
@@ -220,7 +222,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             }
             SplitElement.LeftElement.Append(container);
 
-            Tabs = new TabList(Repository, TargetCategory, TargetEntry);
+            Tabs = new TabList(Repository, TargetMod, TargetCategory, TargetEntry);
             {
                 Tabs.Width.Set(0f, 1f);
                 Tabs.Height.Set(0f, 1f);
@@ -252,7 +254,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             }
             SplitElement.RightElement.Append(container);
 
-            Config = new ConfigList(Repository, TargetCategory, TargetEntry);
+            Config = new ConfigList(Repository, TargetMod, TargetCategory, TargetEntry);
             {
                 Config.Width.Set(0f, 1f);
                 Config.Height.Set(0f, 1f);
@@ -306,6 +308,8 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             SaveButton.WithFadedMouseOver();
         }
         BaseElement.Append(SaveButton);
+
+        return;
 
         void OnCategorySelected_UpdateConfigList(ConfigCategory? category)
         {
@@ -407,10 +411,11 @@ internal sealed class TabList : FadedList
             }
 
             field = value;
-            
+
             if (field.IsSet)
             {
                 Category = null;
+                OpenMod(field);
             }
         }
     }
@@ -427,6 +432,7 @@ internal sealed class TabList : FadedList
 
     public TabList(
         ConfigRepository repository,
+        ConfigValue<Mod?> targetMod,
         ConfigCategory? targetCategory,
         IConfigEntry? targetEntry
     )
@@ -479,24 +485,23 @@ internal sealed class TabList : FadedList
         }
         Add(endPadElement);
 
-        ConfigCategory categoryToGoTo;
+        var categoryToGoTo = targetCategory;
         if (targetEntry is not null)
         {
-            if (targetCategory is not null && targetEntry.Categories.Contains(targetCategory))
-            {
-                categoryToGoTo = targetCategory;
-            }
-            else
+            if (targetCategory is null || !targetEntry.Categories.Contains(targetCategory))
             {
                 categoryToGoTo = repository.GetCategory(targetEntry.MainCategory);
             }
         }
+
+        if (categoryToGoTo is not null)
+        {
+            Category = categoryToGoTo;
+        }
         else
         {
-            categoryToGoTo = targetCategory ?? categoriesByMod.Values.First().First();
+            Mod = targetMod;
         }
-
-        Category = categoryToGoTo;
     }
 
     private void ModGroup_OnCategorySelected(ConfigCategory category)
@@ -546,6 +551,29 @@ internal sealed class TabList : FadedList
         group.IsACategorySelected = true;
 
         group[category]?.Selected = true;
+
+        if (scroll)
+        {
+            _scrollbar.ViewPosition = elem.Top.Pixels;
+        }
+    }
+
+    private void OpenMod(ConfigValue<Mod?> mod, bool scroll = false)
+    {
+        if (!mod.IsSet)
+        {
+            return;
+        }
+
+        var elem = _items.FirstOrDefault(m => m is ModGroup g && g.Mod == mod.Value);
+
+        if (elem is not ModGroup group)
+        {
+            return;
+        }
+
+        group.IsACategorySelected = false;
+        group.IsHeaderSelected = true;
 
         if (scroll)
         {
@@ -774,7 +802,7 @@ internal sealed class TabList : FadedList
                     highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
                 }
                 dividerContainer.Append(highlightDivider);
-                
+
                 selectDivider = new UIHorizontalSeparator();
                 {
                     selectDivider.Width = StyleDimension.Empty;
@@ -875,7 +903,7 @@ internal sealed class TabList : FadedList
         {
             base.LeftClick(evt);
 
-            if (/*Selected ||*/ !hoveringHeader)
+            if ( /*Selected ||*/ !hoveringHeader)
             {
                 return;
             }
@@ -891,7 +919,7 @@ internal sealed class TabList : FadedList
         {
             base.LeftDoubleClick(evt);
 
-            if (/*IsAtAllSelected ||*/ !hoveringHeader)
+            if ( /*IsAtAllSelected ||*/ !hoveringHeader)
             {
                 return;
             }
@@ -1151,6 +1179,7 @@ internal sealed class ConfigList : FadedList
 
     public ConfigList(
         ConfigRepository repository,
+        ConfigValue<Mod?> targetMod,
         ConfigCategory? targetCategory,
         IConfigEntry? targetEntry
     )
@@ -1161,28 +1190,27 @@ internal sealed class ConfigList : FadedList
 
         ManualSortMethod = _ => { };
 
-        var entriesByCategory = new Dictionary<ConfigCategory, List<IConfigEntry>>();
+        // var entriesByCategory = new Dictionary<ConfigCategory, List<IConfigEntry>>();
 
-        ConfigCategory categoryToOpen;
+        var categoryToOpen = targetCategory;
         if (targetEntry is not null)
         {
-            if (targetCategory is not null && targetEntry.Categories.Contains(targetCategory))
-            {
-                categoryToOpen = targetCategory;
-            }
-            else
+            if (targetCategory is null || !targetEntry.Categories.Contains(targetCategory))
             {
                 categoryToOpen = repository.GetCategory(targetEntry.MainCategory);
             }
         }
+
+        if (categoryToOpen is not null)
+        {
+            Category = categoryToOpen;
+            AddCategoryElements(Category, targetEntry);
+        }
         else
         {
-            categoryToOpen = targetCategory ?? repository.Categories.First();
+            Mod = targetMod;
+            AddModElements(Mod);
         }
-
-        Category = categoryToOpen;
-
-        AddCategoryElements(Category, targetEntry);
     }
 
     private void AddModElements(ConfigValue<Mod?> mod)

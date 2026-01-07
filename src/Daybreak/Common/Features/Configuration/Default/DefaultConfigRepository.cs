@@ -14,11 +14,13 @@ namespace Daybreak.Common.Features.Configuration;
 
 internal sealed class DefaultConfigState(
     ConfigRepository repository,
+    ConfigValue<Mod?> mod,
     ConfigCategoryHandle? category = null,
     ConfigEntryHandle? entry = null,
     Action? onExit = null
 ) : ConfigState(
     repository,
+    mod,
     category,
     entry,
     onExit
@@ -100,6 +102,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
     }
 
     public override void ShowInterface(
+        ConfigValue<Mod?> mod,
         ConfigCategoryHandle? categoryHandle = null,
         ConfigEntryHandle? entryHandle = null,
         Action? onExit = null
@@ -109,6 +112,7 @@ internal sealed class DefaultConfigRepository : ConfigRepository
             GetInterface(),
             new DefaultConfigState(
                 this,
+                mod,
                 categoryHandle,
                 entryHandle,
                 onExit

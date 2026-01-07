@@ -14,6 +14,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
+using Terraria.ModLoader.Default;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
@@ -177,6 +178,7 @@ internal static class DefaultConfigDisplay
         private void HandleClick()
         {
             ConfigRepository.Default.ShowInterface(
+                ConfigValue<Mod?>.Set(ModContent.GetInstance<ModLoaderMod>()),
                 categoryHandle: CategoryHandle,
                 entryHandle: EntryHandle,
                 onExit: OnExit
@@ -244,6 +246,7 @@ internal static class DefaultConfigDisplay
             {
                 daybreakOverVanillaSettings = true;
                 ConfigRepository.Default.ShowInterface(
+                    ConfigValue<Mod?>.Set(null), // vanilla
                     onExit:
                     () =>
                     {
@@ -373,12 +376,23 @@ internal static class DefaultConfigDisplay
         if (daybreakOverModdedSettings || !ConfigManager.Configs.TryGetValue(mod, out var modConfigs) || modConfigs.Count == 0)
         {
             ConfigRepository.Default.ShowInterface(
+                ConfigValue<Mod?>.Set(mod),
+                onExit: () =>
+                {
+                    Main.menuMode = Interface.modsMenuID;
+                }
+            );
+
+            /*
+            ConfigRepository.Default.ShowInterface(
+                ConfigValue<Mod?>.Set(mod),
                 categoryHandle: ConfigRepository.Default.Categories.FirstOrDefault(x => x.Handle.Mod == mod) ?? default(ConfigCategoryHandle),
                 onExit: () =>
                 {
                     Main.menuMode = Interface.modsMenuID;
                 }
             );
+            */
         }
         else
         {
@@ -410,6 +424,7 @@ internal static class DefaultConfigDisplay
                 if (daybreakOverVanillaSettings)
                 {
                     ConfigRepository.Default.ShowInterface(
+                        ConfigValue<Mod?>.Set(null), // vanilla
                         onExit:
                         () =>
                         {

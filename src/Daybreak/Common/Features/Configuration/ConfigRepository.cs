@@ -302,6 +302,7 @@ public abstract class ConfigRepository : ILocalizedModType
     ///     exist, treat it as if neither were provided.
     /// </summary>
     public abstract void ShowInterface(
+        ConfigValue<Mod?> mod,
         ConfigCategoryHandle? categoryHandle = null,
         ConfigEntryHandle? entryHandle = null,
         Action? onExit = null
