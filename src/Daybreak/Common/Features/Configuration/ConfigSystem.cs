@@ -123,18 +123,6 @@ public static class ConfigSystem
                       .WithDisplayName(_ => mc.DisplayName)
                       .Register(ConfigRepository.Default, self, name);
 
-        /*
-        foreach (var member in GetSerializableMembers(category, ConfigManager.serializerSettingsCompact.ContractResolver))
-        {
-            if (member.PropertyType is null || member.PropertyName is not { } propertyName)
-            {
-                continue;
-            }
-
-            define_entry_method.MakeGenericMethod(member.PropertyType).Invoke(null, [member, self, propertyName]);
-        }
-        */
-
         // Transcribed largely from
         // ConfigManager::RegisterLocalizationKeysForMembers.
         foreach (var wrapper in ConfigManager.GetFieldsAndProperties(mc))
@@ -157,7 +145,8 @@ public static class ConfigSystem
             define_entry_method.MakeGenericMethod(wrapper.Type).Invoke(
                 null,
                 [
-                    wrapper, category,
+                    wrapper,
+                    category,
                     mc.Mode == ConfigScope.ClientSide ? ConfigSide.ClientSide : ConfigSide.Both,
                     self,
                     labelKey,
@@ -178,6 +167,7 @@ public static class ConfigSystem
         string tooltipKey
     )
     {
+        // TODO: Default value provider
         ConfigEntry<T>.Define()
                        /*
                       .WithValueTransformer(
