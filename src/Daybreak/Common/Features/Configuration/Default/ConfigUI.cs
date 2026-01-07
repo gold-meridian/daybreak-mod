@@ -698,14 +698,12 @@ internal sealed class TabList : FadedList
             {
                 const float list_margin = 15f;
 
-                listContainer.MarginLeft = -PaddingLeft;
+                listContainer.MarginLeft = -PaddingLeft + list_margin;
                 listContainer.MarginRight = -PaddingRight;
 
-                listContainer.Left.Set(list_margin, 0f);
                 listContainer.Top.Set(tab_height, 0f);
 
-                listContainer.Width.Set(list_margin + PaddingLeft + PaddingRight, 1f);
-                listContainer.MaxWidth.Set(list_margin + PaddingLeft + PaddingRight, 1f);
+                listContainer.MinWidth.Set(PaddingLeft + PaddingRight - list_margin, 1f);
 
                 listContainer.OverflowHidden = true;
             }
