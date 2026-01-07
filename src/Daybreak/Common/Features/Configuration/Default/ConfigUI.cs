@@ -903,15 +903,12 @@ internal sealed class TabList : FadedList
         {
             base.LeftClick(evt);
 
-            if ( /*Selected ||*/ !hoveringHeader)
+            if (IsHeaderSelected ||!hoveringHeader)
             {
                 return;
             }
 
-            if (!IsHeaderSelected)
-            {
-                SoundEngine.PlaySound(SoundID.MenuOpen);
-            }
+            SoundEngine.PlaySound(SoundID.MenuOpen);
 
             IsHeaderSelected = true;
 
