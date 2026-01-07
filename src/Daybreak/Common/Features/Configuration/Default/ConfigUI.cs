@@ -1,4 +1,5 @@
 ﻿using Daybreak.Common.UI;
+using Daybreak.Content.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Daybreak.Content.UI;
+using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
@@ -49,6 +51,8 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
     protected TabList? Tabs { get; set; }
 
     protected UIScrollbar? TabScrollbar { get; set; }
+
+    protected ConfigList Config { get; set; }
 
     protected UIScrollbar? ConfigScrollbar { get; set; }
 
@@ -192,14 +196,14 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
         var searchBarOffset = SearchBar.Height.Pixels + 6f;
 
+        // It overflows by this amount of pixels vertically on the top and
+        // bottom, for some reason.
+        const float scrollbar_vertical_adjust = 6f;
+
         TabScrollbar = new UIScrollbar();
         {
-            // It overflows by this amount of pixels vertically on the top and
-            // bottom, for some reason.
-            const float vertical_adjust = 6f;
-
-            TabScrollbar.Height.Set(-64f - BackPanel.PaddingTop - searchBarOffset - (vertical_adjust * 2f), 1f);
-            TabScrollbar.Top.Set(searchBarOffset + vertical_adjust, 0f);
+            TabScrollbar.Height.Set(-64f - BackPanel.PaddingTop - searchBarOffset - (scrollbar_vertical_adjust * 2f), 1f);
+            TabScrollbar.Top.Set(searchBarOffset + scrollbar_vertical_adjust, 0f);
             TabScrollbar.HAlign = 1f;
         }
         SplitElement.LeftElement.Append(TabScrollbar);
@@ -219,9 +223,40 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
                 Tabs.Width.Set(0f, 1f);
                 Tabs.Height.Set(0f, 1f);
                 Tabs.HAlign = 1f;
+                Tabs.OnCategorySelected += OnCategorySelected_UpdateConfigList;
                 Tabs.SetScrollbar(TabScrollbar);
             }
             container.Append(Tabs);
+        }
+
+        ConfigScrollbar = new UIScrollbar();
+        {
+            ConfigScrollbar.Height.Set(-64f - BackPanel.PaddingTop - (scrollbar_vertical_adjust * 2f), 1f);
+            ConfigScrollbar.Top.Set(scrollbar_vertical_adjust, 0f);
+            ConfigScrollbar.HAlign = 1f;
+        }
+        SplitElement.RightElement.Append(ConfigScrollbar);
+
+        // Panel config
+        {
+            var container = new UIElement();
+            {
+                container.Width.Set(-TabScrollbar.Width.Pixels - 4f, 1f);
+                container.Height.Set(-64f - BackPanel.PaddingTop, 1f);
+                container.Top.Set(0f, 0f);
+                container.Left.Set(-TabScrollbar.Width.Pixels - 4f, 0f);
+                container.HAlign = 1f;
+            }
+            SplitElement.RightElement.Append(container);
+
+            Config = new ConfigList(Repository, TargetCategory, TargetEntry);
+            {
+                Config.Width.Set(0f, 1f);
+                Config.Height.Set(0f, 1f);
+                Config.HAlign = 1f;
+                Config.SetScrollbar(ConfigScrollbar);
+            }
+            container.Append(Config);
         }
 
         HeaderPanel = new UITextPanel<LocalizedText>(
@@ -268,6 +303,11 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             SaveButton.WithFadedMouseOver();
         }
         BaseElement.Append(SaveButton);
+
+        void OnCategorySelected_UpdateConfigList(ConfigCategory category)
+        {
+            Config.Category = category;
+        }
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -437,6 +477,7 @@ internal sealed class TabList : FadedList
 
     public override void OnActivate()
     {
+        OnCategorySelected?.Invoke(Category);
         OpenCategory(Category, true);
     }
 
@@ -965,5 +1006,97 @@ internal sealed class TabList : FadedList
 
             TextTargetColor = UnselectedColor;
         }
+    }
+}
+
+internal sealed class ConfigList : FadedList
+{
+    [field: MaybeNull]
+    public ConfigCategory Category
+    {
+        get;
+
+        set
+        {
+            Clear();
+
+            AddCategoryElements(value, null);
+
+            field = value;
+        }
+    }
+
+    public ConfigList(
+        ConfigRepository repository,
+        ConfigCategory? targetCategory,
+        IConfigEntry? targetEntry
+    )
+    {
+        ListPadding = 6f;
+
+        _innerList.MinWidth.Set(300f, 0f);
+
+        ManualSortMethod = _ => { };
+
+        var entriesByCategory = new Dictionary<ConfigCategory, List<IConfigEntry>>();
+
+        ConfigCategory categoryToOpen;
+        if (targetEntry is not null)
+        {
+            if (targetCategory is not null && targetEntry.Categories.Contains(targetCategory))
+            {
+                categoryToOpen = targetCategory;
+            }
+            else
+            {
+                categoryToOpen = repository.GetCategory(targetEntry.MainCategory);
+            }
+        }
+        else
+        {
+            categoryToOpen = targetCategory ?? repository.Categories.First();
+        }
+
+        Category = categoryToOpen;
+
+        AddCategoryElements(Category, targetEntry);
+    }
+
+    private void AddCategoryElements(
+        ConfigCategory category,
+        IConfigEntry? targetEntry
+    )
+    {
+        // Extra padding at the start of the list to avoid the last item being
+        // engulfed in the fade.
+        var startPadElement = new UIElement();
+        {
+            startPadElement.Height.Set(4f, 0f);
+        }
+        Add(startPadElement);
+
+        var repository = category.Handle.Repository;
+
+        foreach (var entry in repository.Entries)
+        {
+            if (!entry.Categories.Contains(category))
+            {
+                continue;
+            }
+
+            var configElement = new ConfigElement(entry);
+            {
+                // TODO: Highlight effect for the target entry.
+            }
+            Add(configElement);
+        }
+
+        // Extra padding at the bottom of the list to avoid the last item being
+        // engulfed in the fade.
+        var endPadElement = new UIElement();
+        {
+            endPadElement.Height.Set(24f, 0f);
+        }
+        Add(endPadElement);
     }
 }
