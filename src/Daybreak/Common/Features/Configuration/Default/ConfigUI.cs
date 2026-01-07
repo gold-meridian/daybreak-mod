@@ -625,6 +625,7 @@ internal sealed class TabList : FadedList
                         {
                             tabImage.MarginRight = -PaddingRight;
                         }
+
                         tabImage.MarginTop = -2f;
                         tabImage.Width.Set(30f, 0f);
                         tabImage.Height.Set(30f, 0f);
@@ -928,7 +929,7 @@ internal sealed class TabList : FadedList
         {
             base.LeftClick(evt);
 
-            if (IsHeaderSelected ||!hoveringHeader)
+            if (IsHeaderSelected || !hoveringHeader)
             {
                 return;
             }
@@ -1247,6 +1248,29 @@ internal sealed class ConfigList : FadedList
         {
             return;
         }
+
+        // Extra padding at the start of the list to avoid the last item being
+        // engulfed in the fade.
+        var startPadElement = new UIElement();
+        {
+            startPadElement.Height.Set(4f, 0f);
+        }
+        Add(startPadElement);
+
+        var provider = ConfigRepository.DefaultRepository.GetModPageProvider(mod);
+
+        provider.AddCategoriesToContainer(
+            this,
+            ConfigRepository.DefaultRepository.Categories.Where(x => x.Handle.Mod == mod.Value).ToArray()
+        );
+
+        // Extra padding at the bottom of the list to avoid the last item being
+        // engulfed in the fade.
+        var endPadElement = new UIElement();
+        {
+            endPadElement.Height.Set(24f, 0f);
+        }
+        Add(endPadElement);
     }
 
     private void AddCategoryElements(

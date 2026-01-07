@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -52,7 +53,7 @@ public abstract class ConfigRepository : ILocalizedModType
         public EntryKey(IConfigEntry entry) : this(entry.Handle) { }
     }
 
-    private static readonly DefaultConfigRepository default_repository = new();
+    internal static DefaultConfigRepository DefaultRepository { get; } = new();
 
     /// <summary>
     ///     The default config repository.
@@ -65,7 +66,11 @@ public abstract class ConfigRepository : ILocalizedModType
     ///     syncing handled automatically through the mechanisms in which
     ///     tModLoader handles <see cref="ModConfig"/>s.
     /// </summary>
-    public static ConfigRepository Default => default_repository;
+    public static ConfigRepository Default
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => DefaultRepository;
+    }
 
     /// <summary>
     ///     The mod that owns this repository.

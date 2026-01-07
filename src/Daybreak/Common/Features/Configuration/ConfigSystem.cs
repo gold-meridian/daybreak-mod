@@ -56,6 +56,20 @@ public static class ConfigSystem
         return false;
     }
 
+    /// <summary>
+    ///     Registers a <see cref="IDefaultModPageProvider"/> for the
+    ///     <paramref name="mod"/>.  This allows mods to create custom UIs for
+    ///     their mod category UI, which should contain the nested categories
+    ///     belonging to the mod.
+    /// </summary>
+    public static void RegisterDefaultModPageProvider(
+        ConfigValue<Mod?> mod,
+        IDefaultModPageProvider provider
+    )
+    {
+        ConfigRepository.DefaultRepository.RegisterModPageProvider(mod, provider);
+    }
+
     [OnLoad]
     private static void AddDefaultRepository()
     {
