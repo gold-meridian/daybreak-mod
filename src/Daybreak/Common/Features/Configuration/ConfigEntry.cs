@@ -80,9 +80,13 @@ public interface IConfigEntry : IConfigEntryMetadata
     /// <summary>
     ///     Untyped <see cref="IConfigEntry{T}.Serialize"/> proxy.
     /// </summary>
-    /// <param name="layer"></param>
-    /// <returns></returns>
     JToken? BoxedDefaultSerialize(ConfigValueLayer layer);
+
+    /// <summary>
+    ///     Untyped <see cref="IConfigEntry{T}.Deserialize"/> proxy which
+    ///     directly registers its pending state instead of returning it.
+    /// </summary>
+    void BoxedDefaultDeserialize(ConfigValueLayer layer, JToken? token);
 }
 
 /// <summary>
@@ -283,6 +287,14 @@ public interface IConfigEntry<T> : IConfigEntryValues<T>
     JToken? IConfigEntry.BoxedDefaultSerialize(ConfigValueLayer layer)
     {
         return Serialize(GetLayerValue(layer));
+    }
+
+    void IConfigEntry.BoxedDefaultDeserialize(ConfigValueLayer layer, JToken? token)
+    {
+        var value = Deserialize(token);
+        {
+            PendingState.SetPending(layer, value);
+        }
     }
 
     /// <summary>

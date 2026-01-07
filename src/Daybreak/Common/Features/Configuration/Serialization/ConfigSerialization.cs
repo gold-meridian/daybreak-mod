@@ -22,18 +22,19 @@ public static class ConfigSerialization
     public delegate ConfigValue<T> Deserialize<T>(ConfigEntry<T> entry, JToken? token);
 
     /// <summary>
-    ///     Serializes an entire category into a usable string.
+    ///     Serializes an entire category into a <see cref="JObject"/>.
     /// </summary>
     public static JObject SerializeCategory(
         ConfigRepository repository,
         ConfigCategory category,
+        ConfigValueLayer layer,
         IEnumerable<IConfigEntry> entries
     )
     {
         var obj = new JObject();
         foreach (var entry in entries)
         {
-            if (SerializeEntry(entry) is not { } token)
+            if (SerializeEntry(entry, layer) is not { } token)
             {
                 continue;
             }
@@ -47,9 +48,17 @@ public static class ConfigSerialization
     /// <summary>
     ///     Serializes the local value of the entry.
     /// </summary>
-    public static JToken? SerializeEntry(IConfigEntry entry)
+    public static JToken? SerializeEntry(IConfigEntry entry, ConfigValueLayer layer)
     {
-        return entry.BoxedDefaultSerialize(ConfigValueLayer.User);
+        return entry.BoxedDefaultSerialize(layer);
+    }
+
+    /// <summary>
+    ///     Deserializes a token to the entry, updating its pending state.
+    /// </summary>
+    public static void DeserializeToEntry(IConfigEntry entry, ConfigValueLayer layer, JToken? token)
+    {
+        entry.BoxedDefaultDeserialize(layer, token);
     }
 
     internal static T? FallbackDeserialize<T>(JToken token, IConfigEntry<T> entry)
