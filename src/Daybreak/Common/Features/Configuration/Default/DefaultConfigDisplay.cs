@@ -54,6 +54,11 @@ internal static class DefaultConfigDisplay
 
         public bool IsHoveringButNotReally => !IsMouseHovering && ContainsPoint(Main.MouseScreen);
 
+        public void CleanUpSelf()
+        {
+            ElementThatDecidesClicks?.OnLeftClick -= ReceiveLeftClickFromParent;
+        }
+
         public override void OnInitialize()
         {
             base.OnInitialize();
@@ -447,11 +452,12 @@ internal static class DefaultConfigDisplay
             return;
         }
 
-        if (element.Children?.FirstOrDefault(x => x is DaybreakSettingsIcon) is not { } icon)
+        if (element.Children?.FirstOrDefault(x => x is DaybreakSettingsIcon) is not DaybreakSettingsIcon icon)
         {
             return;
         }
 
+        icon.CleanUpSelf();
         element.RemoveChild(icon);
         menu.Recalculate();
     }
