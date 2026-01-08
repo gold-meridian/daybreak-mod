@@ -240,6 +240,7 @@ public class InputField : UIPanel
                     cursorPosition -= origin.X;
                 }
 
+                // TODO: Test different scales
                 var offset = cursorPosition * TextScale;
 
                 var width = Math.Sign(offset) <= 0

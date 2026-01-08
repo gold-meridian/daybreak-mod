@@ -10,8 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -584,21 +582,20 @@ internal sealed class TabList : FadedList
         }
     }
 
-    private abstract class TextTab<T> : UIAutoScaleTextTextPanel<T>
+    private abstract class TextTab<T> : UIElement
     {
-        protected TextTab(T text, Asset<Texture2D>? icon = null, bool forceIconPadding = false, bool iconLeft = false) : base(text)
-        {
-            BackgroundColor = Color.Transparent;
-            BorderColor = Color.Transparent;
+        protected MarqueeText<T> label;
 
+        protected TextTab(T text, Asset<Texture2D>? icon = null, bool forceIconPadding = false, bool iconLeft = false)
+        {
             Width.Set(0f, 1f);
 
-            TextOriginX = 0f;
-
-            SetPadding(0f);
-
-            // Makes the text respond to padding.
-            UseInnerDimensions = true;
+            label = new MarqueeText<T>(text);
+            {
+                label.Width.Set(0f, 1f);
+                label.Height.Set(0f, 1f);
+            }
+            Append(label);
 
             // Icon
             {
@@ -1046,7 +1043,7 @@ internal sealed class TabList : FadedList
 
                 if (value)
                 {
-                    TextTargetColor = TextColor = SelectedColor;
+                    TextTargetColor = label.TextColor = SelectedColor;
                 }
                 else
                 {
@@ -1063,7 +1060,7 @@ internal sealed class TabList : FadedList
             {
                 field = value;
                 targetColorLerp = 0;
-                oldColor = TextColor;
+                oldColor = label.TextColor;
             }
         }
 
@@ -1082,7 +1079,7 @@ internal sealed class TabList : FadedList
         {
             Category = category;
 
-            TextTargetColor = TextColor = UnselectedColor;
+            TextTargetColor = label.TextColor = UnselectedColor;
 
             var dividerContainer = new UIElement();
             {
@@ -1135,7 +1132,7 @@ internal sealed class TabList : FadedList
                     targetColorLerp = lerp_frames;
                 }
 
-                TextColor = Color.Lerp(oldColor, TextTargetColor, targetColorLerp / (float)lerp_frames);
+                label.TextColor = Color.Lerp(oldColor, TextTargetColor, targetColorLerp / (float)lerp_frames);
             }
 
             const int hover_frames = 8;
@@ -1193,6 +1190,9 @@ internal sealed class ConfigList : FadedList
             Clear();
 
             AddCategoryElements(value, null);
+
+            // Recall activate to force list elements to recalculate.
+            Activate();
 
             field = value;
         }
