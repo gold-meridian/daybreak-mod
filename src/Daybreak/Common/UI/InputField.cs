@@ -240,9 +240,9 @@ public class InputField : UIPanel
                     cursorPosition -= origin.X;
                 }
 
-                // TODO: Test different scales
                 var offset = cursorPosition * TextScale;
 
+                // Each half of the text seperated by the alignment.
                 var width = Math.Sign(offset) <= 0
                     ? (dims.Width * TextAlignX)
                     : (dims.Width * (1f - TextAlignX));

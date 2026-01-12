@@ -582,20 +582,11 @@ internal sealed class TabList : FadedList
         }
     }
 
-    private abstract class TextTab<T> : UIElement
+    private abstract class TextTab<T> : MarqueeText<T>
     {
-        protected MarqueeText<T> label;
-
-        protected TextTab(T text, Asset<Texture2D>? icon = null, bool forceIconPadding = false, bool iconLeft = false)
+        protected TextTab(T text, Asset<Texture2D>? icon = null, bool forceIconPadding = false, bool iconLeft = false) : base(text)
         {
             Width.Set(0f, 1f);
-
-            label = new MarqueeText<T>(text);
-            {
-                label.Width.Set(0f, 1f);
-                label.Height.Set(0f, 1f);
-            }
-            Append(label);
 
             // Icon
             {
@@ -1043,7 +1034,7 @@ internal sealed class TabList : FadedList
 
                 if (value)
                 {
-                    TextTargetColor = label.TextColor = SelectedColor;
+                    TextTargetColor = TextColor = SelectedColor;
                 }
                 else
                 {
@@ -1060,7 +1051,7 @@ internal sealed class TabList : FadedList
             {
                 field = value;
                 targetColorLerp = 0;
-                oldColor = label.TextColor;
+                oldColor = TextColor;
             }
         }
 
@@ -1079,7 +1070,7 @@ internal sealed class TabList : FadedList
         {
             Category = category;
 
-            TextTargetColor = label.TextColor = UnselectedColor;
+            TextTargetColor = TextColor = UnselectedColor;
 
             var dividerContainer = new UIElement();
             {
@@ -1132,7 +1123,7 @@ internal sealed class TabList : FadedList
                     targetColorLerp = lerp_frames;
                 }
 
-                label.TextColor = Color.Lerp(oldColor, TextTargetColor, targetColorLerp / (float)lerp_frames);
+                TextColor = Color.Lerp(oldColor, TextTargetColor, targetColorLerp / (float)lerp_frames);
             }
 
             const int hover_frames = 8;
