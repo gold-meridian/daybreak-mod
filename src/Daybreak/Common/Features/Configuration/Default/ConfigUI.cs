@@ -408,7 +408,7 @@ internal sealed class TabList : FadedList
         {
             if (field.IsSet)
             {
-                this[field.Value]?.IsHeaderSelected = false;
+                this[field.Value]?.Selected = false;
             }
 
             field = value;
@@ -574,7 +574,7 @@ internal sealed class TabList : FadedList
         }
 
         group.IsACategorySelected = false;
-        group.IsHeaderSelected = true;
+        group.Selected = true;
 
         if (scroll)
         {
@@ -584,6 +584,16 @@ internal sealed class TabList : FadedList
 
     private abstract class TextTab<T> : MarqueeText<T>
     {
+        protected bool hovering;
+        protected bool selected;
+
+        protected int hoverProgress;
+        protected int selectProgress;
+
+        private readonly UIHorizontalSeparator dimDivider;
+        private readonly UIHorizontalSeparator highlightDivider;
+        private readonly UIHorizontalSeparator selectDivider;
+
         protected TextTab(T text, Asset<Texture2D>? icon = null, bool forceIconPadding = false, bool iconLeft = false) : base(text)
         {
             Width.Set(0f, 1f);
@@ -623,12 +633,78 @@ internal sealed class TabList : FadedList
                 }
             }
 
+            // Dividers
+            {
+                var dividerContainer = new UIElement();
+                {
+
+                    if (!forceIconPadding)
+                    {
+                        dividerContainer.MarginLeft = -PaddingLeft;
+                        dividerContainer.MarginRight = -PaddingRight;
+
+                        dividerContainer.Width.Set(PaddingLeft + PaddingRight, 1f);
+                        dividerContainer.MaxWidth.Set(PaddingLeft + PaddingRight, 1f);
+                    }
+                    else
+                    {
+                        dividerContainer.Width.Set(0, 1f);
+                        dividerContainer.MaxWidth.Set(0, 1f);
+                    }
+
+                    dividerContainer.Height.Set(2f, 0f);
+
+                    dividerContainer.VAlign = 1f;
+                }
+                Append(dividerContainer);
+
+                dimDivider = new UIHorizontalSeparator();
+                {
+                    dimDivider.Width = StyleDimension.Fill;
+                    dimDivider.Height.Set(2f, 0f);
+                    dimDivider.Color = new Color(85, 88, 159) * 0.5f;
+                }
+                dividerContainer.Append(dimDivider);
+
+                highlightDivider = new UIHorizontalSeparator();
+                {
+                    highlightDivider.Width = StyleDimension.Empty;
+                    highlightDivider.Height.Set(2f, 0f);
+                    highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
+                }
+                dividerContainer.Append(highlightDivider);
+
+                selectDivider = new UIHorizontalSeparator();
+                {
+                    selectDivider.Width = StyleDimension.Empty;
+                    selectDivider.Height.Set(2f, 0f);
+                    selectDivider.Color = Main.OurFavoriteColor;
+                }
+                dividerContainer.Append(selectDivider);
+            }
+
             Recalculate();
         }
 
-        public sealed override void Recalculate()
+        public override void Update(GameTime gameTime)
         {
-            base.Recalculate();
+            base.Update(gameTime);
+
+            const int hover_frames = 8;
+            {
+                hoverProgress = MathHelper.Clamp(hoverProgress + (hovering || selected).ToDirectionInt(), 0, hover_frames);
+                selectProgress = MathHelper.Clamp(selectProgress + selected.ToDirectionInt(), 0, hover_frames);
+
+                highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
+                selectDivider.Width.Set(0f, Ease(selectProgress / (float)hover_frames));
+            }
+
+            return;
+
+            static float Ease(float x)
+            {
+                return 1 - MathF.Pow(1 - x, 5);
+            }
         }
 
         protected sealed class Icon : UIElement
@@ -671,13 +747,13 @@ internal sealed class TabList : FadedList
 
         public event Action<ConfigValue<Mod?>>? OnModSelected;
 
-        public bool IsHeaderSelected
+        public bool Selected
         {
-            get;
+            get => selected;
 
             set
             {
-                field = value;
+                selected = value;
 
                 if (value)
                 {
@@ -720,8 +796,6 @@ internal sealed class TabList : FadedList
             }
         }
 
-        public bool IsAtAllSelected => IsHeaderSelected || IsACategorySelected;
-
         public CategoryTab? this[ConfigCategory category]
         {
             get
@@ -736,13 +810,8 @@ internal sealed class TabList : FadedList
 
         private bool hoveringHeader;
 
-        private int hoverProgress;
-        private int selectProgress;
         private int openProgress;
 
-        private readonly UIHorizontalSeparator dimDivider;
-        private readonly UIHorizontalSeparator highlightDivider;
-        private readonly UIHorizontalSeparator selectDivider;
         private readonly Icon dropdownIcon;
         private readonly UIElement listContainer;
         private readonly UIList list;
@@ -778,47 +847,6 @@ internal sealed class TabList : FadedList
                 };
             }
             Append(dropdownIcon);
-
-            // Dividers
-            {
-                var dividerContainer = new UIElement();
-                {
-                    dividerContainer.MarginLeft = -PaddingLeft;
-                    dividerContainer.MarginRight = -PaddingRight;
-
-                    dividerContainer.Width.Set(PaddingLeft + PaddingRight, 1f);
-                    dividerContainer.MaxWidth.Set(PaddingLeft + PaddingRight, 1f);
-
-                    dividerContainer.Height.Set(2f, 0f);
-
-                    dividerContainer.VAlign = 1f;
-                }
-                Append(dividerContainer);
-
-                dimDivider = new UIHorizontalSeparator();
-                {
-                    dimDivider.Width = StyleDimension.Fill;
-                    dimDivider.Height.Set(2f, 0f);
-                    dimDivider.Color = new Color(85, 88, 159) * 0.5f;
-                }
-                dividerContainer.Append(dimDivider);
-
-                highlightDivider = new UIHorizontalSeparator();
-                {
-                    highlightDivider.Width = StyleDimension.Empty;
-                    highlightDivider.Height.Set(2f, 0f);
-                    highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
-                }
-                dividerContainer.Append(highlightDivider);
-
-                selectDivider = new UIHorizontalSeparator();
-                {
-                    selectDivider.Width = StyleDimension.Empty;
-                    selectDivider.Height.Set(2f, 0f);
-                    selectDivider.Color = Main.OurFavoriteColor;
-                }
-                dividerContainer.Append(selectDivider);
-            }
 
             listContainer = new UIElement();
             {
@@ -894,11 +922,6 @@ internal sealed class TabList : FadedList
             }
         }
 
-        private void DropdownIcon_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
-        {
-            throw new NotImplementedException();
-        }
-
         private static Asset<Texture2D>? GetModSmallIcon(Mod? mod)
         {
             if (mod is null)
@@ -914,23 +937,18 @@ internal sealed class TabList : FadedList
             return mod.RequestAssetIfExists<Texture2D>("icon_small", out var iconSmall) ? iconSmall : null;
         }
 
-        public override void LeftMouseDown(UIMouseEvent evt)
-        {
-            base.LeftMouseDown(evt);
-        }
-
         public override void LeftClick(UIMouseEvent evt)
         {
             base.LeftClick(evt);
 
-            if (IsHeaderSelected || !hoveringHeader)
+            if (Selected || !hoveringHeader)
             {
                 return;
             }
 
             SoundEngine.PlaySound(SoundID.MenuOpen);
 
-            IsHeaderSelected = true;
+            Selected = true;
 
             OnModSelected?.Invoke(ConfigValue<Mod?>.Set(Mod));
         }
@@ -939,7 +957,7 @@ internal sealed class TabList : FadedList
         {
             base.LeftDoubleClick(evt);
 
-            if ( /*IsAtAllSelected ||*/ !hoveringHeader)
+            if (!hoveringHeader)
             {
                 return;
             }
@@ -958,18 +976,11 @@ internal sealed class TabList : FadedList
             var wasHoveringHeader = hoveringHeader;
             hoveringHeader = IsMouseHovering && !dropdownIcon.IsMouseHovering && this.Dimensions.Contains(mousePosition.ToPoint()) && mousePosition.Y < this.InnerDimensions.Bottom;
 
-            if (!IsHeaderSelected && hoveringHeader && !wasHoveringHeader)
+            hovering = hoveringHeader;
+
+            if (!Selected && hoveringHeader && !wasHoveringHeader)
             {
                 SoundEngine.PlaySound(in SoundID.MenuTick);
-            }
-
-            const int hover_frames = 8;
-            {
-                hoverProgress = MathHelper.Clamp(hoverProgress + (hoveringHeader || IsAtAllSelected).ToDirectionInt(), 0, hover_frames);
-                selectProgress = MathHelper.Clamp(selectProgress + IsHeaderSelected.ToDirectionInt(), 0, hover_frames);
-
-                highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
-                selectDivider.Width.Set(0f, Ease(selectProgress / (float)hover_frames));
             }
 
             UpdateHeight();
@@ -1026,11 +1037,11 @@ internal sealed class TabList : FadedList
 
         public bool Selected
         {
-            get;
+            get => selected;
 
             set
             {
-                field = value;
+                selected = value;
 
                 if (value)
                 {
@@ -1057,12 +1068,6 @@ internal sealed class TabList : FadedList
 
         private Color oldColor;
         private int targetColorLerp;
-        private int hoverProgress;
-        private int selectProgress;
-
-        private readonly UIHorizontalSeparator dimDivider;
-        private readonly UIHorizontalSeparator highlightDivider;
-        private readonly UIHorizontalSeparator selectDivider;
 
         public ConfigCategory Category { get; }
 
@@ -1071,49 +1076,14 @@ internal sealed class TabList : FadedList
             Category = category;
 
             TextTargetColor = TextColor = UnselectedColor;
-
-            var dividerContainer = new UIElement();
-            {
-                dividerContainer.MarginLeft = -PaddingLeft;
-                dividerContainer.MarginRight = -PaddingRight;
-
-                dividerContainer.Left.Set(30f, 0f);
-                dividerContainer.Width.Set(PaddingLeft + PaddingRight - 30f, 1f);
-                dividerContainer.MaxWidth.Set(PaddingLeft + PaddingRight, 1f);
-
-                dividerContainer.Height.Set(2f, 0f);
-
-                dividerContainer.VAlign = 1f;
-            }
-            Append(dividerContainer);
-
-            dimDivider = new UIHorizontalSeparator();
-            {
-                dimDivider.Width = StyleDimension.Fill;
-                dimDivider.Height.Set(2f, 0f);
-                dimDivider.Color = new Color(85, 88, 159) * 0.5f;
-            }
-            dividerContainer.Append(dimDivider);
-
-            highlightDivider = new UIHorizontalSeparator();
-            {
-                highlightDivider.Width = StyleDimension.Empty;
-                highlightDivider.Height.Set(2f, 0f);
-                highlightDivider.Color = new Color(85, 88, 159) * 0.75f;
-            }
-            dividerContainer.Append(highlightDivider);
-
-            selectDivider = new UIHorizontalSeparator();
-            {
-                selectDivider.Width = StyleDimension.Empty;
-                selectDivider.Height.Set(2f, 0f);
-                selectDivider.Color = Main.OurFavoriteColor;
-            }
-            dividerContainer.Append(selectDivider);
         }
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
+            hovering = IsMouseHovering;
+
             const int lerp_frames = 6;
             {
                 targetColorLerp++;
@@ -1124,15 +1094,6 @@ internal sealed class TabList : FadedList
                 }
 
                 TextColor = Color.Lerp(oldColor, TextTargetColor, targetColorLerp / (float)lerp_frames);
-            }
-
-            const int hover_frames = 8;
-            {
-                hoverProgress = MathHelper.Clamp(hoverProgress + (IsMouseHovering || Selected).ToDirectionInt(), 0, hover_frames);
-                selectProgress = MathHelper.Clamp(selectProgress + Selected.ToDirectionInt(), 0, hover_frames);
-
-                highlightDivider.Width.Set(0f, Ease(hoverProgress / (float)hover_frames));
-                selectDivider.Width.Set(0f, Ease(selectProgress / (float)hover_frames));
             }
 
             return;
