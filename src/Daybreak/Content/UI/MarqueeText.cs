@@ -33,6 +33,8 @@ internal class MarqueeText<T> : UIElement
 
     public float ScrollSpeed { get; set; } = 1f;
 
+    public bool OnlyScrollOnHover { get; set; } = true;
+
     private float textScale;
 
     private float scroll;
@@ -80,11 +82,18 @@ internal class MarqueeText<T> : UIElement
 
         var dims = this.InnerDimensions;
 
-        if (textSize.X >= dims.Width)
-        {
-            const float scroll_increment = 1f;
+        bool shouldScroll = textSize.X >= dims.Width;
 
-            const int scroll_delay = 40;
+        if (OnlyScrollOnHover)
+        {
+            shouldScroll &= IsMouseHovering;
+        }
+
+        if (shouldScroll)
+        {
+            const float scroll_increment = 1.5f;
+
+            const int scroll_delay = 30;
 
             // Each half of the text seperated by the alignment.
             var left =
