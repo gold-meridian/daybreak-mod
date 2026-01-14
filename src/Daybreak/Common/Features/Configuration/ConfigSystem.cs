@@ -150,7 +150,7 @@ public static class ConfigSystem
 
         // Transcribed largely from
         // ConfigManager::RegisterLocalizationKeysForMembers.
-        foreach (var wrapper in GetFieldsAndProperties(mc.GetType()))
+        foreach (var wrapper in ConfigManager.GetFieldsAndProperties(mc.GetType()))
         {
             var labelObsolete = ConfigManager.GetLegacyLabelAttribute(wrapper.MemberInfo);
             // var tooltipObsolete = ConfigManager.GetLegacyTooltipAttribute(wrapper.MemberInfo);
@@ -178,17 +178,6 @@ public static class ConfigSystem
                     tooltipKey,
                 ]
             );
-        }
-
-        static IEnumerable<PropertyFieldWrapper> GetFieldsAndProperties(Type type)
-        {
-            // Ignore inherited members.
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
-            FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
-
-            return
-                fields.Select(x => new PropertyFieldWrapper(x))
-                .Concat(properties.Select(x => new PropertyFieldWrapper(x)));
         }
     }
 
