@@ -4,6 +4,7 @@
 
 **DAYBREAK** is a library mod purpose-built for NIGHTSHADE and Wrath of the Gods. It mostly features APIs for advanced vanilla integration (focusing on perfectly replicating vanilla features or concepts) and utilities for obscure tasks, including rendering and IL editing.
 
+<!--
 Current features:
 - transient asset replacement,
 - IL editing tools,
@@ -22,6 +23,7 @@ Current features:
 - solutions for preserving RenderTarget contents on-swap,
 - API for autoloading chat tags (with de-registration),
 - author name tags and convenient API for custom author text in mod panels.
+-->
 
 For more information:
 - https://discord.gg/6Fm4ZTHVub
