@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
 using Daybreak.Common.Features.Hooks;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -151,12 +150,12 @@ public static class ConfigSystem
 
         // Transcribed largely from
         // ConfigManager::RegisterLocalizationKeysForMembers.
-        foreach (var wrapper in ConfigManager.GetFieldsAndProperties(mc))
+        foreach (var wrapper in GetFieldsAndProperties(mc.GetType()))
         {
             var labelObsolete = ConfigManager.GetLegacyLabelAttribute(wrapper.MemberInfo);
             // var tooltipObsolete = ConfigManager.GetLegacyTooltipAttribute(wrapper.MemberInfo);
 
-            if (Attribute.IsDefined(wrapper.MemberInfo, typeof(JsonIgnoreAttribute)) && labelObsolete is null && !Attribute.IsDefined(wrapper.MemberInfo, typeof(ShowDespiteJsonIgnoreAttribute)))
+            if (Attribute.IsDefined(wrapper.MemberInfo, typeof(Newtonsoft.Json.JsonIgnoreAttribute)) && labelObsolete is null && !Attribute.IsDefined(wrapper.MemberInfo, typeof(ShowDespiteJsonIgnoreAttribute)))
             {
                 continue;
             }
@@ -179,6 +178,17 @@ public static class ConfigSystem
                     tooltipKey,
                 ]
             );
+        }
+
+        static IEnumerable<PropertyFieldWrapper> GetFieldsAndProperties(Type type)
+        {
+            // Ignore inherited members.
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+            FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+
+            return
+                fields.Select(x => new PropertyFieldWrapper(x))
+                .Concat(properties.Select(x => new PropertyFieldWrapper(x)));
         }
     }
 
