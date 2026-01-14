@@ -3,7 +3,9 @@ using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria.GameContent.UI.Elements;
+using System;
+using Terraria;
+using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Default;
@@ -12,26 +14,33 @@ using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
 
-public class ConfigElement : UIPanel
+public class ConfigElement : UIElement
 {
+    protected const float DEFAULT_HEIGHT = 38;
+
+    protected static readonly Color COLOR = UICommon.DefaultUIBlue.MultiplyRGB(new Color(180, 180, 180));
+    protected static readonly Color HOVER_COLOR = UICommon.DefaultUIBlue;
+
+    protected Color PanelColor { get; set; }
+
+    public bool Flashing { get; set; }
+
     protected UIElement LabelContainer;
 
-    protected Icon InfoIcon;
+    protected Icon? InfoIcon;
 
     protected UIAutoScaleTextTextPanel<LocalizedText> Label;
 
-    public ConfigElement(IConfigEntry entry) : base()
+    public ConfigElement(IConfigEntry entry, bool showIcon) : base()
     {
-        const float default_height = 42f;
         const float upper_height = 30f;
 
-        _backgroundTexture = AssetReferences.Assets.Images.UI.FullPanel.Asset;
-        BorderColor = Color.Transparent;
+        PanelColor = COLOR;
 
         Width.Set(0f, 1f);
-        Height.Set(default_height, 0f);
+        Height.Set(DEFAULT_HEIGHT, 0f);
 
-        SetPadding(6f);
+        SetPadding(4f);
 
         LabelContainer = new UIElement();
         {
@@ -46,7 +55,7 @@ public class ConfigElement : UIPanel
         }
         Append(LabelContainer);
 
-        if (GetModSmallIcon(entry.Handle.Mod) is { } icon)
+        if (showIcon && GetModSmallIcon(entry.Handle.Mod) is { } icon)
         {
             const float icon_padding = 4f;
 
@@ -71,9 +80,11 @@ public class ConfigElement : UIPanel
 
             Label.Width.Set(0f, 1f);
             Label.Height.Set(0f, 1f);
-            // Label.MinWidth.Set(120f, 0f);
+
+            Label.TextScaleMax = 0.95f;
 
             Label.TextOriginX = 0f;
+            Label.TextOriginY = 0.5f;
 
             SetPadding(0f);
         }
@@ -98,6 +109,62 @@ public class ConfigElement : UIPanel
         }
 
         return mod.RequestAssetIfExists<Texture2D>("icon", out var icon) ? icon : null;
+    }
+
+    public override void MouseOver(UIMouseEvent evt)
+    {
+        base.MouseOver(evt);
+
+        PanelColor = HOVER_COLOR;
+
+        Flashing = false;
+    }
+
+    public override void MouseOut(UIMouseEvent evt)
+    {
+        base.MouseOut(evt);
+
+        PanelColor = COLOR;
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        if (Flashing)
+        {
+            float ratio = Utils.Turn01ToCyclic010(Main.GlobalTimeWrappedHourly % 120 / 120f) * 0.5f + 0.5f;
+            PanelColor = Color.Lerp(COLOR, Color.White, MathF.Pow(ratio, 2f));
+        }
+    }
+
+    protected override void DrawSelf(SpriteBatch spriteBatch)
+    {
+        DrawPanel(spriteBatch, PanelColor, this.Dimensions);
+    }
+
+    private static void DrawPanel(
+        SpriteBatch sb,
+        Color color,
+        Rectangle dims
+    )
+    {
+        const int highlight_size = (int)(DEFAULT_HEIGHT * 0.5f);
+
+        TextureAssets.SettingsPanel.Wait();
+        var texture = TextureAssets.SettingsPanel.Value;
+
+        // Left/Right bars.
+        sb.Draw(texture, new Rectangle(dims.X, dims.Y + 2, 2, dims.Height - 4), new Rectangle(0, 2, 1, 1), color);
+        sb.Draw(texture, new Rectangle(dims.X + dims.Width - 2, dims.Y + 2, 2, dims.Height - 4), new Rectangle(0, 2, 1, 1), color);
+
+        // Up/Down bars.
+        sb.Draw(texture, new Rectangle(dims.X + 2, dims.Y, dims.Width - 4, 2), new Rectangle(2, 0, 1, 1), color);
+        sb.Draw(texture, new Rectangle(dims.X + 2, dims.Y + dims.Height - 2, dims.Width - 4, 2), new Rectangle(2, 0, 1, 1), color);
+
+        // Inner Panel.
+        sb.Draw(texture, new Rectangle(dims.X + 2, dims.Y + 2, dims.Width - 4, highlight_size - 2), new Rectangle(2, 2, 1, 1), color);
+        sb.Draw(texture, new Rectangle(dims.X + 2, dims.Y + highlight_size, dims.Width - 4, dims.Height - highlight_size - 2), new Rectangle(2, 16, 1, 1), color);
     }
 
     protected sealed class Icon : UIElement

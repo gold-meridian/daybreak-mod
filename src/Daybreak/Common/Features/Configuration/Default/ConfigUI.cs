@@ -1254,6 +1254,10 @@ internal sealed class ConfigList : FadedList
 
         var repository = category.Handle.Repository;
 
+        var entries = repository.Entries.Where(e => e.Categories.Contains(category));
+        
+        bool showModIcons = entries.Any(e => e.Handle.Mod != category.Handle.Mod);
+
         foreach (var entry in repository.Entries)
         {
             if (!entry.Categories.Contains(category))
@@ -1261,9 +1265,9 @@ internal sealed class ConfigList : FadedList
                 continue;
             }
 
-            var configElement = new ConfigElement(entry);
+            var configElement = new ConfigElement(entry, showModIcons);
             {
-                // TODO: Highlight effect for the target entry.
+                configElement.Flashing = targetEntry == entry;
             }
             Add(configElement);
         }
