@@ -598,6 +598,9 @@ internal sealed class TabList : FadedList
         {
             Width.Set(0f, 1f);
 
+            TextAlignX = 0f;
+            TextAlignY = 0.5f;
+
             // Icon
             {
                 if (icon is not null || forceIconPadding)
