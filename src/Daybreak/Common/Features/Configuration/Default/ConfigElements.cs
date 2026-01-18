@@ -1,7 +1,6 @@
 ﻿using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Mathematics;
 using Daybreak.Common.UI;
-using Daybreak.Content.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
