@@ -78,7 +78,7 @@ public class IntElement : RangeElement<int>
 {
     public IntElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
     {
-        Min = 0;
+        Min = -50;
         Max = 100;
     }
 }
@@ -95,6 +95,9 @@ public class FloatElement : RangeElement<float>
 
 public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, INumber<T>, IConvertible
 {
+    protected static readonly char[] NUMBER_CHARACTERS =
+        [.. Enumerable.Range('0', '9' + 1).Select(i => (char)i), '-', '.'];
+
     // TODO: Parse options for Min/Max value.
     protected T Min { get; set; }
 
@@ -127,7 +130,7 @@ public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, IN
 
     public RangeElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
     {
-        const float slider_ratio = 0.75f;
+        const float slider_ratio = 0.65f;
 
         const float slider_padding = 6f;
 
@@ -170,6 +173,10 @@ public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, IN
             Input.TextScale = 0.8f;
 
             Input.OnTextChanged += Input_ParseText;
+
+            Input.OnEnter += Input_AcceptText;
+
+            Input.WhitelistedChars.UnionWith(NUMBER_CHARACTERS);
         }
         rightContainer.Append(Input);
 
@@ -182,18 +189,20 @@ public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, IN
         {
             if (!T.TryParse(obj.Text, null, out T value))
             {
-                obj.Text = string.Empty;
                 return;
             }
 
             value = Utils.Clamp(value, Min, Max);
 
-            // Should not show unclamped value
-            obj.Text = value.ToString() ?? string.Empty;
-
             Value = ConfigValue<T>.Set(value);
 
             Slider.Ratio = Ratio;
+        }
+
+        void Input_AcceptText(InputField obj)
+        {
+            // Refresh the text to show the correct value.
+            obj.Text = Value.Value.ToString() ?? string.Empty;
         }
     }
 }
