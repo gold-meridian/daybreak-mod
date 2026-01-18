@@ -1146,8 +1146,8 @@ internal sealed class ConfigList : FadedList
 
             AddCategoryElements(value, null);
 
-            // Recall activate to force list elements to recalculate.
             Activate();
+            Recalculate();
 
             field = value;
         }
@@ -1162,6 +1162,9 @@ internal sealed class ConfigList : FadedList
             Clear();
 
             AddModElements(value);
+
+            Activate();
+            Recalculate();
 
             field = value;
         }
@@ -1265,7 +1268,9 @@ internal sealed class ConfigList : FadedList
                 continue;
             }
 
-            var configElement = new ConfigElement(entry, showModIcons);
+            var configElement =
+                DefaultConfigElementLoader.GetConfigElement(entry.EntryType, entry, showModIcons, out var elem) ? elem :
+                new ConfigElement(entry, showModIcons);
             {
                 configElement.Flashing = targetEntry == entry;
             }

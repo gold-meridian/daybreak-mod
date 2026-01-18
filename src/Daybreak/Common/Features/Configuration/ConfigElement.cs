@@ -14,6 +14,23 @@ using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
 
+public class ConfigElement<T> : ConfigElement
+{
+    protected ConfigEntry<T> ConfigEntry;
+
+    public ConfigValue<T> Value
+    {
+        get => ConfigEntry.PendingState.GetPending(ConfigValueLayer.User);
+        set => ConfigEntry.PendingState.SetPending(ConfigValueLayer.User, value);
+    }
+
+    public ConfigElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        ConfigEntry = entry as ConfigEntry<T> ??
+            throw new InvalidOperationException($"Entry does not wrap value of type {typeof(T)}: " + entry.Handle);
+    }
+}
+
 public class ConfigElement : UIElement
 {
     protected const float DEFAULT_HEIGHT = 38;
@@ -25,6 +42,8 @@ public class ConfigElement : UIElement
 
     public bool Flashing { get; set; }
 
+    protected IConfigEntry Entry;
+
     protected UIElement LabelContainer;
 
     protected Icon? InfoIcon;
@@ -33,6 +52,8 @@ public class ConfigElement : UIElement
 
     public ConfigElement(IConfigEntry entry, bool showIcon) : base()
     {
+        Entry = entry;
+
         const float upper_height = 30f;
 
         PanelColor = COLOR;
@@ -47,15 +68,11 @@ public class ConfigElement : UIElement
             LabelContainer.Width.Set(0f, 0.8f);
             LabelContainer.Height.Set(upper_height, 0f);
 
-            // Padding doesn't seem to apply automatically
-            LabelContainer.Left.Set(PaddingLeft, 0f);
-            LabelContainer.Top.Set(PaddingTop, 0f);
-
             LabelContainer.MinWidth.Set(30f, 0f);
         }
         Append(LabelContainer);
 
-        if (showIcon && GetModSmallIcon(entry.Handle.Mod) is { } icon)
+        if (showIcon && GetModSmallIcon(Entry.Handle.Mod) is { } icon)
         {
             const float icon_padding = 4f;
 
@@ -73,7 +90,7 @@ public class ConfigElement : UIElement
             LabelContainer.Append(InfoIcon);
         }
 
-        Label = new UIAutoScaleTextTextPanel<LocalizedText>(entry.DisplayName);
+        Label = new UIAutoScaleTextTextPanel<LocalizedText>(Entry.DisplayName);
         {
             Label.BackgroundColor = Color.Transparent;
             Label.BorderColor = Color.Transparent;
