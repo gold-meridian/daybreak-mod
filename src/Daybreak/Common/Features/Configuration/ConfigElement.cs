@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Diagnostics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Localization;
@@ -65,7 +66,7 @@ public class ConfigElement : UIElement
 
         LabelContainer = new UIElement();
         {
-            LabelContainer.Width.Set(0f, 0.8f);
+            LabelContainer.Width.Set(0f, 0.6f);
             LabelContainer.Height.Set(upper_height, 0f);
 
             LabelContainer.MinWidth.Set(30f, 0f);
@@ -98,12 +99,12 @@ public class ConfigElement : UIElement
             Label.Width.Set(0f, 1f);
             Label.Height.Set(0f, 1f);
 
-            Label.TextScaleMax = 0.95f;
+            Label.TextScaleMax = 0.9f;
 
             Label.TextOriginX = 0f;
             Label.TextOriginY = 0.5f;
 
-            SetPadding(0f);
+            Label.SetPadding(0f);
         }
         LabelContainer.Append(Label);
     }

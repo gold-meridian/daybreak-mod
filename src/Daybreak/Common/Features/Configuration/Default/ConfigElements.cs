@@ -1,16 +1,17 @@
 ﻿using Daybreak.Common.Features.Hooks;
-using Daybreak.Core;
+using Daybreak.Common.Mathematics;
+using Daybreak.Common.UI;
+using Daybreak.Content.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Terraria;
-using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
+using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -72,3 +73,127 @@ internal static class DefaultConfigElementLoader
     }
 }
 
+[DefaultConfigElementFor<int>]
+public class IntElement : RangeElement<int>
+{
+    public IntElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        Min = 0;
+        Max = 100;
+    }
+}
+
+[DefaultConfigElementFor<float>]
+public class FloatElement : RangeElement<float>
+{
+    public FloatElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        Min = 0;
+        Max = 100;
+    }
+}
+
+public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, INumber<T>, IConvertible
+{
+    // TODO: Parse options for Min/Max value.
+    protected T Min { get; set; }
+
+    protected T Max { get; set; }
+
+    protected float Ratio
+    {
+        get
+        {
+            return (Value.Value - Min).ToSingle(null) / (Max - Min).ToSingle(null);
+        }
+
+        set
+        {
+            T val = T.CreateChecked(value * (Max - Min).ToSingle(null)) + Min;
+
+            val = Utils.Clamp(val, Min, Max);
+
+            Value = ConfigValue<T>.Set(val);
+
+            Slider.Ratio = value;
+
+            Input.Text = string.Empty;
+        }
+    }
+
+    protected Slider Slider;
+
+    protected InputField Input;
+
+    public RangeElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        const float slider_ratio = 0.75f;
+
+        const float slider_padding = 6f;
+
+        var rightContainer = new UIElement();
+        {
+            rightContainer.Width.Set(0f, 0.4f);
+            rightContainer.Height.Set(30, 0f);
+
+            rightContainer.MinWidth.Set(60f, 0f);
+
+            rightContainer.HAlign = 1f;
+        }
+        Append(rightContainer);
+
+        Slider = new Slider();
+        {
+            Slider.Width.Set(-slider_padding, slider_ratio);
+
+            Slider.Left.Set(-slider_padding, 0f);
+
+            Slider.MinWidth.Set(30, 0f);
+
+            Slider.HAlign = 1f;
+
+            Slider.VAlign = 0.5f;
+
+            Slider.OnChanged += Slider_UpdateValue;
+        }
+        rightContainer.Append(Slider);
+
+        Input = new InputField(() => Value.Value.ToString() ?? string.Empty);
+        {
+            Input.Width.Set(-slider_padding, 1f - slider_ratio);
+            Input.Height.Set(24, 0f);
+
+            Input.MinWidth.Set(30, 0f);
+
+            Input.VAlign = 0.5f;
+
+            Input.TextScale = 0.8f;
+
+            Input.OnTextChanged += Input_ParseText;
+        }
+        rightContainer.Append(Input);
+
+        void Slider_UpdateValue(Slider obj)
+        {
+            Ratio = obj.Ratio;
+        }
+
+        void Input_ParseText(InputField obj)
+        {
+            if (!T.TryParse(obj.Text, null, out T value))
+            {
+                obj.Text = string.Empty;
+                return;
+            }
+
+            value = Utils.Clamp(value, Min, Max);
+
+            // Should not show unclamped value
+            obj.Text = value.ToString() ?? string.Empty;
+
+            Value = ConfigValue<T>.Set(value);
+
+            Slider.Ratio = Ratio;
+        }
+    }
+}
