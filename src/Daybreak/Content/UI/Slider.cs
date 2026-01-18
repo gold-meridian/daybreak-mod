@@ -85,6 +85,11 @@ public class Slider : UIElement
                 OnChanged?.Invoke(this);
             }
         }
+        else if (!IsMouseHovering && ContainsPoint(Main.MouseScreen) && !Main.mouseLeft)
+        {
+            IsMouseHovering = true;
+            SoundEngine.PlaySound(SoundID.MenuTick);
+        }
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
