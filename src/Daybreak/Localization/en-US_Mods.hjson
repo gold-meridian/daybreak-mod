@@ -1,0 +1,13 @@
+Terraria: {
+	ConfigCategory: {
+		General.DisplayName: General
+		Interface.DisplayName: Interface
+		Video.DisplayName: Video
+		Volume.DisplayName: Volume
+		Cursor.DisplayName: Cursor
+		Controls.DisplayName: Controls
+		LanguageCategory.DisplayName: Language
+	}
+}
+
+ModLoader.ConfigCategory.General.DisplayName: General
