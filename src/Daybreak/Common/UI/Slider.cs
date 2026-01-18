@@ -13,7 +13,7 @@ using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace Daybreak.Content.UI;
+namespace Daybreak.Common.UI;
 
 public class Slider : UIElement
 {
