@@ -88,8 +88,8 @@ public class FloatElement : RangeElement<float>
 {
     public FloatElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
     {
-        Min = 0;
-        Max = 100;
+        Min = -93.4f;
+        Max = 55.432f;
     }
 }
 
@@ -204,5 +204,10 @@ public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, IN
             // Refresh the text to show the correct value.
             obj.Text = Value.Value.ToString() ?? string.Empty;
         }
+    }
+
+    public override void OnActivate()
+    {
+        Slider.Ratio = Ratio;
     }
 }
