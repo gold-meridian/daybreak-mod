@@ -164,13 +164,13 @@ public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, IN
         Input = new InputField(() => Value.Value.ToString() ?? string.Empty);
         {
             Input.Width.Set(-slider_padding, 1f - slider_ratio);
-            Input.Height.Set(24, 0f);
+            Input.Height.Set(26, 0f);
 
             Input.MinWidth.Set(30, 0f);
 
             Input.VAlign = 0.5f;
 
-            Input.TextScale = 0.8f;
+            Input.TextScale = 0.9f;
 
             Input.OnTextChanged += Input_ParseText;
 
