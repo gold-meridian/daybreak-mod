@@ -353,6 +353,7 @@ internal static class InputHelpers
         if (drawBlinker && blinkerIndex != -1 && blinkTimer < blink_duration_in_seconds * blink_percent)
         {
             var blinkerX = font.MeasureString(text[..blinkerIndex]).X - 2f;
+            blinkerX *= scale.X;
 
             var blinkerPosition = position + Vector2.Transform(new Vector2(blinkerX, 0), matrix);
 
