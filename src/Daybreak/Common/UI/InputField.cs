@@ -149,13 +149,11 @@ public class InputField : UIPanel
         }
 
         var clickedOff = !Main.hasFocus || (Main.mouseLeft && !IsMouseHovering);
-        if (!clickedOff || !currentlyWriting)
+        if (clickedOff && currentlyWriting)
         {
-            return;
+            OnEnter?.Invoke(this);
+            currentlyWriting = false;
         }
-
-        OnEnter?.Invoke(this);
-        currentlyWriting = false;
     }
 
     private void HandleInput()
