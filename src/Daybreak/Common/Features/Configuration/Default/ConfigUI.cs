@@ -20,6 +20,7 @@ using Terraria.ModLoader.Default;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Gamepad;
+using static Terraria.GameContent.Bestiary.BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -52,9 +53,9 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
     protected TabList? Tabs { get; set; }
 
-    protected UIScrollbar? TabScrollbar { get; set; }
+    protected UIScrollbar? TabsScrollbar { get; set; }
 
-    protected ConfigList Config { get; set; }
+    protected ConfigList? Config { get; set; }
 
     protected UIScrollbar? ConfigScrollbar { get; set; }
 
@@ -204,19 +205,19 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         // bottom, for some reason.
         const float scrollbar_vertical_adjust = 6f;
 
-        TabScrollbar = new UIScrollbar();
+        TabsScrollbar = new UIScrollbar();
         {
-            TabScrollbar.Height.Set(-64f - BackPanel.PaddingTop - searchBarOffset - (scrollbar_vertical_adjust * 2f), 1f);
-            TabScrollbar.Top.Set(searchBarOffset + scrollbar_vertical_adjust, 0f);
-            TabScrollbar.HAlign = 1f;
+            TabsScrollbar.Height.Set(-64f - BackPanel.PaddingTop - searchBarOffset - (scrollbar_vertical_adjust * 2f), 1f);
+            TabsScrollbar.Top.Set(searchBarOffset + scrollbar_vertical_adjust, 0f);
+            TabsScrollbar.HAlign = 1f;
         }
-        SplitElement.LeftElement.Append(TabScrollbar);
+        SplitElement.LeftElement.Append(TabsScrollbar);
 
         // Panel tabs
         {
             var container = new UIElement();
             {
-                container.Width.Set(-TabScrollbar.Width.Pixels - 4f, 1f);
+                container.Width.Set(-TabsScrollbar.Width.Pixels - 4f, 1f);
                 container.Height.Set(-64f - BackPanel.PaddingTop - searchBarOffset, 1f);
                 container.Top.Set(searchBarOffset, 0f);
             }
@@ -229,7 +230,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
                 Tabs.HAlign = 1f;
                 Tabs.OnCategorySelected += OnCategorySelected_UpdateConfigList;
                 Tabs.OnModSelected += OnModSelected_UpdateConfigList;
-                Tabs.SetScrollbar(TabScrollbar);
+                Tabs.SetScrollbar(TabsScrollbar);
             }
             container.Append(Tabs);
         }
@@ -246,10 +247,10 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         {
             var container = new UIElement();
             {
-                container.Width.Set(-TabScrollbar.Width.Pixels - 4f, 1f);
+                container.Width.Set(-TabsScrollbar.Width.Pixels - 4f, 1f);
                 container.Height.Set(-64f - BackPanel.PaddingTop, 1f);
                 container.Top.Set(0f, 0f);
-                container.Left.Set(-TabScrollbar.Width.Pixels - 4f, 0f);
+                container.Left.Set(-TabsScrollbar.Width.Pixels - 4f, 0f);
                 container.HAlign = 1f;
             }
             SplitElement.RightElement.Append(container);
@@ -315,16 +316,16 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
 
         void OnCategorySelected_UpdateConfigList(ConfigCategory? category)
         {
-            Config.Mod = ConfigValue<Mod?>.Unset();
-            Config.Category = category;
+            Config?.Mod = ConfigValue<Mod?>.Unset();
+            Config?.Category = category;
 
             ClearDescription(null);
         }
 
         void OnModSelected_UpdateConfigList(ConfigValue<Mod?> mod)
         {
-            Config.Category = null;
-            Config.Mod = mod;
+            Config?.Category = null;
+            Config?.Mod = mod;
 
             ClearDescription(null);
         }
@@ -337,6 +338,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         UILinkPointNavigator.Shortcuts.BackButtonCommand = 7;
     }
 
+#region Description
     private void SetDescription(IConfigEntry? entry)
     {
         if (TargetEntry is null && entry is not null)
@@ -358,6 +360,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             MetadataText?.SetText(Mods.Daybreak.UI.DefaultMetadataDescription.GetText());
         }
     }
+#endregion
 
     private void ExitState()
     {
@@ -375,19 +378,86 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         exitAction?.Invoke();
     }
 
+    private void RefreshScrollbars()
+    {
+        if (SplitElement is null ||
+            Tabs is null ||
+            TabsScrollbar is null ||
+            Config is null ||
+            ConfigScrollbar is null)
+        {
+            return;
+        }
+
+        float scrollbarMargin = TabsScrollbar.Dimensions.Width + 4f;
+
+        // Tabs
+        {
+            bool exceedsSize =
+                Tabs.GetTotalHeight() > Tabs.Dimensions.Height &&
+                SplitElement.LeftElement.Dimensions.Width > TabsScrollbar.Dimensions.Width;
+
+            if (exceedsSize && !SplitElement.LeftElement.HasChild(TabsScrollbar))
+            {
+                SplitElement.LeftElement.Append(TabsScrollbar);
+
+                Tabs.Parent.Width.Set(-scrollbarMargin, 1f);
+
+                SplitElement.LeftElement.Activate();
+                Recalculate();
+            }
+            if (!exceedsSize && SplitElement.LeftElement.HasChild(TabsScrollbar))
+            {
+                SplitElement.LeftElement.RemoveChild(TabsScrollbar);
+
+                Tabs.Parent.Width.Set(0f, 1f);
+
+                Recalculate();
+            }
+        }
+
+        // Config
+        {
+            bool exceedsSize =
+                Config.GetTotalHeight() > Config.Dimensions.Height &&
+                SplitElement.RightElement.Dimensions.Width > ConfigScrollbar.Dimensions.Width;
+
+            if (exceedsSize && !SplitElement.RightElement.HasChild(ConfigScrollbar))
+            {
+                SplitElement.RightElement.Append(ConfigScrollbar);
+
+                Config.Parent.Width.Set(-scrollbarMargin, 1f);
+                Config.Parent.Left.Set(-scrollbarMargin, 0f);
+
+                Recalculate();
+            }
+            if (!exceedsSize && SplitElement.RightElement.HasChild(ConfigScrollbar))
+            {
+                SplitElement.RightElement.RemoveChild(ConfigScrollbar);
+
+                Config.Parent.Width.Set(0f, 1f);
+                Config.Parent.Left.Set(0f, 0f);
+
+                Recalculate();
+            }
+        }
+    }
+
+    public override void OnActivate()
+    {
+        base.OnActivate();
+
+        RefreshScrollbars();
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        RefreshScrollbars();
+    }
+
 #region Buttons
-    /*
-    private void DescriptionMouseOver(UIMouseEvent evt, UIElement listeningElement)
-    {
-        // TODO
-    }
-
-    private void DescriptionMouseOut(UIMouseEvent evt, UIElement listeningElement)
-    {
-        DescriptionText?.SetText(Mods.Daybreak.UI.DefaultConfigDescription.GetText());
-    }
-    */
-
     void IHaveBackButtonCommand.HandleBackButtonUsage()
     {
         ExitState();
