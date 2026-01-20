@@ -1,5 +1,6 @@
 ﻿using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.UI;
+using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -77,7 +78,7 @@ public class Slider : UIElement
 
         InnerColor = Color.Gray;
 
-        InnerTexture = Assets.Images.UI.Gradient.Asset;
+        InnerTexture = AssetReferences.Assets.Images.UI.Gradient.Asset;
         BlipTexture = TextureAssets.ColorSlider;
     }
 
@@ -150,8 +151,8 @@ public class Slider : UIElement
 
         Rectangle dims = this.Dimensions;
 
-        Texture2D slider = Assets.Images.UI.Slider.Asset.Value;
-        Texture2D sliderOutline = Assets.Images.UI.SliderHighlight.Asset.Value;
+        Texture2D slider = AssetReferences.Assets.Images.UI.Slider.Asset.Value;
+        Texture2D sliderOutline = AssetReferences.Assets.Images.UI.SliderHighlight.Asset.Value;
 
         DrawBar(slider, Color.White);
 
