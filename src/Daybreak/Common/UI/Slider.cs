@@ -76,7 +76,7 @@ public class Slider : UIElement
         Width.Set(0, 1f);
         Height.Set(16, 0f);
 
-        InnerColor = Color.Gray;
+        InnerColor = Color.White;
 
         InnerTexture = AssetReferences.Assets.Images.UI.Gradient.Asset;
         BlipTexture = TextureAssets.ColorSlider;
