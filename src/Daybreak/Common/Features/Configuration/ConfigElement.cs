@@ -1,5 +1,4 @@
 ﻿using Daybreak.Common.UI;
-using Daybreak.Content.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -192,7 +191,7 @@ public class ConfigElement : UIElement
 
         ForceDescription = !ForceDescription;
 
-        SoundEngine.PlaySound(ForceDescription ? SoundID.MenuOpen : SoundID.MenuClose);
+        SoundEngine.PlaySound(in SoundID.MenuTick);
     }
 
     public override void Update(GameTime gameTime)
