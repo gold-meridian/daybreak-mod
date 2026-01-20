@@ -1,4 +1,5 @@
 ﻿using Daybreak.Common.UI;
+using Daybreak.Content.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -70,7 +71,7 @@ public class ConfigElement : UIElement
 
     protected Icon? InfoIcon;
 
-    protected UIAutoScaleTextTextPanel<LocalizedText> Label;
+    protected MarqueeText<LocalizedText> Label;
 
     private bool wasLeftMouseDown;
 
@@ -116,18 +117,15 @@ public class ConfigElement : UIElement
             LabelContainer.Append(InfoIcon);
         }
 
-        Label = new UIAutoScaleTextTextPanel<LocalizedText>(Entry.DisplayName);
+        Label = new MarqueeText<LocalizedText>(Entry.DisplayName);
         {
-            Label.BackgroundColor = Color.Transparent;
-            Label.BorderColor = Color.Transparent;
-
             Label.Width.Set(0f, 1f);
             Label.Height.Set(0f, 1f);
 
-            Label.TextScaleMax = 0.9f;
+            Label.MaxTextScale = 0.9f;
 
-            Label.TextOriginX = 0f;
-            Label.TextOriginY = 0.5f;
+            Label.TextAlignX = 0f;
+            Label.TextAlignY = 0.5f;
 
             Label.SetPadding(0f);
         }
@@ -200,6 +198,9 @@ public class ConfigElement : UIElement
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
+
+        // Allow marquee text to scroll since the container disables mouse interactions
+        Label.IsMouseHovering = IsMouseHovering;
 
         // Checking for 'Main.mouseLeft && Main.mouseLeftRelease' doesn't seem to work here.
         var clickedOff = !Main.hasFocus || (wasLeftMouseDown && !Main.mouseLeft && !IsMouseHovering);

@@ -6,12 +6,10 @@ using ReLogic.Graphics;
 using Terraria.GameContent;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace Daybreak.Content.UI;
+namespace Daybreak.Common.UI;
 
-// TODO: Clean-up to match InputField
-internal class MarqueeText<T> : UIElement
+public class MarqueeText<T> : UIElement
 {
     private T text;
 
