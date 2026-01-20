@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -261,6 +260,8 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
                 Config.Height.Set(0f, 1f);
                 Config.HAlign = 1f;
                 Config.SetScrollbar(ConfigScrollbar);
+                Config.OnShowDescription += SetDescription;
+                Config.OnHideDescription += ClearDescription;
             }
             container.Append(Config);
         }
@@ -316,12 +317,16 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         {
             Config.Mod = ConfigValue<Mod?>.Unset();
             Config.Category = category;
+
+            ClearDescription(null);
         }
 
         void OnModSelected_UpdateConfigList(ConfigValue<Mod?> mod)
         {
             Config.Category = null;
             Config.Mod = mod;
+
+            ClearDescription(null);
         }
     }
 
@@ -330,6 +335,28 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         base.Draw(spriteBatch);
 
         UILinkPointNavigator.Shortcuts.BackButtonCommand = 7;
+    }
+
+    private void SetDescription(IConfigEntry? entry)
+    {
+        if (TargetEntry is null && entry is not null)
+        {
+            TargetEntry = entry;
+
+            DescriptionText?.SetText(entry.Description);
+            // MetadataText?.SetText();
+        }
+    }
+
+    private void ClearDescription(IConfigEntry? entry)
+    {
+        if (entry is null || (TargetEntry == entry))
+        {
+            TargetEntry = null;
+
+            DescriptionText?.SetText(Mods.Daybreak.UI.DefaultConfigDescription.GetText());
+            MetadataText?.SetText(Mods.Daybreak.UI.DefaultMetadataDescription.GetText());
+        }
     }
 
     private void ExitState()
@@ -1136,6 +1163,10 @@ internal sealed class TabList : FadedList
 
 internal sealed class ConfigList : FadedList
 {
+    public Action<IConfigEntry?>? OnShowDescription;
+
+    public Action<IConfigEntry?>? OnHideDescription;
+
     public ConfigCategory? Category
     {
         get;
@@ -1273,6 +1304,10 @@ internal sealed class ConfigList : FadedList
                 new ConfigElement(entry, showModIcons);
             {
                 configElement.Flashing = targetEntry == entry;
+
+                configElement.OnShowDescription += ConfigElement_OnShowDescription;
+
+                configElement.OnHideDescription += ConfigElement_OnHideDescription;
             }
             Add(configElement);
         }
@@ -1284,5 +1319,17 @@ internal sealed class ConfigList : FadedList
             endPadElement.Height.Set(24f, 0f);
         }
         Add(endPadElement);
+
+        return;
+
+        void ConfigElement_OnShowDescription(IConfigEntry? entry)
+        {
+            OnShowDescription?.Invoke(entry);
+        }
+
+        void ConfigElement_OnHideDescription(IConfigEntry? entry)
+        {
+            OnHideDescription?.Invoke(entry);
+        }
     }
 }

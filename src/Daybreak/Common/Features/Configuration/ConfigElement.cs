@@ -6,7 +6,9 @@ using ReLogic.Content;
 using System;
 using System.Diagnostics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Default;
@@ -38,18 +40,39 @@ public class ConfigElement : UIElement
 
     protected static readonly Color COLOR = UICommon.DefaultUIBlue.MultiplyRGB(new Color(180, 180, 180));
     protected static readonly Color HOVER_COLOR = UICommon.DefaultUIBlue;
+    protected static readonly Color FLASHING_COLOR = UICommon.DefaultUIBlue * 1.15f;
 
     protected Color PanelColor { get; set; }
 
     public bool Flashing { get; set; }
 
-    protected IConfigEntry Entry;
+    public IConfigEntry Entry { get; set; }
+
+    protected bool ForceDescription
+    {
+        get;
+
+        set
+        {
+            Flashing = value;
+
+            PanelColor = IsMouseHovering ? HOVER_COLOR : COLOR;
+
+            field = value;
+        }
+    }
+
+    public Action<IConfigEntry?>? OnShowDescription;
+
+    public Action<IConfigEntry?>? OnHideDescription;
 
     protected UIElement LabelContainer;
 
     protected Icon? InfoIcon;
 
     protected UIAutoScaleTextTextPanel<LocalizedText> Label;
+
+    private bool wasLeftMouseDown;
 
     public ConfigElement(IConfigEntry entry, bool showIcon) : base()
     {
@@ -70,6 +93,8 @@ public class ConfigElement : UIElement
             LabelContainer.Height.Set(upper_height, 0f);
 
             LabelContainer.MinWidth.Set(30f, 0f);
+
+            LabelContainer.IgnoresMouseInteraction = true;
         }
         Append(LabelContainer);
 
@@ -133,26 +158,65 @@ public class ConfigElement : UIElement
     {
         base.MouseOver(evt);
 
-        PanelColor = HOVER_COLOR;
+        OnShowDescription?.Invoke(Entry);
 
-        Flashing = false;
+        if (!ForceDescription)
+        {
+            PanelColor = HOVER_COLOR;
+
+            Flashing = false;
+        }
     }
 
     public override void MouseOut(UIMouseEvent evt)
     {
         base.MouseOut(evt);
 
-        PanelColor = COLOR;
+        if (!ForceDescription)
+        {
+            PanelColor = COLOR;
+
+            OnHideDescription?.Invoke(Entry);
+        }
+    }
+
+    public override void LeftClick(UIMouseEvent evt)
+    {
+        base.LeftClick(evt);
+
+        if (evt.Target != this)
+        {
+            return;
+        }
+
+        OnHideDescription?.Invoke(null);
+        OnShowDescription?.Invoke(Entry);
+
+        ForceDescription = !ForceDescription;
+
+        SoundEngine.PlaySound(ForceDescription ? SoundID.MenuOpen : SoundID.MenuClose);
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
 
+        // Checking for 'Main.mouseLeft && Main.mouseLeftRelease' doesn't seem to work here.
+        var clickedOff = !Main.hasFocus || (wasLeftMouseDown && !Main.mouseLeft && !IsMouseHovering);
+
+        wasLeftMouseDown = Main.mouseLeft;
+
+        if (clickedOff && ForceDescription)
+        {
+            OnHideDescription?.Invoke(Entry);
+
+            ForceDescription = false;
+        }
+
         if (Flashing)
         {
-            float ratio = Utils.Turn01ToCyclic010(Main.GlobalTimeWrappedHourly % 120 / 120f) * 0.5f + 0.5f;
-            PanelColor = Color.Lerp(COLOR, Color.White, MathF.Pow(ratio, 2f));
+            float ratio = Utils.Turn01ToCyclic010(Main.GlobalTimeWrappedHourly * 60 % 120 / 120f) * 0.5f + 0.5f;
+            PanelColor = Color.Lerp(HOVER_COLOR, FLASHING_COLOR, MathF.Pow(ratio, 2f));
         }
     }
 
