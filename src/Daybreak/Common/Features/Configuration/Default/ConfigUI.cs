@@ -20,7 +20,6 @@ using Terraria.ModLoader.Default;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Gamepad;
-using static Terraria.GameContent.Bestiary.BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -273,9 +272,9 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             large: true
         );
         {
-            HeaderPanel.SetPadding(13f);
-            HeaderPanel.Top.Set(-44f, 0f);
+            HeaderPanel.Top.Set(-46f - BackPanel.PaddingTop, 0f);
             HeaderPanel.HAlign = 0.5f;
+            HeaderPanel.SetPadding(15f);
             HeaderPanel.BackgroundColor = UICommon.DefaultUIBlue;
         }
         BackPanel.Append(HeaderPanel);
@@ -1347,14 +1346,6 @@ internal sealed class ConfigList : FadedList
         {
             return;
         }
-
-        // Extra padding at the start of the list to avoid the last item being
-        // engulfed in the fade.
-        var startPadElement = new UIElement();
-        {
-            startPadElement.Height.Set(4f, 0f);
-        }
-        Add(startPadElement);
 
         var repository = category.Handle.Repository;
 
