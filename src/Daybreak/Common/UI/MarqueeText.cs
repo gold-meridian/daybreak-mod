@@ -162,6 +162,9 @@ public class MarqueeText<T> : UIElement
                 position.X -= offset;
             }
 
+            // Chat tags don't correctly account for origin nor scale/rotation.
+            position -= origin;
+
             ChatManager.DrawColorCodedStringWithShadow(
                 spriteBatch,
                 font,
@@ -169,7 +172,7 @@ public class MarqueeText<T> : UIElement
                 position,
                 Color.White,
                 0f,
-                origin,
+                Vector2.Zero,
                 new Vector2(textScale)
             );
         }
