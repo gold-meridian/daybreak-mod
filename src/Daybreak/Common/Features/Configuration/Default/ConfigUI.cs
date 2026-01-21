@@ -538,14 +538,6 @@ internal sealed class TabList : FadedList
 
         _innerList.MinWidth.Set(150f, 0f);
 
-        // Extra padding at the start of the list to avoid the last item being
-        // engulfed in the fade.
-        var startPadElement = new UIElement();
-        {
-            startPadElement.Height.Set(4f, 0f);
-        }
-        Add(startPadElement);
-
         ManualSortMethod = _ => { };
 
         var categoriesByMod = new Dictionary<ConfigValue<Mod?>, List<ConfigCategory>>
@@ -573,14 +565,6 @@ internal sealed class TabList : FadedList
             }
             Add(modGroup);
         }
-
-        // Extra padding at the bottom of the list to avoid the last item being
-        // engulfed in the fade.
-        var endPadElement = new UIElement();
-        {
-            endPadElement.Height.Set(24f, 0f);
-        }
-        Add(endPadElement);
 
         var categoryToGoTo = targetCategory;
         if (targetEntry is not null)
@@ -1372,14 +1356,6 @@ internal sealed class ConfigList : FadedList
             }
             Add(configElement);
         }
-
-        // Extra padding at the bottom of the list to avoid the last item being
-        // engulfed in the fade.
-        var endPadElement = new UIElement();
-        {
-            endPadElement.Height.Set(24f, 0f);
-        }
-        Add(endPadElement);
 
         return;
 
