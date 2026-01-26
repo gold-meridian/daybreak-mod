@@ -1,19 +1,22 @@
 ﻿using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Mathematics;
 using Daybreak.Common.Rendering;
+using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using ReLogic.Graphics;
 using System;
 using System.Runtime.CompilerServices;
+using Terraria;
+using Terraria.GameContent;
 using Terraria.UI.Chat;
 
 namespace Daybreak.Common.Features.ChatTags;
 
 internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHandler>
 {
-    private record struct FormattingOptions(bool Bold, bool Italic, bool Underline, bool StrikeThrough)
+    private record struct FormattingOptions(bool Bold, bool Italic, bool Underline, bool Strikethrough)
     {
         public static FormattingOptions Parse(string text)
         {
@@ -42,7 +45,7 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
                     }
                     case 's':
                     {
-                        options.StrikeThrough = true;
+                        options.Strikethrough = true;
                         break;
                     }
                 }
@@ -124,12 +127,12 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
     {
         private readonly FormattingOptions options;
 
-        public Snippet(string text, FormattingOptions options) : base(text)
+        public Snippet(FormattingOptions options, string text = "") : base(text)
         {
             this.options = options;
         }
 
-        public Snippet(string text, Color color, float scale = 1f, FormattingOptions options) : base(text, color, scale)
+        public Snippet(FormattingOptions options, string text, Color color, float scale = 1f) : base(text, color, scale)
         {
             this.options = options;
         }
@@ -147,6 +150,8 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
         {
             spriteBatch.End(out var snapshot);
 
+            var textSize = font.MeasureString(text) * scale;
+
             var matrix =
                 options.Italic ?
                 (GetItalicMatrix() * snapshot.TransformMatrix) :
@@ -156,13 +161,23 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
             spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
 
+            if (options.Underline)
+            {
+                DrawLine(new(0, textSize.Y * 0.6f));
+            }
+
+            if (options.Strikethrough)
+            {
+                DrawLine(new(0, textSize.Y * 0.3f));
+            }
+
             spriteBatch.Restart(snapshot);
 
             return;
 
             Matrix GetItalicMatrix()
             {
-                const float skew_angle = -25f;
+                const float skew_angle = -17f;
 
                 const float x_offset = 5f;
 
@@ -185,6 +200,60 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
                 return matrix;
             }
+
+            void DrawLine(Vector2 offset)
+            {
+                const float size_ratio = 0.1f;
+
+                AssetReferences.Assets.Images.Formatting.RoundedLine.Asset.Wait();
+
+                var texture = AssetReferences.Assets.Images.Formatting.RoundedLine.Asset;
+
+                float size = textSize.Y * size_ratio;
+
+                int edgeSize = (int)(3 * scale.X);
+                int height = (int)size;
+
+                Matrix matrix =
+                    Matrix.CreateTranslation(new(-position, 0)) *
+                    Matrix.CreateTranslation((0f - origin.X) * textSize.X, (0f - origin.Y) * textSize.Y, 0f) *
+                    Matrix.CreateRotationZ(rotation) *
+                    Matrix.CreateTranslation(new(position, 0));
+
+                var leftPosition = Vector2.Transform(position + offset, matrix);
+
+                var leftDest = new Rectangle(
+                    (int)leftPosition.X,
+                    (int)leftPosition.Y,
+                    edgeSize,
+                    height
+                );
+                var leftSource = new Rectangle(0, 0, 3, texture.Height());
+
+                var middlePosition = Vector2.Transform(new Vector2(position.X + edgeSize, position.Y) + offset, matrix);
+
+                var middleDest = new Rectangle(
+                    (int)middlePosition.X,
+                    (int)middlePosition.Y,
+                    (int)textSize.X -(edgeSize * 2),
+                    height
+                );
+                var middleSource = new Rectangle(3, 0, 1, texture.Height());
+
+                var rightPosition = Vector2.Transform(new Vector2(position.X + textSize.X - edgeSize, position.Y) + offset, matrix);
+
+                var rightDest = new Rectangle(
+                    (int)rightPosition.X,
+                    (int)rightPosition.Y,
+                    edgeSize,
+                    height
+                );
+                var rightSource = new Rectangle(4, 0, 3, texture.Height());
+
+                spriteBatch.Draw(texture.Value, leftDest, leftSource, color, rotation, Vector2.Zero, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture.Value, middleDest, middleSource, color, rotation, Vector2.Zero, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture.Value, rightDest, rightSource, color, rotation, Vector2.Zero, SpriteEffects.None, 0f);
+            }
         }
 
         public override Color GetVisibleColor()
@@ -204,6 +273,6 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
         var formatting = FormattingOptions.Parse(options);
 
-        return new Snippet(text, baseColor, 1f, formatting);
+        return new Snippet(formatting, text, baseColor);
     }
 }
