@@ -204,6 +204,6 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
         var formatting = FormattingOptions.Parse(options);
 
-        return new Snippet(text, baseColor, formatting);
+        return new Snippet(text, baseColor, 1f, formatting);
     }
 }
