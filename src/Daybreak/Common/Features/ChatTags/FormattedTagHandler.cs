@@ -161,6 +161,11 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
             spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
 
+            if (options.Bold)
+            {
+                DrawBoldOutline();
+            }
+
             if (options.Underline)
             {
                 DrawLine(new(0, textSize.Y * 0.6f));
@@ -175,6 +180,22 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
             return;
 
+            void DrawBoldOutline()
+            {
+                const int directions = 4;
+
+                const float distance = 0.25f;
+
+                for (int i = 0; i < directions; i++)
+                {
+                    Vector2 offset = new Vector2(distance, 0).RotatedBy(MathF.Tau * ((float)i / directions));
+
+                    offset *= scale;
+
+                    spriteBatch.DrawString(font, text, position + offset, color, rotation, origin, scale, SpriteEffects.None, 0f);
+                }
+            }
+
             Matrix GetItalicMatrix()
             {
                 const float skew_angle = -17f;
@@ -183,7 +204,7 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
                 position.X += (skew_angle * 0.5f + x_offset) * scale.X;
 
-                var angle = Angle.FromDegrees(skew_angle);
+                var angle = Angle.FromDegrees(skew_angle) * scale.X;
 
                 var translation = new Vector3(position.X - origin.X, position.Y + font.MeasureString(text).Y - origin.Y, 0);
 
