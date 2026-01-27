@@ -148,18 +148,16 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
             Vector2 scale
         )
         {
-            spriteBatch.End(out var snapshot);
-
             var textSize = font.MeasureString(text) * scale;
 
-            var matrix =
-                options.Italic ?
-                (GetItalicMatrix() * snapshot.TransformMatrix) :
-                snapshot.TransformMatrix;
-
-            spriteBatch.Begin(snapshot with { TransformMatrix = matrix });
-
-            spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
+            if (options.Italic)
+            {
+                DrawItalicText();
+            }
+            else
+            {
+                spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
+            }
 
             if (options.Bold)
             {
@@ -175,8 +173,6 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
             {
                 DrawLine(new(0, textSize.Y * 0.3f));
             }
-
-            spriteBatch.Restart(snapshot);
 
             return;
 
@@ -196,8 +192,10 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
                 }
             }
 
-            Matrix GetItalicMatrix()
+            void DrawItalicText()
             {
+                spriteBatch.End(out var snapshot);
+
                 const float skew_angle = -17f;
 
                 const float x_offset = 5f;
@@ -219,7 +217,11 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
                 var matrix = Matrix.CreateTranslation(-translation) * skew * Matrix.CreateTranslation(translation);
 
-                return matrix;
+                spriteBatch.Begin(snapshot with { TransformMatrix = matrix });
+
+                spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
+
+                spriteBatch.Restart(snapshot);
             }
 
             void DrawLine(Vector2 offset)
