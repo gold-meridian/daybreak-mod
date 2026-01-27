@@ -157,11 +157,11 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
             else
             {
                 spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
-            }
 
-            if (options.Bold)
-            {
-                DrawBoldOutline();
+                if (options.Bold)
+                {
+                    DrawBoldOutline();
+                }
             }
 
             if (options.Underline)
@@ -220,6 +220,11 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
                 spriteBatch.Begin(snapshot with { TransformMatrix = matrix });
 
                 spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
+
+                if (options.Bold)
+                {
+                    DrawBoldOutline();
+                }
 
                 spriteBatch.Restart(snapshot);
             }
