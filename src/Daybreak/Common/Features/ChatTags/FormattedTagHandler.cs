@@ -148,7 +148,23 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
             Vector2 scale
         )
         {
+            spriteBatch.Draw(AssetReferences.Assets.Images.Formatting.RoundedLine.Asset.Value, new Rectangle((int)position.X, (int)position.Y, 2, 2), Color.White);
+
+            origin = font.MeasureString(text) / 2;
+
+            rotation = Main.GlobalTimeWrappedHourly;
+
             var textSize = font.MeasureString(text) * scale;
+
+            if (options.Underline)
+            {
+                DrawLine(new(0, textSize.Y * 0.6f));
+            }
+
+            if (options.Strikethrough)
+            {
+                DrawLine(new(0, textSize.Y * 0.35f));
+            }
 
             if (options.Italic)
             {
@@ -162,16 +178,6 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
                 {
                     DrawBoldOutline();
                 }
-            }
-
-            if (options.Underline)
-            {
-                DrawLine(new(0, textSize.Y * 0.6f));
-            }
-
-            if (options.Strikethrough)
-            {
-                DrawLine(new(0, textSize.Y * 0.3f));
             }
 
             return;
@@ -194,28 +200,35 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
             void DrawItalicText()
             {
-                spriteBatch.End(out var snapshot);
-
                 const float skew_angle = -17f;
 
-                const float x_offset = 5f;
+                var angle = Angle.FromDegrees(skew_angle);
 
-                position.X += (skew_angle * 0.5f + x_offset) * scale.X;
+                spriteBatch.End(out var snapshot);
 
-                var angle = Angle.FromDegrees(skew_angle) * scale.X;
-
-                var translation = new Vector3(position.X - origin.X, position.Y + font.MeasureString(text).Y - origin.Y, 0);
+                var translation = new Vector3(position - (origin * scale), 0f);
 
                 /*
-                 * 1,      0, 0, 0,
-                 * tan(a), 1, 0, 0,
-                 * 0,      0, 1, 0,
-                 * 0,      0, 0, 1
+                 * 1, tan(a), 0, 0,
+                 * 0, 1,      0, 0,
+                 * 0, 0,      1, 0,
+                 * 0, 0,      0, 1
                  */
                 var skew = Matrix.Identity;
-                skew.M21 = MathF.Tan(angle.Radians);
+                skew.M21 += MathF.Tan(angle.Radians);
 
-                var matrix = Matrix.CreateTranslation(-translation) * skew * Matrix.CreateTranslation(translation);
+                // Skew should base based on the bottom of the characters.
+                float offset = textSize.Y * 0.6f;
+
+                var matrix =
+                    Matrix.CreateTranslation(-translation) *
+                    Matrix.CreateRotationZ(-rotation) *
+                    Matrix.CreateTranslation(0f, -offset, 0f) *
+                    skew *
+                    Matrix.CreateTranslation(0f, offset, 0f) *
+                    Matrix.CreateRotationZ(rotation) *
+                    Matrix.CreateTranslation(translation) *
+                    snapshot.TransformMatrix;
 
                 spriteBatch.Begin(snapshot with { TransformMatrix = matrix });
 
@@ -243,12 +256,10 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
                 int height = (int)size;
 
                 Matrix matrix =
-                    Matrix.CreateTranslation(new(-position, 0)) *
-                    Matrix.CreateTranslation((0f - origin.X) * textSize.X, (0f - origin.Y) * textSize.Y, 0f) *
-                    Matrix.CreateRotationZ(rotation) *
-                    Matrix.CreateTranslation(new(position, 0));
+                    Matrix.CreateTranslation(new(-origin * scale, 0f)) *
+                    Matrix.CreateRotationZ(rotation);
 
-                var leftPosition = Vector2.Transform(position + offset, matrix);
+                var leftPosition = Vector2.Transform(offset, matrix) + position;
 
                 var leftDest = new Rectangle(
                     (int)leftPosition.X,
@@ -258,7 +269,7 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
                 );
                 var leftSource = new Rectangle(0, 0, 3, texture.Height());
 
-                var middlePosition = Vector2.Transform(new Vector2(position.X + edgeSize, position.Y) + offset, matrix);
+                var middlePosition = Vector2.Transform(new Vector2(edgeSize, 0) + offset, matrix) + position;
 
                 var middleDest = new Rectangle(
                     (int)middlePosition.X,
@@ -268,7 +279,7 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
                 );
                 var middleSource = new Rectangle(3, 0, 1, texture.Height());
 
-                var rightPosition = Vector2.Transform(new Vector2(position.X + textSize.X - edgeSize, position.Y) + offset, matrix);
+                var rightPosition = Vector2.Transform(new Vector2(textSize.X - edgeSize, 0) + offset, matrix) + position;
 
                 var rightDest = new Rectangle(
                     (int)rightPosition.X,
