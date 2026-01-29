@@ -125,8 +125,6 @@ public class BoolElement : ConfigElement<bool>
             Toggle.Width.Set(30f, 0f);
             Toggle.Height.Set(30f, 0f);
 
-            Toggle.SetPadding(3f);
-
             Toggle.IgnoresMouseInteraction = true;
         }
         container.Append(Toggle);
