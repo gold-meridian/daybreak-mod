@@ -126,6 +126,8 @@ public class BoolElement : ConfigElement<bool>
             Toggle.Height.Set(30f, 0f);
 
             Toggle.SetPadding(3f);
+
+            Toggle.IgnoresMouseInteraction = true;
         }
         container.Append(Toggle);
 
@@ -146,6 +148,8 @@ public class BoolElement : ConfigElement<bool>
             Text.TextColor = BUTTON_COLOR;
 
             Text.PaddingTop = 3f;
+
+            Text.IgnoresMouseInteraction = true;
         }
         container.Append(Text);
 
