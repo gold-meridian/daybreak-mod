@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using System.Diagnostics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -92,7 +91,7 @@ public class ConfigElement : UIElement
             LabelContainer.Width.Set(0f, 0.6f);
             LabelContainer.Height.Set(upper_height, 0f);
 
-            LabelContainer.MinWidth.Set(30f, 0f);
+            LabelContainer.MinWidth.Set(50f, 0f);
 
             LabelContainer.IgnoresMouseInteraction = true;
         }
@@ -126,7 +125,7 @@ public class ConfigElement : UIElement
             Label.TextAlignX = 0f;
             Label.TextAlignY = 0.5f;
 
-            Label.SetPadding(0f);
+            Label.PaddingTop = 3f;
         }
         LabelContainer.Append(Label);
     }

@@ -1,6 +1,12 @@
 ﻿using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Mathematics;
+using Daybreak.Common.Rendering;
 using Daybreak.Common.UI;
+using Daybreak.Core;
+using Microsoft.CodeAnalysis;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -8,6 +14,10 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.UI;
@@ -69,6 +79,140 @@ internal static class DefaultConfigElementLoader
         }
 
         return false;
+    }
+}
+
+[DefaultConfigElementFor<bool>]
+public class BoolElement : ConfigElement<bool>
+{
+    protected Color BUTTON_COLOR = Color.White * 0.75f;
+    protected Color BUTTON_HOVER_COLOR = Color.White;
+
+    protected ToggleImage Toggle;
+
+    protected MarqueeText<LocalizedText> Text;
+
+    public BoolElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        const float upper_height = 30f;
+
+        var container = new UIElement();
+        {
+            container.Width.Set(0f, 0.2f);
+            container.Height.Set(upper_height, 0f);
+
+            container.HAlign = 1f;
+
+            container.OnLeftClick += OnLeftClick_UpdateValue;
+
+            container.OnMouseOver += OnMouseOver_UpdateColors;
+            container.OnMouseOut += OnMouseOut_UpdateColors;
+        }
+        Append(container);
+
+        Toggle = new ToggleImage();
+        {
+            AssetReferences.Assets.Images.UI.Toggle.Asset.Wait();
+
+            Toggle.Texture = AssetReferences.Assets.Images.UI.Toggle.Asset;
+
+            Toggle.Frame = GetButtonFrame();
+
+            Toggle.Color = BUTTON_COLOR;
+
+            Toggle.HAlign = 1f;
+
+            Toggle.Width.Set(30f, 0f);
+            Toggle.Height.Set(30f, 0f);
+
+            Toggle.SetPadding(3f);
+        }
+        container.Append(Toggle);
+
+        Text = new MarqueeText<LocalizedText>(GetDisplayText(), this.Label.ScrollSpeed);
+        {
+            Text.Width.Set(-30f, 1f);
+            Text.Height.Set(upper_height, 0f);
+
+            Text.Left.Set(-30, 0f);
+
+            Text.HAlign = 1f;
+            Text.VAlign = 0.5f;
+
+            Text.MaxTextScale = 0.9f;
+
+            Text.TextAlignX = 1f;
+
+            Text.TextColor = BUTTON_COLOR;
+
+            Text.PaddingTop = 3f;
+        }
+        container.Append(Text);
+
+        return;
+
+        void OnLeftClick_UpdateValue(UIMouseEvent evt, UIElement listeningElement)
+        {
+            Value = ConfigValue<bool>.Set(!Value.Value);
+
+            Text?.SetText(GetDisplayText());
+
+            Toggle?.Frame = GetButtonFrame();
+
+            SoundEngine.PlaySound(in SoundID.MenuTick);
+        }
+
+        LocalizedText GetDisplayText()
+        {
+            return Value.Value ? Lang.menu[126] : Lang.menu[124];
+        }
+
+        Rectangle? GetButtonFrame()
+        {
+            return AssetReferences.Assets.Images.UI.Toggle.Asset.Frame(1, 2, 0, Value.Value.ToInt());
+        }
+
+        void OnMouseOver_UpdateColors(UIMouseEvent evt, UIElement listeningElement)
+        {
+            Toggle?.Color = BUTTON_HOVER_COLOR;
+            Text?.TextColor = BUTTON_HOVER_COLOR;
+
+            SoundEngine.PlaySound(in SoundID.MenuTick);
+        }
+
+        void OnMouseOut_UpdateColors(UIMouseEvent evt, UIElement listeningElement)
+        {
+            Toggle?.Color = BUTTON_COLOR;
+            Text?.TextColor = BUTTON_COLOR;
+        }
+    }
+
+    protected sealed class ToggleImage : UIElement
+    {
+        public Asset<Texture2D>? Texture { get; set; }
+
+        public Rectangle? Frame { get; set; }
+
+        public Color Color { get; set; }
+
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            base.DrawSelf(spriteBatch);
+
+            if (Texture is null)
+            {
+                return;
+            }
+
+            var dims = this.InnerDimensions;
+
+            spriteBatch.Draw(
+                Texture.Value,
+                dims,
+                Frame,
+                Color
+            );
+        }
     }
 }
 
