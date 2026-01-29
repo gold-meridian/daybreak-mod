@@ -148,12 +148,6 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
             Vector2 scale
         )
         {
-            spriteBatch.Draw(AssetReferences.Assets.Images.Formatting.RoundedLine.Asset.Value, new Rectangle((int)position.X, (int)position.Y, 2, 2), Color.White);
-
-            origin = font.MeasureString(text) / 2;
-
-            rotation = Main.GlobalTimeWrappedHourly;
-
             var textSize = font.MeasureString(text) * scale;
 
             if (options.Underline)
@@ -206,7 +200,8 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
 
                 spriteBatch.End(out var snapshot);
 
-                var translation = new Vector3(position - (origin * scale), 0f);
+                // Skew should base based on the bottom of the characters.
+                float offset = (textSize.Y * 0.6f) - origin.Y;
 
                 /*
                  * 1, tan(a), 0, 0,
@@ -217,17 +212,14 @@ internal sealed class FormattedTagHandler : ILoadableTagHandler<FormattedTagHand
                 var skew = Matrix.Identity;
                 skew.M21 += MathF.Tan(angle.Radians);
 
-                // Skew should base based on the bottom of the characters.
-                float offset = textSize.Y * 0.6f;
-
                 var matrix =
-                    Matrix.CreateTranslation(-translation) *
+                    Matrix.CreateTranslation(new(-position, 0f)) *
                     Matrix.CreateRotationZ(-rotation) *
                     Matrix.CreateTranslation(0f, -offset, 0f) *
                     skew *
                     Matrix.CreateTranslation(0f, offset, 0f) *
                     Matrix.CreateRotationZ(rotation) *
-                    Matrix.CreateTranslation(translation) *
+                    Matrix.CreateTranslation(new(position, 0f)) *
                     snapshot.TransformMatrix;
 
                 spriteBatch.Begin(snapshot with { TransformMatrix = matrix });
