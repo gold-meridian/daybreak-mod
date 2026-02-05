@@ -108,6 +108,7 @@ internal static class InputHelpers
         string input,
         out string output,
         bool allowLineBreaks = false,
+        bool allowChatTags = false,
         IEnumerable<char>? blacklistedChars = null,
         IEnumerable<char>? whitelistedChars = null)
     {
@@ -131,6 +132,17 @@ internal static class InputHelpers
 
         // Arrow key movement
         {
+            int left = 1;
+            int right = 1;
+
+            if (allowChatTags)
+            {
+                TryGetNeighborSnippets(input, out var previous, out var next);
+
+                left = previous?.DeleteWhole is true ? previous.TextOriginal.Length : left;
+                right = next?.DeleteWhole is true ? next.TextOriginal.Length : right;
+            }
+
             // Left
             if (Keys.Left.Held)
             {
@@ -145,7 +157,7 @@ internal static class InputHelpers
                 (Keys.Left.Held &&
                 leftArrowTimer <= 0))
             {
-                CursorPositon--;
+                CursorPositon -= left;
             }
 
             // Right
@@ -157,11 +169,12 @@ internal static class InputHelpers
             {
                 rightArrowTimer = key_timer_delay;
             }
+
             if (Keys.Right.JustPressed ||
                 (Keys.Right.Held &&
                 rightArrowTimer <= 0))
             {
-                CursorPositon++;
+                CursorPositon += right;
             }
         }
 
@@ -269,6 +282,35 @@ internal static class InputHelpers
 
         return InputCancellationType.None;
 
+        void TryGetNeighborSnippets(string input, out TextSnippet? previous, out TextSnippet? next)
+        {
+            var snippets = ChatManager.ParseMessage(input, Color.White);
+
+            previous = null;
+            next = null;
+
+            int length = 0;
+
+            for (int i = 0; i < snippets.Count; i++)
+            {
+                if (length + snippets[i].TextOriginal.Length > CursorPositon)
+                {
+                    next = snippets[i];
+
+                    if (CursorPositon > length)
+                    {
+                        previous = snippets[i];
+                    }
+
+                    break;
+                }
+
+                length += snippets[i].TextOriginal.Length;
+
+                previous = snippets[i];
+            }
+        }
+
         string RemoveInvalidCharacters(string input)
         {
             foreach (var c in blacklistedChars)
@@ -297,82 +339,249 @@ internal static class InputHelpers
 
     public static void DrawInputString(
         this SpriteBatch spriteBatch,
-        Vector2 mousePosition,
         DynamicSpriteFont font,
         string text,
         Vector2 position,
         Color color,
-        float rotation,
         Vector2 origin,
         Vector2 scale,
-        out int hoveredChar,
-        bool drawBlinker = false,
-        int blinkerIndex = -1) =>
-        spriteBatch.DrawInputStringWithShadow(mousePosition, font, text, position, color, Color.Black, rotation, origin, scale, out hoveredChar, drawBlinker, blinkerIndex, -1f);
-
-    public static void DrawInputStringWithShadow(
-        this SpriteBatch spriteBatch,
-        Vector2 mousePosition,
-        DynamicSpriteFont font,
-        string text,
-        Vector2 position,
-        Color color,
-        float rotation,
-        Vector2 origin,
-        Vector2 scale,
-        out int hoveredChar,
         bool drawBlinker = false,
         int blinkerIndex = -1,
-        float spread = 2f) =>
-        spriteBatch.DrawInputStringWithShadow(mousePosition, font, text, position, color, Color.Black, rotation, origin, scale, out hoveredChar, drawBlinker, blinkerIndex, spread);
+        bool allowChatTags = false
+    )
+    {
+        spriteBatch.DrawInputStringWithShadow(
+            font,
+            text,
+            position,
+            color,
+            Color.Black,
+            origin,
+            scale,
+            drawBlinker,
+            blinkerIndex,
+            allowChatTags,
+            -1f
+        );
+    }
 
     public static void DrawInputStringWithShadow(
         this SpriteBatch spriteBatch,
-        Vector2 mousePosition,
+        DynamicSpriteFont font,
+        string text,
+        Vector2 position,
+        Color color,
+        Vector2 origin,
+        Vector2 scale,
+        bool drawBlinker = false,
+        int blinkerIndex = -1,
+        bool allowChatTags = false
+    )
+    {
+        spriteBatch.DrawInputStringWithShadow(
+            font,
+            text,
+            position,
+            color,
+            Color.Black,
+            origin,
+            scale,
+            drawBlinker,
+            blinkerIndex,
+            allowChatTags
+        );
+    }
+
+    public static void DrawInputStringWithShadow(
+        this SpriteBatch spriteBatch,
         DynamicSpriteFont font,
         string text,
         Vector2 position,
         Color color,
         Color shadowColor,
-        float rotation,
         Vector2 origin,
         Vector2 scale,
-        out int hoveredChar,
         bool drawBlinker = false,
         int blinkerIndex = -1,
-        float spread = 2f)
+        bool allowChatTags = false,
+        float spread = 2f
+    )
     {
-        // Mirrors the matrix created by DynamicSpriteFont.InternalDraw.
-        var matrix = Matrix.CreateTranslation(-origin.X * scale.X, -origin.Y * scale.Y, 0f) * Matrix.CreateRotationZ(rotation);
+        DrawStringWithShadow(
+            text,
+            position,
+            color,
+            shadowColor,
+            origin,
+            scale
+        );
 
-        spriteBatch.DrawStringWithShadow(font, text, position, color, shadowColor, rotation, origin, scale, spread);
-
-        const float blink_duration_in_seconds = 2f / 3f;
-        const float blink_percent = 0.5f;
-        var blinkTimer = MathF.Max(0f, (Main.GlobalTimeWrappedHourly - blinkerStartTime) % blink_duration_in_seconds);
-        if (drawBlinker && blinkerIndex != -1 && blinkTimer < blink_duration_in_seconds * blink_percent)
+        // Blinker
         {
-            var blinkerX = font.MeasureString(text[..blinkerIndex]).X - 2f;
-            blinkerX *= scale.X;
+            const float blink_duration_in_seconds = 2f / 3f;
+            const float blink_percent = 0.5f;
 
-            var blinkerPosition = position + Vector2.Transform(new Vector2(blinkerX, 0), matrix);
+            var blinkTimer = MathF.Max(0f, (Main.GlobalTimeWrappedHourly - blinkerStartTime) % blink_duration_in_seconds);
 
-            spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, shadowColor, rotation, Vector2.Zero, scale, spread);
+            if (drawBlinker && blinkerIndex != -1 && blinkTimer < blink_duration_in_seconds * blink_percent)
+            {
+                const float blinker_x_offset = -2f;
+
+                var blinkerX =
+                    allowChatTags
+                    ? ChatManager.GetStringSize(font, text[..blinkerIndex], Vector2.One).X
+                    : font.MeasureString(text[..blinkerIndex]).X;
+
+                blinkerX += blinker_x_offset;
+
+                blinkerX *= scale.X;
+
+                var blinkerOffset = new Vector2(blinkerX, 0) - origin;
+                blinkerOffset *= scale;
+
+                DrawStringWithShadow(
+                    "|",
+                    position + blinkerOffset,
+                    color,
+                    shadowColor,
+                    Vector2.Zero,
+                    scale
+                );
+            }
         }
 
-        // Find hovered char
-        {
-            mousePosition -= position;
-            mousePosition = Vector2.Transform(mousePosition, matrix);
+        return;
 
+        void DrawStringWithShadow(
+            string text,
+            Vector2 position,
+            Color color,
+            Color shadowColor,
+            Vector2 origin,
+            Vector2 scale
+        )
+        {
+            if (allowChatTags)
+            {
+                ChatManager.DrawColorCodedStringWithShadow(
+                    spriteBatch,
+                    font,
+                    text,
+                    position - origin,
+                    color,
+                    shadowColor,
+                    0f,
+                    Vector2.Zero,
+                    scale,
+                    -1,
+                    spread
+                );
+
+                return;
+            }
+
+            if (spread > 0f)
+            {
+                for (var i = 0; i < ChatManager.ShadowDirections.Length; i++)
+                {
+                    spriteBatch.DrawString(
+                        font,
+                        text,
+                        position + ChatManager.ShadowDirections[i] * spread,
+                        shadowColor,
+                        0f,
+                        origin,
+                        scale,
+                        SpriteEffects.None,
+                        0f
+                    );
+                }
+            }
+
+            spriteBatch.DrawString(
+                font,
+                text,
+                position,
+                color,
+                0f,
+                origin,
+                scale,
+                SpriteEffects.None,
+                0f
+            );
+        }
+    }
+
+    public static int GetHoveredCharacter(
+        this DynamicSpriteFont font,
+        string text,
+        Vector2 mousePosition,
+        Vector2 position,
+        Vector2 origin,
+        Vector2 scale,
+        bool allowChatTags = false
+    )
+    {
+        mousePosition -= position;
+        mousePosition -= origin;
+        mousePosition *= scale;
+
+        if (allowChatTags)
+        {
+            var snippets = ChatManager.ParseMessage(text, Color.White);
+
+            var totalWidth = -origin.X * 2;
+
+            int charCount = 0;
+
+            foreach (var snippet in snippets)
+            {
+                totalWidth += snippet.GetStringLength(font);
+
+                if (totalWidth <= mousePosition.X)
+                {
+                    charCount += snippet.TextOriginal.Length;
+
+                    continue;
+                }
+
+                if (snippet.DeleteWhole)
+                {
+                    return charCount + snippet.TextOriginal.Length;
+                }
+                else if (FindHoveredCharacter(charCount, snippet.TextOriginal.Length, out int index))
+                {
+                    return index;
+                }
+
+                break;
+            }
+        }
+        else if (FindHoveredCharacter(0, text.Length, out int index))
+        {
+            return index;
+        }
+
+        return text.Length;
+
+        bool FindHoveredCharacter(int start, int length, out int index)
+        {
             var first = true;
             var lastKerning = 0f;
 
             var totalWidth = -origin.X * 2;
 
-            hoveredChar = 0;
+            if (start > 0)
+            {
+                totalWidth +=
+                    allowChatTags
+                    ? ChatManager.GetStringSize(font, text[..start], Vector2.One).X
+                    : font.MeasureString(text[..start]).X;
+            }
 
-            for (var i = 0; i < text.Length; i++)
+            index = 0;
+
+            for (var i = start; i < start + length; i++)
             {
                 var c = text[i];
 
@@ -380,39 +589,17 @@ internal static class InputHelpers
 
                 if (mousePosition.X >= totalWidth && mousePosition.X <= totalWidth + charSize.X)
                 {
-                    hoveredChar = mousePosition.X >= totalWidth + (charSize.X * .5f) ? i + 1 : i;
+                    index = mousePosition.X >= totalWidth + (charSize.X * .5f) ? i + 1 : i;
+
+                    return true;
                 }
 
                 totalWidth += charSize.X;
                 first = false;
             }
 
-            if (mousePosition.X >= totalWidth)
-            {
-                hoveredChar = text.Length;
-            }
+            return false;
         }
-    }
-
-    // Notably we don't use ChatManager to avoid allowing the player to type chat tags.
-    private static void DrawStringWithShadow(this SpriteBatch spriteBatch,
-        DynamicSpriteFont font,
-        string text,
-        Vector2 position,
-        Color color,
-        Color shadowColor,
-        float rotation,
-        Vector2 origin,
-        Vector2 scale,
-        float spread = 2f)
-    {
-        if (spread > 0f)
-        {
-            for (var i = 0; i < ChatManager.ShadowDirections.Length; i++)
-                spriteBatch.DrawString(font, text, position + ChatManager.ShadowDirections[i] * spread, shadowColor, rotation, origin, scale, SpriteEffects.None, 0f);
-        }
-
-        spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
     }
 
     private static Vector2 MeasureChar(this DynamicSpriteFont font, char c, bool firstChar, Vector2 scale, float lastKerning, out float kerningZ)

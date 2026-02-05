@@ -84,6 +84,8 @@ internal sealed class SearchBar : InputField
     {
         const float button_margin = 22f;
 
+        AllowChatTags = true;
+
         PaddingLeft += button_margin;
         PaddingRight += button_margin;
 

@@ -129,7 +129,7 @@ public class BoolElement : ConfigElement<bool>
         }
         container.Append(Toggle);
 
-        Text = new MarqueeText<LocalizedText>(GetDisplayText(), this.Label.ScrollSpeed);
+        Text = new MarqueeText<LocalizedText>(GetDisplayText(), Label.ScrollSpeed);
         {
             Text.Width.Set(-30f, 1f);
             Text.Height.Set(upper_height, 0f);

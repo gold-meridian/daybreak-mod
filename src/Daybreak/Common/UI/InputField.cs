@@ -1,7 +1,9 @@
 ﻿using Daybreak.Common.Rendering;
 using Daybreak.Core;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -10,6 +12,8 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.UI;
 using Terraria.UI.Chat;
+using TerrariaOverhaul.Core.Localization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Daybreak.Common.UI;
 
@@ -39,6 +43,11 @@ public class InputField : UIPanel
     public int MaxChars { get; set; } = 100;
 
     /// <summary>
+    ///     Weither Terraria's TextSnippets, will be used.
+    /// </summary>
+    public bool AllowChatTags { get; set; } = false;
+
+    /// <summary>
     ///     Any characters which may not be entered into the field.
     /// </summary>
     public HashSet<char> BlacklistedChars { get; } = [];
@@ -62,7 +71,7 @@ public class InputField : UIPanel
     public event Action<InputField>? OnEnter;
 
     /// <summary>
-    ///     Ran of the frame that this field stops capturing input.
+    ///     Ran on the frame that this field stops capturing input.
     /// </summary>
     public event Action<InputField>? OnEscape;
 
@@ -71,7 +80,7 @@ public class InputField : UIPanel
     /// </summary>
     public event Action<InputField>? OnTextChanged;
 
-    private int mousePosition;
+    private int cursorPosition;
     private bool currentlyWriting;
 
     // The text from before writing started.
@@ -113,19 +122,45 @@ public class InputField : UIPanel
             currentlyWriting = false;
             return;
         }
+    }
+
+    /// <inheritdoc />
+    public override void LeftClick(UIMouseEvent evt)
+    {
+        base.LeftClick(evt);
 
         InputHelpers.SyncBlinkerStartTime();
         currentlyWriting = true;
         lastText = Text;
 
-        InputHelpers.CursorPositon = 0;
-
         if (Text.Length <= 0)
         {
+            InputHelpers.CursorPositon = 0;
+
             return;
         }
 
-        InputHelpers.CursorPositon = mousePosition;
+        var dims = this.InnerDimensions;
+
+        var font = FontAssets.MouseText.Value;
+
+        var textSize =
+            AllowChatTags
+            ? ChatManager.GetStringSize(font, Text, Vector2.One)
+            : font.MeasureString(Text);
+
+        var origin = new Vector2(textSize.X * TextAlignX, textSize.Y * 0.5f);
+
+        cursorPosition = font.GetHoveredCharacter(
+            Text,
+            Main.MouseScreen,
+            CalculateTextPositon(font, Text, dims),
+            origin,
+            new Vector2(TextScale),
+            AllowChatTags
+        );
+
+        InputHelpers.CursorPositon = cursorPosition;
     }
 
     /// <inheritdoc />
@@ -145,7 +180,7 @@ public class InputField : UIPanel
         {
             Text = Text[..cap];
 
-            mousePosition = Math.Min(mousePosition, cap);
+            cursorPosition = Math.Min(cursorPosition, cap);
         }
 
         var clickedOff = !Main.hasFocus || (Main.mouseLeft && !IsMouseHovering);
@@ -164,6 +199,7 @@ public class InputField : UIPanel
             Text,
             out var newText,
             false,
+            AllowChatTags,
             BlacklistedChars,
             WhitelistedChars
         );
@@ -199,6 +235,7 @@ public class InputField : UIPanel
         spriteBatch.GraphicsDevice.ScissorRectangle = GetClippingRectangle(spriteBatch);
 
         var dims = this.InnerDimensions;
+
         var cursorMargin = 5f * TextScale;
         {
             dims.Width -= (int)cursorMargin;
@@ -208,9 +245,16 @@ public class InputField : UIPanel
         {
             var hint = Hint();
 
+            var text = Text == string.Empty ? hint : Text;
+
             var font = FontAssets.MouseText.Value;
-            var position = new Vector2(dims.X + dims.Width * TextAlignX + 2f, dims.Y + dims.Height * 0.5f + 4);
-            var textSize = font.MeasureString(Text == string.Empty ? hint : Text);
+            var position = CalculateTextPositon(font, text, dims);
+
+            var textSize =
+                AllowChatTags
+                ? ChatManager.GetStringSize(font, text, Vector2.One)
+                : font.MeasureString(text);
+
             var origin = new Vector2(textSize.X * TextAlignX, textSize.Y * 0.5f);
 
             if (Text == string.Empty)
@@ -229,40 +273,16 @@ public class InputField : UIPanel
 
             var cursorIndex = Math.Min(InputHelpers.CursorPositon, Text.Length);
 
-            // Move the text position based on the cursor when text is out
-            // of the frame.
-            if (currentlyWriting && textSize.X >= dims.Width)
-            {
-                var cursorPosition = font.MeasureString(Text[..cursorIndex]).X;
-                {
-                    cursorPosition -= origin.X;
-                }
-
-                var offset = cursorPosition * TextScale;
-
-                // Each half of the text seperated by the alignment.
-                var width = Math.Sign(offset) <= 0
-                    ? (dims.Width * TextAlignX)
-                    : (dims.Width * (1f - TextAlignX));
-
-                offset = Utils.Remap(Math.Abs(offset), width, textSize.X, 0f, textSize.X - width) * Math.Sign(offset);
-                {
-                    position.X -= offset;
-                }
-            }
-
             spriteBatch.DrawInputStringWithShadow(
-                UserInterface.ActiveInstance.MousePosition,
                 font,
                 Text,
                 position,
                 Color.White,
-                0f,
                 origin,
                 new Vector2(TextScale),
-                out mousePosition,
                 currentlyWriting,
-                cursorIndex
+                cursorIndex,
+                AllowChatTags
             );
         }
         spriteBatch.End();
@@ -275,5 +295,44 @@ public class InputField : UIPanel
         {
             HandleInput();
         }
+    }
+
+    private Vector2 CalculateTextPositon(DynamicSpriteFont font, string text, Rectangle dims)
+    {
+        var position = new Vector2(dims.X + dims.Width * TextAlignX + 2f, dims.Y + dims.Height * 0.5f + 4);
+
+        var textSize =
+            AllowChatTags
+            ? ChatManager.GetStringSize(font, text, Vector2.One)
+            : font.MeasureString(text);
+
+        var origin = new Vector2(textSize.X * TextAlignX, textSize.Y * 0.5f);
+
+        var cursorIndex = Math.Min(InputHelpers.CursorPositon, Text.Length);
+
+        if (currentlyWriting && textSize.X >= dims.Width)
+        {
+            var cursorPosition =
+                AllowChatTags
+                ? ChatManager.GetStringSize(font, text[..cursorIndex], Vector2.One).X
+                : font.MeasureString(text[..cursorIndex]).X;
+
+            cursorPosition -= origin.X;
+
+            var offset = cursorPosition * TextScale;
+
+            // Each half of the text seperated by the alignment.
+            var width =
+                Math.Sign(offset) <= 0
+                ? (dims.Width * TextAlignX)
+                : (dims.Width * (1f - TextAlignX));
+
+            offset = Utils.Remap(Math.Abs(offset), width, textSize.X, 0f, textSize.X - width) * Math.Sign(offset);
+            {
+                position.X -= offset;
+            }
+        }
+
+        return position;
     }
 }
