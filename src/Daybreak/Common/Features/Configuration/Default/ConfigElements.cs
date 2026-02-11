@@ -369,7 +369,9 @@ public class ColorElement : ConfigElement<Color>
         {
             Picker.HAlign = 1f;
 
-            Picker.Top.Set(upper_height, 0f);
+            Picker.Top.Set(upper_height - PaddingTop, 0f);
+
+            Picker.Height.Set(-(upper_height - PaddingTop) * 2f, 1f);
 
             Picker.MaxWidth.Set(130f, 0.2f);
             Picker.MinWidth.Set(60f, 0f);
@@ -396,6 +398,6 @@ public class ColorElement : ConfigElement<Color>
 
         const float upper_height = 30f;
 
-        Height.Set(upper_height + Picker.Dimensions.Height, 0f);
+        Height.Set(upper_height + Picker.Dimensions.Height + PaddingBottom, 0f);
     }
 }
