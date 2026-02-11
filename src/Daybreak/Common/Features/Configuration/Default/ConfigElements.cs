@@ -15,7 +15,6 @@ using System.Numerics;
 using System.Reflection;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -98,9 +97,9 @@ public class BoolElement : ConfigElement<bool>
 
         var container = new UIElement();
         {
-            container.Width.Set(0f, 0.2f);
+            container.Width.Set(90f, 0f);
             container.Height.Set(upper_height, 0f);
-
+            
             container.HAlign = 1f;
 
             container.OnLeftClick += OnLeftClick_UpdateValue;
@@ -354,5 +353,49 @@ public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, IN
     public override void OnActivate()
     {
         Slider.Ratio = Ratio;
+    }
+}
+
+[DefaultConfigElementFor<Color>]
+public class ColorElement : ConfigElement<Color>
+{
+    protected ColorPicker Picker;
+
+    public ColorElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        const float upper_height = 30f;
+
+        Picker = new ColorPicker();
+        {
+            Picker.HAlign = 1f;
+
+            Picker.Top.Set(upper_height, 0f);
+
+            Picker.MaxWidth.Set(130f, 0.2f);
+            Picker.MinWidth.Set(60f, 0f);
+
+            Picker.Color = Value.Value;
+
+            Picker.OnChanged += OnChanged_UpdateColor;
+        }
+        Append(Picker);
+
+        Height.Set(upper_height + Picker.Dimensions.Height, 0f);
+
+        return;
+
+        void OnChanged_UpdateColor(ColorPicker obj)
+        {
+            Value = ConfigValue<Color>.Set(obj.Color);
+        }
+    }
+
+    public override void Recalculate()
+    {
+        base.Recalculate();
+
+        const float upper_height = 30f;
+
+        Height.Set(upper_height + Picker.Dimensions.Height, 0f);
     }
 }
