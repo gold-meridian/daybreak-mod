@@ -1,4 +1,6 @@
 ﻿using Daybreak.Common.Features.Hooks;
+using Daybreak.Common.Mathematics;
+using Daybreak.Common.Rendering;
 using Daybreak.Common.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
@@ -27,6 +29,8 @@ public class Slider : UIElement
     public float Ratio { get; set; }
 
     public event Action<Slider>? OnChanged;
+
+    public bool Vertical { get; init; }
 
     protected bool IsHeld;
 
@@ -71,10 +75,20 @@ public class Slider : UIElement
 
 #endregion
 
-    public Slider()
+    public Slider(bool vertical = false)
     {
-        Width.Set(0, 1f);
-        Height.Set(16, 0f);
+        Vertical = vertical;
+
+        if (vertical)
+        {
+            Width.Set(16f, 0f);
+            Height.Set(0, 1f);
+        }
+        else
+        {
+            Width.Set(0, 1f);
+            Height.Set(16, 0f);
+        }
 
         InnerColor = Color.White;
 
@@ -123,8 +137,12 @@ public class Slider : UIElement
         {
             float oldRatio = Ratio;
 
-            float num = Main.mouseX - dims.X;
-            Ratio = Math.Clamp(num / dims.Width, 0f, 1f);
+            float num =
+                Vertical
+                ? Main.mouseY - dims.Y
+                : Main.mouseX - dims.X;
+
+            Ratio = Math.Clamp(num / (Vertical ? dims.Height : dims.Width), 0f, 1f);
 
             if (oldRatio != Ratio)
             {
@@ -133,8 +151,6 @@ public class Slider : UIElement
 
             if (PlayerInput.Triggers.Current.SmartCursor || Main.keyState.IsKeyDown(Keys.LeftShift))
             {
-                const float speed = 7f;
-
                 SlowCursor = true;
             }
         }
@@ -166,8 +182,11 @@ public class Slider : UIElement
 
         Texture2D blip = BlipTexture.Value;
 
-        Vector2 blipOrigin = blip.Size() * .5f;
-        Vector2 blipPosition = new(dims.X + Ratio * dims.Width, dims.Center.Y);
+        Vector2 blipOrigin = blip.Size() * 0.5f;
+        Vector2 blipPosition =
+            Vertical
+            ? new Vector2(dims.Center.X, dims.Y + Ratio * dims.Height)
+            : new Vector2(dims.X + Ratio * dims.Width, dims.Center.Y);
 
         spriteBatch.Draw(blip, blipPosition, null, Color.White, 0f, blipOrigin, 1f, 0, 0f);
 
@@ -175,9 +194,56 @@ public class Slider : UIElement
 
         void DrawBar(Texture2D texture, Color color)
         {
-            spriteBatch.Draw(texture, new Rectangle(dims.X, dims.Y, 6, dims.Height), new(0, 0, 6, texture.Height), color);
-            spriteBatch.Draw(texture, new Rectangle(dims.X + 6, dims.Y, dims.Width - 12, dims.Height), new(6, 0, 2, texture.Height), color);
-            spriteBatch.Draw(texture, new Rectangle(dims.X + dims.Width - 6, dims.Y, 6, dims.Height), new(8, 0, 6, texture.Height), color);
+            var rotation = Vertical ? Angle.FromRadians(MathHelper.PiOver2) : Angle.Zero;
+
+            var startDest = new Rectangle(
+                dims.X,
+                dims.Y,
+                Vertical ? dims.Width : 6,
+                Vertical ? 6 : dims.Height
+            );
+
+            var centerDest = new Rectangle(
+                dims.X + (Vertical ? 0 : 6),
+                dims.Y + (Vertical ? 6 : 0),
+                dims.Width - (Vertical ? 0 : 12),
+                dims.Height - (Vertical ? 12 : 0)
+            );
+
+            var endDest = new Rectangle(
+                dims.X + (Vertical ? 0 : (dims.Width - 6)),
+                dims.Y + (Vertical ? (dims.Height- 6) : 0),
+                Vertical ? dims.Width : 6,
+                Vertical ? 6 : dims.Height
+            );
+
+            spriteBatch.Draw(
+                new DrawParameters(texture)
+                {
+                    Destination = startDest,
+                    Source = new(0, 0, 6, texture.Height),
+                    Rotation = rotation,
+                    Color = color
+                }
+            );
+            spriteBatch.Draw(
+                new DrawParameters(texture)
+                {
+                    Destination = centerDest,
+                    Source = new(6, 0, 2, texture.Height),
+                    Rotation = rotation,
+                    Color = color
+                }
+            );
+            spriteBatch.Draw(
+                new DrawParameters(texture)
+                {
+                    Destination = endDest,
+                    Source = new(8, 0, 6, texture.Height),
+                    Rotation = rotation,
+                    Color = color
+                }
+            );
         }
     }
 }
