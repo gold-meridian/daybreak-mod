@@ -220,8 +220,8 @@ public class Slider : UIElement
             spriteBatch.Draw(
                 new DrawParameters(texture)
                 {
-                    Destination = startDest,
                     Source = new(0, 0, 6, texture.Height),
+                    Destination = startDest,
                     Rotation = rotation,
                     Color = color
                 }
@@ -229,8 +229,8 @@ public class Slider : UIElement
             spriteBatch.Draw(
                 new DrawParameters(texture)
                 {
-                    Destination = centerDest,
                     Source = new(6, 0, 2, texture.Height),
+                    Destination = centerDest,
                     Rotation = rotation,
                     Color = color
                 }
@@ -238,8 +238,8 @@ public class Slider : UIElement
             spriteBatch.Draw(
                 new DrawParameters(texture)
                 {
-                    Destination = endDest,
                     Source = new(8, 0, 6, texture.Height),
+                    Destination = endDest,
                     Rotation = rotation,
                     Color = color
                 }
