@@ -93,7 +93,7 @@ public class ColorPicker : UIElement
             Square.Width.Set(0, 1f);
             Square.Height.Set(-sliderMargin, 1f);
 
-            Square.OnChanged += (_) => OnChanged?.Invoke(this);
+            Square.OnChanged += OnChanged_UpdateColor;
         }
         Append(Square);
 
@@ -103,6 +103,13 @@ public class ColorPicker : UIElement
         {
             Square?.Hue = obj.Ratio;
 
+            Alpha?.InnerColor = Color;
+
+            OnChanged?.Invoke(this);
+        }
+
+        void OnChanged_UpdateColor(HSVSquare obj)
+        {
             Alpha?.InnerColor = Color;
 
             OnChanged?.Invoke(this);
