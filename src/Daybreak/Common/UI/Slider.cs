@@ -32,6 +32,11 @@ public class Slider : UIElement
 
     public bool Vertical { get; init; }
 
+    /// <summary>
+    /// Used over IsMouseHovering to determine if the mouse is hovering the slider and NOT draging another.
+    /// </summary>
+    public bool Hovering { get; private set; }
+
     protected bool IsHeld;
 
 #region Mouse Movement Edit
@@ -117,9 +122,9 @@ public class Slider : UIElement
     {
         base.MouseOver(evt);
 
-        IsMouseHovering &= !Main.mouseLeft || IsHeld;
+        Hovering = IsMouseHovering && (!Main.mouseLeft || IsHeld);
 
-        if (!IsMouseHovering || IsHeld)
+        if (!Hovering || IsHeld)
         {
             return;
         }
@@ -133,14 +138,16 @@ public class Slider : UIElement
 
         Rectangle dims = this.Dimensions;
 
+        var mousePosition = UserInterface.ActiveInstance.MousePosition;
+
         if (IsHeld)
         {
             float oldRatio = Ratio;
 
             float num =
                 Vertical
-                ? Main.mouseY - dims.Y
-                : Main.mouseX - dims.X;
+                ? mousePosition.Y - dims.Y
+                : mousePosition.X - dims.X;
 
             Ratio = Math.Clamp(num / (Vertical ? dims.Height : dims.Width), 0f, 1f);
 
@@ -154,9 +161,9 @@ public class Slider : UIElement
                 SlowCursor = true;
             }
         }
-        else if (!IsMouseHovering && ContainsPoint(Main.MouseScreen) && !Main.mouseLeft)
+        else if (!Hovering && IsMouseHovering && !Main.mouseLeft)
         {
-            IsMouseHovering = true;
+            Hovering = true;
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
     }
@@ -172,7 +179,7 @@ public class Slider : UIElement
 
         DrawBar(slider, Color.White);
 
-        if (IsHeld || IsMouseHovering)
+        if (Hovering || IsHeld)
         {
             DrawBar(sliderOutline, Main.OurFavoriteColor);
         }
