@@ -30,8 +30,6 @@ public class Slider : UIElement
 
     public event Action<Slider>? OnChanged;
 
-    public bool Vertical { get; init; }
-
     /// <summary>
     /// Used over IsMouseHovering to determine if the mouse is hovering the slider and NOT draging another.
     /// </summary>
@@ -78,22 +76,12 @@ public class Slider : UIElement
         );
     }
 
-#endregion
+    #endregion
 
-    public Slider(bool vertical = false)
+    public Slider()
     {
-        Vertical = vertical;
-
-        if (vertical)
-        {
-            Width.Set(16f, 0f);
-            Height.Set(0, 1f);
-        }
-        else
-        {
-            Width.Set(0, 1f);
-            Height.Set(16, 0f);
-        }
+        Width.Set(0, 1f);
+        Height.Set(16, 0f);
 
         InnerColor = Color.White;
 
@@ -144,12 +132,9 @@ public class Slider : UIElement
         {
             float oldRatio = Ratio;
 
-            float num =
-                Vertical
-                ? mousePosition.Y - dims.Y
-                : mousePosition.X - dims.X;
+            float num = mousePosition.X - dims.X;
 
-            Ratio = Math.Clamp(num / (Vertical ? dims.Height : dims.Width), 0f, 1f);
+            Ratio = Math.Clamp(num / dims.Width, 0f, 1f);
 
             if (oldRatio != Ratio)
             {
@@ -190,10 +175,7 @@ public class Slider : UIElement
         Texture2D blip = BlipTexture.Value;
 
         Vector2 blipOrigin = blip.Size() * 0.5f;
-        Vector2 blipPosition =
-            Vertical
-            ? new Vector2(dims.Center.X, dims.Y + Ratio * dims.Height)
-            : new Vector2(dims.X + Ratio * dims.Width, dims.Center.Y);
+        Vector2 blipPosition = new Vector2(dims.X + Ratio * dims.Width, dims.Center.Y);
 
         spriteBatch.Draw(blip, blipPosition, null, Color.White, 0f, blipOrigin, 1f, 0, 0f);
 
@@ -201,27 +183,25 @@ public class Slider : UIElement
 
         void DrawBar(Texture2D texture, Color color)
         {
-            var rotation = Vertical ? Angle.FromRadians(MathHelper.PiOver2) : Angle.Zero;
-
             var startDest = new Rectangle(
                 dims.X,
                 dims.Y,
-                Vertical ? dims.Width : 6,
-                Vertical ? 6 : dims.Height
+                6,
+                dims.Height
             );
 
             var centerDest = new Rectangle(
-                dims.X + (Vertical ? 0 : 6),
-                dims.Y + (Vertical ? 6 : 0),
-                dims.Width - (Vertical ? 0 : 12),
-                dims.Height - (Vertical ? 12 : 0)
+                dims.X + 6,
+                dims.Y + 0,
+                dims.Width - 12,
+                dims.Height - 0
             );
 
             var endDest = new Rectangle(
-                dims.X + (Vertical ? 0 : (dims.Width - 6)),
-                dims.Y + (Vertical ? (dims.Height- 6) : 0),
-                Vertical ? dims.Width : 6,
-                Vertical ? 6 : dims.Height
+                dims.X + 6,
+                dims.Y + 0,
+                6,
+                dims.Height
             );
 
             spriteBatch.Draw(
@@ -229,7 +209,6 @@ public class Slider : UIElement
                 {
                     Source = new(0, 0, 6, texture.Height),
                     Destination = startDest,
-                    Rotation = rotation,
                     Color = color
                 }
             );
@@ -238,7 +217,6 @@ public class Slider : UIElement
                 {
                     Source = new(6, 0, 2, texture.Height),
                     Destination = centerDest,
-                    Rotation = rotation,
                     Color = color
                 }
             );
@@ -247,7 +225,6 @@ public class Slider : UIElement
                 {
                     Source = new(8, 0, 6, texture.Height),
                     Destination = endDest,
-                    Rotation = rotation,
                     Color = color
                 }
             );
