@@ -38,8 +38,8 @@ public class ConfigElement : UIElement
     protected const float DEFAULT_HEIGHT = 38;
 
     protected static readonly Color COLOR = UICommon.DefaultUIBlue.MultiplyRGB(new Color(180, 180, 180));
-    protected static readonly Color HOVER_COLOR = UICommon.DefaultUIBlue;
-    protected static readonly Color FLASHING_COLOR = UICommon.DefaultUIBlue * 1.15f;
+    protected static readonly Color HOVER_COLOR = UICommon.DefaultUIBlue.MultiplyRGB(new Color(210, 210, 210));
+    protected static readonly Color FLASHING_COLOR = UICommon.DefaultUIBlue * 1.1f;
 
     protected Color PanelColor { get; set; }
 
