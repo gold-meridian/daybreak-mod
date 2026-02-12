@@ -66,12 +66,12 @@ public class InputField : UIPanel
     public float TextAlignX { get; set; }
 
     /// <summary>
-    ///     Ran on the frame that this field begins capturing input.
+    ///     Ran when typing is "accepted" via either clicking off or pressing Enter.
     /// </summary>
     public event Action<InputField>? OnEnter;
 
     /// <summary>
-    ///     Ran on the frame that this field stops capturing input.
+    ///     Ran when typing is "cancelled" via pressing Escape.
     /// </summary>
     public event Action<InputField>? OnEscape;
 
