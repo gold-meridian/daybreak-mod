@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -15,6 +16,7 @@ using System.Numerics;
 using System.Reflection;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -356,33 +358,174 @@ public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, IN
     }
 }
 
+public abstract class DropdownConfigElement<T> : ConfigElement<T>
+{
+    protected const float DROPDOWN_MARGIN = 30f;
+
+    private UIElement container;
+
+    protected UIElement InnerElement;
+
+    protected DropdownIcon DropdownButton;
+
+    public bool Open { get; protected set; }
+
+    private int openProgress;
+
+    public DropdownConfigElement(float height, IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        container = new UIElement();
+        {
+            container.VAlign = 1f;
+
+            container.Width.Set(0f, 1f);
+
+            container.OverflowHidden = true;
+        }
+        Append(container);
+
+        var divider = new UIHorizontalSeparator();
+        {
+            const float margin = 4f;
+
+            divider.Width.Set(-margin * 2f, 1f);
+
+            divider.Left.Set(margin, 0f);
+
+            divider.Height.Set(2f, 0f);
+            divider.Color = new Color(85, 88, 159) * 0.75f;
+        }
+        container.Append(divider);
+
+        InnerElement = new UIElement();
+        {
+            InnerElement.VAlign = 1f;
+
+            InnerElement.MinHeight.Set(height, 0f);
+
+            InnerElement.Width.Set(0f, 1f);
+
+            InnerElement.SetPadding(4f);
+
+            InnerElement.PaddingTop = 8f;
+        }
+        container.Append(InnerElement);
+
+        DropdownButton = new DropdownIcon();
+        {
+            DropdownButton.Width.Set(30f, 0f);
+            DropdownButton.Height.Set(30f, 0f);
+
+            DropdownButton.HAlign = 1f;
+
+            DropdownButton.OnLeftClick += (_, _) =>
+            {
+                Open = !Open;
+                SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
+            };
+        }
+        Append(DropdownButton);
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        const int open_frames = 12;
+        {
+            openProgress = MathHelper.Clamp(openProgress + Open.ToDirectionInt(), 0, open_frames);
+
+            var eased = Open ? Ease(openProgress / (float)open_frames) : EaseClose(openProgress / (float)open_frames);
+
+            DropdownButton.Rotation = MathHelper.PiOver2 * eased;
+
+            var height = InnerElement.Dimensions.Height * eased;
+
+            container.MinHeight.Set(height, 0f);
+            container.MaxHeight.Set(height, 0f);
+
+            Height.Set(DEFAULT_HEIGHT + height, 0f);
+        }
+
+        static float Ease(float x)
+        {
+            // return x < 0.5f ? 4 * x * x * x : 1 - MathF.Pow(-2 * x + 2, 3) / 2;
+            return MathF.Sqrt(1 - MathF.Pow(x - 1, 2));
+        }
+
+        static float EaseClose(float x)
+        {
+            return x * x;
+        }
+    }
+
+    protected sealed class DropdownIcon : UIElement
+    {
+        public float Rotation { get; set; }
+
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            base.MouseOver(evt);
+
+            SoundEngine.PlaySound(SoundID.MenuTick);
+        }
+
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            base.DrawSelf(spriteBatch);
+
+            var texture = AssetReferences.Assets.Images.UI.Dropdown.Asset.Value;
+
+            var dims = this.Dimensions;
+            var origin = texture.Size() * 0.5f;
+
+            spriteBatch.Draw(
+                new DrawParameters(texture)
+                {
+                    Position = dims.Center(),
+                    Rotation = Angle.FromRadians(Rotation),
+                    Color = IsMouseHovering ? Color.White : (Color.White * 0.75f),
+                    Origin = origin
+                }
+            );
+        }
+    }
+}
+
 [DefaultConfigElementFor<Color>]
-public class ColorElement : ConfigElement<Color>
+public class ColorElement : DropdownConfigElement<Color>
 {
     protected ColorPicker Picker;
 
-    public ColorElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    public ColorElement(IConfigEntry entry, bool showIcon) : base(0f, entry, showIcon)
     {
-        const float upper_height = 30f;
+        const float slider_margin = 16f + 4f;
 
-        Picker = new ColorPicker();
+        const float picker_size = 170f;
+
+        float pickerWidth = picker_size;
+        float pickerHeight = picker_size + slider_margin;
+
+        if (true) // TODO: show alpha slider property
+        {
+            pickerHeight += slider_margin;
+        }
+
+        Picker = new ColorPicker(true);
         {
             Picker.HAlign = 1f;
 
-            Picker.Top.Set(upper_height - PaddingTop, 0f);
+            Picker.Width.Set(pickerWidth, 0f);
 
-            Picker.Height.Set(-(upper_height - PaddingTop) * 2f, 1f);
-
-            Picker.MaxWidth.Set(130f, 0.2f);
-            Picker.MinWidth.Set(60f, 0f);
+            Picker.Height.Set(pickerHeight, 1f);
 
             Picker.Color = Value.Value;
 
             Picker.OnChanged += OnChanged_UpdateColor;
         }
-        Append(Picker);
+        InnerElement.Append(Picker);
 
-        Height.Set(upper_height + Picker.Dimensions.Height, 0f);
+        InnerElement.MinHeight.Set(pickerHeight, 0f);
 
         return;
 
@@ -390,14 +533,5 @@ public class ColorElement : ConfigElement<Color>
         {
             Value = ConfigValue<Color>.Set(obj.Color);
         }
-    }
-
-    public override void Recalculate()
-    {
-        base.Recalculate();
-
-        const float upper_height = 30f;
-
-        Height.Set(upper_height + Picker.Dimensions.Height + PaddingBottom, 0f);
     }
 }

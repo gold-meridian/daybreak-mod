@@ -19,7 +19,14 @@ public class ColorPicker : UIElement
     {
         get
         {
-            return HSVToColor(new Vector3(Square.Hue, Square.PickerPosition.X, 1 - Square.PickerPosition.Y));
+            var col = HSVToColor(new Vector3(Square.Hue, Square.PickerPosition.X, 1 - Square.PickerPosition.Y));
+
+            if (AlphaSlider is not null)
+            {
+                col.A = (byte)(AlphaSlider.Ratio * byte.MaxValue);
+            }
+
+            return HSVToColor(new Vector3(Square.Hue, Square.PickerPosition.X, 1 - Square.PickerPosition.Y)) ;
         }
         set
         {
@@ -30,18 +37,24 @@ public class ColorPicker : UIElement
             Square.Hue = hsv.X;
 
             Square.PickerPosition = new(hsv.Y, 1 - hsv.Z);
+
+            AlphaSlider?.Ratio = (float)value.A / byte.MaxValue;
         }
     }
 
     protected Slider HueSlider;
 
+    protected Slider? AlphaSlider;
+
     protected HSVSquare Square;
 
-    public ColorPicker()
+    public ColorPicker(bool showAlpha = false)
     {
+        float sliderMargin = 0f;
+
         Width.Set(0f, 1f);
 
-        Height.Set(20f, 1f);
+        Height.Set(0f, 1f);
 
         HueSlider = new Slider();
         {
@@ -50,13 +63,30 @@ public class ColorPicker : UIElement
             HueSlider.InnerTexture = AssetReferences.Assets.Images.UI.ColorPickerHue.Asset;
 
             HueSlider.OnChanged += OnChanged_UpdateHue;
+
+            sliderMargin += 20;
         }
         Append(HueSlider);
 
+        if (showAlpha)
+        {
+            HueSlider.MarginBottom += sliderMargin;
+
+            AlphaSlider = new Slider();
+            {
+                AlphaSlider.VAlign = 1f;
+
+                sliderMargin += 20;
+            }
+            Append(AlphaSlider);
+        }
+
         Square = new HSVSquare();
         {
+            Square.HAlign = 1f;
+
             Square.Width.Set(0, 1f);
-            Square.Height.Set(-20f, 1f);
+            Square.Height.Set(-sliderMargin, 1f);
 
             Square.OnChanged += (_) => OnChanged?.Invoke(this);
         }
@@ -70,15 +100,6 @@ public class ColorPicker : UIElement
 
             OnChanged?.Invoke(this);
         }
-    }
-
-    public override void Recalculate()
-    {
-        base.Recalculate();
-
-        var dims = this.Dimensions;
-
-        Height.Set(dims.Width + 20f, 0f);
     }
 
     protected static Color HSVToColor(Vector3 hsv)
