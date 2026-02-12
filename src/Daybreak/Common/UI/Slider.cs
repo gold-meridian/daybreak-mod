@@ -120,6 +120,13 @@ public class Slider : UIElement
         SoundEngine.PlaySound(SoundID.MenuTick);
     }
 
+    public override void MouseOut(UIMouseEvent evt)
+    {
+        base.MouseOut(evt);
+
+        Hovering = false;
+    }
+
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
@@ -153,6 +160,11 @@ public class Slider : UIElement
         }
     }
 
+    protected virtual void DrawSliderInner(SpriteBatch spriteBatch, Rectangle dims, Color color)
+    {
+        spriteBatch.Draw(InnerTexture.Value, dims, color);
+    }
+
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
         base.DrawSelf(spriteBatch);
@@ -170,7 +182,8 @@ public class Slider : UIElement
         }
 
         dims.Inflate(-4, -4);
-        spriteBatch.Draw(InnerTexture.Value, dims, InnerColor);
+
+        DrawSliderInner(spriteBatch, dims, InnerColor);
 
         Texture2D blip = BlipTexture.Value;
 
@@ -192,14 +205,14 @@ public class Slider : UIElement
 
             var centerDest = new Rectangle(
                 dims.X + 6,
-                dims.Y + 0,
+                dims.Y,
                 dims.Width - 12,
-                dims.Height - 0
+                dims.Height
             );
 
             var endDest = new Rectangle(
-                dims.X + 6,
-                dims.Y + 0,
+                dims.X + dims.Width - 6,
+                dims.Y,
                 6,
                 dims.Height
             );
