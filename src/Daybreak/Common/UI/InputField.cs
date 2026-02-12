@@ -168,7 +168,7 @@ public class InputField : UIPanel
     {
         base.Update(gameTime);
 
-        if (Text != oldText)
+        if (Text != oldText && oldText is not null)
         {
             OnTextChanged?.Invoke(this);
         }

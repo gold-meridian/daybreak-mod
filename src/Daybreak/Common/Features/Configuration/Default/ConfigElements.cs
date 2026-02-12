@@ -3,6 +3,7 @@ using Daybreak.Common.Mathematics;
 using Daybreak.Common.Rendering;
 using Daybreak.Common.UI;
 using Daybreak.Core;
+using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,9 @@ using ReLogic.Content;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -242,7 +245,7 @@ public class FloatElement : RangeElement<float>
 public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, INumber<T>, IConvertible
 {
     protected static readonly char[] NUMBER_CHARACTERS =
-        [.. Enumerable.Range('0', '9' + 1).Select(i => (char)i), '-', '.'];
+        ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.'];
 
     // TODO: Parse options for Min/Max value.
     protected T Min { get; set; }
@@ -495,7 +498,19 @@ public abstract class DropdownConfigElement<T> : ConfigElement<T>
 [DefaultConfigElementFor<Color>]
 public class ColorElement : DropdownConfigElement<Color>
 {
+    protected static readonly char[] HEX_CHARACTERS =
+        ['#',
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        'a', 'b', 'c', 'd', 'e', 'f',
+        'A', 'B', 'C', 'D', 'E', 'F'];
+
     protected ColorPicker Picker;
+
+    protected UIPanel ColorPreview;
+
+    protected InputField ColorInput;
+
+    private bool showAlpha;
 
     public ColorElement(IConfigEntry entry, bool showIcon) : base(0f, entry, showIcon)
     {
@@ -506,12 +521,14 @@ public class ColorElement : DropdownConfigElement<Color>
         float pickerWidth = picker_size;
         float pickerHeight = picker_size + slider_margin;
 
-        if (true) // TODO: show alpha slider property
+        showAlpha = true; // TODO: parse
+
+        if (showAlpha)
         {
             pickerHeight += slider_margin;
         }
 
-        Picker = new ColorPicker(true);
+        Picker = new ColorPicker(showAlpha);
         {
             Picker.HAlign = 1f;
 
@@ -527,11 +544,99 @@ public class ColorElement : DropdownConfigElement<Color>
 
         InnerElement.MinHeight.Set(pickerHeight, 0f);
 
+        const float margin = 4f;
+
+        ColorPreview = new UIPanel();
+        {
+            ColorPreview._backgroundTexture = AssetReferences.Assets.Images.UI.FullPanel.Asset;
+            ColorPreview.BorderColor = Color.Transparent;
+
+            ColorPreview.HAlign = 1f;
+
+            ColorPreview.Width.Set(30, 0f);
+            ColorPreview.Height.Set(30, 0f);
+
+            ColorPreview.Left.Set(-DROPDOWN_MARGIN - margin, 0f);
+
+            ColorPreview.BackgroundColor = Value.Value;
+        }
+        Append(ColorPreview);
+
+        ColorInput = new InputField(showAlpha ? "#RRGGBBAA" : "#RRGGBB");
+        {
+            ColorInput.HAlign = 1f;
+
+            ColorInput.Top.Set(2f, 0f);
+            ColorInput.Height.Set(26f, 0f);
+
+            ColorInput.Width.Set(showAlpha ? 135f : 100f, 0f);
+
+            ColorInput.Left.Set(-DROPDOWN_MARGIN - 30f - (margin * 2f), 0f);
+
+            ColorInput.WhitelistedChars.UnionWith(HEX_CHARACTERS);
+
+            ColorInput.OnTextChanged += Input_ParseText;
+            ColorInput.OnEnter += Input_AcceptText;
+
+            ColorInput.MaxChars = ColorInput.Hint().Length;
+        }
+        Append(ColorInput);
+
         return;
 
         void OnChanged_UpdateColor(ColorPicker obj)
         {
+            ColorPreview?.BackgroundColor = obj.Color.MultiplyRGBA(new(obj.Color.A, obj.Color.A, obj.Color.A, byte.MaxValue));
             Value = ConfigValue<Color>.Set(obj.Color);
         }
+
+        void Input_ParseText(InputField obj)
+        {
+            if (!TryParseHex(obj.Text, showAlpha, out var color))
+            {
+                return;
+            }
+
+            Value = ConfigValue<Color>.Set(color);
+
+            Picker.Color = color;
+            ColorPreview?.BackgroundColor = color;
+        }
+
+        void Input_AcceptText(InputField obj)
+        {
+            obj.Text = string.Empty;
+        }
+    }
+
+    protected static bool TryParseHex(string hexString, bool alpha, out Color color)
+    {
+        color = default;
+
+        if (hexString.StartsWith('#'))
+        {
+            hexString = hexString[1..];
+        }
+
+        if (uint.TryParse(hexString, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out uint hex))
+        {
+            uint a = 0xFFu;
+
+            if (alpha && hexString.Length == 8)
+            {
+                a = hex & 0xFFu;
+                hex >>= 8;
+            }
+
+            uint r = (hex >> 16) & 0xFFu;
+            uint g = (hex >> 8) & 0xFFu;
+            uint b = hex & 0xFFu;
+
+            color = new((int)r, (int)g, (int)b, (int)a);
+
+            return true;
+        }
+
+        return false;
     }
 }

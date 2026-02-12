@@ -27,7 +27,7 @@ public class ColorPicker : UIElement
                 col.A = (byte)(Alpha.Ratio * byte.MaxValue);
             }
 
-            return HSVToColor(new Vector3(Square.Hue, Square.PickerPosition.X, 1 - Square.PickerPosition.Y)) ;
+            return col;
         }
         set
         {
@@ -78,6 +78,8 @@ public class ColorPicker : UIElement
             Alpha = new AlphaSlider();
             {
                 Alpha.VAlign = 1f;
+
+                Alpha.OnChanged += (_) => OnChanged?.Invoke(this);
 
                 sliderMargin += 20;
             }
