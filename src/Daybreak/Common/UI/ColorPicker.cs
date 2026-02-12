@@ -181,6 +181,11 @@ public class ColorPicker : UIElement
         /// </summary>
         public Vector2 PickerPosition { get; set; }
 
+        /// <summary>
+        /// Used over IsMouseHovering to determine if the mouse is hovering the slider and NOT draging another.
+        /// </summary>
+        public bool Hovering { get; private set; }
+
         public bool IsHeld;
 
 #region Mouse Movement Edit
@@ -253,14 +258,21 @@ public class ColorPicker : UIElement
         {
             base.MouseOver(evt);
 
-            IsMouseHovering &= !Main.mouseLeft || IsHeld;
+            Hovering = IsMouseHovering && (!Main.mouseLeft || IsHeld);
 
-            if (!IsMouseHovering || IsHeld)
+            if (!Hovering || IsHeld)
             {
                 return;
             }
 
             SoundEngine.PlaySound(SoundID.MenuTick);
+        }
+
+        public override void MouseOut(UIMouseEvent evt)
+        {
+            base.MouseOut(evt);
+
+            Hovering = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -269,6 +281,12 @@ public class ColorPicker : UIElement
 
             if (!IsHeld)
             {
+                if (!Hovering && IsMouseHovering && !Main.mouseLeft)
+                {
+                    Hovering = true;
+                    SoundEngine.PlaySound(SoundID.MenuTick);
+                }
+
                 return;
             }
 
@@ -311,7 +329,7 @@ public class ColorPicker : UIElement
             dims.Inflate(-2, -2);
 
             Color outline =
-                IsHeld || IsMouseHovering
+                Hovering || IsHeld
                 ? Main.OurFavoriteColor
                 : OUTLINE_COLOR;
 

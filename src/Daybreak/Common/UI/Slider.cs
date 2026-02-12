@@ -94,23 +94,26 @@ public class Slider : UIElement
 
         var mousePosition = UserInterface.ActiveInstance.MousePosition;
 
-        if (IsHeld)
+        if (!IsHeld)
         {
-            float oldRatio = Ratio;
-
-            float num = mousePosition.X - dims.X;
-
-            Ratio = Math.Clamp(num / dims.Width, 0f, 1f);
-
-            if (oldRatio != Ratio)
+            if (!Hovering && IsMouseHovering && !Main.mouseLeft)
             {
-                OnChanged?.Invoke(this);
+                Hovering = true;
+                SoundEngine.PlaySound(SoundID.MenuTick);
             }
+
+            return;
         }
-        else if (!Hovering && IsMouseHovering && !Main.mouseLeft)
+
+        float oldRatio = Ratio;
+
+        float num = mousePosition.X - dims.X;
+
+        Ratio = Math.Clamp(num / dims.Width, 0f, 1f);
+
+        if (oldRatio != Ratio)
         {
-            Hovering = true;
-            SoundEngine.PlaySound(SoundID.MenuTick);
+            OnChanged?.Invoke(this);
         }
     }
 
