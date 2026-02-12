@@ -1,6 +1,7 @@
 ﻿using Daybreak.Common.Rendering;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -21,9 +22,9 @@ public class ColorPicker : UIElement
         {
             var col = HSVToColor(new Vector3(Square.Hue, Square.PickerPosition.X, 1 - Square.PickerPosition.Y));
 
-            if (AlphaSlider is not null)
+            if (Alpha is not null)
             {
-                col.A = (byte)(AlphaSlider.Ratio * byte.MaxValue);
+                col.A = (byte)(Alpha.Ratio * byte.MaxValue);
             }
 
             return HSVToColor(new Vector3(Square.Hue, Square.PickerPosition.X, 1 - Square.PickerPosition.Y)) ;
@@ -32,19 +33,21 @@ public class ColorPicker : UIElement
         {
             var hsv = ColorToHSV(value);
 
-            HueSlider.Ratio = hsv.X;
+            Hue.Ratio = hsv.X;
 
             Square.Hue = hsv.X;
 
             Square.PickerPosition = new(hsv.Y, 1 - hsv.Z);
 
-            AlphaSlider?.Ratio = (float)value.A / byte.MaxValue;
+            Alpha?.Ratio = (float)value.A / byte.MaxValue;
+
+            Alpha?.Hue = hsv.X;
         }
     }
 
-    protected Slider HueSlider;
+    protected Slider Hue;
 
-    protected Slider? AlphaSlider;
+    protected AlphaSlider? Alpha;
 
     protected HSVSquare Square;
 
@@ -56,29 +59,29 @@ public class ColorPicker : UIElement
 
         Height.Set(0f, 1f);
 
-        HueSlider = new Slider();
+        Hue = new Slider();
         {
-            HueSlider.VAlign = 1f;
+            Hue.VAlign = 1f;
 
-            HueSlider.InnerTexture = AssetReferences.Assets.Images.UI.ColorPickerHue.Asset;
+            Hue.InnerTexture = AssetReferences.Assets.Images.UI.ColorPickerHue.Asset;
 
-            HueSlider.OnChanged += OnChanged_UpdateHue;
+            Hue.OnChanged += OnChanged_UpdateHue;
 
             sliderMargin += 20;
         }
-        Append(HueSlider);
+        Append(Hue);
 
         if (showAlpha)
         {
-            HueSlider.MarginBottom += sliderMargin;
+            Hue.MarginBottom += sliderMargin;
 
-            AlphaSlider = new Slider();
+            Alpha = new AlphaSlider();
             {
-                AlphaSlider.VAlign = 1f;
+                Alpha.VAlign = 1f;
 
                 sliderMargin += 20;
             }
-            Append(AlphaSlider);
+            Append(Alpha);
         }
 
         Square = new HSVSquare();
@@ -97,6 +100,8 @@ public class ColorPicker : UIElement
         void OnChanged_UpdateHue(Slider obj)
         {
             Square?.Hue = obj.Ratio;
+
+            Alpha?.Hue = obj.Ratio;
 
             OnChanged?.Invoke(this);
         }
@@ -131,6 +136,25 @@ public class ColorPicker : UIElement
         float val = max;
 
         return new(hue, sat, val);
+    }
+
+    protected sealed class AlphaSlider : Slider
+    {
+        public float Hue { get; set; }
+
+        public AlphaSlider() : base()
+        {
+            InnerTexture = AssetReferences.Assets.Images.UI.PreMultipliedGradient.Asset;
+        }
+
+        protected override void DrawSliderInner(SpriteBatch spriteBatch, Rectangle dims, Color color)
+        {
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, dims, Color.White);
+
+            color = HSVToColor(new Vector3(Hue, 1f, 1f));
+
+            base.DrawSliderInner(spriteBatch, dims, color);
+        }
     }
 
     protected sealed class HSVSquare : UIElement
