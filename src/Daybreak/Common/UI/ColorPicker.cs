@@ -1,12 +1,16 @@
-﻿using Daybreak.Common.Rendering;
+﻿using Daybreak.Common.Features.Hooks;
+using Daybreak.Common.Rendering;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MonoMod.Cil;
 using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.UI;
 
@@ -177,7 +181,48 @@ public class ColorPicker : UIElement
         /// </summary>
         public Vector2 PickerPosition { get; set; }
 
-        protected bool IsHeld;
+        public bool IsHeld;
+
+#region Mouse Movement Edit
+
+        private const float slow_cursor_speed = 0.15f;
+
+        private static bool SlowCursor;
+
+        [OnLoad]
+        private static void Load()
+        {
+            IL_PlayerInput.MouseInput += DoUpdate_HandleInput_SlowCursor;
+        }
+
+        private static void DoUpdate_HandleInput_SlowCursor(ILContext il)
+        {
+            var c = new ILCursor(il);
+
+            c.GotoNext(MoveType.After,
+                i => i.MatchCall(typeof(Mouse), nameof(Mouse.GetState)),
+                i => i.MatchStsfld<PlayerInput>(nameof(PlayerInput.MouseInfo))
+            );
+
+            c.EmitDelegate(
+                () =>
+                {
+                    if (SlowCursor)
+                    {
+                        Mouse.SetPosition(
+                            PlayerInput.MouseInfoOld.X + (int)((PlayerInput.MouseInfo.X - PlayerInput.MouseInfoOld.X) * slow_cursor_speed),
+                            PlayerInput.MouseInfoOld.Y + (int)((PlayerInput.MouseInfo.Y - PlayerInput.MouseInfoOld.Y) * slow_cursor_speed)
+                        );
+
+                        PlayerInput.MouseInfo = Mouse.GetState();
+                    }
+
+                    SlowCursor = false;
+                }
+            );
+        }
+
+#endregion
 
         public HSVSquare()
         {
@@ -240,6 +285,11 @@ public class ColorPicker : UIElement
             if (oldPickerPosition != PickerPosition)
             {
                 OnChanged?.Invoke(this);
+            }
+
+            if (PlayerInput.Triggers.Current.SmartCursor || Main.keyState.IsKeyDown(Keys.LeftShift))
+            {
+                SlowCursor = true;
             }
         }
 
