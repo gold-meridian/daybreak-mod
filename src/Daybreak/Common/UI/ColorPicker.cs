@@ -41,7 +41,7 @@ public class ColorPicker : UIElement
 
             Alpha?.Ratio = (float)value.A / byte.MaxValue;
 
-            Alpha?.Hue = hsv.X;
+            Alpha?.InnerColor = value;
         }
     }
 
@@ -103,7 +103,7 @@ public class ColorPicker : UIElement
         {
             Square?.Hue = obj.Ratio;
 
-            Alpha?.Hue = obj.Ratio;
+            Alpha?.InnerColor = Color;
 
             OnChanged?.Invoke(this);
         }
@@ -142,8 +142,6 @@ public class ColorPicker : UIElement
 
     protected sealed class AlphaSlider : Slider
     {
-        public float Hue { get; set; }
-
         public AlphaSlider() : base()
         {
             InnerTexture = AssetReferences.Assets.Images.UI.PreMultipliedGradient.Asset;
@@ -153,7 +151,7 @@ public class ColorPicker : UIElement
         {
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, dims, Color.White);
 
-            color = HSVToColor(new Vector3(Hue, 1f, 1f));
+            color.A = byte.MaxValue;
 
             base.DrawSliderInner(spriteBatch, dims, color);
         }
