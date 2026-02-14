@@ -1,6 +1,5 @@
 ﻿using Daybreak.Common.Rendering;
 using Daybreak.Core;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -12,8 +11,6 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using TerrariaOverhaul.Core.Localization;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Daybreak.Common.UI;
 

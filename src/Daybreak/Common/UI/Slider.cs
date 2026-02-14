@@ -1,18 +1,14 @@
-﻿using Daybreak.Common.Features.Hooks;
-using Daybreak.Common.Mathematics;
+﻿using Daybreak.Common.Mathematics;
 using Daybreak.Common.Rendering;
 using Daybreak.Common.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using MonoMod.Cil;
 using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
-using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.UI;
 
