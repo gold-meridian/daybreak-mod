@@ -40,7 +40,7 @@ public class InputField : UIPanel
     public int MaxChars { get; set; } = 100;
 
     /// <summary>
-    ///     Weither Terraria's TextSnippets, will be used.
+    ///     Weither Terraria's TextSnippets will be used.
     /// </summary>
     public bool AllowChatTags { get; set; } = false;
 
