@@ -65,6 +65,8 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
     protected UITextPanel<LocalizedText>? SaveButton { get; set; }
 
     protected SearchBar? SearchBar { get; set; }
+
+    protected PopupLayer? PopupLayer { get; set; }
 #endregion
 
     private readonly Action? exitAction;
@@ -310,6 +312,12 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
             SaveButton.WithFadedMouseOver();
         }
         BaseElement.Append(SaveButton);
+
+        PopupLayer = new PopupLayer();
+        {
+            Config.PopupLayer = PopupLayer;
+        }
+        Append(PopupLayer);
 
         return;
 
@@ -1254,6 +1262,8 @@ internal sealed class ConfigList : FadedList
         }
     }
 
+    public PopupLayer? PopupLayer;
+
     public ConfigList(
         ConfigRepository repository,
         ConfigValue<Mod?> targetMod,
@@ -1353,6 +1363,8 @@ internal sealed class ConfigList : FadedList
                 configElement.OnShowDescription += ConfigElement_OnShowDescription;
 
                 configElement.OnHideDescription += ConfigElement_OnHideDescription;
+
+                configElement.PopupLayer = PopupLayer;
             }
             Add(configElement);
         }

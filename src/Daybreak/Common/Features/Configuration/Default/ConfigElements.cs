@@ -510,7 +510,7 @@ public class ColorElement : DropdownConfigElement<Color>
 
     protected InputField ColorInput;
 
-    private bool showAlpha;
+    protected bool ShowAlpha;
 
     public ColorElement(IConfigEntry entry, bool showIcon) : base(0f, entry, showIcon)
     {
@@ -521,20 +521,20 @@ public class ColorElement : DropdownConfigElement<Color>
         float pickerWidth = picker_size;
         float pickerHeight = picker_size + slider_margin;
 
-        showAlpha = true; // TODO: parse
+        ShowAlpha = true; // TODO: parse
 
-        if (showAlpha)
+        if (ShowAlpha)
         {
             pickerHeight += slider_margin;
         }
 
-        Picker = new ColorPicker(showAlpha);
+        Picker = new ColorPicker(ShowAlpha);
         {
             Picker.HAlign = 1f;
 
             Picker.Width.Set(pickerWidth, 0f);
 
-            Picker.Height.Set(pickerHeight, 1f);
+            Picker.Height.Set(pickerHeight, 0f);
 
             Picker.Color = Value.Value;
 
@@ -556,22 +556,24 @@ public class ColorElement : DropdownConfigElement<Color>
             ColorPreview.Width.Set(30, 0f);
             ColorPreview.Height.Set(30, 0f);
 
-            ColorPreview.Left.Set(-DROPDOWN_MARGIN - margin, 0f);
+            ColorPreview.Left.Set(-DROPDOWN_MARGIN, 0f);
 
             ColorPreview.BackgroundColor = Value.Value;
+
+            ColorPreview.OnLeftClick += OnLeftClick_ShowPopup;
         }
         Append(ColorPreview);
 
-        ColorInput = new InputField(showAlpha ? "#RRGGBBAA" : "#RRGGBB");
+        ColorInput = new InputField(ShowAlpha ? "#RRGGBBAA" : "#RRGGBB");
         {
             ColorInput.HAlign = 1f;
 
             ColorInput.Top.Set(2f, 0f);
             ColorInput.Height.Set(26f, 0f);
 
-            ColorInput.Width.Set(showAlpha ? 135f : 100f, 0f);
+            ColorInput.Width.Set(ShowAlpha ? 135f : 100f, 0f);
 
-            ColorInput.Left.Set(-DROPDOWN_MARGIN - 30f - (margin * 2f), 0f);
+            ColorInput.Left.Set(-DROPDOWN_MARGIN - 30f - margin, 0f);
 
             ColorInput.WhitelistedChars.UnionWith(HEX_CHARACTERS);
 
@@ -582,6 +584,8 @@ public class ColorElement : DropdownConfigElement<Color>
         }
         Append(ColorInput);
 
+        LabelContainer.Width.Set(ColorInput.Width.Pixels - DROPDOWN_MARGIN - 30f - (margin * 2f), 1f);
+
         return;
 
         void OnChanged_UpdateColor(ColorPicker obj)
@@ -590,9 +594,44 @@ public class ColorElement : DropdownConfigElement<Color>
             Value = ConfigValue<Color>.Set(obj.Color);
         }
 
+        void OnLeftClick_ShowPopup(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (Open)
+            {
+                return;
+            }
+
+            var panel = new UIPanel();
+            {
+                panel._backgroundTexture = AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
+                panel.BorderColor = Color.Transparent;
+
+                panel.Width.Set(Picker.Width.Pixels + panel.PaddingLeft + panel.PaddingRight, 0f);
+                panel.Height.Set(Picker.Height.Pixels + panel.PaddingTop + panel.PaddingBottom, 0f);
+            }
+
+            var picker = new ColorPicker(ShowAlpha);
+            {
+                picker.Width.Set(0f, 1f);
+
+                picker.Height.Set(0f, 1f);
+
+                picker.Color = Value.Value;
+
+                picker.OnChanged += OnChanged_UpdateColor;
+            }
+            panel.Append(picker);
+
+            var position = listeningElement.Dimensions.Center();
+
+            PopupLayer?.AppendPopup(panel, position);
+
+            SoundEngine.PlaySound(SoundID.MenuOpen);
+        }
+
         void Input_ParseText(InputField obj)
         {
-            if (!TryParseHex(obj.Text, showAlpha, out var color))
+            if (!TryParseHex(obj.Text, ShowAlpha, out var color))
             {
                 return;
             }
@@ -608,7 +647,6 @@ public class ColorElement : DropdownConfigElement<Color>
             obj.Text = string.Empty;
         }
     }
-
     protected static bool TryParseHex(string hexString, bool alpha, out Color color)
     {
         color = default;

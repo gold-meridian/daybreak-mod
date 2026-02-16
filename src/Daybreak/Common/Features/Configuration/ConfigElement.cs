@@ -65,6 +65,8 @@ public class ConfigElement : UIElement
 
     public Action<IConfigEntry?>? OnHideDescription;
 
+    public PopupLayer? PopupLayer;
+
     protected UIElement LabelContainer;
 
     protected Icon? InfoIcon;
