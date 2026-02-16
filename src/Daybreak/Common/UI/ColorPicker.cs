@@ -188,10 +188,14 @@ public class ColorPicker : UIElement
         public bool IsHeld;
 
 #region Mouse Movement Edit
-
         private const float slow_cursor_speed = 0.15f;
 
-        private static bool SlowCursor;
+        private static bool slowCursor;
+
+        private static Vector2 oldMousePosition;
+        private static Vector2 mousePosition;
+
+        private static bool mouseSet;
 
         [OnLoad]
         private static void Load()
@@ -211,21 +215,35 @@ public class ColorPicker : UIElement
             c.EmitDelegate(
                 () =>
                 {
-                    if (SlowCursor)
+                    if (!slowCursor)
                     {
-                        Mouse.SetPosition(
-                            PlayerInput.MouseInfoOld.X + (int)((PlayerInput.MouseInfo.X - PlayerInput.MouseInfoOld.X) * slow_cursor_speed),
-                            PlayerInput.MouseInfoOld.Y + (int)((PlayerInput.MouseInfo.Y - PlayerInput.MouseInfoOld.Y) * slow_cursor_speed)
-                        );
-
-                        PlayerInput.MouseInfo = Mouse.GetState();
+                        mouseSet = false;
+                        return;
                     }
 
-                    SlowCursor = false;
+                    if (!mouseSet)
+                    {
+                        oldMousePosition = new Vector2(PlayerInput.MouseInfoOld.X, PlayerInput.MouseInfoOld.Y);
+
+                        mouseSet = true;
+                    }
+
+                    mousePosition = new Vector2(PlayerInput.MouseInfo.X, PlayerInput.MouseInfo.Y);
+
+                    mousePosition = oldMousePosition + ((mousePosition - oldMousePosition) * slow_cursor_speed);
+
+                    oldMousePosition = mousePosition;
+
+                    Mouse.SetPosition(
+                        (int)mousePosition.X,
+                        (int)mousePosition.Y
+                    );
+
+                    PlayerInput.MouseInfo = Mouse.GetState();
+                    slowCursor = false;
                 }
             );
         }
-
 #endregion
 
         public HSVSquare()
@@ -306,7 +324,7 @@ public class ColorPicker : UIElement
 
             if (PlayerInput.Triggers.Current.SmartCursor || Main.keyState.IsKeyDown(Keys.LeftShift))
             {
-                SlowCursor = true;
+                slowCursor = true;
             }
         }
 
