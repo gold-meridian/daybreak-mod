@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
@@ -675,7 +676,7 @@ public class ColorElement : DropdownConfigElement<Color>
 [DefaultConfigElementFor<Enum>]
 public class EnumElement : DropdownConfigElement<Enum>
 {
-    protected readonly object[] Values;
+    protected readonly Enum[] Values;
     protected readonly LocalizedText[] Names;
 
     public EnumElement(IConfigEntry entry, bool showIcon) : base(0f, entry, showIcon)
@@ -687,11 +688,16 @@ public class EnumElement : DropdownConfigElement<Enum>
         Names = GetLocalizedNames(type);
     }
 
-    protected object[] GetEnumValues(Type type)
+    protected Enum[] GetEnumValues(Type type)
     {
         var values = Enum.GetValuesAsUnderlyingType(type);
-        var result = new object[values.Length];
-        Array.Copy(values, result, values.Length);
+
+        var result = new Enum[values.Length];
+
+        for (int i = 0; i < values.Length; i++)
+        {
+            result[i] = (Enum)Enum.ToObject(type, values.GetValue(i)!);
+        }
 
         return result;
     }
