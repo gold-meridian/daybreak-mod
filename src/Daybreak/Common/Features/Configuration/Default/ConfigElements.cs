@@ -3,16 +3,13 @@ using Daybreak.Common.Mathematics;
 using Daybreak.Common.Rendering;
 using Daybreak.Common.UI;
 using Daybreak.Core;
-using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using rail;
 using ReLogic.Content;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -23,6 +20,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Core;
 using Terraria.UI;
 
@@ -671,5 +669,55 @@ public class ColorElement : DropdownConfigElement<Color>
         }
 
         return false;
+    }
+}
+
+[DefaultConfigElementFor<Enum>]
+public class EnumElement : DropdownConfigElement<Enum>
+{
+    protected readonly object[] Values;
+    protected readonly LocalizedText[] Names;
+
+    public EnumElement(IConfigEntry entry, bool showIcon) : base(0f, entry, showIcon)
+    {
+        var type = Value.Value.GetType();
+
+        Values = GetEnumValues(type);
+
+        Names = GetLocalizedNames(type);
+    }
+
+    protected object[] GetEnumValues(Type type)
+    {
+        var values = Enum.GetValuesAsUnderlyingType(type);
+        var result = new object[values.Length];
+        Array.Copy(values, result, values.Length);
+
+        return result;
+    }
+
+    protected LocalizedText[] GetLocalizedNames(Type type)
+    {
+        var names = Enum.GetNames(type);
+
+        var result = new LocalizedText[names.Length];
+
+        for (int i = 0; i < names.Length; i++)
+        {
+            string tmlConfigKey = ConfigManager.GetConfigKey<LabelKeyAttribute>(type.GetField(names[i])!, "Label");
+
+            result[i] =
+                Language.Exists(tmlConfigKey)
+                ? Language.GetText(tmlConfigKey)
+                : LanguageHelpers.GetLocalization(
+                    Entry.Handle.Mod,
+                    Entry.Handle.Name,
+                    nameof(ConfigEntry<>),
+                    $"{type.Name}.{names[i]}",
+                    () => names[i]
+                );
+        }
+
+        return result;
     }
 }
