@@ -39,7 +39,7 @@ internal class DefaultConfigElementForAttribute(Type type) : Attribute
 
 internal static class DefaultConfigElementLoader
 {
-    private static readonly Dictionary<Type, Type> types_by_element_type = [];
+    private static readonly Dictionary<Type, Type> element_type_by_provided_type = [];
 
     [OnLoad]
     private static void Load(Mod mod)
@@ -63,26 +63,21 @@ internal static class DefaultConfigElementLoader
 
         foreach (var attribute in attributes)
         {
-            types_by_element_type.Add(attribute.Type, type);
+            element_type_by_provided_type.Add(attribute.Type, type);
         }
     }
 
-    internal static bool GetConfigElement(Type type, IConfigEntry entry, bool showIcon, [NotNullWhen(true)] out ConfigElement? instance)
+    internal static Type GetConfigElementType<T>()
     {
-        instance = null;
-
-        foreach (var item in types_by_element_type)
+        foreach (var item in element_type_by_provided_type)
         {
-            if (!type.IsAssignableTo(item.Key))
+            if (typeof(T).IsAssignableTo(item.Key))
             {
-                continue;
+                return item.Value;
             }
-
-            instance = (ConfigElement)Activator.CreateInstance(item.Value, entry, showIcon)!;
-            return true;
         }
 
-        return false;
+        return typeof(ConfigElement);
     }
 }
 

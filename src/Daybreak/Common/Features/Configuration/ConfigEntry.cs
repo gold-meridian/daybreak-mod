@@ -117,6 +117,12 @@ public interface IConfigEntryMetadata
     LocalizedText Description { get; }
 
     /// <summary>
+    ///     The type of the <see cref="Configuration.ConfigElement"/> this
+    ///     config entry may use for a config UI.
+    /// </summary>
+    Type ConfigElement { get; }
+
+    /// <summary>
     ///     The categories this entry belongs to.  The first category is the
     ///     &quot;main&quot; category to which this entry canonically belongs
     ///     to.
@@ -398,6 +404,11 @@ public class ConfigEntry<T> : IConfigEntry<T>
             nameof(Description),
             () => ""
         );
+
+    /// <inheritdoc />
+    public Type ConfigElement =>
+        Options.ConfigElement?.Invoke(this)
+     ?? DefaultConfigElementLoader.GetConfigElementType<T>();
 
     /// <inheritdoc />
     public ConfigCategoryHandle[] Categories { get; }
@@ -712,6 +723,8 @@ public sealed class ConfigEntryOptions<T>
 
     public Func<ConfigEntry<T>, LocalizedText>? Description { get; set; }
 
+    public Func<ConfigEntry<T>, Type>? ConfigElement { get; set; }
+
     public Func<ConfigEntry<T>, IEnumerable<ConfigCategoryHandle>>? Categories { get; set; }
 #endregion
 
@@ -778,6 +791,16 @@ public static class ConfigEntryOptionsExtensions
         public ConfigEntryOptions<T> WithDescription(Func<ConfigEntry<T>, LocalizedText>? description)
         {
             return options.With(x => x.Description = description);
+        }
+
+        public ConfigEntryOptions<T> WithConfigElement(Func<ConfigEntry<T>, Type>? configElement)
+        {
+            return options.With(x => x.ConfigElement = configElement);
+        }
+
+        public ConfigEntryOptions<T> WithConfigElement<TElement>() where TElement : ConfigElement
+        {
+            return options.With(x => x.ConfigElement = _ => typeof(TElement));
         }
 
         public ConfigEntryOptions<T> WithCategories(Func<ConfigEntry<T>, IEnumerable<ConfigCategoryHandle>>? categories)

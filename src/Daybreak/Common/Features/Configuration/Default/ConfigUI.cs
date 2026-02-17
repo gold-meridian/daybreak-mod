@@ -1355,8 +1355,8 @@ internal sealed class ConfigList : FadedList
             }
 
             var configElement =
-                DefaultConfigElementLoader.GetConfigElement(entry.EntryType, entry, showModIcons, out var elem) ? elem :
-                new ConfigElement(entry, showModIcons);
+                (ConfigElement?)Activator.CreateInstance(entry.ConfigElement, entry, showModIcons)
+                ?? new ConfigElement(entry, showModIcons);
             {
                 configElement.Flashing = targetEntry == entry;
 
