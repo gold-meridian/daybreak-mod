@@ -6,7 +6,6 @@ using Daybreak.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using rail;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,6 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
@@ -23,6 +21,8 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Core;
+using Terraria.ModLoader.UI;
+using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
@@ -68,15 +68,12 @@ internal static class DefaultConfigElementLoader
 
     internal static Type GetConfigElementType<T>()
     {
-        foreach (var item in element_type_by_provided_type)
+        if (!element_type_by_provided_type.TryGetValue(typeof(T), out var type))
         {
-            if (typeof(T).IsAssignableTo(item.Key))
-            {
-                return item.Value;
-            }
+            return typeof(ConfigElement);
         }
 
-        return typeof(ConfigElement);
+        return type;
     }
 }
 
@@ -358,6 +355,8 @@ public abstract class RangeElement<T> : ConfigElement<T> where T : unmanaged, IN
 public abstract class DropdownConfigElement<T> : ConfigElement<T>
 {
     protected const float DROPDOWN_MARGIN = 30f;
+
+    public bool Open { get; protected set; }
 
     private UIElement container;
 
@@ -673,44 +672,103 @@ public class ColorElement : DropdownConfigElement<Color>
     }
 }
 
-[DefaultConfigElementFor<Enum>]
-public class EnumElement : DropdownConfigElement<Enum>
+public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
 {
-    protected readonly Enum[] Values;
-    protected readonly LocalizedText[] Names;
+    protected UIGrid Grid;
+
+    protected readonly EnumOption<T>[] Options;
 
     public EnumElement(IConfigEntry entry, bool showIcon) : base(0f, entry, showIcon)
     {
+        const int columns = 5;
+
         var type = Value.Value.GetType();
 
-        Values = GetEnumValues(type);
+        var values = Enum.GetValues<T>();
 
-        Names = GetLocalizedNames(type);
-    }
+        var names = GetLocalizedNames();
 
-    protected Enum[] GetEnumValues(Type type)
-    {
-        var values = Enum.GetValuesAsUnderlyingType(type);
-
-        var result = new Enum[values.Length];
-
-        for (int i = 0; i < values.Length; i++)
+        Grid = new UIGrid();
         {
-            result[i] = (Enum)Enum.ToObject(type, values.GetValue(i)!);
+            Grid.Width.Set(0f, 1f);
+            Grid.Height.Set(0f, 0f);
+        }
+        InnerElement.Append(Grid);
+
+        Options = new EnumOption<T>[values.Length];
+
+        for (int i = 0; i < Options.Length; i++)
+        {
+            var option = new EnumOption<T>(values[i], names[i]);
+            {
+                option.Width.Set(30f, 1f / columns);
+
+                option.OnLeftClick += OnLeftClick_UpdateValue;
+
+                if (values[i].CompareTo(Value.Value) == 0)
+                {
+                    option.Selected = true;
+                }
+            }
+            Options[i] = option;
         }
 
-        return result;
+        Grid.AddRange(Options);
+
+        return;
+
+        void OnLeftClick_UpdateValue(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (listeningElement is not EnumOption<T> option || option.Selected)
+            {
+                return;
+            }
+
+            ResetList();
+
+            option.Selected = true;
+
+            Value = ConfigValue<T>.Set(option.Value);
+
+            SoundEngine.PlaySound(in SoundID.MenuTick);
+        }
+
+        void ResetList()
+        {
+            foreach (var element in Grid)
+            {
+                if (element is not EnumOption<T> option)
+                {
+                    continue;
+                }
+
+                option.Selected = false;
+            }
+        }
     }
 
-    protected LocalizedText[] GetLocalizedNames(Type type)
+    public override void Recalculate()
     {
-        var names = Enum.GetNames(type);
+        base.Recalculate();
+
+        Grid.RecalculateChildren();
+
+        Grid.MinWidth.Set(0f, 1f);
+
+        InnerElement.MinHeight.Set(400, 0f);
+
+        base.Recalculate();
+    }
+
+    protected LocalizedText[] GetLocalizedNames()
+    {
+        var names = Enum.GetNames<T>();
 
         var result = new LocalizedText[names.Length];
 
         for (int i = 0; i < names.Length; i++)
         {
-            string tmlConfigKey = ConfigManager.GetConfigKey<LabelKeyAttribute>(type.GetField(names[i])!, "Label");
+            string tmlConfigKey = ConfigManager.GetConfigKey<LabelKeyAttribute>(typeof(T).GetField(names[i])!, "Label");
 
             result[i] =
                 Language.Exists(tmlConfigKey)
@@ -719,11 +777,62 @@ public class EnumElement : DropdownConfigElement<Enum>
                     Entry.Handle.Mod,
                     Entry.Handle.Name,
                     nameof(ConfigEntry<>),
-                    $"{type.Name}.{names[i]}",
+                    $"{typeof(T).Name}.{names[i]}",
                     () => names[i]
                 );
         }
 
         return result;
+    }
+
+    protected sealed class EnumOption<T> : UIAutoScaleTextTextPanel<LocalizedText> where T : struct, Enum
+    {
+        public T Value;
+
+        public bool Selected
+        {
+            get;
+
+            set
+            {
+                _backgroundTexture =
+                    value
+                    ? AssetReferences.Assets.Images.UI.FullPanel.Asset
+                    : AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
+
+                field = value;
+            }
+        }
+
+        public EnumOption(T value, LocalizedText displayName) : base(displayName)
+        {
+            Value = value;
+
+            _backgroundTexture = AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
+            BorderColor = Color.Transparent;
+
+            BackgroundColor = UICommon.DefaultUIBlue;
+
+            Width.Set(0f, 1f);
+            Height.Set(30f, 0f);
+
+            SetPadding(0f);
+        }
+
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            base.MouseOver(evt);
+
+            SoundEngine.PlaySound(in SoundID.MenuTick);
+
+            BackgroundColor = UICommon.DefaultUIBlue * 1.2f;
+        }
+
+        public override void MouseOut(UIMouseEvent evt)
+        {
+            base.MouseOut(evt);
+
+            BackgroundColor = UICommon.DefaultUIBlue;
+        }
     }
 }

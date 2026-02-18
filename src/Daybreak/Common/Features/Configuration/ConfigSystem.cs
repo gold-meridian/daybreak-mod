@@ -215,6 +215,18 @@ public static class ConfigSystem
                       .Register(ConfigRepository.Default, mod, category.Handle.Name + '_' + wrapper.Name);
     }
 
+    internal static Type GetConfigElementType<T>()
+    {
+        if (typeof(T).IsEnum
+            && typeof(T).IsValueType
+            && Nullable.GetUnderlyingType(typeof(T)) is null)
+        {
+            return typeof(EnumElement<>).MakeGenericType(typeof(T));
+        }
+
+        return DefaultConfigElementLoader.GetConfigElementType<T>();
+    }
+
     /*
     private static void DefineEntry<T>(JsonProperty property, Mod mod, string name)
     {

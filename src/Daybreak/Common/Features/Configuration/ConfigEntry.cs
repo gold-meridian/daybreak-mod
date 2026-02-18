@@ -408,7 +408,7 @@ public class ConfigEntry<T> : IConfigEntry<T>
     /// <inheritdoc />
     public Type ConfigElement =>
         Options.ConfigElement?.Invoke(this)
-     ?? DefaultConfigElementLoader.GetConfigElementType<T>();
+     ?? ConfigSystem.GetConfigElementType<T>();
 
     /// <inheritdoc />
     public ConfigCategoryHandle[] Categories { get; }
