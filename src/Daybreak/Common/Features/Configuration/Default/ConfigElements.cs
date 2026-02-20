@@ -364,8 +364,6 @@ public abstract class DropdownConfigElement<T> : ConfigElement<T>
 
     protected DropdownIcon DropdownButton;
 
-    public bool Open { get; protected set; }
-
     private int openProgress;
 
     public DropdownConfigElement(float height, IConfigEntry entry, bool showIcon) : base(entry, showIcon)
@@ -535,7 +533,7 @@ public class ColorElement : DropdownConfigElement<Color>
         }
         InnerElement.Append(Picker);
 
-        InnerElement.MinHeight.Set(pickerHeight, 0f);
+        InnerElement.MinHeight.Set(pickerHeight + InnerElement.PaddingTop, 0f);
 
         const float margin = 4f;
 
@@ -674,13 +672,13 @@ public class ColorElement : DropdownConfigElement<Color>
 
 public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
 {
-    protected UIGrid Grid;
+    protected Grid Grid;
 
     protected readonly EnumOption<T>[] Options;
 
     public EnumElement(IConfigEntry entry, bool showIcon) : base(0f, entry, showIcon)
     {
-        const int columns = 5;
+        const int max_columns = 6;
 
         var type = Value.Value.GetType();
 
@@ -688,10 +686,12 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
 
         var names = GetLocalizedNames();
 
-        Grid = new UIGrid();
+        Grid = new Grid();
         {
             Grid.Width.Set(0f, 1f);
-            Grid.Height.Set(0f, 0f);
+            Grid.Height.Set(0f, 1f);
+
+            Grid.Columns = Math.Min(values.Length, max_columns);
         }
         InnerElement.Append(Grid);
 
@@ -701,8 +701,6 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
         {
             var option = new EnumOption<T>(values[i], names[i]);
             {
-                option.Width.Set(30f, 1f / columns);
-
                 option.OnLeftClick += OnLeftClick_UpdateValue;
 
                 if (values[i].CompareTo(Value.Value) == 0)
@@ -751,13 +749,7 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
     {
         base.Recalculate();
 
-        Grid.RecalculateChildren();
-
-        Grid.MinWidth.Set(0f, 1f);
-
-        InnerElement.MinHeight.Set(400, 0f);
-
-        base.Recalculate();
+        InnerElement.MinHeight.Set(Grid.GetTotalHeight() + InnerElement.PaddingTop, 0f);
     }
 
     protected LocalizedText[] GetLocalizedNames()
@@ -817,6 +809,8 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
             Height.Set(30f, 0f);
 
             SetPadding(0f);
+
+            UseInnerDimensions = false;
         }
 
         public override void MouseOver(UIMouseEvent evt)
