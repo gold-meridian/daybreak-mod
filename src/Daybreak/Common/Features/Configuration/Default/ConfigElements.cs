@@ -512,7 +512,7 @@ public class ColorElement : DropdownConfigElement<Color>
 
     protected bool ShowAlpha;
 
-    public ColorElement(IConfigEntry entry, bool showIcon) : base(0f, entry, showIcon)
+    public ColorElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
     {
         const float slider_margin = 16f + 4f;
 
@@ -685,7 +685,7 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
 
     protected readonly EnumOption<T>[] Options;
 
-    public EnumElement(IConfigEntry entry, bool showIcon) : base(0f, entry, showIcon)
+    public EnumElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
     {
         const int max_columns = 6;
 
