@@ -358,6 +358,17 @@ public abstract class DropdownConfigElement<T> : ConfigElement<T>
 
     public bool Open { get; protected set; }
 
+    public float InnerHeight
+    {
+        get;
+        set
+        {
+            InnerElement.MinHeight.Set(value + InnerElement.PaddingTop + InnerElement.PaddingBottom, 0f);
+
+            field = value;
+        }
+    }
+
     private UIElement container;
 
     protected UIElement InnerElement;
@@ -366,7 +377,7 @@ public abstract class DropdownConfigElement<T> : ConfigElement<T>
 
     private int openProgress;
 
-    public DropdownConfigElement(float height, IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    public DropdownConfigElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
     {
         container = new UIElement();
         {
@@ -394,8 +405,6 @@ public abstract class DropdownConfigElement<T> : ConfigElement<T>
         InnerElement = new UIElement();
         {
             InnerElement.VAlign = 1f;
-
-            InnerElement.MinHeight.Set(height, 0f);
 
             InnerElement.Width.Set(0f, 1f);
 
@@ -533,7 +542,7 @@ public class ColorElement : DropdownConfigElement<Color>
         }
         InnerElement.Append(Picker);
 
-        InnerElement.MinHeight.Set(pickerHeight + InnerElement.PaddingTop, 0f);
+        InnerHeight = pickerHeight;
 
         const float margin = 4f;
 
@@ -749,7 +758,7 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
     {
         base.Recalculate();
 
-        InnerElement.MinHeight.Set(Grid.GetTotalHeight() + InnerElement.PaddingTop, 0f);
+        InnerHeight = Grid.GetTotalHeight();
     }
 
     protected LocalizedText[] GetLocalizedNames()
