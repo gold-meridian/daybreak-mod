@@ -12,15 +12,24 @@ public static class ElementExtensions
     {
         /// <summary>
         ///     The <paramref name="element"/>'s dimensions as a
-        ///     <see cref="Rectangle"/>.
+        ///     <see cref="Rectangle"/>.<br></br>
+        ///     <inheritdoc cref="UIElement.GetDimensions"/>
         /// </summary>
         public Rectangle Dimensions => element.GetDimensions().ToRectangle();
 
         /// <summary>
         ///     The <paramref name="element"/>'s inner dimensions as a
-        ///     <see cref="Rectangle"/>.
+        ///     <see cref="Rectangle"/>.<br></br>
+        ///     <inheritdoc cref="UIElement.GetInnerDimensions"/>
         /// </summary>
         public Rectangle InnerDimensions => element.GetInnerDimensions().ToRectangle();
+
+        /// <summary>
+        ///     The <paramref name="element"/>'s outer dimensions as a
+        ///     <see cref="Rectangle"/>.<br></br>
+        ///     <inheritdoc cref="UIElement.GetOuterDimensions"/>
+        /// </summary>
+        public Rectangle OuterDimensions => element.GetOuterDimensions().ToRectangle();
 
         /// <summary>
         ///     Attempts to get the dimensions of this
