@@ -3,6 +3,7 @@ using Daybreak.Common.Mathematics;
 using Daybreak.Common.Rendering;
 using Daybreak.Common.UI;
 using Daybreak.Core;
+using Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,7 +23,6 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Core;
 using Terraria.ModLoader.UI;
-using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 
 namespace Daybreak.Common.Features.Configuration;
@@ -681,66 +681,129 @@ public class ColorElement : DropdownConfigElement<Color>
 
 public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
 {
+    protected Color BUTTON_COLOR = Color.White * 0.75f;
+    protected Color BUTTON_HOVER_COLOR = Color.White;
+
+    protected readonly (T Value, LocalizedText Name)[] EnumData;
+
+    protected MarqueeText<string> Text;
+
     protected Grid Grid;
 
-    protected readonly EnumOption<T>[] Options;
+    protected bool UseFlags;
 
     public EnumElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
     {
+        const float upper_height = 30f;
+
         const int max_columns = 6;
 
         var type = Value.Value.GetType();
 
-        var values = Enum.GetValues<T>();
+        var underlyingType = Enum.GetUnderlyingType(type);
 
-        var names = GetLocalizedNames();
+        var none = (T)default;
+
+        EnumData = Enum.GetValues<T>().Zip(GetLocalizedNames()).ToArray();
+
+        UseFlags = typeof(T).IsDefined(typeof(FlagsAttribute));
 
         Grid = new Grid();
         {
             Grid.Width.Set(0f, 1f);
             Grid.Height.Set(0f, 1f);
 
-            Grid.Columns = Math.Min(values.Length, max_columns);
+            Grid.Columns = Math.Min(EnumData.Length, max_columns);
         }
         InnerElement.Append(Grid);
 
-        Options = new EnumOption<T>[values.Length];
-
-        for (int i = 0; i < Options.Length; i++)
+        Text = new MarqueeText<string>(string.Empty, Label.ScrollSpeed);
         {
-            var option = new EnumOption<T>(values[i], names[i]);
-            {
-                option.OnLeftClick += OnLeftClick_UpdateValue;
+            Text.Width.Set(-DROPDOWN_MARGIN - 4f, 0.6f);
+            Text.Height.Set(upper_height, 0f);
 
-                if (values[i].CompareTo(Value.Value) == 0)
+            Text.Left.Set(-DROPDOWN_MARGIN, 0f);
+
+            Text.HAlign = 1f;
+
+            Text.MaxTextScale = 0.9f;
+
+            Text.TextAlignX = 1f;
+
+            Text.TextColor = BUTTON_COLOR;
+
+            Text.PaddingTop = 3f;
+        }
+        Append(Text);
+
+        LabelContainer.Width.Set(0f, 0.4f);
+
+        for (int i = 0; i < EnumData.Length; i++)
+        {
+            var data = EnumData[i];
+
+            bool selected = data.Value.Equals(Value.Value);
+
+            if (UseFlags)
+            {
+                selected = Value.Value.Has(data.Value);
+
+                if (data.Value.Equals(none))
                 {
-                    option.Selected = true;
+                    continue;
                 }
             }
-            Options[i] = option;
+
+            var option = new EnumOption<T>(data.Value, data.Name);
+            {
+                option.Selected = selected;
+
+                option.OnLeftClick += OnLeftClick_UpdateValue;
+            }
+            Grid.Add(option);
         }
 
-        Grid.AddRange(Options);
+        UpdateText();
 
         return;
 
         void OnLeftClick_UpdateValue(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (listeningElement is not EnumOption<T> option || option.Selected)
+            if (listeningElement is not EnumOption<T> option)
             {
                 return;
             }
 
-            ResetList();
+            if (UseFlags)
+            {
+                option.Selected = !option.Selected;
 
-            option.Selected = true;
+                Value = ConfigValue<T>.Set(
+                    option.Selected
+                    ? Value.Value.Include(option.Value)
+                    : Value.Value.Remove(option.Value)
+                );
+            }
+            else
+            {
+                if (option.Selected)
+                {
+                    return;
+                }
 
-            Value = ConfigValue<T>.Set(option.Value);
+                ResetGrid();
+
+                option.Selected = true;
+
+                Value = ConfigValue<T>.Set(option.Value);
+            }
+
+            UpdateText();
 
             SoundEngine.PlaySound(in SoundID.MenuTick);
         }
 
-        void ResetList()
+        void ResetGrid()
         {
             foreach (var element in Grid)
             {
@@ -750,6 +813,37 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
                 }
 
                 option.Selected = false;
+            }
+        }
+
+        void UpdateText()
+        {
+            if (UseFlags)
+            {
+                var names = EnumData
+                    .Where(d => Value.Value.Has(d.Value))
+                    .Select(d => d.Name.Value);
+
+                if (Value.Value.Equals(none))
+                {
+                    Text.SetText(
+                        EnumData.First().Value.Equals(none)
+                        ? names.First()
+                        : "...");
+
+                    return;
+                }
+
+                if (EnumData[0].Value.Equals(none))
+                {
+                    names = names.Skip(1);
+                }
+
+                Text.SetText(string.Join(", ", names));
+            }
+            else
+            {
+                Text.SetText(EnumData.First(d => d.Value.Equals(Value.Value)).Name.Value);
             }
         }
     }
