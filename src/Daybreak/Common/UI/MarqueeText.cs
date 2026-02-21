@@ -83,7 +83,7 @@ public class MarqueeText<T> : UIElement
         DynamicSpriteFont font = Large ? FontAssets.DeathText.Value : FontAssets.MouseText.Value;
 
         Vector2 textSize = ChatManager.GetStringSize(font, Text, new Vector2(textScale));
-        textSize.X += margin * textScale;
+        //textSize.X += margin * textScale;
 
         var dims = this.InnerDimensions;
 
@@ -157,15 +157,15 @@ public class MarqueeText<T> : UIElement
             var textSize = ChatManager.GetStringSize(font, Text, Vector2.One);
             var origin = new Vector2(textSize.X * TextAlignX, textSize.Y * TextAlignY);
 
-            if (textSize.X >= dims.Width)
+            if (textSize.X * textScale >= dims.Width)
             {
-                var offset = scroll * textScale;
+                var offset = scroll;
 
                 position.X -= offset;
             }
 
             // Chat tags don't correctly account for origin nor scale/rotation.
-            position -= origin;
+            position -= origin * textScale;
 
             ChatManager.DrawColorCodedStringWithShadow(
                 spriteBatch,

@@ -467,7 +467,7 @@ internal static class InputHelpers
                     spriteBatch,
                     font,
                     text,
-                    position - origin,
+                    position - (origin * scale),
                     color,
                     shadowColor,
                     0f,

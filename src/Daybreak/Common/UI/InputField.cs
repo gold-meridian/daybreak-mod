@@ -307,7 +307,7 @@ public class InputField : UIPanel
 
         var cursorIndex = Math.Min(InputHelpers.CursorPositon, Text.Length);
 
-        if (currentlyWriting && textSize.X >= dims.Width)
+        if (currentlyWriting && textSize.X * TextScale >= dims.Width)
         {
             var cursorPosition =
                 AllowChatTags
@@ -324,7 +324,7 @@ public class InputField : UIPanel
                 ? (dims.Width * TextAlignX)
                 : (dims.Width * (1f - TextAlignX));
 
-            offset = Utils.Remap(Math.Abs(offset), width, textSize.X, 0f, textSize.X - width) * Math.Sign(offset);
+            offset = Utils.Remap(Math.Abs(offset), width, textSize.X * TextScale, 0f, (textSize.X * TextScale) - width) * Math.Sign(offset);
             {
                 position.X -= offset;
             }
