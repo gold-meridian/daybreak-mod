@@ -52,6 +52,9 @@ public class MarqueeText<T> : UIElement
         Large = large;
 
         TextColor = Color.White;
+
+        PaddingLeft = 4f;
+        PaddingRight = 4f;
     }
 
     public override void Recalculate()
@@ -78,12 +81,9 @@ public class MarqueeText<T> : UIElement
     {
         base.Update(gameTime);
 
-        const float margin = 15f;
-
         DynamicSpriteFont font = Large ? FontAssets.DeathText.Value : FontAssets.MouseText.Value;
 
         Vector2 textSize = ChatManager.GetStringSize(font, Text, new Vector2(textScale));
-        //textSize.X += margin * textScale;
 
         var dims = this.InnerDimensions;
 
@@ -153,7 +153,7 @@ public class MarqueeText<T> : UIElement
         spriteBatch.Begin(ss with { RasterizerState = OverflowHiddenRasterizerState });
         {
             var font = FontAssets.MouseText.Value;
-            var position = new Vector2(dims.X + (dims.Width * TextAlignX) + 2f, dims.Y + (dims.Height * TextAlignY) + 4);
+            var position = new Vector2(dims.X + (dims.Width * TextAlignX), dims.Y + (dims.Height * TextAlignY) + 4);
             var textSize = ChatManager.GetStringSize(font, Text, Vector2.One);
             var origin = new Vector2(textSize.X * TextAlignX, textSize.Y * TextAlignY);
 

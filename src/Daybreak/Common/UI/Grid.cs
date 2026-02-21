@@ -35,7 +35,7 @@ public class Grid : UIList
         {
             if (i >= 1 && i % Columns == 0)
             {
-                totalHeight += height + ListPadding;
+                totalHeight += height + ((i >= _items.Count - 1) ? 0 : ListPadding);
                 height = 0f;
             }
 
@@ -49,7 +49,7 @@ public class Grid : UIList
             height = MathF.Max(height, _items[i].OuterDimensions.Height);
         }
 
-        totalHeight += height + ListPadding;
+        totalHeight += height;
 
         _innerListHeight = totalHeight;
     }
