@@ -924,7 +924,7 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
                 return;
             }
 
-            if (option.Parent is UIList list)
+            if (option.Parent.Parent is UIList list)
             {
                 ResetList(list);
             }
