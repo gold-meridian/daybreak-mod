@@ -574,14 +574,14 @@ public class ColorElement : DropdownConfigElement<Color>
         }
         Append(ColorPreview);
 
-        ColorInput = new InputField(ShowAlpha ? "#RRGGBBAA" : "#RRGGBB");
+        ColorInput = new InputField(Input_HintText);
         {
             ColorInput.HAlign = 1f;
 
             ColorInput.Top.Set(2f, 0f);
             ColorInput.Height.Set(26f, 0f);
 
-            ColorInput.Width.Set(ShowAlpha ? 135f : 100f, 0f);
+            ColorInput.Width.Set(ShowAlpha ? 110f : 85f, 0f);
 
             ColorInput.Left.Set(-DROPDOWN_MARGIN - 30f - margin, 0f);
 
@@ -639,6 +639,11 @@ public class ColorElement : DropdownConfigElement<Color>
             PopupLayer?.AppendPopup(panel, position);
 
             SoundEngine.PlaySound(SoundID.MenuOpen);
+        }
+
+        string Input_HintText()
+        {
+            return "#" + (ShowAlpha ? Value.Value.Hex4() : Value.Value.Hex3());
         }
 
         void Input_ParseText(InputField obj)
