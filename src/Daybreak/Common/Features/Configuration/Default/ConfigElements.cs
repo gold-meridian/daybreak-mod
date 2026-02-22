@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -24,6 +25,7 @@ using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Core;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
+using static TerrariaOverhaul.Common.ProjectileEffects.ProjectileDecals;
 
 namespace Daybreak.Common.Features.Configuration;
 
@@ -369,6 +371,8 @@ public abstract class DropdownConfigElement<T> : ConfigElement<T>
         }
     }
 
+    public Action? OnOpen;
+
     private UIElement container;
 
     protected UIElement InnerElement;
@@ -424,6 +428,12 @@ public abstract class DropdownConfigElement<T> : ConfigElement<T>
             DropdownButton.OnLeftClick += (_, _) =>
             {
                 Open = !Open;
+
+                if (Open)
+                {
+                    OnOpen?.Invoke();
+                }
+
                 SoundEngine.PlaySound(Open ? SoundID.MenuOpen : SoundID.MenuClose);
             };
         }
@@ -586,6 +596,8 @@ public class ColorElement : DropdownConfigElement<Color>
 
         LabelContainer.Width.Set(ColorInput.Width.Pixels - DROPDOWN_MARGIN - 30f - (margin * 2f), 1f);
 
+        OnOpen += OnOpen_RefreshColor;
+
         return;
 
         void OnChanged_UpdateColor(ColorPicker obj)
@@ -622,7 +634,7 @@ public class ColorElement : DropdownConfigElement<Color>
             }
             panel.Append(picker);
 
-            var position = listeningElement.Dimensions.Center();
+            var position = listeningElement.Dimensions.BottomRight();
 
             PopupLayer?.AppendPopup(panel, position);
 
@@ -645,6 +657,11 @@ public class ColorElement : DropdownConfigElement<Color>
         void Input_AcceptText(InputField obj)
         {
             obj.Text = string.Empty;
+        }
+
+        void OnOpen_RefreshColor()
+        {
+            Picker.Color = Value.Value;
         }
     }
     protected static bool TryParseHex(string hexString, bool alpha, out Color color)
@@ -702,8 +719,6 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
 
         var underlyingType = Enum.GetUnderlyingType(type);
 
-        var none = (T)default;
-
         EnumData = Enum.GetValues<T>().Zip(GetLocalizedNames()).ToArray();
 
         UseFlags = typeof(T).IsDefined(typeof(FlagsAttribute));
@@ -733,77 +748,75 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
             Text.TextColor = BUTTON_COLOR;
 
             Text.PaddingTop = 3f;
+
+            Text.OnMouseOver += OnMouseOver_UpdateColors;
+            Text.OnMouseOut += OnMouseOut_UpdateColors;
+
+            Text.OnLeftClick += OnLeftClick_ShowPopup;
         }
         Append(Text);
 
         LabelContainer.Width.Set(0f, 0.4f);
 
-        for (int i = 0; i < EnumData.Length; i++)
-        {
-            var data = EnumData[i];
+        var options = CreateOptions();
 
-            bool selected = data.Value.Equals(Value.Value);
-
-            if (UseFlags)
-            {
-                selected = Value.Value.Has(data.Value);
-
-                if (data.Value.Equals(none))
-                {
-                    continue;
-                }
-            }
-
-            var option = new EnumOption<T>(data.Value, data.Name);
-            {
-                option.Selected = selected;
-
-                option.OnLeftClick += OnLeftClick_UpdateValue;
-            }
-            Grid.Add(option);
-        }
+        Grid.AddRange(options);
 
         UpdateText();
 
+        OnOpen += OnOpen_RefreshValue;
+
         return;
 
-        void OnLeftClick_UpdateValue(UIMouseEvent evt, UIElement listeningElement)
+        void OnMouseOver_UpdateColors(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (listeningElement is not EnumOption<T> option)
-            {
-                return;
-            }
-
-            if (UseFlags)
-            {
-                option.Selected = !option.Selected;
-
-                Value = ConfigValue<T>.Set(
-                    option.Selected
-                    ? Value.Value.Include(option.Value)
-                    : Value.Value.Remove(option.Value)
-                );
-            }
-            else
-            {
-                if (option.Selected)
-                {
-                    return;
-                }
-
-                ResetGrid();
-
-                option.Selected = true;
-
-                Value = ConfigValue<T>.Set(option.Value);
-            }
-
-            UpdateText();
+            Text?.TextColor = BUTTON_HOVER_COLOR;
 
             SoundEngine.PlaySound(in SoundID.MenuTick);
         }
 
-        void ResetGrid()
+        void OnMouseOut_UpdateColors(UIMouseEvent evt, UIElement listeningElement)
+        {
+            Text?.TextColor = BUTTON_COLOR;
+        }
+
+        void OnLeftClick_ShowPopup(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (Open)
+            {
+                return;
+            }
+
+            var panel = new UIPanel();
+            {
+                panel._backgroundTexture = AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
+                panel.BorderColor = Color.Transparent;
+
+                panel.Width.Set(200f, 0f);
+            }
+
+            var list = new UIList();
+            {
+                list.Width.Set(0f, 1f);
+                list.Height.Set(0f, 1f);
+            }
+            panel.Append(list);
+
+            var options = CreateOptions();
+            list.AddRange(options);
+
+            var position = listeningElement.Dimensions.BottomRight();
+
+            PopupLayer?.AppendPopup(panel, position);
+
+            panel.Height.Set(list.GetTotalHeight() - list.ListPadding + panel.PaddingTop + panel.PaddingBottom, 0f);
+
+            PopupLayer?.Recalculate();
+
+            SoundEngine.PlaySound(SoundID.MenuOpen);
+        }
+
+        void OnOpen_RefreshValue()
         {
             foreach (var element in Grid)
             {
@@ -812,47 +825,21 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
                     continue;
                 }
 
-                option.Selected = false;
-            }
-        }
+                bool selected = option.Value.Equals(Value.Value);
 
-        void UpdateText()
-        {
-            if (UseFlags)
-            {
-                var names = EnumData
-                    .Where(d => Value.Value.Has(d.Value))
-                    .Select(d => d.Name.Value);
-
-                if (Value.Value.Equals(none))
+                if (UseFlags)
                 {
-                    Text.SetText(
-                        EnumData.First().Value.Equals(none)
-                        ? names.First()
-                        : "...");
+                    selected = Value.Value.Has(option.Value);
 
-                    return;
+                    if (option.Value.Equals((T)default))
+                    {
+                        continue;
+                    }
                 }
 
-                if (EnumData[0].Value.Equals(none))
-                {
-                    names = names.Skip(1);
-                }
-
-                Text.SetText(string.Join(", ", names));
-            }
-            else
-            {
-                Text.SetText(EnumData.First(d => d.Value.Equals(Value.Value)).Name.Value);
+                option.Selected = selected;
             }
         }
-    }
-
-    public override void Recalculate()
-    {
-        base.Recalculate();
-
-        InnerHeight = Grid.GetTotalHeight();
     }
 
     protected LocalizedText[] GetLocalizedNames()
@@ -878,6 +865,131 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
         }
 
         return result;
+    }
+
+    protected IEnumerable<EnumOption<T>> CreateOptions()
+    {
+        var options = new List<EnumOption<T>>();
+
+        for (int i = 0; i < EnumData.Length; i++)
+        {
+            var data = EnumData[i];
+
+            bool selected = data.Value.Equals(Value.Value);
+
+            if (UseFlags)
+            {
+                selected = Value.Value.Has(data.Value);
+
+                if (data.Value.Equals((T)default))
+                {
+                    continue;
+                }
+            }
+
+            var option = new EnumOption<T>(data.Value, data.Name);
+            {
+                option.Selected = selected;
+
+                option.OnLeftClick += UpdateValue;
+            }
+
+            options.Add(option);
+        }
+
+        return options;
+    }
+
+    protected void UpdateValue(UIMouseEvent evt, UIElement listeningElement)
+    {
+        if (listeningElement is not EnumOption<T> option)
+        {
+            return;
+        }
+
+        if (UseFlags)
+        {
+            option.Selected = !option.Selected;
+
+            Value = ConfigValue<T>.Set(
+                option.Selected
+                ? Value.Value.Include(option.Value)
+                : Value.Value.Remove(option.Value)
+            );
+        }
+        else
+        {
+            if (option.Selected)
+            {
+                return;
+            }
+
+            if (option.Parent is UIList list)
+            {
+                ResetList(list);
+            }
+
+            option.Selected = true;
+
+            Value = ConfigValue<T>.Set(option.Value);
+        }
+
+        UpdateText();
+
+        SoundEngine.PlaySound(in SoundID.MenuTick);
+
+        return;
+
+        void ResetList(UIList list)
+        {
+            foreach (var element in list)
+            {
+                if (element is not EnumOption<T> option)
+                {
+                    continue;
+                }
+
+                option.Selected = false;
+            }
+        }
+    }
+
+    protected void UpdateText()
+    {
+        if (UseFlags)
+        {
+            var names = EnumData
+                .Where(d => Value.Value.Has(d.Value))
+                .Select(d => d.Name.Value);
+
+            if (Value.Value.Equals((T)default))
+            {
+                Text.SetText(
+                    EnumData.First().Value.Equals((T)default)
+                    ? names.First()
+                    : "...");
+
+                return;
+            }
+
+            if (EnumData[0].Value.Equals((T)default))
+            {
+                names = names.Skip(1);
+            }
+
+            Text.SetText(string.Join(", ", names));
+        }
+        else
+        {
+            Text.SetText(EnumData.First(d => d.Value.Equals(Value.Value)).Name.Value);
+        }
+    }
+
+    public override void Recalculate()
+    {
+        base.Recalculate();
+
+        InnerHeight = Grid.GetTotalHeight();
     }
 
     protected sealed class EnumOption<T> : UIAutoScaleTextTextPanel<LocalizedText> where T : struct, Enum
