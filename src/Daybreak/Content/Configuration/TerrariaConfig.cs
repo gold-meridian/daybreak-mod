@@ -4,7 +4,6 @@ using Terraria;
 using Terraria.GameInput;
 using Terraria.Graphics.Light;
 using Terraria.ModLoader;
-using static Daybreak.Content.Configuration.TerrariaConfig.Video;
 
 namespace Daybreak.Content.Configuration;
 
@@ -125,7 +124,7 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
-               .WithDisplayName(Terraria.Localization.Language.GetText("UI.Video")) // Video
+               .WithDisplayName(Lang.menu[63]) // Video
                .Register(Config, Mod, nameof(Video));
 
         //  Resolution - ???
