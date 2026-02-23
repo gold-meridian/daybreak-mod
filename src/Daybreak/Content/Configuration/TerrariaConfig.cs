@@ -1,6 +1,10 @@
 ﻿using Daybreak.Common.Features.Configuration;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameInput;
+using Terraria.Graphics.Light;
 using Terraria.ModLoader;
+using static Daybreak.Content.Configuration.TerrariaConfig.Video;
 
 namespace Daybreak.Content.Configuration;
 
@@ -54,90 +58,35 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
-               // .WithIcon(c => Assets.Images.Configuration.GeneralTerrariaIcon.Asset)
+               .WithDisplayName(Lang.menu[114]) // General
                .Register(Config, Mod, nameof(General));
 
-        // bool Autosave On/Off
-        /*
-                int num22 = 0;
-                if (autoSave)
-                    array9[num22] = Lang.menu[67].Value;
-                else
-                    array9[num22] = Lang.menu[68].Value;
+        // Autosave - On/Off
+        // Autopause - On/Off
+        // Map Enabled - On/Off
+        // Hide Password - On/Off
 
-                if (selectedMenu == num22) {
-                    SoundEngine.PlaySound(12);
-                    if (autoSave)
-                        autoSave = false;
-                    else
-                        autoSave = true;
-                }
-         */
+        // TODO: Localization
+
+        // LegacyMenu.67/LegacyMenu.68
         public static ConfigEntry<bool> Autosave { get; } =
             Define(() => ref Main.autoSave)
                .WithCategories(Category)
                .Register(Config, Mod);
 
-        // bool Autopause On/Off
-        /*
-                num22++;
-                if (autoPause)
-                    array9[num22] = Lang.menu[69].Value;
-                else
-                    array9[num22] = Lang.menu[70].Value;
-
-                if (selectedMenu == num22) {
-                    SoundEngine.PlaySound(12);
-                    if (autoPause)
-                        autoPause = false;
-                    else
-                        autoPause = true;
-                }
-         */
+        // LegacyMenu.69/LegacyMenu.70
         public static ConfigEntry<bool> Autopause { get; } =
             Define(() => ref Main.autoPause)
                .WithCategories(Category)
                .Register(Config, Mod);
 
-        // bool Map Enabled/Disabled
-        /*
-                num22++;
-                if (mapEnabled)
-                    array9[num22] = Lang.menu[112].Value;
-                else
-                    array9[num22] = Lang.menu[113].Value;
-
-                if (selectedMenu == num22) {
-                    SoundEngine.PlaySound(12);
-                    if (mapEnabled)
-                        mapEnabled = false;
-                    else
-                        mapEnabled = true;
-                }
-         */
+        // LegacyMenu.112/LegacyMenu.113
         public static ConfigEntry<bool> MapEnabled { get; } =
             Define(() => ref Main.mapEnabled)
                .WithCategories(Category)
                .Register(Config, Mod);
 
-        // bool Passwords: Visible/Hidden
-        /*
-
-                num22++;
-                array9[num22] = (HidePassword ? Lang.menu[212].Value : Lang.menu[211].Value);
-                if (selectedMenu == num22) {
-                    SoundEngine.PlaySound(12);
-                    HidePassword = !HidePassword;
-                }
-
-                num22++;
-                array9[num22] = Lang.menu[5].Value;
-                if (selectedMenu == num22 || flag5) {
-                    flag5 = false;
-                    menuMode = 11;
-                    SoundEngine.PlaySound(11);
-                }
-         */
+        // LegacyMenu.211/LegacyMenu.212
         public static ConfigEntry<bool> HidePassword { get; } =
             Define(() => ref Main.HidePassword)
                .WithCategories(Category)
@@ -149,18 +98,21 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
+               .WithDisplayName(Lang.menu[210]) // Interface
                .Register(Config, Mod, nameof(Interface));
 
-        // bool Pickup Text On/Off
-        // bool Event Progress Bar On/Off
-        // bool Placement Preview On/Off
-        // bool Highlight New Items On/Off
-        // bool Tile Grid On/Off
-        // bool Gamepad Instructions On/Off
-        // ??? Minimap Border: {}
-        // ??? Health and Mana Style: {}
-        // bool Boss Health Bar Numbers: On/Off
-        // ??? Boss bar Style: {}
+        //  Pickup Text - On/Off
+        //  Event Progress Bar - On/Off
+        //  Placement Preview - On/Off
+        //  Highlight New Items - On/Off
+        //  Tile Grid - On/Off
+        //  Gamepad Instructions - On/Off
+        //  ??? Minimap Border: {}
+        //  ??? Health and Mana Style: {}
+        //  Boss Health Bar Numbers - On/Off
+        //  ??? Boss bar Style: {}
+
+        // TODO: Localization
 
         public static ConfigEntry<bool> LoadStub1 { get; } =
             Define(() => ref Main.HidePassword)
@@ -173,25 +125,193 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
+               .WithDisplayName(Terraria.Localization.Language.GetText("UI.Video")) // Video
                .Register(Config, Mod, nameof(Video));
 
-        // Resolution sub-menu
-        // - Fullscreen resolution selection
-        // - Fullscreen/Windowed
-        // Parallax sub-menu
-        // - Parallax slider (0-100)
-        // bool Frame Skip On/Off
-        // ??? Lighting: {}
-        // ??? Quality: {}
-        // bool Background On/Off
-        // bool Blood and Gore On/Off
-        // bool Miner's Wobble: Enabled/Disabled
-        // bool Windy Environment: Enabled/Disabled
+        //  Resolution - ???
+        //  Fullscreen Toggle - On/Off
+        // Show Background - On/Off
+        // Background Parallax - 0-100%
+        // Lighting Mode - White, Retro, Trippy, Color
+        // Quality - Auto, Low, Medium, High
+        //  Frame Skip - Off, On, Subtle
+        // Storm Effects - On/Off
+        // Heat Distortion - On/Off
+        //  Windy Environment - On/Off
+        // Wave Quality - Off, Low, Medium, High
+        //  Blood and Gore - On/Off
+        //  Miner's Wobble - On/Off
+        
+        // TODO: Localization
 
-        public static ConfigEntry<bool> LoadStub2 { get; } =
-            Define(() => ref Main.HidePassword)
+#region Background
+
+        // LegacyMenu.100/LegacyMenu.101
+        public static ConfigEntry<bool> ShowBackground { get; } =
+            Define(() => ref Main.BackgroundEnabled)
                .WithCategories(Category)
                .Register(Config, Mod);
+
+        // Min 0f
+        // Max 1f
+        public static ConfigEntry<float> BackgroundParallax { get; } =
+           ConfigEntry<float>
+              .Define()
+              .WithConfigSide(ConfigSide.NoSync)
+              .WithValueTransformer(
+                   getter: (_, layer, localValue) =>
+                   {
+                       if (layer == ConfigValueLayer.User)
+                       {
+                           return ConfigValue<float>.Set(Main.bgScroll);
+                       }
+
+                       return localValue;
+                   },
+                   setter: (_, layer, ref storedValue, newValue) =>
+                   {
+                       if (layer == ConfigValueLayer.User)
+                       {
+                           Main.bgScroll = (int)(newValue.Value * 100f);
+                           Main.caveParallax = 1f - Main.bgScroll / 500f;
+                       }
+
+                       storedValue = newValue;
+                   }
+               )
+              .WithSerialization(
+                   serializer: (_, _) => null,
+                   deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
+               )
+               .WithCategories(Category)
+               .WithDisplayName(Lang.menu[52]) // Parallax
+               .Register(Config, Mod);
+
+#endregion
+
+        public static ConfigEntry<LightMode> LightingMode { get; } =
+            ConfigEntry<LightMode>
+               .Define()
+               .WithConfigSide(ConfigSide.NoSync)
+               .WithValueTransformer(
+                    getter: (_, layer, localValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            return ConfigValue<LightMode>.Set(Lighting.Mode);
+                        }
+
+                        return localValue;
+                    },
+                    setter: (_, layer, ref storedValue, newValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            Lighting.Mode = newValue.Value;
+                        }
+
+                        storedValue = newValue;
+                    }
+                )
+               .WithSerialization(
+                    serializer: (_, _) => null,
+                    deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
+                )
+                .WithCategories(Category)
+                .Register(Config, Mod);
+
+        public enum QualityMode : int
+        {
+            Auto,
+            Low,
+            Medium,
+            High
+        }
+
+        public static ConfigEntry<QualityMode> Quality { get; } =
+            ConfigEntry<QualityMode>
+              .Define()
+              .WithConfigSide(ConfigSide.NoSync)
+              .WithValueTransformer(
+                   getter: (_, layer, localValue) =>
+                   {
+                       if (layer == ConfigValueLayer.User)
+                       {
+                           return ConfigValue<QualityMode>.Set((QualityMode)Main.qaStyle);
+                       }
+
+                       return localValue;
+                   },
+                   setter: (_, layer, ref storedValue, newValue) =>
+                   {
+                       if (layer == ConfigValueLayer.User)
+                       {
+                           Main.qaStyle = (int)newValue.Value;
+                       }
+
+                       storedValue = newValue;
+                   }
+               )
+              .WithSerialization(
+                   serializer: (_, _) => null,
+                   deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
+               )
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+#region Effects
+        // GameUI.StormEffects
+        public static ConfigEntry<bool> StormEffects { get; } =
+            Define(() => ref Main.UseStormEffects)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+        // GameUI.HeatDistortion
+        public static ConfigEntry<bool> HeatDistortion { get; } =
+            Define(() => ref Main.UseHeatDistortion)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+        public enum WaveQualityMode : int
+        {
+            Off,
+            Low,
+            Medium,
+            High
+        }
+
+        // GameUI.WaveQuality
+        public static ConfigEntry<WaveQualityMode> WaveQuality { get; } =
+            ConfigEntry<WaveQualityMode>
+               .Define()
+               .WithConfigSide(ConfigSide.NoSync)
+               .WithValueTransformer(
+                    getter: (_, layer, localValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            return ConfigValue<WaveQualityMode>.Set((WaveQualityMode)Main.WaveQuality);
+                        }
+
+                        return localValue;
+                    },
+                    setter: (_, layer, ref storedValue, newValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            Main.WaveQuality = (int)newValue.Value;
+                        }
+
+                        storedValue = newValue;
+                    }
+               )
+               .WithSerialization(
+                    serializer: (_, _) => null,
+                    deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
+               )
+               .WithCategories(Category)
+               .Register(Config, Mod);
+#endregion
     }
 
     public static class Volume
@@ -201,12 +321,35 @@ internal static class TerrariaConfig
                .Define()
                .Register(Config, Mod, nameof(Volume));
 
-        // Music: 0%-100%
-        // Sound: 0%-100%
-        // Ambient: 0%-100%
+        // Music Volume - 0-100%
+        // Sound Volume - 0-100%
+        // Ambient Volume - 0-100%
 
-        public static ConfigEntry<bool> LoadStub3 { get; } =
-            Define(() => ref Main.HidePassword)
+        // TODO: Localization
+
+        // Will need to display these as percentages.
+
+        // Min 0f
+        // Max 1f
+        // LegacyMenu.99/GameUI.Music
+        public static ConfigEntry<float> MusicVolume { get; } =
+            Define(() => ref Main.musicVolume)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+        // Min 0f
+        // Max 1f
+        // LegacyMenu.98
+        public static ConfigEntry<float> SoundVolume { get; } =
+            Define(() => ref Main.soundVolume)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+        // Min 0f
+        // Max 1f
+        // LegacyMenu.119
+        public static ConfigEntry<float> AmbientVolume { get; } =
+            Define(() => ref Main.ambientVolume)
                .WithCategories(Category)
                .Register(Config, Mod);
     }
@@ -216,19 +359,119 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
+               .WithDisplayName(Lang.menu[218]) // Cursor
                .Register(Config, Mod, nameof(Cursor));
 
-        // Cursor Color sub-menu
-        // - various color sliders
-        // Border Color sub-menu
-        // - various color sliders
-        // ??? Smart Cursor Mode: {}
-        // ??? Smart Cursor Priority: {}
-        // bool Smart Block Placement: Enabled/Disabled
-        // ??? Lock On Priority: {}
+        // Smart Cursor Usage - Hold, Toggle
+        // Smart Cursor Priority - Pickaxe to Axe, Axe to Pickaxe
+        // Smart Cursor Block Placement - On/Off
+        // Cursor Color - Color
+        // Cursor Outline Color - Color
+        // Lock-on Priority - FocusTarget, TargetClosest, ThreeDS
 
-        public static ConfigEntry<bool> LoadStub4 { get; } =
-            Define(() => ref Main.HidePassword)
+        // TODO: Localization
+
+#region Smart Cursor
+        public enum SmartCursorUsageMode : int
+        {
+            Hold,
+            Toggle
+        }
+
+        // LegacyMenu.121/LegacyMenu.122
+        public static ConfigEntry<SmartCursorUsageMode> SmartCursorUsage { get; } =
+            ConfigEntry<SmartCursorUsageMode>
+               .Define()
+               .WithConfigSide(ConfigSide.NoSync)
+               .WithValueTransformer(
+                    getter: (_, layer, localValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            return ConfigValue<SmartCursorUsageMode>.Set((SmartCursorUsageMode)Main.cSmartCursorModeIsToggleAndNotHold.ToInt());
+                        }
+
+                        return localValue;
+                    },
+                    setter: (_, layer, ref storedValue, newValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            Main.cSmartCursorModeIsToggleAndNotHold = (int)newValue.Value >= 1;
+                        }
+
+                        storedValue = newValue;
+                    }
+               )
+               .WithSerialization(
+                    serializer: (_, _) => null,
+                    deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
+               )
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+        public enum SmartCursorPriorityMode : int
+        {
+            PickaxeToAxe,
+            AxeToPickaxe,
+        }
+
+        //LegacyMenu.213/LegacyMenu.214
+        public static ConfigEntry<SmartCursorPriorityMode> SmartCursorPriority { get; } =
+            ConfigEntry<SmartCursorPriorityMode>
+               .Define()
+               .WithConfigSide(ConfigSide.NoSync)
+               .WithValueTransformer(
+                    getter: (_, layer, localValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            return ConfigValue<SmartCursorPriorityMode>.Set((SmartCursorPriorityMode)Player.SmartCursorSettings.SmartAxeAfterPickaxe.ToInt());
+                        }
+
+                        return localValue;
+                    },
+                    setter: (_, layer, ref storedValue, newValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            Player.SmartCursorSettings.SmartAxeAfterPickaxe = (int)newValue.Value >= 1;
+                        }
+
+                        storedValue = newValue;
+                    }
+               )
+               .WithSerialization(
+                    serializer: (_, _) => null,
+                    deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
+               )
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+        //LegacyMenu.215/LegacyMenu.216
+        public static ConfigEntry<bool> SmartBlockPlacement { get; } =
+            Define(() => ref Player.SmartCursorSettings.SmartBlocksEnabled)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+#endregion
+
+#region Cursor Color
+        public static ConfigEntry<Color> CursorColor { get; } =
+            Define(() => ref Main.cursorColor)
+               .WithCategories(Category)
+               .WithDisplayName(Lang.menu[64]) // Cursor Color
+               .Register(Config, Mod);
+
+        public static ConfigEntry<Color> CursorOutlineColor { get; } =
+            Define(() => ref Main.MouseBorderColor)
+               .WithCategories(Category)
+               .WithDisplayName(Lang.menu[217]) // Border Color
+               .Register(Config, Mod);
+        #endregion
+
+        // LegacyMenu.232/LegacyMenu.233/LegacyMenu.234
+        public static ConfigEntry<LockOnHelper.LockOnMode> LockOnPriority { get; } =
+            Define(() => ref LockOnHelper.UseMode)
                .WithCategories(Category)
                .Register(Config, Mod);
     }

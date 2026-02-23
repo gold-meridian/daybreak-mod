@@ -783,9 +783,19 @@ public static class ConfigEntryOptionsExtensions
             return options.With(x => x.Nullability = _ => ConfigNullability.DisallowNull);
         }
 
+        public ConfigEntryOptions<T> WithDisplayName(LocalizedText displayName)
+        {
+            return options.With(x => x.DisplayName = _ => displayName);
+        }
+
         public ConfigEntryOptions<T> WithDisplayName(Func<ConfigEntry<T>, LocalizedText>? displayName)
         {
             return options.With(x => x.DisplayName = displayName);
+        }
+
+        public ConfigEntryOptions<T> WithDescription(LocalizedText description)
+        {
+            return options.With(x => x.Description = _ => description);
         }
 
         public ConfigEntryOptions<T> WithDescription(Func<ConfigEntry<T>, LocalizedText>? description)
