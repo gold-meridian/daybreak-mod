@@ -1,6 +1,8 @@
 ﻿using Daybreak.Common.Features.Configuration;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Enums;
+using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.Graphics.Light;
 using Terraria.ModLoader;
@@ -127,19 +129,19 @@ internal static class TerrariaConfig
                .WithDisplayName(Lang.menu[63]) // Video
                .Register(Config, Mod, nameof(Video));
 
-        //  Resolution - ???
-        //  Fullscreen Toggle - On/Off
+        // - Resolution - ???
+        // - Fullscreen Toggle - On/Off
         // Show Background - On/Off
         // Background Parallax - 0-100%
         // Lighting Mode - White, Retro, Trippy, Color
         // Quality - Auto, Low, Medium, High
-        //  Frame Skip - Off, On, Subtle
+        // - Frame Skip - Off, On, Subtle
         // Storm Effects - On/Off
         // Heat Distortion - On/Off
-        //  Windy Environment - On/Off
+        // Windy Environment - On/Off
         // Wave Quality - Off, Low, Medium, High
-        //  Blood and Gore - On/Off
-        //  Miner's Wobble - On/Off
+        // Blood and Gore - On/Off
+        // Miner's Wobble - On/Off
         
         // TODO: Localization
 
@@ -182,9 +184,9 @@ internal static class TerrariaConfig
                    serializer: (_, _) => null,
                    deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
                )
-               .WithCategories(Category)
-               .WithDisplayName(Lang.menu[52]) // Parallax
-               .Register(Config, Mod);
+              .WithCategories(Category)
+              .WithDisplayName(Lang.menu[52]) // Parallax
+              .Register(Config, Mod);
 
 #endregion
 
@@ -216,8 +218,8 @@ internal static class TerrariaConfig
                     serializer: (_, _) => null,
                     deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
                 )
-                .WithCategories(Category)
-                .Register(Config, Mod);
+               .WithCategories(Category)
+               .Register(Config, Mod);
 
         public enum QualityMode : int
         {
@@ -258,6 +260,12 @@ internal static class TerrariaConfig
                .WithCategories(Category)
                .Register(Config, Mod);
 
+        // LegacyMenu.247/LegacyMenu.248/LegacyMenu.249
+        public static ConfigEntry<FrameSkipMode> FrameSkip { get; } =
+            Define(() => ref Main.FrameSkipMode)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
 #region Effects
         // GameUI.StormEffects
         public static ConfigEntry<bool> StormEffects { get; } =
@@ -268,6 +276,12 @@ internal static class TerrariaConfig
         // GameUI.HeatDistortion
         public static ConfigEntry<bool> HeatDistortion { get; } =
             Define(() => ref Main.UseHeatDistortion)
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+        // UI.TilesSwayInWindOff/UI.TilesSwayInWindOn
+        public static ConfigEntry<bool> WindyEnvironment { get; } =
+            Define(() => ref Main.SettingsEnabled_TilesSwayInWind)
                .WithCategories(Category)
                .Register(Config, Mod);
 
@@ -303,11 +317,49 @@ internal static class TerrariaConfig
 
                         storedValue = newValue;
                     }
-               )
+                )
                .WithSerialization(
                     serializer: (_, _) => null,
                     deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
-               )
+                )
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+        // LegacyMenu.132/LegacyMenu.133
+        public static ConfigEntry<bool> BloodAndGore { get; } =
+            ConfigEntry<bool>
+               .Define()
+               .WithConfigSide(ConfigSide.NoSync)
+               .WithValueTransformer(
+                    getter: (_, layer, localValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            return ConfigValue<bool>.Set(!ChildSafety.Disabled);
+                        }
+
+                        return localValue;
+                    },
+                    setter: (_, layer, ref storedValue, newValue) =>
+                    {
+                        if (layer == ConfigValueLayer.User)
+                        {
+                            ChildSafety.Disabled = !newValue.Value;
+                        }
+
+                        storedValue = newValue;
+                    }
+                )
+               .WithSerialization(
+                    serializer: (_, _) => null,
+                    deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
+                )
+               .WithCategories(Category)
+               .Register(Config, Mod);
+
+        // LegacyMenu.250/LegacyMenu.251
+        public static ConfigEntry<bool> MinersWobble { get; } =
+            Define(() => ref Main.SettingsEnabled_MinersWobble)
                .WithCategories(Category)
                .Register(Config, Mod);
 #endregion
