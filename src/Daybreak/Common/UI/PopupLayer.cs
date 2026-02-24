@@ -8,6 +8,8 @@ namespace Daybreak.Common.UI;
 
 public sealed class PopupLayer : UIElement
 {
+    private UIElement? popup;
+
     public PopupLayer()
     {
         Width.Set(0f, 1f);
@@ -54,17 +56,31 @@ public sealed class PopupLayer : UIElement
 
         RemoveAllChildren();
 
-        Append(element);
-
         element.Activate();
-
         {
-            position -= Vector2.Clamp(element.Dimensions.BottomRight() - Parent.Dimensions.Size(), Vector2.Zero, Parent.Dimensions.Size());
+            var dims = this.InnerDimensions;
+
+            position = Vector2.Clamp(
+                position,
+                dims.TopLeft(),
+                dims.BottomRight() - element.Dimensions.Size()
+            );
+
+            position.X -= PaddingLeft;
+            position.Y -= PaddingTop;
 
             element.Left.Set(position.X, 0f);
             element.Top.Set(position.Y, 0f);
         }
+        Append(element);
 
         element.Recalculate();
+
+        popup = element;
+    }
+
+    public override void Recalculate()
+    {
+        base.Recalculate();
     }
 }

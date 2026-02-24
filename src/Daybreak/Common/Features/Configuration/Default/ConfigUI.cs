@@ -464,6 +464,22 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         RefreshScrollbars();
     }
 
+    public override void Recalculate()
+    {
+        base.Recalculate();
+
+        if (BackPanel is null)
+        {
+            return;
+        }
+
+        const float padding = 4f;
+
+        var panelDims = BackPanel.Dimensions;
+
+        PopupLayer?.PaddingLeft = panelDims.TopRight().X + padding;
+    }
+
 #region Buttons
     void IHaveBackButtonCommand.HandleBackButtonUsage()
     {
