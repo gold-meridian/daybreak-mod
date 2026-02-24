@@ -220,8 +220,48 @@ public class IntElement : RangeElement<int>
 {
     public IntElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
     {
-        Min = -50;
+        Min = 0;
         Max = 100;
+    }
+}
+
+[DefaultConfigElementFor<uint>]
+public class UIntElement : RangeElement<uint>
+{
+    public UIntElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        Min = 0;
+        Max = 100;
+    }
+}
+
+[DefaultConfigElementFor<long>]
+public class LongElement : RangeElement<long>
+{
+    public LongElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        Min = 0;
+        Max = 100;
+    }
+}
+
+[DefaultConfigElementFor<ulong>]
+public class ULongElement : RangeElement<ulong>
+{
+    public ULongElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        Min = 0;
+        Max = 100;
+    }
+}
+
+[DefaultConfigElementFor<byte>]
+public class ByteElement : RangeElement<byte>
+{
+    public ByteElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
+    {
+        Min = 0;
+        Max = byte.MaxValue;
     }
 }
 
@@ -230,8 +270,8 @@ public class FloatElement : RangeElement<float>
 {
     public FloatElement(IConfigEntry entry, bool showIcon) : base(entry, showIcon)
     {
-        Min = -93.4f;
-        Max = 55.432f;
+        Min = 0f;
+        Max = 1f;
     }
 }
 
