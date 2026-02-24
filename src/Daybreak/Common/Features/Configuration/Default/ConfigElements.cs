@@ -674,7 +674,7 @@ public class ColorElement : DropdownConfigElement<Color>
             }
             panel.Append(picker);
 
-            var position = listeningElement.Dimensions.TopRight();
+            var position = listeningElement.Dimensions.BottomRight();
 
             PopupLayer?.AppendPopup(panel, position);
 
@@ -850,7 +850,7 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
             var options = CreateOptions();
             list.AddRange(options);
 
-            var position = listeningElement.Dimensions.TopRight();
+            var position = listeningElement.Dimensions.BottomRight();
 
             PopupLayer?.AppendPopup(panel, position);
 

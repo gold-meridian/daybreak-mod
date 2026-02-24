@@ -56,6 +56,10 @@ public sealed class PopupLayer : UIElement
 
         RemoveAllChildren();
 
+        Append(element);
+
+        element.Recalculate();
+
         element.Activate();
         {
             var dims = this.InnerDimensions;
@@ -66,14 +70,11 @@ public sealed class PopupLayer : UIElement
                 dims.BottomRight() - element.Dimensions.Size()
             );
 
-            position.X -= PaddingLeft;
-            position.Y -= PaddingTop;
+            position -= dims.TopLeft();
 
             element.Left.Set(position.X, 0f);
             element.Top.Set(position.Y, 0f);
         }
-        Append(element);
-
         element.Recalculate();
 
         popup = element;

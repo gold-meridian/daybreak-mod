@@ -317,7 +317,7 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         {
             Config.PopupLayer = PopupLayer;
         }
-        Append(PopupLayer);
+        BackPanel.Append(PopupLayer);
 
         return;
 
@@ -462,22 +462,6 @@ internal abstract class ConfigState : UIState, IHaveBackButtonCommand
         base.Update(gameTime);
 
         RefreshScrollbars();
-    }
-
-    public override void Recalculate()
-    {
-        base.Recalculate();
-
-        if (BackPanel is null)
-        {
-            return;
-        }
-
-        const float padding = 4f;
-
-        var panelDims = BackPanel.Dimensions;
-
-        PopupLayer?.PaddingLeft = panelDims.TopRight().X + padding;
     }
 
 #region Buttons
