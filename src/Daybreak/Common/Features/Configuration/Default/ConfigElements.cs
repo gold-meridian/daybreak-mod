@@ -546,15 +546,13 @@ public abstract class DropdownConfigElement<T> : ConfigElement<T>
 }
 
 [DefaultConfigElementFor<Color>]
-public class ColorElement : DropdownConfigElement<Color>
+public class ColorElement : ConfigElement<Color>
 {
     protected static readonly char[] HEX_CHARACTERS =
         ['#',
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'a', 'b', 'c', 'd', 'e', 'f',
         'A', 'B', 'C', 'D', 'E', 'F'];
-
-    protected ColorPicker Picker;
 
     protected UIPanel ColorPreview;
 
@@ -566,33 +564,7 @@ public class ColorElement : DropdownConfigElement<Color>
     {
         const float slider_margin = 16f + 4f;
 
-        const float picker_size = 170f;
-
-        float pickerWidth = picker_size;
-        float pickerHeight = picker_size + slider_margin;
-
         ShowAlpha = true; // TODO: parse
-
-        if (ShowAlpha)
-        {
-            pickerHeight += slider_margin;
-        }
-
-        Picker = new ColorPicker(ShowAlpha);
-        {
-            Picker.HAlign = 1f;
-
-            Picker.Width.Set(pickerWidth, 0f);
-
-            Picker.Height.Set(pickerHeight, 0f);
-
-            Picker.Color = Value.Value;
-
-            Picker.OnChanged += OnChanged_UpdateColor;
-        }
-        InnerElement.Append(Picker);
-
-        InnerHeight = pickerHeight;
 
         const float margin = 4f;
 
@@ -606,7 +578,7 @@ public class ColorElement : DropdownConfigElement<Color>
             ColorPreview.Width.Set(30, 0f);
             ColorPreview.Height.Set(30, 0f);
 
-            ColorPreview.Left.Set(-DROPDOWN_MARGIN, 0f);
+            ColorPreview.Left.Set(-2f, 0f);
 
             ColorPreview.BackgroundColor = Value.Value;
 
@@ -623,7 +595,7 @@ public class ColorElement : DropdownConfigElement<Color>
 
             ColorInput.Width.Set(ShowAlpha ? 110f : 85f, 0f);
 
-            ColorInput.Left.Set(-DROPDOWN_MARGIN - 30f - margin, 0f);
+            ColorInput.Left.Set(-30f - margin - 2f, 0f);
 
             ColorInput.WhitelistedChars.UnionWith(HEX_CHARACTERS);
 
@@ -634,9 +606,7 @@ public class ColorElement : DropdownConfigElement<Color>
         }
         Append(ColorInput);
 
-        LabelContainer.Width.Set(ColorInput.Width.Pixels - DROPDOWN_MARGIN - 30f - (margin * 2f), 1f);
-
-        OnOpen += OnOpen_RefreshColor;
+        LabelContainer.Width.Set(ColorInput.Width.Pixels - 30f - (margin * 2f) - 2f, 1f);
 
         return;
 
@@ -648,9 +618,14 @@ public class ColorElement : DropdownConfigElement<Color>
 
         void OnLeftClick_ShowPopup(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (Open)
+            const float picker_size = 170f;
+
+            float pickerWidth = picker_size;
+            float pickerHeight = picker_size + slider_margin;
+
+            if (ShowAlpha)
             {
-                return;
+                pickerHeight += slider_margin;
             }
 
             var panel = new UIPanel();
@@ -658,8 +633,8 @@ public class ColorElement : DropdownConfigElement<Color>
                 panel._backgroundTexture = AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
                 panel._borderTexture = AssetReferences.Assets.Images.UI.SmallPanelOutline.Asset;
 
-                panel.Width.Set(Picker.Width.Pixels + panel.PaddingLeft + panel.PaddingRight, 0f);
-                panel.Height.Set(Picker.Height.Pixels + panel.PaddingTop + panel.PaddingBottom, 0f);
+                panel.Width.Set(pickerWidth + panel.PaddingLeft + panel.PaddingRight, 0f);
+                panel.Height.Set(pickerHeight + panel.PaddingTop + panel.PaddingBottom, 0f);
             }
 
             var picker = new ColorPicker(ShowAlpha);
@@ -695,18 +670,12 @@ public class ColorElement : DropdownConfigElement<Color>
 
             Value = ConfigValue<Color>.Set(color);
 
-            Picker.Color = color;
             ColorPreview?.BackgroundColor = color;
         }
 
         void Input_AcceptText(InputField obj)
         {
             obj.Text = string.Empty;
-        }
-
-        void OnOpen_RefreshColor()
-        {
-            Picker.Color = Value.Value;
         }
     }
     protected static bool TryParseHex(string hexString, bool alpha, out Color color)
