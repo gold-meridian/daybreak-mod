@@ -92,7 +92,7 @@ public class InputField : UIPanel
         Hint = hint;
 
         _backgroundTexture = AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
-        BorderColor = Color.Transparent;
+        _borderTexture = AssetReferences.Assets.Images.UI.SmallPanelOutline.Asset;
 
         Width.Set(0f, 1f);
         Height.Set(30f, 0f);

@@ -599,7 +599,7 @@ public class ColorElement : DropdownConfigElement<Color>
         ColorPreview = new UIPanel();
         {
             ColorPreview._backgroundTexture = AssetReferences.Assets.Images.UI.FullPanel.Asset;
-            ColorPreview.BorderColor = Color.Transparent;
+            ColorPreview._borderTexture = AssetReferences.Assets.Images.UI.SmallPanelOutline.Asset;
 
             ColorPreview.HAlign = 1f;
 
@@ -656,7 +656,7 @@ public class ColorElement : DropdownConfigElement<Color>
             var panel = new UIPanel();
             {
                 panel._backgroundTexture = AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
-                panel.BorderColor = Color.Transparent;
+                panel._borderTexture = AssetReferences.Assets.Images.UI.SmallPanelOutline.Asset;
 
                 panel.Width.Set(Picker.Width.Pixels + panel.PaddingLeft + panel.PaddingRight, 0f);
                 panel.Height.Set(Picker.Height.Pixels + panel.PaddingTop + panel.PaddingBottom, 0f);
@@ -674,7 +674,7 @@ public class ColorElement : DropdownConfigElement<Color>
             }
             panel.Append(picker);
 
-            var position = listeningElement.Dimensions.BottomRight();
+            var position = listeningElement.Dimensions.TopRight();
 
             PopupLayer?.AppendPopup(panel, position);
 
@@ -835,7 +835,7 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
             var panel = new UIPanel();
             {
                 panel._backgroundTexture = AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
-                panel.BorderColor = Color.Transparent;
+                panel._borderTexture = AssetReferences.Assets.Images.UI.SmallPanelOutline.Asset;
 
                 panel.Width.Set(200f, 0f);
             }
@@ -850,11 +850,11 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
             var options = CreateOptions();
             list.AddRange(options);
 
-            var position = listeningElement.Dimensions.BottomRight();
+            var position = listeningElement.Dimensions.TopRight();
 
             PopupLayer?.AppendPopup(panel, position);
 
-            panel.Height.Set(list.GetTotalHeight() - list.ListPadding + panel.PaddingTop + panel.PaddingBottom, 0f);
+            panel.MinHeight.Set(list.GetTotalHeight() - list.ListPadding + panel.PaddingTop + panel.PaddingBottom, 0f);
 
             PopupLayer?.Recalculate();
 
@@ -1061,7 +1061,7 @@ public class EnumElement<T> : DropdownConfigElement<T> where T : struct, Enum
             Value = value;
 
             _backgroundTexture = AssetReferences.Assets.Images.UI.EmptyPanel.Asset;
-            BorderColor = Color.Transparent;
+            _borderTexture = AssetReferences.Assets.Images.UI.SmallPanelOutline.Asset;
 
             BackgroundColor = UICommon.DefaultUIBlue;
 
