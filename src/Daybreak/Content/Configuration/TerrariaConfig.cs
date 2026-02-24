@@ -59,7 +59,7 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
-               .WithDisplayName(Lang.menu[114]) // General
+                // .WithDisplayName(Lang.menu[114]) // General
                .Register(Config, Mod, nameof(General));
 
         // Autosave - On/Off
@@ -99,7 +99,7 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
-               .WithDisplayName(Lang.menu[210]) // Interface
+                // .WithDisplayName(Lang.menu[210]) // Interface
                .Register(Config, Mod, nameof(Interface));
 
         //  Pickup Text - On/Off
@@ -126,7 +126,7 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
-               .WithDisplayName(Lang.menu[63]) // Video
+                // .WithDisplayName(Lang.menu[63]) // Video
                .Register(Config, Mod, nameof(Video));
 
         // - Resolution - ???
@@ -135,7 +135,7 @@ internal static class TerrariaConfig
         // Background Parallax - 0-100%
         // Lighting Mode - White, Retro, Trippy, Color
         // Quality - Auto, Low, Medium, High
-        // - Frame Skip - Off, On, Subtle
+        // Frame Skip - Off, On, Subtle
         // Storm Effects - On/Off
         // Heat Distortion - On/Off
         // Windy Environment - On/Off
@@ -146,7 +146,6 @@ internal static class TerrariaConfig
         // TODO: Localization
 
 #region Background
-
         // LegacyMenu.100/LegacyMenu.101
         public static ConfigEntry<bool> ShowBackground { get; } =
             Define(() => ref Main.BackgroundEnabled)
@@ -185,11 +184,11 @@ internal static class TerrariaConfig
                    deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
                )
               .WithCategories(Category)
-              .WithDisplayName(Lang.menu[52]) // Parallax
+               // .WithDisplayName(Lang.menu[52]) // Parallax
               .Register(Config, Mod);
-
 #endregion
 
+        // UI.LightMode_White/UI.LightMode_Retro/UI.LightMode_Trippy/UI.LightMode_Color
         public static ConfigEntry<LightMode> LightingMode { get; } =
             ConfigEntry<LightMode>
                .Define()
@@ -257,8 +256,8 @@ internal static class TerrariaConfig
                    serializer: (_, _) => null,
                    deserializer: (entry, _) => entry.GetLayerValue(ConfigValueLayer.Default)
                )
-               .WithCategories(Category)
-               .Register(Config, Mod);
+              .WithCategories(Category)
+              .Register(Config, Mod);
 
         // LegacyMenu.247/LegacyMenu.248/LegacyMenu.249
         public static ConfigEntry<FrameSkipMode> FrameSkip { get; } =
@@ -410,7 +409,7 @@ internal static class TerrariaConfig
         public static ConfigCategoryHandle Category { get; } =
             ConfigCategory
                .Define()
-               .WithDisplayName(Lang.menu[218]) // Cursor
+                // .WithDisplayName(Lang.menu[218]) // Cursor
                .Register(Config, Mod, nameof(Cursor));
 
         // Smart Cursor Usage - Hold, Toggle
@@ -510,15 +509,15 @@ internal static class TerrariaConfig
         public static ConfigEntry<Color> CursorColor { get; } =
             Define(() => ref Main.cursorColor)
                .WithCategories(Category)
-               .WithDisplayName(Lang.menu[64]) // Cursor Color
+                //.WithDisplayName(Lang.menu[64]) // Cursor Color
                .Register(Config, Mod);
 
         public static ConfigEntry<Color> CursorOutlineColor { get; } =
             Define(() => ref Main.MouseBorderColor)
                .WithCategories(Category)
-               .WithDisplayName(Lang.menu[217]) // Border Color
+                //.WithDisplayName(Lang.menu[217]) // Border Color
                .Register(Config, Mod);
-        #endregion
+#endregion
 
         // LegacyMenu.232/LegacyMenu.233/LegacyMenu.234
         public static ConfigEntry<LockOnHelper.LockOnMode> LockOnPriority { get; } =

@@ -8,6 +8,100 @@ Terraria: {
 		Controls.DisplayName: Controls
 		LanguageCategory.DisplayName: Language
 	}
+
+	ConfigEntry: {
+		Autosave.DisplayName: Autosave
+		Autopause.DisplayName: Autopause
+		MapEnabled.DisplayName: Show Map
+		HidePassword.DisplayName: Hide Password
+		ShowBackground.DisplayName: Show Background
+		BackgroundParallax.DisplayName: Background Parallax
+
+		LightingMode: {
+			DisplayName: Lighting Mode
+
+			LightMode: {
+				White: White
+				Retro: Retro
+				Trippy: Trippy
+				Color: Color
+			}
+		}
+
+		Quality: {
+			DisplayName: Quality
+
+			QualityMode: {
+				Auto: Auto
+				Low: Low
+				Medium: Medium
+				High: High
+			}
+		}
+
+		FrameSkip: {
+			DisplayName: Frame Skip
+
+			FrameSkipMode: {
+				Off: Off
+				On: On
+				Subtle: Subtle
+			}
+		}
+
+		StormEffects.DisplayName: Storm Effects
+		HeatDistortion.DisplayName: Heat Distortion
+		WindyEnvironment.DisplayName: Windy Environment
+
+		WaveQuality: {
+			DisplayName: Wave Quality
+
+			WaveQualityMode: {
+				Off: Off
+				Low: Low
+				Medium: Medium
+				High: High
+			}
+		}
+
+		BloodAndGore.DisplayName: Blood and Gore
+		MinersWobble.DisplayName: Miner's Wobble
+		MusicVolume.DisplayName: Music Volume
+		SoundVolume.DisplayName: Sound Volume
+		AmbientVolume.DisplayName: Ambient Volume
+
+		SmartCursorUsage: {
+			DisplayName: Smart Cursor Mode
+
+			SmartCursorUsageMode: {
+				Hold: Hold
+				Toggle: Toggle
+			}
+		}
+
+		SmartCursorPriority: {
+			DisplayName: Smart Cursor Priority
+
+			SmartCursorPriorityMode: {
+				PickaxeToAxe: Pickaxe to Axe
+				AxeToPickaxe: Axe to Pickaxe
+			}
+		}
+
+		SmartBlockPlacement.DisplayName: Smart Block Placement
+		CursorColor.DisplayName: Cursor Color
+		CursorOutlineColor.DisplayName: Cursor Outline Color
+
+		LockOnPriority: {
+			DisplayName: Lock-on Priority
+
+			LockOnMode: {
+				FocusTarget: Focus Target
+				TargetClosest: Target Closest
+				ThreeDS: Clearest Line
+			}
+		}
+	}
 }
 
 ModLoader.ConfigCategory.General.DisplayName: General
