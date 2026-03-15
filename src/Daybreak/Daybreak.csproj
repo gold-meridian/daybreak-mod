@@ -9,6 +9,7 @@
         <Publicize Include="FNA" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
         <Publicize Include="ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
         <Publicize Include="Luminance" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
+        <Publicize Include="TerrariaOverhaul" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
     </ItemGroup>
 
     <ItemGroup>

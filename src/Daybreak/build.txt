@@ -4,5 +4,5 @@ version = 2.4.0
 homepage = https://discord.gg/6Fm4ZTHVub
 side = NoSync
 
-sortBefore = BetterExpertRarity, PrettyRarities, Luminance
-weakReferences = BetterExpertRarity, PrettyRarities, Luminance
+sortBefore = BetterExpertRarity, PrettyRarities, Luminance, TerrariaOverhaul
+weakReferences = BetterExpertRarity, PrettyRarities, Luminance, TerrariaOverhaul
