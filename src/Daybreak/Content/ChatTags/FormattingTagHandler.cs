@@ -23,15 +23,13 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
     {
         public static Options Parse(string text)
         {
-            var arr = text.Split(',');
-
             var bold = false;
             var italic = false;
             var underline = false;
             var strikethrough = false;
-            foreach (var opt in arr)
+            foreach (var opt in text)
             {
-                switch (opt[0])
+                switch (opt)
                 {
                     case 'b':
                     {
