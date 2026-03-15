@@ -59,8 +59,21 @@ public interface IStatic<TData> : ILoadable
 
     /// <summary>
     ///     Responsible for uninitializing the <typeparamref name="TData"/>.
-    ///     Expected to dispose of resouces, etc.
+    ///     Expected to dispose of resources, etc.
     /// </summary>
     /// <param name="data">The data to clean up/uninitialize.</param>
     protected static abstract void UnloadData(TData data);
+}
+
+/// <summary>
+///     Extensions to static data.
+/// </summary>
+public static class StaticDataExtensions
+{
+    extension<TData>(IStatic<TData>)
+        where TData : IStatic<TData>
+    {
+        /// <inheritdoc cref="IStatic{TData}.Instance"/>
+        public static TData Instance => IStatic<TData>.Instance;
+    }
 }
