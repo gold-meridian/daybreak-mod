@@ -147,7 +147,7 @@ internal static class HookLoader
 
         LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, ResolveStaticHooks);
         LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, CallOnLoads);
-        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, RunStaticConstructors);
+        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes.Where(self.PreJITFilter.ShouldJIT), RunStaticConstructors);
     }
 
     /*
@@ -317,7 +317,7 @@ internal static class HookLoader
         // with this approach because it independently fucks up load orders.  We
         // can just use the Mod instance passed to AddContent, thankfully.
         // Debug.Assert(currentlyLoadingMod is not null);
-
+        
         var methods = instance.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         foreach (var method in methods)
         {
