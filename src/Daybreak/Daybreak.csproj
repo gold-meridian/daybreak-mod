@@ -3,6 +3,7 @@
     <PropertyGroup>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <TmlBuildUseDefaultModImpl>true</TmlBuildUseDefaultModImpl>
+	    <TmlVersion>dev</TmlVersion>
     </PropertyGroup>
 
     <ItemGroup>
