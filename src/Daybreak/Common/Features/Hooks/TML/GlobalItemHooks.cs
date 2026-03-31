@@ -11,10 +11,11 @@ namespace Daybreak.Common.Features.Hooks;
 
 // Hooks to generate for 'Terraria.ModLoader.GlobalItem':
 //     System.Void Terraria.ModLoader.GlobalItem::OnCreated(Terraria.Item,Terraria.DataStructures.ItemCreationContext)
-//     System.Void Terraria.ModLoader.GlobalItem::OnSpawn(Terraria.Item,Terraria.DataStructures.IEntitySource)
+//     System.Void Terraria.ModLoader.GlobalItem::OnSpawn(Terraria.WorldItem,Terraria.DataStructures.IEntitySource)
 //     System.Int32 Terraria.ModLoader.GlobalItem::ChoosePrefix(Terraria.Item,Terraria.Utilities.UnifiedRandom)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalItem::PrefixChance(Terraria.Item,System.Int32,Terraria.Utilities.UnifiedRandom)
 //     System.Boolean Terraria.ModLoader.GlobalItem::AllowPrefix(Terraria.Item,System.Int32)
+//     System.Void Terraria.ModLoader.GlobalItem::ApplyPrefix(Terraria.Item,System.Int32)
 //     System.Boolean Terraria.ModLoader.GlobalItem::CanUseItem(Terraria.Item,Terraria.Player)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalItem::CanAutoReuseItem(Terraria.Item,Terraria.Player)
 //     System.Void Terraria.ModLoader.GlobalItem::UseStyle(Terraria.Item,Terraria.Player,Microsoft.Xna.Framework.Rectangle)
@@ -85,10 +86,10 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalItem::RightClick(Terraria.Item,Terraria.Player)
 //     System.Void Terraria.ModLoader.GlobalItem::ModifyItemLoot(Terraria.Item,Terraria.ModLoader.ItemLoot)
 //     System.Boolean Terraria.ModLoader.GlobalItem::CanStack(Terraria.Item,Terraria.Item)
-//     System.Boolean Terraria.ModLoader.GlobalItem::CanStackInWorld(Terraria.Item,Terraria.Item)
+//     System.Boolean Terraria.ModLoader.GlobalItem::CanStackInWorld(Terraria.WorldItem,Terraria.WorldItem)
 //     System.Void Terraria.ModLoader.GlobalItem::OnStack(Terraria.Item,Terraria.Item,System.Int32)
 //     System.Void Terraria.ModLoader.GlobalItem::SplitStack(Terraria.Item,Terraria.Item,System.Int32)
-//     System.Boolean Terraria.ModLoader.GlobalItem::ReforgePrice(Terraria.Item,System.Int32&,System.Boolean&)
+//     System.Boolean Terraria.ModLoader.GlobalItem::ReforgePrice(Terraria.Item,System.Int64&,System.Boolean&)
 //     System.Boolean Terraria.ModLoader.GlobalItem::CanReforge(Terraria.Item)
 //     System.Void Terraria.ModLoader.GlobalItem::PreReforge(Terraria.Item)
 //     System.Void Terraria.ModLoader.GlobalItem::PostReforge(Terraria.Item)
@@ -97,16 +98,16 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalItem::VerticalWingSpeeds(Terraria.Item,Terraria.Player,System.Single&,System.Single&,System.Single&,System.Single&,System.Single&)
 //     System.Void Terraria.ModLoader.GlobalItem::HorizontalWingSpeeds(Terraria.Item,Terraria.Player,System.Single&,System.Single&)
 //     System.Boolean Terraria.ModLoader.GlobalItem::WingUpdate(System.Int32,Terraria.Player,System.Boolean)
-//     System.Void Terraria.ModLoader.GlobalItem::Update(Terraria.Item,System.Single&,System.Single&)
-//     System.Void Terraria.ModLoader.GlobalItem::PostUpdate(Terraria.Item)
-//     System.Void Terraria.ModLoader.GlobalItem::GrabRange(Terraria.Item,Terraria.Player,System.Int32&)
-//     System.Boolean Terraria.ModLoader.GlobalItem::GrabStyle(Terraria.Item,Terraria.Player)
-//     System.Boolean Terraria.ModLoader.GlobalItem::CanPickup(Terraria.Item,Terraria.Player)
-//     System.Boolean Terraria.ModLoader.GlobalItem::OnPickup(Terraria.Item,Terraria.Player)
+//     System.Void Terraria.ModLoader.GlobalItem::Update(Terraria.WorldItem,System.Single&,System.Single&)
+//     System.Void Terraria.ModLoader.GlobalItem::PostUpdate(Terraria.WorldItem)
+//     System.Void Terraria.ModLoader.GlobalItem::GrabRange(Terraria.WorldItem,Terraria.Player,System.Int32&)
+//     System.Boolean Terraria.ModLoader.GlobalItem::GrabStyle(Terraria.WorldItem,Terraria.Player)
+//     System.Boolean Terraria.ModLoader.GlobalItem::CanPickup(Terraria.WorldItem,Terraria.Player)
+//     System.Boolean Terraria.ModLoader.GlobalItem::OnPickup(Terraria.WorldItem,Terraria.Player)
 //     System.Boolean Terraria.ModLoader.GlobalItem::ItemSpace(Terraria.Item,Terraria.Player)
 //     System.Nullable`1<Microsoft.Xna.Framework.Color> Terraria.ModLoader.GlobalItem::GetAlpha(Terraria.Item,Microsoft.Xna.Framework.Color)
-//     System.Boolean Terraria.ModLoader.GlobalItem::PreDrawInWorld(Terraria.Item,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,System.Single&,System.Single&,System.Int32)
-//     System.Void Terraria.ModLoader.GlobalItem::PostDrawInWorld(Terraria.Item,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,System.Single,System.Single,System.Int32)
+//     System.Boolean Terraria.ModLoader.GlobalItem::PreDrawInWorld(Terraria.WorldItem,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,System.Single&,System.Single&,System.Int32)
+//     System.Void Terraria.ModLoader.GlobalItem::PostDrawInWorld(Terraria.WorldItem,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,System.Single,System.Single,System.Int32)
 //     System.Boolean Terraria.ModLoader.GlobalItem::PreDrawInInventory(Terraria.Item,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,System.Single)
 //     System.Void Terraria.ModLoader.GlobalItem::PostDrawInInventory(Terraria.Item,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,System.Single)
 //     System.Nullable`1<Microsoft.Xna.Framework.Vector2> Terraria.ModLoader.GlobalItem::HoldoutOffset(System.Int32)
@@ -158,14 +159,14 @@ public static partial class GlobalItemHooks
     public sealed partial class OnSpawn
     {
         public delegate void Original(
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.DataStructures.IEntitySource source
         );
 
         public delegate void Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.DataStructures.IEntitySource source
         );
 
@@ -257,6 +258,32 @@ public static partial class GlobalItemHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalItem_AllowPrefix_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalItem::AllowPrefix")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::AllowPrefix; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(ApplyPrefix), EventName = "Event", DelegateName = "Definition")]
+    public sealed class ApplyPrefixAttribute : SubscribesToAttribute;
+
+    public sealed partial class ApplyPrefix
+    {
+        public delegate void Original(
+            Terraria.Item item,
+            int pre
+        );
+
+        public delegate void Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalItem self,
+            Terraria.Item item,
+            int pre
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalItem_ApplyPrefix_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalItem::ApplyPrefix")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::ApplyPrefix; use a flag to disable behavior.");
         }
     }
 
@@ -2241,16 +2268,16 @@ public static partial class GlobalItemHooks
     public sealed partial class CanStackInWorld
     {
         public delegate bool Original(
-            Terraria.Item destination,
-            Terraria.Item source
+            Terraria.WorldItem destination,
+            Terraria.WorldItem source
         );
 
         [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item destination,
-            Terraria.Item source
+            Terraria.WorldItem destination,
+            Terraria.WorldItem source
         );
 
         public static event Definition? Event
@@ -2325,7 +2352,7 @@ public static partial class GlobalItemHooks
     {
         public delegate bool Original(
             Terraria.Item item,
-            ref int reforgePrice,
+            ref long reforgePrice,
             ref bool canApplyDiscount
         );
 
@@ -2334,7 +2361,7 @@ public static partial class GlobalItemHooks
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
             Terraria.Item item,
-            ref int reforgePrice,
+            ref long reforgePrice,
             ref bool canApplyDiscount
         );
 
@@ -2589,7 +2616,7 @@ public static partial class GlobalItemHooks
     public sealed partial class Update
     {
         public delegate void Original(
-            Terraria.Item item,
+            Terraria.WorldItem item,
             ref float gravity,
             ref float maxFallSpeed
         );
@@ -2597,7 +2624,7 @@ public static partial class GlobalItemHooks
         public delegate void Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
+            Terraria.WorldItem item,
             ref float gravity,
             ref float maxFallSpeed
         );
@@ -2617,13 +2644,13 @@ public static partial class GlobalItemHooks
     public sealed partial class PostUpdate
     {
         public delegate void Original(
-            Terraria.Item item
+            Terraria.WorldItem item
         );
 
         public delegate void Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item
+            Terraria.WorldItem item
         );
 
         public static event Definition? Event
@@ -2641,7 +2668,7 @@ public static partial class GlobalItemHooks
     public sealed partial class GrabRange
     {
         public delegate void Original(
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.Player player,
             ref int grabRange
         );
@@ -2649,7 +2676,7 @@ public static partial class GlobalItemHooks
         public delegate void Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.Player player,
             ref int grabRange
         );
@@ -2669,7 +2696,7 @@ public static partial class GlobalItemHooks
     public sealed partial class GrabStyle
     {
         public delegate bool Original(
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.Player player
         );
 
@@ -2677,7 +2704,7 @@ public static partial class GlobalItemHooks
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.Player player
         );
 
@@ -2696,7 +2723,7 @@ public static partial class GlobalItemHooks
     public sealed partial class CanPickup
     {
         public delegate bool Original(
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.Player player
         );
 
@@ -2704,7 +2731,7 @@ public static partial class GlobalItemHooks
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.Player player
         );
 
@@ -2723,7 +2750,7 @@ public static partial class GlobalItemHooks
     public sealed partial class OnPickup
     {
         public delegate bool Original(
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.Player player
         );
 
@@ -2731,7 +2758,7 @@ public static partial class GlobalItemHooks
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Terraria.Player player
         );
 
@@ -2804,7 +2831,7 @@ public static partial class GlobalItemHooks
     public sealed partial class PreDrawInWorld
     {
         public delegate bool Original(
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Microsoft.Xna.Framework.Color lightColor,
             Microsoft.Xna.Framework.Color alphaColor,
@@ -2817,7 +2844,7 @@ public static partial class GlobalItemHooks
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Microsoft.Xna.Framework.Color lightColor,
             Microsoft.Xna.Framework.Color alphaColor,
@@ -2841,7 +2868,7 @@ public static partial class GlobalItemHooks
     public sealed partial class PostDrawInWorld
     {
         public delegate void Original(
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Microsoft.Xna.Framework.Color lightColor,
             Microsoft.Xna.Framework.Color alphaColor,
@@ -2853,7 +2880,7 @@ public static partial class GlobalItemHooks
         public delegate void Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
+            Terraria.WorldItem item,
             Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
             Microsoft.Xna.Framework.Color lightColor,
             Microsoft.Xna.Framework.Color alphaColor,
@@ -3385,13 +3412,13 @@ public sealed partial class GlobalItem_OnSpawn_Impl : Terraria.ModLoader.GlobalI
     }
 
     public override void OnSpawn(
-        Terraria.Item item,
+        Terraria.WorldItem item,
         Terraria.DataStructures.IEntitySource source
     )
     {
         hook(
             (
-                Terraria.Item item_captured,
+                Terraria.WorldItem item_captured,
                 Terraria.DataStructures.IEntitySource source_captured
             ) => base.OnSpawn(
                 item_captured,
@@ -3515,6 +3542,45 @@ public sealed partial class GlobalItem_AllowPrefix_Impl : Terraria.ModLoader.Glo
                 Terraria.Item item_captured,
                 int pre_captured
             ) => base.AllowPrefix(
+                item_captured,
+                pre_captured
+            ),
+            this,
+            item,
+            pre
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalItem_ApplyPrefix_Impl : Terraria.ModLoader.GlobalItem
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalItemHooks.ApplyPrefix.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public GlobalItem_ApplyPrefix_Impl(GlobalItemHooks.ApplyPrefix.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override void ApplyPrefix(
+        Terraria.Item item,
+        int pre
+    )
+    {
+        hook(
+            (
+                Terraria.Item item_captured,
+                int pre_captured
+            ) => base.ApplyPrefix(
                 item_captured,
                 pre_captured
             ),
@@ -6531,14 +6597,14 @@ public sealed partial class GlobalItem_CanStackInWorld_Impl : Terraria.ModLoader
     }
 
     public override bool CanStackInWorld(
-        Terraria.Item destination,
-        Terraria.Item source
+        Terraria.WorldItem destination,
+        Terraria.WorldItem source
     )
     {
         return hook(
             (
-                Terraria.Item destination_captured,
-                Terraria.Item source_captured
+                Terraria.WorldItem destination_captured,
+                Terraria.WorldItem source_captured
             ) => base.CanStackInWorld(
                 destination_captured,
                 source_captured
@@ -6657,14 +6723,14 @@ public sealed partial class GlobalItem_ReforgePrice_Impl : Terraria.ModLoader.Gl
 
     public override bool ReforgePrice(
         Terraria.Item item,
-        ref int reforgePrice,
+        ref long reforgePrice,
         ref bool canApplyDiscount
     )
     {
         return hook(
             (
                 Terraria.Item item_captured,
-                ref int reforgePrice_captured,
+                ref long reforgePrice_captured,
                 ref bool canApplyDiscount_captured
             ) => base.ReforgePrice(
                 item_captured,
@@ -7063,14 +7129,14 @@ public sealed partial class GlobalItem_Update_Impl : Terraria.ModLoader.GlobalIt
     }
 
     public override void Update(
-        Terraria.Item item,
+        Terraria.WorldItem item,
         ref float gravity,
         ref float maxFallSpeed
     )
     {
         hook(
             (
-                Terraria.Item item_captured,
+                Terraria.WorldItem item_captured,
                 ref float gravity_captured,
                 ref float maxFallSpeed_captured
             ) => base.Update(
@@ -7106,12 +7172,12 @@ public sealed partial class GlobalItem_PostUpdate_Impl : Terraria.ModLoader.Glob
     }
 
     public override void PostUpdate(
-        Terraria.Item item
+        Terraria.WorldItem item
     )
     {
         hook(
             (
-                Terraria.Item item_captured
+                Terraria.WorldItem item_captured
             ) => base.PostUpdate(
                 item_captured
             ),
@@ -7141,14 +7207,14 @@ public sealed partial class GlobalItem_GrabRange_Impl : Terraria.ModLoader.Globa
     }
 
     public override void GrabRange(
-        Terraria.Item item,
+        Terraria.WorldItem item,
         Terraria.Player player,
         ref int grabRange
     )
     {
         hook(
             (
-                Terraria.Item item_captured,
+                Terraria.WorldItem item_captured,
                 Terraria.Player player_captured,
                 ref int grabRange_captured
             ) => base.GrabRange(
@@ -7184,13 +7250,13 @@ public sealed partial class GlobalItem_GrabStyle_Impl : Terraria.ModLoader.Globa
     }
 
     public override bool GrabStyle(
-        Terraria.Item item,
+        Terraria.WorldItem item,
         Terraria.Player player
     )
     {
         return hook(
             (
-                Terraria.Item item_captured,
+                Terraria.WorldItem item_captured,
                 Terraria.Player player_captured
             ) => base.GrabStyle(
                 item_captured,
@@ -7223,13 +7289,13 @@ public sealed partial class GlobalItem_CanPickup_Impl : Terraria.ModLoader.Globa
     }
 
     public override bool CanPickup(
-        Terraria.Item item,
+        Terraria.WorldItem item,
         Terraria.Player player
     )
     {
         return hook(
             (
-                Terraria.Item item_captured,
+                Terraria.WorldItem item_captured,
                 Terraria.Player player_captured
             ) => base.CanPickup(
                 item_captured,
@@ -7262,13 +7328,13 @@ public sealed partial class GlobalItem_OnPickup_Impl : Terraria.ModLoader.Global
     }
 
     public override bool OnPickup(
-        Terraria.Item item,
+        Terraria.WorldItem item,
         Terraria.Player player
     )
     {
         return hook(
             (
-                Terraria.Item item_captured,
+                Terraria.WorldItem item_captured,
                 Terraria.Player player_captured
             ) => base.OnPickup(
                 item_captured,
@@ -7379,7 +7445,7 @@ public sealed partial class GlobalItem_PreDrawInWorld_Impl : Terraria.ModLoader.
     }
 
     public override bool PreDrawInWorld(
-        Terraria.Item item,
+        Terraria.WorldItem item,
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
         Microsoft.Xna.Framework.Color lightColor,
         Microsoft.Xna.Framework.Color alphaColor,
@@ -7390,7 +7456,7 @@ public sealed partial class GlobalItem_PreDrawInWorld_Impl : Terraria.ModLoader.
     {
         return hook(
             (
-                Terraria.Item item_captured,
+                Terraria.WorldItem item_captured,
                 Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
                 Microsoft.Xna.Framework.Color lightColor_captured,
                 Microsoft.Xna.Framework.Color alphaColor_captured,
@@ -7438,7 +7504,7 @@ public sealed partial class GlobalItem_PostDrawInWorld_Impl : Terraria.ModLoader
     }
 
     public override void PostDrawInWorld(
-        Terraria.Item item,
+        Terraria.WorldItem item,
         Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch,
         Microsoft.Xna.Framework.Color lightColor,
         Microsoft.Xna.Framework.Color alphaColor,
@@ -7449,7 +7515,7 @@ public sealed partial class GlobalItem_PostDrawInWorld_Impl : Terraria.ModLoader
     {
         hook(
             (
-                Terraria.Item item_captured,
+                Terraria.WorldItem item_captured,
                 Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch_captured,
                 Microsoft.Xna.Framework.Color lightColor_captured,
                 Microsoft.Xna.Framework.Color alphaColor_captured,

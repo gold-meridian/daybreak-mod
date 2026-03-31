@@ -34,6 +34,8 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Boolean Terraria.ModLoader.GlobalTile::AutoSelect(System.Int32,System.Int32,System.Int32,Terraria.Item)
 //     System.Boolean Terraria.ModLoader.GlobalTile::PreHitWire(System.Int32,System.Int32,System.Int32)
 //     System.Void Terraria.ModLoader.GlobalTile::HitWire(System.Int32,System.Int32,System.Int32)
+//     System.Boolean Terraria.ModLoader.GlobalTile::HitSwitch(System.Int32,System.Int32,System.Int32)
+//     System.Boolean Terraria.ModLoader.GlobalTile::SwitchTiles(System.Int32,System.Int32,System.Int32,Terraria.Entity,Microsoft.Xna.Framework.Vector2,System.Int32,System.Int32,Microsoft.Xna.Framework.Vector2,System.Int32)
 //     System.Boolean Terraria.ModLoader.GlobalTile::Slope(System.Int32,System.Int32,System.Int32)
 //     System.Void Terraria.ModLoader.GlobalTile::FloorVisuals(System.Int32,Terraria.Player)
 //     System.Void Terraria.ModLoader.GlobalTile::ChangeWaterfallStyle(System.Int32,System.Int32&)
@@ -42,6 +44,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalTile::PostSetupTileMerge()
 //     System.Void Terraria.ModLoader.GlobalTile::PreShakeTree(System.Int32,System.Int32,Terraria.Enums.TreeTypes)
 //     System.Boolean Terraria.ModLoader.GlobalTile::ShakeTree(System.Int32,System.Int32,Terraria.Enums.TreeTypes)
+//     System.Void Terraria.ModLoader.GlobalTile::OnTileConverted(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
 //     System.Boolean Terraria.ModLoader.GlobalBlockType::KillSound(System.Int32,System.Int32,System.Int32,System.Boolean)
 //     System.Void Terraria.ModLoader.GlobalBlockType::NumDust(System.Int32,System.Int32,System.Int32,System.Boolean,System.Int32&)
 //     System.Boolean Terraria.ModLoader.GlobalBlockType::CreateDust(System.Int32,System.Int32,System.Int32,System.Int32&)
@@ -794,6 +797,76 @@ public static partial class GlobalTileHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(HitSwitch), EventName = "Event", DelegateName = "Definition")]
+    public sealed class HitSwitchAttribute : SubscribesToAttribute;
+
+    public sealed partial class HitSwitch
+    {
+        public delegate bool Original(
+            int i,
+            int j,
+            int type
+        );
+
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
+        public delegate bool Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int type
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalTile_HitSwitch_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalTile::HitSwitch")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::HitSwitch; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(SwitchTiles), EventName = "Event", DelegateName = "Definition")]
+    public sealed class SwitchTilesAttribute : SubscribesToAttribute;
+
+    public sealed partial class SwitchTiles
+    {
+        public delegate bool Original(
+            int i,
+            int j,
+            int type,
+            Terraria.Entity entity,
+            Microsoft.Xna.Framework.Vector2 position,
+            int width,
+            int height,
+            Microsoft.Xna.Framework.Vector2 oldPosition,
+            int objType
+        );
+
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
+        public delegate bool Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int type,
+            Terraria.Entity entity,
+            Microsoft.Xna.Framework.Vector2 position,
+            int width,
+            int height,
+            Microsoft.Xna.Framework.Vector2 oldPosition,
+            int objType
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalTile_SwitchTiles_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalTile::SwitchTiles")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::SwitchTiles; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     [HookMetadata(TypeContainingEvent = typeof(Slope), EventName = "Event", DelegateName = "Definition")]
     public sealed class SlopeAttribute : SubscribesToAttribute;
 
@@ -1012,6 +1085,38 @@ public static partial class GlobalTileHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalTile_ShakeTree_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalTile::ShakeTree")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::ShakeTree; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(OnTileConverted), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnTileConvertedAttribute : SubscribesToAttribute;
+
+    public sealed partial class OnTileConverted
+    {
+        public delegate void Original(
+            int i,
+            int j,
+            int fromType,
+            int toType,
+            int conversionType
+        );
+
+        public delegate void Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalTile self,
+            int i,
+            int j,
+            int fromType,
+            int toType,
+            int conversionType
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalTile_OnTileConverted_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalTile::OnTileConverted")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalTile::OnTileConverted; use a flag to disable behavior.");
         }
     }
 
@@ -2371,6 +2476,108 @@ public sealed partial class GlobalTile_HitWire_Impl : Terraria.ModLoader.GlobalT
 }
 
 [Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalTile_HitSwitch_Impl : Terraria.ModLoader.GlobalTile
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.HitSwitch.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    public GlobalTile_HitSwitch_Impl(GlobalTileHooks.HitSwitch.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override bool HitSwitch(
+        int i,
+        int j,
+        int type
+    )
+    {
+        return hook(
+            (
+                int i_captured,
+                int j_captured,
+                int type_captured
+            ) => base.HitSwitch(
+                i_captured,
+                j_captured,
+                type_captured
+            ),
+            this,
+            i,
+            j,
+            type
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalTile_SwitchTiles_Impl : Terraria.ModLoader.GlobalTile
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.SwitchTiles.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    public GlobalTile_SwitchTiles_Impl(GlobalTileHooks.SwitchTiles.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override bool SwitchTiles(
+        int i,
+        int j,
+        int type,
+        Terraria.Entity entity,
+        Microsoft.Xna.Framework.Vector2 position,
+        int width,
+        int height,
+        Microsoft.Xna.Framework.Vector2 oldPosition,
+        int objType
+    )
+    {
+        return hook(
+            (
+                int i_captured,
+                int j_captured,
+                int type_captured,
+                Terraria.Entity entity_captured,
+                Microsoft.Xna.Framework.Vector2 position_captured,
+                int width_captured,
+                int height_captured,
+                Microsoft.Xna.Framework.Vector2 oldPosition_captured,
+                int objType_captured
+            ) => base.SwitchTiles(
+                i_captured,
+                j_captured,
+                type_captured,
+                entity_captured,
+                position_captured,
+                width_captured,
+                height_captured,
+                oldPosition_captured,
+                objType_captured
+            ),
+            this,
+            i,
+            j,
+            type,
+            entity,
+            position,
+            width,
+            height,
+            oldPosition,
+            objType
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
 public sealed partial class GlobalTile_Slope_Impl : Terraria.ModLoader.GlobalTile
 {
     [field: Terraria.ModLoader.CloneByReference]
@@ -2667,6 +2874,53 @@ public sealed partial class GlobalTile_ShakeTree_Impl : Terraria.ModLoader.Globa
             x,
             y,
             treeType
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalTile_OnTileConverted_Impl : Terraria.ModLoader.GlobalTile
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalTileHooks.OnTileConverted.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    public GlobalTile_OnTileConverted_Impl(GlobalTileHooks.OnTileConverted.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override void OnTileConverted(
+        int i,
+        int j,
+        int fromType,
+        int toType,
+        int conversionType
+    )
+    {
+        hook(
+            (
+                int i_captured,
+                int j_captured,
+                int fromType_captured,
+                int toType_captured,
+                int conversionType_captured
+            ) => base.OnTileConverted(
+                i_captured,
+                j_captured,
+                fromType_captured,
+                toType_captured,
+                conversionType_captured
+            ),
+            this,
+            i,
+            j,
+            fromType,
+            toType,
+            conversionType
         );
     }
 }

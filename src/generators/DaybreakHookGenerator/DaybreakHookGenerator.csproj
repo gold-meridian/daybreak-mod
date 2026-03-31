@@ -6,6 +6,9 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
 
+        <TmlVersion>dev</TmlVersion>
+        <OutputTmlReferences>true</OutputTmlReferences>
+
         <TmlBuildUseShaderCompile>false</TmlBuildUseShaderCompile>
         <TmlBuildUseLocalizationCompiler>false</TmlBuildUseLocalizationCompiler>
         <TmlBuildPackageMod>false</TmlBuildPackageMod>

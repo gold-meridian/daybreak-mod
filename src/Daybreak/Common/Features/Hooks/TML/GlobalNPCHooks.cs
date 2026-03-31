@@ -62,7 +62,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalNPC::DrawHealthBar(Terraria.NPC,System.Byte,System.Single&,Microsoft.Xna.Framework.Vector2&)
 //     System.Void Terraria.ModLoader.GlobalNPC::EditSpawnRate(Terraria.Player,System.Int32&,System.Int32&)
 //     System.Void Terraria.ModLoader.GlobalNPC::EditSpawnRange(Terraria.Player,System.Int32&,System.Int32&,System.Int32&,System.Int32&)
-//     System.Void Terraria.ModLoader.GlobalNPC::EditSpawnPool(System.Collections.Generic.IDictionary`2<System.Int32,System.Single>,Terraria.ModLoader.NPCSpawnInfo)
+//     System.Void Terraria.ModLoader.GlobalNPC::EditSpawnPool(System.Collections.Generic.IDictionary`2<System.Int32,System.Single>,Terraria.NPC/Spawner)
 //     System.Void Terraria.ModLoader.GlobalNPC::SpawnNPC(System.Int32,System.Int32,System.Int32)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalNPC::CanChat(Terraria.NPC)
 //     System.Void Terraria.ModLoader.GlobalNPC::GetChat(Terraria.NPC,System.String&)
@@ -1508,14 +1508,14 @@ public static partial class GlobalNPCHooks
     {
         public delegate void Original(
             System.Collections.Generic.IDictionary<int, float> pool,
-            Terraria.ModLoader.NPCSpawnInfo spawnInfo
+            Terraria.NPC.Spawner spawner
         );
 
         public delegate void Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalNPC self,
             System.Collections.Generic.IDictionary<int, float> pool,
-            Terraria.ModLoader.NPCSpawnInfo spawnInfo
+            Terraria.NPC.Spawner spawner
         );
 
         public static event Definition? Event
@@ -4403,20 +4403,20 @@ public sealed partial class GlobalNPC_EditSpawnPool_Impl : Terraria.ModLoader.Gl
 
     public override void EditSpawnPool(
         System.Collections.Generic.IDictionary<int, float> pool,
-        Terraria.ModLoader.NPCSpawnInfo spawnInfo
+        Terraria.NPC.Spawner spawner
     )
     {
         hook(
             (
                 System.Collections.Generic.IDictionary<int, float> pool_captured,
-                Terraria.ModLoader.NPCSpawnInfo spawnInfo_captured
+                Terraria.NPC.Spawner spawner_captured
             ) => base.EditSpawnPool(
                 pool_captured,
-                spawnInfo_captured
+                spawner_captured
             ),
             this,
             pool,
-            spawnInfo
+            spawner
         );
     }
 }

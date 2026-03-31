@@ -14,6 +14,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalWall::KillWall(System.Int32,System.Int32,System.Int32,System.Boolean&)
 //     System.Boolean Terraria.ModLoader.GlobalWall::WallFrame(System.Int32,System.Int32,System.Int32,System.Boolean,System.Int32&,System.Int32&)
 //     System.Boolean Terraria.ModLoader.GlobalWall::CanBeTeleportedTo(System.Int32,System.Int32,System.Int32,Terraria.Player,System.String)
+//     System.Void Terraria.ModLoader.GlobalWall::OnWallConverted(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
 //     System.Boolean Terraria.ModLoader.GlobalBlockType::KillSound(System.Int32,System.Int32,System.Int32,System.Boolean)
 //     System.Void Terraria.ModLoader.GlobalBlockType::NumDust(System.Int32,System.Int32,System.Int32,System.Boolean,System.Int32&)
 //     System.Boolean Terraria.ModLoader.GlobalBlockType::CreateDust(System.Int32,System.Int32,System.Int32,System.Int32&)
@@ -152,6 +153,38 @@ public static partial class GlobalWallHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalWall_CanBeTeleportedTo_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalWall::CanBeTeleportedTo")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalWall::CanBeTeleportedTo; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(OnWallConverted), EventName = "Event", DelegateName = "Definition")]
+    public sealed class OnWallConvertedAttribute : SubscribesToAttribute;
+
+    public sealed partial class OnWallConverted
+    {
+        public delegate void Original(
+            int i,
+            int j,
+            int fromType,
+            int toType,
+            int conversionType
+        );
+
+        public delegate void Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalWall self,
+            int i,
+            int j,
+            int fromType,
+            int toType,
+            int conversionType
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalWall_OnWallConverted_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalWall::OnWallConverted")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalWall::OnWallConverted; use a flag to disable behavior.");
         }
     }
 
@@ -641,6 +674,53 @@ public sealed partial class GlobalWall_CanBeTeleportedTo_Impl : Terraria.ModLoad
             type,
             player,
             context
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalWall_OnWallConverted_Impl : Terraria.ModLoader.GlobalWall
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalWallHooks.OnWallConverted.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    public GlobalWall_OnWallConverted_Impl(GlobalWallHooks.OnWallConverted.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override void OnWallConverted(
+        int i,
+        int j,
+        int fromType,
+        int toType,
+        int conversionType
+    )
+    {
+        hook(
+            (
+                int i_captured,
+                int j_captured,
+                int fromType_captured,
+                int toType_captured,
+                int conversionType_captured
+            ) => base.OnWallConverted(
+                i_captured,
+                j_captured,
+                fromType_captured,
+                toType_captured,
+                conversionType_captured
+            ),
+            this,
+            i,
+            j,
+            fromType,
+            toType,
+            conversionType
         );
     }
 }

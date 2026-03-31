@@ -60,7 +60,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Boolean Terraria.ModLoader.ModSystem::HijackGetData(System.Byte&,System.IO.BinaryReader&,System.Int32)
 //     System.Boolean Terraria.ModLoader.ModSystem::HijackSendData(System.Int32,System.Int32,System.Int32,System.Int32,Terraria.Localization.NetworkText,System.Int32,System.Single,System.Single,System.Single,System.Int32,System.Int32,System.Int32)
 //     System.Void Terraria.ModLoader.ModSystem::PreWorldGen()
-//     System.Void Terraria.ModLoader.ModSystem::ModifyWorldGenTasks(System.Collections.Generic.List`1<Terraria.WorldBuilding.GenPass>,System.Double&)
+//     System.Void Terraria.ModLoader.ModSystem::ModifyWorldGenTasks(System.Collections.Generic.List`1<Terraria.WorldBuilding.GenPass>)
 //     System.Void Terraria.ModLoader.ModSystem::PostWorldGen()
 //     System.Void Terraria.ModLoader.ModSystem::ResetNearbyTileEffects()
 //     System.Void Terraria.ModLoader.ModSystem::ModifyHardmodeTasks(System.Collections.Generic.List`1<Terraria.WorldBuilding.GenPass>)
@@ -1203,15 +1203,13 @@ public static partial class ModSystemHooks
     public sealed partial class ModifyWorldGenTasks
     {
         public delegate void Original(
-            System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks,
-            ref double totalWeight
+            System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks
         );
 
         public delegate void Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.ModSystem self,
-            System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks,
-            ref double totalWeight
+            System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks
         );
 
         public static event Definition? Event
@@ -2756,21 +2754,17 @@ public sealed partial class ModSystem_ModifyWorldGenTasks_Impl : Terraria.ModLoa
     }
 
     public override void ModifyWorldGenTasks(
-        System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks,
-        ref double totalWeight
+        System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks
     )
     {
         hook(
             (
-                System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks_captured,
-                ref double totalWeight_captured
+                System.Collections.Generic.List<Terraria.WorldBuilding.GenPass> tasks_captured
             ) => base.ModifyWorldGenTasks(
-                tasks_captured,
-                ref totalWeight_captured
+                tasks_captured
             ),
             this,
-            tasks,
-            ref totalWeight
+            tasks
         );
     }
 }

@@ -110,6 +110,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.ModPlayer::GetDyeTraderReward(System.Collections.Generic.List`1<System.Int32>)
 //     System.Void Terraria.ModLoader.ModPlayer::DrawEffects(Terraria.DataStructures.PlayerDrawSet,System.Single&,System.Single&,System.Single&,System.Single&,System.Boolean&)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyDrawInfo(Terraria.DataStructures.PlayerDrawSet&)
+//     System.Void Terraria.ModLoader.ModPlayer::TransformDrawData(Terraria.DataStructures.PlayerDrawSet&)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyDrawLayerOrdering(System.Collections.Generic.IDictionary`2<Terraria.ModLoader.PlayerDrawLayer,Terraria.ModLoader.PlayerDrawLayer/Position>)
 //     System.Void Terraria.ModLoader.ModPlayer::HideDrawLayers(Terraria.DataStructures.PlayerDrawSet)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyScreenPosition()
@@ -132,9 +133,10 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Collections.Generic.IEnumerable`1<Terraria.Item> Terraria.ModLoader.ModPlayer::AddStartingItems(System.Boolean)
 //     System.Void Terraria.ModLoader.ModPlayer::ModifyStartingInventory(System.Collections.Generic.IReadOnlyDictionary`2<System.String,System.Collections.Generic.List`1<Terraria.Item>>,System.Boolean)
 //     System.Collections.Generic.IEnumerable`1<Terraria.Item> Terraria.ModLoader.ModPlayer::AddMaterialsForCrafting(Terraria.ModLoader.ModPlayer/ItemConsumedCallback&)
-//     System.Boolean Terraria.ModLoader.ModPlayer::OnPickup(Terraria.Item)
+//     System.Boolean Terraria.ModLoader.ModPlayer::OnPickup(Terraria.WorldItem)
 //     System.Boolean Terraria.ModLoader.ModPlayer::CanBeTeleportedTo(Microsoft.Xna.Framework.Vector2,System.String)
 //     System.Void Terraria.ModLoader.ModPlayer::OnEquipmentLoadoutSwitched(System.Int32,System.Int32)
+//     System.Void Terraria.ModLoader.ModPlayer::DrawPlayer(Terraria.Graphics.Camera)
 public static partial class ModPlayerHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
@@ -2650,6 +2652,30 @@ public static partial class ModPlayerHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(TransformDrawData), EventName = "Event", DelegateName = "Definition")]
+    public sealed class TransformDrawDataAttribute : SubscribesToAttribute;
+
+    public sealed partial class TransformDrawData
+    {
+        public delegate void Original(
+            ref Terraria.DataStructures.PlayerDrawSet drawInfo
+        );
+
+        public delegate void Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModPlayer self,
+            ref Terraria.DataStructures.PlayerDrawSet drawInfo
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_TransformDrawData_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::TransformDrawData")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::TransformDrawData; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     [HookMetadata(TypeContainingEvent = typeof(ModifyDrawLayerOrdering), EventName = "Event", DelegateName = "Definition")]
     public sealed class ModifyDrawLayerOrderingAttribute : SubscribesToAttribute;
 
@@ -3222,14 +3248,14 @@ public static partial class ModPlayerHooks
     public sealed partial class OnPickup
     {
         public delegate bool Original(
-            Terraria.Item item
+            Terraria.WorldItem item
         );
 
         [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.ModPlayer self,
-            Terraria.Item item
+            Terraria.WorldItem item
         );
 
         public static event Definition? Event
@@ -3290,6 +3316,30 @@ public static partial class ModPlayerHooks
             add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_OnEquipmentLoadoutSwitched_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::OnEquipmentLoadoutSwitched")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::OnEquipmentLoadoutSwitched; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(DrawPlayer), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DrawPlayerAttribute : SubscribesToAttribute;
+
+    public sealed partial class DrawPlayer
+    {
+        public delegate void Original(
+            Terraria.Graphics.Camera camera
+        );
+
+        public delegate void Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.ModPlayer self,
+            Terraria.Graphics.Camera camera
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new ModPlayer_DrawPlayer_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: ModPlayer::DrawPlayer")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: ModPlayer::DrawPlayer; use a flag to disable behavior.");
         }
     }
 }
@@ -6742,6 +6792,39 @@ public sealed partial class ModPlayer_ModifyDrawInfo_Impl : Terraria.ModLoader.M
 }
 
 [Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_TransformDrawData_Impl : Terraria.ModLoader.ModPlayer
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly ModPlayerHooks.TransformDrawData.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    protected override bool CloneNewInstances => true;
+
+    public ModPlayer_TransformDrawData_Impl(ModPlayerHooks.TransformDrawData.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override void TransformDrawData(
+        ref Terraria.DataStructures.PlayerDrawSet drawInfo
+    )
+    {
+        hook(
+            (
+                ref Terraria.DataStructures.PlayerDrawSet drawInfo_captured
+            ) => base.TransformDrawData(
+                ref drawInfo_captured
+            ),
+            this,
+            ref drawInfo
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
 public sealed partial class ModPlayer_ModifyDrawLayerOrdering_Impl : Terraria.ModLoader.ModPlayer
 {
     [field: Terraria.ModLoader.CloneByReference]
@@ -7538,12 +7621,12 @@ public sealed partial class ModPlayer_OnPickup_Impl : Terraria.ModLoader.ModPlay
     }
 
     public override bool OnPickup(
-        Terraria.Item item
+        Terraria.WorldItem item
     )
     {
         return hook(
             (
-                Terraria.Item item_captured
+                Terraria.WorldItem item_captured
             ) => base.OnPickup(
                 item_captured
             ),
@@ -7623,6 +7706,39 @@ public sealed partial class ModPlayer_OnEquipmentLoadoutSwitched_Impl : Terraria
             this,
             oldLoadoutIndex,
             loadoutIndex
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class ModPlayer_DrawPlayer_Impl : Terraria.ModLoader.ModPlayer
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly ModPlayerHooks.DrawPlayer.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    protected override bool CloneNewInstances => true;
+
+    public ModPlayer_DrawPlayer_Impl(ModPlayerHooks.DrawPlayer.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override void DrawPlayer(
+        Terraria.Graphics.Camera camera
+    )
+    {
+        hook(
+            (
+                Terraria.Graphics.Camera camera_captured
+            ) => base.DrawPlayer(
+                camera_captured
+            ),
+            this,
+            camera
         );
     }
 }
