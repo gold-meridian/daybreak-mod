@@ -75,7 +75,7 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
             this.options = options;
         }
 
-        public Snippet(Options options, string text, Color color, float scale = 1f) : base(text, color, scale)
+        public Snippet(Options options, string text, Color color) : base(text, color)
         {
             this.options = options;
         }
@@ -239,9 +239,10 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
     [OnLoad]
     private static void Load()
     {
-        IL_ChatManager.DrawColorCodedString_SpriteBatch_DynamicSpriteFont_TextSnippetArray_Vector2_Color_float_Vector2_Vector2_refInt32_float_bool += DrawColorCodedString_TextSnippetArray_FormattedSnippets;
+        // TODO(1.4.5): IL_ChatManager.DrawColorCodedString_SpriteBatch_DynamicSpriteFont_TextSnippetArray_Vector2_Color_float_Vector2_Vector2_refInt32_float_bool += DrawColorCodedString_TextSnippetArray_FormattedSnippets;
     }
 
+    /*
     private static void DrawColorCodedString_TextSnippetArray_FormattedSnippets(ILContext il)
     {
         var c = new ILCursor(il);
@@ -304,6 +305,7 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
 
         c.MarkLabel(skipFormattedTarget);
     }
+    */
 
     public string[] TagNames { get; } = ["dbf"];
 

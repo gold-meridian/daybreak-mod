@@ -21,7 +21,7 @@ internal sealed class RarityEffectRenderer : ModSystem
         base.Load();
 
         GlobalItemHooks.PreDrawTooltipLine.Event += RenderSpecialRaritiesInTooltips;
-        IL_Main.DrawItemTextPopups += RenderSpecialRaritiesInPopupText;
+        IL_PopupText.DrawItemTextPopups += RenderSpecialRaritiesInPopupText;
         IL_Main.MouseTextInner += RenderSpecialRaritiesInMouseText;
     }
 
@@ -66,7 +66,7 @@ internal sealed class RarityEffectRenderer : ModSystem
 
         // Get popup text.
         var popupTextLoc = -1;
-        c.GotoNext(x => x.MatchLdsfld<Main>(nameof(Main.popupText)));
+        c.GotoNext(x => x.MatchLdsfld<PopupText>(nameof(PopupText.popupText)));
         c.GotoNext(x => x.MatchStloc(out popupTextLoc));
 
         // Jump to the end of the method.
