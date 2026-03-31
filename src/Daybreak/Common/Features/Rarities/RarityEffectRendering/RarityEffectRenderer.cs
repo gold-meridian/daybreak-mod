@@ -20,9 +20,11 @@ internal sealed class RarityEffectRenderer : ModSystem
     {
         base.Load();
 
+        /*
         GlobalItemHooks.PreDrawTooltipLine.Event += RenderSpecialRaritiesInTooltips;
         IL_PopupText.DrawItemTextPopups += RenderSpecialRaritiesInPopupText;
         IL_Main.MouseTextInner += RenderSpecialRaritiesInMouseText;
+        */
     }
 
     private static bool RenderSpecialRaritiesInTooltips(GlobalItemHooks.PreDrawTooltipLine.Original orig, GlobalItem self, Item item, DrawableTooltipLine line, ref int yOffset)
