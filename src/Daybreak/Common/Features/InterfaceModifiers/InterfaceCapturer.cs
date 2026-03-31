@@ -32,8 +32,11 @@ public sealed class InterfaceCapturer : ModSystem
             {
                 rtLease = ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice);
 
+                // TODO(1.4.5):
+                /*
                 IL_Main.DoDraw += DoDraw_CaptureUserInterfaces;
                 On_Main.DoUpdate_WhilePaused += BlockMenuInput;
+                */
             }
         );
     }
@@ -81,6 +84,7 @@ public sealed class InterfaceCapturer : ModSystem
         }
     }
 
+    /*
     private static void DoDraw_CaptureUserInterfaces(ILContext il)
     {
         var c = new ILCursor(il);
@@ -157,6 +161,7 @@ public sealed class InterfaceCapturer : ModSystem
             }
         );
     }
+    */
 
     /// <summary>
     ///     Pauses the capture, rendering it to the screen rather than the UI

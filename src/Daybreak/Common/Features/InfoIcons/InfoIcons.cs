@@ -175,7 +175,7 @@ internal static class InfoIcons
 
                 var element = icon.CreateElement();
                 {
-                    element.OnDraw += e =>
+                    element.OnDraw += (e, _) =>
                     {
                         if (e.IsMouseHovering)
                         {

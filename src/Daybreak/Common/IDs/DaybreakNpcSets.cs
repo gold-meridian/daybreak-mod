@@ -91,7 +91,7 @@ public sealed class DaybreakNpcSets : ModSystem
         IL_Main.UpdateTime += ConsiderWhetherNpcLetsTravelingMerchantSpawn;
         IL_WorldGen.SpawnTravelNPC += ConsiderWhetherTravelingMerchantCanSpawnNearNpc;
         IL_Main.DoUpdateInWorld += ConsiderVulnerabilityToAfterPartyOfDoom;
-        On_NPC.AddIntoPlayersTownNPCSlots += ConsiderWhetherTownNpcActuallyCountsForSlots;
+        // TODO(1.4.5): On_NPC.AddIntoPlayersTownNPCSlots += ConsiderWhetherTownNpcActuallyCountsForSlots;
         IL_Main.UpdateTime_SpawnTownNPCs += ConsiderWhetherTownNpcShouldBeConsideredForSpawnCounts;
     }
 
@@ -136,6 +136,7 @@ public sealed class DaybreakNpcSets : ModSystem
         c.EmitDelegate(static (NPC npc) => VulnerableToAfterPartyOfDoom[npc.type] ?? npc.townNPC);
     }
 
+    /*
     private static void ConsiderWhetherTownNpcActuallyCountsForSlots(On_NPC.orig_AddIntoPlayersTownNPCSlots orig, NPC self)
     {
         if (!TownNpcContributesToTownNpcSlots[self.type])
@@ -145,6 +146,7 @@ public sealed class DaybreakNpcSets : ModSystem
 
         orig(self);
     }
+    */
 
     private static void ConsiderWhetherTownNpcShouldBeConsideredForSpawnCounts(ILContext il)
     {

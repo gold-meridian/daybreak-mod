@@ -30,11 +30,6 @@ internal sealed class AuthorTagHandler : ILoadableTagHandler<AuthorTagHandler>
             return true;
         }
 
-        public override float GetStringLength(DynamicSpriteFont font)
-        {
-            return 26f;
-        }
-
         public override Color GetVisibleColor()
         {
             return Color.White;

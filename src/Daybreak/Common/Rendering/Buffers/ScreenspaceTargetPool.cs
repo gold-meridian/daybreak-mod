@@ -167,8 +167,8 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
     {
         backbufferWidth = device.PresentationParameters.BackBufferWidth;
         backbufferHeight = device.PresentationParameters.BackBufferHeight;
-        offscreenTargetWidth = Main.instance.tileTarget.Width;
-        offscreenTargetHeight = Main.instance.tileTarget.Height;
+        offscreenTargetWidth = Main.tileTarget.Texture.Width;
+        offscreenTargetHeight = Main.tileTarget.Texture.Height;
     }
 
     [OnLoad(Side = ModSide.Client)]

@@ -95,6 +95,8 @@ public sealed class ItemSlotLoader : ModSystem
     {
         base.Load();
 
+        // TODO(1.4.5):
+        /*
         On_ItemSlot.OverrideHover_ItemArray_int_int += OverrideHover;
         On_ItemSlot.LeftClick_ItemArray_int_int += LeftClick;
         On_ItemSlot.RightClick_ItemArray_int_int += RightClick;
@@ -106,6 +108,7 @@ public sealed class ItemSlotLoader : ModSystem
         On_ItemSlot.SwapEquip_ItemArray_int_int += SwapEquip;
 
         IL_ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ModifyItemSlotIcon;
+        */
     }
 
     private static void ModifyItemSlotIcon(ILContext il)
@@ -145,6 +148,7 @@ public sealed class ItemSlotLoader : ModSystem
         );
     }
 
+    /*
     private static void LeftClick(On_ItemSlot.orig_LeftClick_ItemArray_int_int orig, Item[] inv, int context, int slot)
     {
         try
@@ -424,4 +428,5 @@ public sealed class ItemSlotLoader : ModSystem
         orig(inv, context, slot);
         itemSlot.PostOverrideHover(inv[slot], context);
     }
+    */
 }

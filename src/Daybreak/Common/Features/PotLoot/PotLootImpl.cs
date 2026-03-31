@@ -3,6 +3,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
+// TODO(1.4.5): Redo this logic.
+
 namespace Daybreak.Common.Features.PotLoot;
 
 internal sealed class PotLootImpl : ModSystem
@@ -110,7 +112,7 @@ internal sealed class PotLootImpl : ModSystem
         int style
     )
     {
-        if (WorldGen.gen)
+        if (WorldGen.isGeneratingOrLoadingWorld)
         {
             return;
         }
@@ -202,7 +204,7 @@ internal sealed class PotLootImpl : ModSystem
         {
             var item = player.inventory[invSlot];
 
-            if (item.createTile <= -1 || item.IsAir || !TileID.Sets.Torch[item.createTile])
+            if (item.createTile <= -1 || item.IsAir || !TileID.Sets.Torches[item.createTile])
             {
                 continue;
             }
