@@ -33,9 +33,9 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalProjectile::OnHitPlayer(Terraria.Projectile,Terraria.Player,Terraria.Player/HurtInfo)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalProjectile::Colliding(Terraria.Projectile,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)
 //     System.Nullable`1<Microsoft.Xna.Framework.Color> Terraria.ModLoader.GlobalProjectile::GetAlpha(Terraria.Projectile,Microsoft.Xna.Framework.Color)
-//     System.Boolean Terraria.ModLoader.GlobalProjectile::PreDrawExtras(Terraria.Projectile)
-//     System.Boolean Terraria.ModLoader.GlobalProjectile::PreDraw(Terraria.Projectile,Microsoft.Xna.Framework.Color&)
-//     System.Void Terraria.ModLoader.GlobalProjectile::PostDraw(Terraria.Projectile,Microsoft.Xna.Framework.Color)
+//     System.Boolean Terraria.ModLoader.GlobalProjectile::PreDrawExtras(Terraria.Projectile,Terraria.Player)
+//     System.Boolean Terraria.ModLoader.GlobalProjectile::PreDraw(Terraria.Projectile,Terraria.Player,Microsoft.Xna.Framework.Color&)
+//     System.Void Terraria.ModLoader.GlobalProjectile::PostDraw(Terraria.Projectile,Terraria.Player,Microsoft.Xna.Framework.Color)
 //     System.Void Terraria.ModLoader.GlobalProjectile::DrawBehind(Terraria.Projectile,System.Int32,System.Collections.Generic.List`1<System.Int32>,System.Collections.Generic.List`1<System.Int32>,System.Collections.Generic.List`1<System.Int32>,System.Collections.Generic.List`1<System.Int32>,System.Collections.Generic.List`1<System.Int32>)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalProjectile::CanUseGrapple(System.Int32,Terraria.Player)
 //     System.Void Terraria.ModLoader.GlobalProjectile::UseGrapple(Terraria.Player,System.Int32&)
@@ -668,14 +668,16 @@ public static partial class GlobalProjectileHooks
     public sealed partial class PreDrawExtras
     {
         public delegate bool Original(
-            Terraria.Projectile projectile
+            Terraria.Projectile projectile,
+            Terraria.Player player
         );
 
         [return: PermitsVoidInvokeParameterWithParameters("orig")]
         public delegate bool Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
-            Terraria.Projectile projectile
+            Terraria.Projectile projectile,
+            Terraria.Player player
         );
 
         public static event Definition? Event
@@ -694,6 +696,7 @@ public static partial class GlobalProjectileHooks
     {
         public delegate bool Original(
             Terraria.Projectile projectile,
+            Terraria.Player player,
             ref Microsoft.Xna.Framework.Color lightColor
         );
 
@@ -702,6 +705,7 @@ public static partial class GlobalProjectileHooks
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
             Terraria.Projectile projectile,
+            Terraria.Player player,
             ref Microsoft.Xna.Framework.Color lightColor
         );
 
@@ -721,6 +725,7 @@ public static partial class GlobalProjectileHooks
     {
         public delegate void Original(
             Terraria.Projectile projectile,
+            Terraria.Player player,
             Microsoft.Xna.Framework.Color lightColor
         );
 
@@ -728,6 +733,7 @@ public static partial class GlobalProjectileHooks
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalProjectile self,
             Terraria.Projectile projectile,
+            Terraria.Player player,
             Microsoft.Xna.Framework.Color lightColor
         );
 
@@ -1949,17 +1955,21 @@ public sealed partial class GlobalProjectile_PreDrawExtras_Impl : Terraria.ModLo
     }
 
     public override bool PreDrawExtras(
-        Terraria.Projectile projectile
+        Terraria.Projectile projectile,
+        Terraria.Player player
     )
     {
         return hook(
             (
-                Terraria.Projectile projectile_captured
+                Terraria.Projectile projectile_captured,
+                Terraria.Player player_captured
             ) => base.PreDrawExtras(
-                projectile_captured
+                projectile_captured,
+                player_captured
             ),
             this,
-            projectile
+            projectile,
+            player
         );
     }
 }
@@ -1985,19 +1995,23 @@ public sealed partial class GlobalProjectile_PreDraw_Impl : Terraria.ModLoader.G
 
     public override bool PreDraw(
         Terraria.Projectile projectile,
+        Terraria.Player player,
         ref Microsoft.Xna.Framework.Color lightColor
     )
     {
         return hook(
             (
                 Terraria.Projectile projectile_captured,
+                Terraria.Player player_captured,
                 ref Microsoft.Xna.Framework.Color lightColor_captured
             ) => base.PreDraw(
                 projectile_captured,
+                player_captured,
                 ref lightColor_captured
             ),
             this,
             projectile,
+            player,
             ref lightColor
         );
     }
@@ -2024,19 +2038,23 @@ public sealed partial class GlobalProjectile_PostDraw_Impl : Terraria.ModLoader.
 
     public override void PostDraw(
         Terraria.Projectile projectile,
+        Terraria.Player player,
         Microsoft.Xna.Framework.Color lightColor
     )
     {
         hook(
             (
                 Terraria.Projectile projectile_captured,
+                Terraria.Player player_captured,
                 Microsoft.Xna.Framework.Color lightColor_captured
             ) => base.PostDraw(
                 projectile_captured,
+                player_captured,
                 lightColor_captured
             ),
             this,
             projectile,
+            player,
             lightColor
         );
     }
