@@ -36,7 +36,6 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Boolean Terraria.ModLoader.GlobalProjectile::PreDrawExtras(Terraria.Projectile,Terraria.Player)
 //     System.Boolean Terraria.ModLoader.GlobalProjectile::PreDraw(Terraria.Projectile,Terraria.Player,Microsoft.Xna.Framework.Color&)
 //     System.Void Terraria.ModLoader.GlobalProjectile::PostDraw(Terraria.Projectile,Terraria.Player,Microsoft.Xna.Framework.Color)
-//     System.Void Terraria.ModLoader.GlobalProjectile::DrawBehind(Terraria.Projectile,System.Int32,System.Collections.Generic.List`1<System.Int32>,System.Collections.Generic.List`1<System.Int32>,System.Collections.Generic.List`1<System.Int32>,System.Collections.Generic.List`1<System.Int32>,System.Collections.Generic.List`1<System.Int32>)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalProjectile::CanUseGrapple(System.Int32,Terraria.Player)
 //     System.Void Terraria.ModLoader.GlobalProjectile::UseGrapple(Terraria.Player,System.Int32&)
 //     System.Void Terraria.ModLoader.GlobalProjectile::NumGrappleHooks(Terraria.Projectile,Terraria.Player,System.Int32&)
@@ -742,42 +741,6 @@ public static partial class GlobalProjectileHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalProjectile_PostDraw_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalProjectile::PostDraw")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::PostDraw; use a flag to disable behavior.");
-        }
-    }
-
-    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    [HookMetadata(TypeContainingEvent = typeof(DrawBehind), EventName = "Event", DelegateName = "Definition")]
-    public sealed class DrawBehindAttribute : SubscribesToAttribute;
-
-    public sealed partial class DrawBehind
-    {
-        public delegate void Original(
-            Terraria.Projectile projectile,
-            int index,
-            System.Collections.Generic.List<int> behindNPCsAndTiles,
-            System.Collections.Generic.List<int> behindNPCs,
-            System.Collections.Generic.List<int> behindProjectiles,
-            System.Collections.Generic.List<int> overPlayers,
-            System.Collections.Generic.List<int> overWiresUI
-        );
-
-        public delegate void Definition(
-            [Omittable] Original orig,
-            [Omittable] Terraria.ModLoader.GlobalProjectile self,
-            Terraria.Projectile projectile,
-            int index,
-            System.Collections.Generic.List<int> behindNPCsAndTiles,
-            System.Collections.Generic.List<int> behindNPCs,
-            System.Collections.Generic.List<int> behindProjectiles,
-            System.Collections.Generic.List<int> overPlayers,
-            System.Collections.Generic.List<int> overWiresUI
-        );
-
-        public static event Definition? Event
-        {
-            add => HookLoader.GetModOrThrow().AddContent(new GlobalProjectile_DrawBehind_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalProjectile::DrawBehind")));
-
-            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::DrawBehind; use a flag to disable behavior.");
         }
     }
 
@@ -2056,65 +2019,6 @@ public sealed partial class GlobalProjectile_PostDraw_Impl : Terraria.ModLoader.
             projectile,
             player,
             lightColor
-        );
-    }
-}
-
-[Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalProjectile_DrawBehind_Impl : Terraria.ModLoader.GlobalProjectile
-{
-    [field: Terraria.ModLoader.CloneByReference]
-    private readonly GlobalProjectileHooks.DrawBehind.Definition hook;
-
-    [field: Terraria.ModLoader.CloneByReference]
-    public override string Name => base.Name + '_' + field;
-
-    public override bool InstancePerEntity => true;
-
-    protected override bool CloneNewInstances => true;
-
-    public GlobalProjectile_DrawBehind_Impl(GlobalProjectileHooks.DrawBehind.Definition hook)
-    {
-        this.hook = hook;
-        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
-    }
-
-    public override void DrawBehind(
-        Terraria.Projectile projectile,
-        int index,
-        System.Collections.Generic.List<int> behindNPCsAndTiles,
-        System.Collections.Generic.List<int> behindNPCs,
-        System.Collections.Generic.List<int> behindProjectiles,
-        System.Collections.Generic.List<int> overPlayers,
-        System.Collections.Generic.List<int> overWiresUI
-    )
-    {
-        hook(
-            (
-                Terraria.Projectile projectile_captured,
-                int index_captured,
-                System.Collections.Generic.List<int> behindNPCsAndTiles_captured,
-                System.Collections.Generic.List<int> behindNPCs_captured,
-                System.Collections.Generic.List<int> behindProjectiles_captured,
-                System.Collections.Generic.List<int> overPlayers_captured,
-                System.Collections.Generic.List<int> overWiresUI_captured
-            ) => base.DrawBehind(
-                projectile_captured,
-                index_captured,
-                behindNPCsAndTiles_captured,
-                behindNPCs_captured,
-                behindProjectiles_captured,
-                overPlayers_captured,
-                overWiresUI_captured
-            ),
-            this,
-            projectile,
-            index,
-            behindNPCsAndTiles,
-            behindNPCs,
-            behindProjectiles,
-            overPlayers,
-            overWiresUI
         );
     }
 }

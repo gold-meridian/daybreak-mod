@@ -4,6 +4,7 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <TmlBuildUseDefaultModImpl>true</TmlBuildUseDefaultModImpl>
 
+        <TargetFramework>net10.0</TargetFramework>
         <TmlVersion>dev</TmlVersion>
     </PropertyGroup>
 
