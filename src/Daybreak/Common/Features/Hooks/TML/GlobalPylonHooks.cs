@@ -13,7 +13,6 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Boolean Terraria.ModLoader.GlobalPylon::PreDrawMapIcon(Terraria.Map.MapOverlayDrawContext&,System.String&,Terraria.GameContent.TeleportPylonInfo&,System.Boolean&,Microsoft.Xna.Framework.Color&,System.Single&,System.Single&)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalPylon::PreCanPlacePylon(System.Int32,System.Int32,System.Int32,Terraria.GameContent.TeleportPylonType)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalPylon::ValidTeleportCheck_PreNPCCount(Terraria.GameContent.TeleportPylonInfo,System.Int32&)
-//     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalPylon::ValidTeleportCheck_PreAnyDanger(Terraria.GameContent.TeleportPylonInfo)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalPylon::ValidTeleportCheck_PreBiomeRequirements(Terraria.GameContent.TeleportPylonInfo,Terraria.SceneMetrics)
 //     System.Void Terraria.ModLoader.GlobalPylon::PostValidTeleportCheck(Terraria.GameContent.TeleportPylonInfo,Terraria.GameContent.TeleportPylonInfo,System.Boolean&,System.Boolean&,System.String&)
 public static partial class GlobalPylonHooks
@@ -110,31 +109,6 @@ public static partial class GlobalPylonHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalPylon_ValidTeleportCheck_PreNPCCount_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalPylon::ValidTeleportCheck_PreNPCCount")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalPylon::ValidTeleportCheck_PreNPCCount; use a flag to disable behavior.");
-        }
-    }
-
-    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    [HookMetadata(TypeContainingEvent = typeof(ValidTeleportCheck_PreAnyDanger), EventName = "Event", DelegateName = "Definition")]
-    public sealed class ValidTeleportCheck_PreAnyDangerAttribute : SubscribesToAttribute;
-
-    public sealed partial class ValidTeleportCheck_PreAnyDanger
-    {
-        public delegate bool? Original(
-            Terraria.GameContent.TeleportPylonInfo pylonInfo
-        );
-
-        [return: PermitsVoidInvokeParameterWithParameters("orig")]
-        public delegate bool? Definition(
-            [Omittable] Original orig,
-            [Omittable] Terraria.ModLoader.GlobalPylon self,
-            Terraria.GameContent.TeleportPylonInfo pylonInfo
-        );
-
-        public static event Definition? Event
-        {
-            add => HookLoader.GetModOrThrow().AddContent(new GlobalPylon_ValidTeleportCheck_PreAnyDanger_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalPylon::ValidTeleportCheck_PreAnyDanger")));
-
-            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalPylon::ValidTeleportCheck_PreAnyDanger; use a flag to disable behavior.");
         }
     }
 
@@ -327,37 +301,6 @@ public sealed partial class GlobalPylon_ValidTeleportCheck_PreNPCCount_Impl : Te
             this,
             pylonInfo,
             ref defaultNecessaryNPCCount
-        );
-    }
-}
-
-[Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalPylon_ValidTeleportCheck_PreAnyDanger_Impl : Terraria.ModLoader.GlobalPylon
-{
-    [field: Terraria.ModLoader.CloneByReference]
-    private readonly GlobalPylonHooks.ValidTeleportCheck_PreAnyDanger.Definition hook;
-
-    [field: Terraria.ModLoader.CloneByReference]
-    public override string Name => base.Name + '_' + field;
-
-    public GlobalPylon_ValidTeleportCheck_PreAnyDanger_Impl(GlobalPylonHooks.ValidTeleportCheck_PreAnyDanger.Definition hook)
-    {
-        this.hook = hook;
-        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
-    }
-
-    public override bool? ValidTeleportCheck_PreAnyDanger(
-        Terraria.GameContent.TeleportPylonInfo pylonInfo
-    )
-    {
-        return hook(
-            (
-                Terraria.GameContent.TeleportPylonInfo pylonInfo_captured
-            ) => base.ValidTeleportCheck_PreAnyDanger(
-                pylonInfo_captured
-            ),
-            this,
-            pylonInfo
         );
     }
 }

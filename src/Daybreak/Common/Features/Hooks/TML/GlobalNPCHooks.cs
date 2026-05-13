@@ -60,8 +60,10 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalNPC::PostDraw(Terraria.NPC,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)
 //     System.Void Terraria.ModLoader.GlobalNPC::DrawBehind(Terraria.NPC,System.Int32)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalNPC::DrawHealthBar(Terraria.NPC,System.Byte,System.Single&,Microsoft.Xna.Framework.Vector2&)
+//     System.Void Terraria.ModLoader.GlobalNPC::EditSpawnFlags(Terraria.NPC/Spawner)
 //     System.Void Terraria.ModLoader.GlobalNPC::EditSpawnRate(Terraria.Player,System.Int32&,System.Int32&)
 //     System.Void Terraria.ModLoader.GlobalNPC::EditSpawnRange(Terraria.Player,System.Int32&,System.Int32&,System.Int32&,System.Int32&)
+//     System.Void Terraria.ModLoader.GlobalNPC::EditSpawnInfo(Terraria.NPC/Spawner)
 //     System.Void Terraria.ModLoader.GlobalNPC::EditSpawnPool(System.Collections.Generic.IDictionary`2<System.Int32,System.Single>,Terraria.NPC/Spawner)
 //     System.Void Terraria.ModLoader.GlobalNPC::SpawnNPC(System.Int32,System.Int32,System.Int32)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalNPC::CanChat(Terraria.NPC)
@@ -1441,6 +1443,30 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(EditSpawnFlags), EventName = "Event", DelegateName = "Definition")]
+    public sealed class EditSpawnFlagsAttribute : SubscribesToAttribute;
+
+    public sealed partial class EditSpawnFlags
+    {
+        public delegate void Original(
+            Terraria.NPC.Spawner spawner
+        );
+
+        public delegate void Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
+            Terraria.NPC.Spawner spawner
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalNPC_EditSpawnFlags_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalNPC::EditSpawnFlags")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::EditSpawnFlags; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     [HookMetadata(TypeContainingEvent = typeof(EditSpawnRate), EventName = "Event", DelegateName = "Definition")]
     public sealed class EditSpawnRateAttribute : SubscribesToAttribute;
 
@@ -1497,6 +1523,30 @@ public static partial class GlobalNPCHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalNPC_EditSpawnRange_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalNPC::EditSpawnRange")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::EditSpawnRange; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(EditSpawnInfo), EventName = "Event", DelegateName = "Definition")]
+    public sealed class EditSpawnInfoAttribute : SubscribesToAttribute;
+
+    public sealed partial class EditSpawnInfo
+    {
+        public delegate void Original(
+            Terraria.NPC.Spawner spawner
+        );
+
+        public delegate void Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
+            Terraria.NPC.Spawner spawner
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalNPC_EditSpawnInfo_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalNPC::EditSpawnInfo")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::EditSpawnInfo; use a flag to disable behavior.");
         }
     }
 
@@ -4289,6 +4339,41 @@ public sealed partial class GlobalNPC_DrawHealthBar_Impl : Terraria.ModLoader.Gl
 }
 
 [Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalNPC_EditSpawnFlags_Impl : Terraria.ModLoader.GlobalNPC
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.EditSpawnFlags.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public GlobalNPC_EditSpawnFlags_Impl(GlobalNPCHooks.EditSpawnFlags.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override void EditSpawnFlags(
+        Terraria.NPC.Spawner spawner
+    )
+    {
+        hook(
+            (
+                Terraria.NPC.Spawner spawner_captured
+            ) => base.EditSpawnFlags(
+                spawner_captured
+            ),
+            this,
+            spawner
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
 public sealed partial class GlobalNPC_EditSpawnRate_Impl : Terraria.ModLoader.GlobalNPC
 {
     [field: Terraria.ModLoader.CloneByReference]
@@ -4378,6 +4463,41 @@ public sealed partial class GlobalNPC_EditSpawnRange_Impl : Terraria.ModLoader.G
             ref spawnRangeY,
             ref safeRangeX,
             ref safeRangeY
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalNPC_EditSpawnInfo_Impl : Terraria.ModLoader.GlobalNPC
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.EditSpawnInfo.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public GlobalNPC_EditSpawnInfo_Impl(GlobalNPCHooks.EditSpawnInfo.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override void EditSpawnInfo(
+        Terraria.NPC.Spawner spawner
+    )
+    {
+        hook(
+            (
+                Terraria.NPC.Spawner spawner_captured
+            ) => base.EditSpawnInfo(
+                spawner_captured
+            ),
+            this,
+            spawner
         );
     }
 }
