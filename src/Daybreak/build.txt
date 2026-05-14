@@ -6,3 +6,7 @@ side = NoSync
 
 sortBefore = BetterExpertRarity, PrettyRarities, Luminance
 weakReferences = BetterExpertRarity, PrettyRarities, Luminance
+
+# Normally, Daybreak-style modules would be provided through dllReferences, but
+# since Daybreak itself would need to be loaded before its own dllReferences,
+# the list is managed specially.

@@ -11,7 +11,7 @@ namespace Daybreak.Loading;
 ///     Responsible for carrying out various loading tasks for Daybreak and its
 ///     module management.
 /// </summary>
-internal static class LoadManager
+internal static partial class LoadManager
 {
     private sealed record ModuleSettings(string? ParentMod);
     
@@ -26,9 +26,14 @@ internal static class LoadManager
     [ModuleInitializer]
     public static void Setup()
     {
-        // This should consistently run before any modules.  Should be safe to
-        // rely on this here, since any mods with modules that need to be loaded
-        // should always sort after Daybreak anyway.
+        // dllReferences are actually loaded before the main mod assembly,
+        // meaning modules provided by Daybreak would get loaded before Daybreak
+        // and before this initializer is run.  We have to just maintain a list
+        // manually and trigger their assembly loads after the fact instead to
+        // make up for this.
+        // Dependent mods which use modules should always be loading after
+        // Daybreak anyway (as they should main a modReference or weakReference
+        // on it), which makes this safe for other mods.
 
         // ModLoadContext.LoadAssemblies is how we determine the
         // currently loading assembly.  We're already in this method when
@@ -43,6 +48,13 @@ internal static class LoadManager
                 orig(self);
             }
         );
+        
+        // Now actually load our modules.
+        LoadDefaultModules();
+        
+        // Despite this being called in the middle of LoadAssemblies, it should
+        // still be before GetLoadableTypes, so this is safe.
+        // TODO: Hook GetLoadableTypes and whatnot
     }
 #pragma warning restore CA2255
 
