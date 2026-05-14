@@ -39,7 +39,7 @@ internal sealed class DaybreakModuleAttribute(bool loadCycle = true, string? par
 
 #pragma warning disable CA2255
     [ModuleInitializer]
-    public static void VerifyLoadingEnvironment()
+    public static void VerifyAndRegisterModule()
     {
         var asm = typeof(DaybreakModuleAttribute).Assembly;
         var settings = asm.GetCustomAttribute<DaybreakModuleAttribute>()
