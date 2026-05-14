@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terraria.ModLoader;
@@ -14,7 +15,7 @@ namespace Daybreak.Loading;
 internal static partial class LoadManager
 {
     private sealed record ModuleSettings(string? ParentMod);
-    
+
     // The assembly currently being loaded.  Does not stay in sync with actual
     // mod loading.
     private static string? AssemblyBeingLoaded { get; set; } = "Daybreak";
@@ -48,13 +49,46 @@ internal static partial class LoadManager
                 orig(self);
             }
         );
-        
+
         // Now actually load our modules.
         LoadDefaultModules();
-        
+
         // Despite this being called in the middle of LoadAssemblies, it should
         // still be before GetLoadableTypes, so this is safe.
-        // TODO: Hook GetLoadableTypes and whatnot
+        MonoModHooks.Add(
+            typeof(AssemblyManager).GetMethod(nameof(AssemblyManager.GetLoadableTypes), BindingFlags.NonPublic | BindingFlags.Static, [typeof(AssemblyManager.ModLoadContext), typeof(MetadataLoadContext)])!,
+            (Func<AssemblyManager.ModLoadContext, MetadataLoadContext, Dictionary<Assembly, Type[]>> orig, AssemblyManager.ModLoadContext mod, MetadataLoadContext mlc) =>
+            {
+                // The current approach is just to merge the modules into the
+                // main assembly's type array and then clear the modules' types.
+                // The other option is to manually hook into other calls to
+                // GetLoadableTypes and intercept there instead.
+                // This current approach means all callers will always get the
+                // merged array, which is probably preferable?
+
+                var typeMap = orig(mod, mlc);
+
+                if (mod.Name is null || !assembly_modules.TryGetValue(mod.Name, out var modules))
+                {
+                    return typeMap;
+                }
+
+                var totalTypes = typeMap[mod.assembly].ToList();
+                foreach (var moduleRef in modules)
+                {
+                    if (!moduleRef.TryGetTarget(out var module))
+                    {
+                        continue;
+                    }
+
+                    totalTypes.AddRange(typeMap[module]);
+                    typeMap[module] = [];
+                }
+
+                typeMap[mod.assembly] = totalTypes.ToArray();
+                return typeMap;
+            }
+        );
     }
 #pragma warning restore CA2255
 
@@ -86,14 +120,14 @@ internal static partial class LoadManager
               + $"\n\nIf you are a developer, you are probably dllReferencing a module expected to be loaded by a single canonical mod. If you don't know how to fix this, contact a DAYBREAK developer through the mod homepage."
             );
         }
-        
+
         module_settings.AddOrUpdate(assembly, new ModuleSettings(parentMod));
 
         if (!assembly_modules.TryGetValue(loadingMod, out var modules))
         {
             assembly_modules[loadingMod] = modules = [];
         }
-        
+
         modules.Add(new WeakReference<Assembly>(assembly));
     }
 }
