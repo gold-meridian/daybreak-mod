@@ -15,8 +15,8 @@ partial class LoadManager
             // We get to benefit from even loading the PDB, which tModLoader
             // doesn't bother with for some reason?
             daybreakAlc.LoadAssembly(
-                daybreakAlc.modFile.GetBytes($"lib/{module}.dll"),
-                daybreakAlc.modFile.GetBytes($"lib/{module}.pdb")
+                daybreakAlc.modFile.GetBytes($"lib/modules/{module}.dll"),
+                daybreakAlc.modFile.GetBytes($"lib/modules/{module}.pdb")
             );
         }
     }

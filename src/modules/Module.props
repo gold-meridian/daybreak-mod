@@ -7,6 +7,8 @@
         <TmlBuildMod>false</TmlBuildMod>
 
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+        <DirectoryToCopyImportantFilesTo>$(MSBuildThisFileDirectory)\..\Daybreak\lib\modules\</DirectoryToCopyImportantFilesTo>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,5 +20,15 @@
     <ItemGroup>
         <Publicize Include="FNA;ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
     </ItemGroup>
+
+    <Target Name="CopyReferenceAssemblies" AfterTargets="Build">
+        <ItemGroup>
+            <ReferenceAssemblies Include="$(OutputPath)\$(ProjectName).dll"/>
+            <ReferenceAssemblies Include="$(OutputPath)\$(ProjectName).pdb"/>
+        </ItemGroup>
+
+        <Copy SourceFiles="@(ReferenceAssemblies)"
+              DestinationFolder="$(DirectoryToCopyImportantFilesTo)"/>
+    </Target>
 
 </Project>
