@@ -15,4 +15,8 @@
         </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+        <Publicize Include="FNA;ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
+    </ItemGroup>
+
 </Project>
