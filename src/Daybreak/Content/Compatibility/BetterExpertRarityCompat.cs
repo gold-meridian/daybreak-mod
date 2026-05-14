@@ -1,3 +1,4 @@
+#if false
 using System.Reflection;
 using BetterExpertRarity.Common.Rarities;
 using Daybreak.Common.Features.Rarities;
@@ -83,3 +84,4 @@ internal sealed class BetterExpertRarityCompat : ModSystem
         return true;
     }
 }
+#endif

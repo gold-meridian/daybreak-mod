@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if false
+using System;
 using System.Reflection;
 using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Features.InfoIcons;
@@ -74,3 +75,4 @@ internal static class LuminanceCompat
         }
     }
 }
+#endif

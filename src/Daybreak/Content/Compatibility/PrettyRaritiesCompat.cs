@@ -1,3 +1,4 @@
+#if false
 using System;
 using System.Reflection;
 using Daybreak.Common.Features.Rarities;
@@ -142,3 +143,4 @@ internal sealed class PrettyRaritiesCompat : ModSystem
         return true;
     }
 }
+#endif

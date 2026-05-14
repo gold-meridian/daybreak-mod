@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using Daybreak.Common.Features.ModPanel;
-using Daybreak.Common.Mathematics;
 using Daybreak.Common.Rendering;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
@@ -237,7 +236,7 @@ internal sealed class PanelStyle : ModPanelStyleExt
             {
                 Debug.Assert(panelShaderData is not null);
 
-                hoverIntensity = Interpolate.Lerp(hoverIntensity, element.IsMouseHovering ? 1f : 0f, 0.2f);
+                hoverIntensity = MathHelper.Lerp(hoverIntensity, element.IsMouseHovering ? 1f : 0f, 0.2f);
                 hoverIntensity = Math.Clamp(MathF.Round(hoverIntensity, 2), 0f, 1f);
 
                 panelShaderData.Parameters.uGrayness = 1f;
