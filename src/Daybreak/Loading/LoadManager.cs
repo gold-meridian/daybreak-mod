@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terraria.ModLoader;
@@ -12,9 +13,14 @@ namespace Daybreak.Loading;
 /// </summary>
 internal static class LoadManager
 {
+    private sealed record ModuleSettings(string? ParentMod);
+    
     // The assembly currently being loaded.  Does not stay in sync with actual
     // mod loading.
     private static string? AssemblyBeingLoaded { get; set; } = "Daybreak";
+
+    private static readonly ConditionalWeakTable<Assembly, ModuleSettings> module_settings = [];
+    private static readonly Dictionary<string, List<WeakReference<Assembly>>> assembly_modules = [];
 
 #pragma warning disable CA2255
     [ModuleInitializer]
@@ -68,5 +74,14 @@ internal static class LoadManager
               + $"\n\nIf you are a developer, you are probably dllReferencing a module expected to be loaded by a single canonical mod. If you don't know how to fix this, contact a DAYBREAK developer through the mod homepage."
             );
         }
+        
+        module_settings.AddOrUpdate(assembly, new ModuleSettings(parentMod));
+
+        if (!assembly_modules.TryGetValue(loadingMod, out var modules))
+        {
+            assembly_modules[loadingMod] = modules = [];
+        }
+        
+        modules.Add(new WeakReference<Assembly>(assembly));
     }
 }
