@@ -1,0 +1,18 @@
+<Project>
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <TmlVersion>dev</TmlVersion>
+
+        <TmlBuildMod>false</TmlBuildMod>
+
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)\shared\DaybreakModuleAttribute.cs">
+            <Link>include/%(Filename)%(Extension)</Link>
+        </Compile>
+    </ItemGroup>
+
+</Project>
