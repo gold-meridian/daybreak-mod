@@ -77,7 +77,7 @@ internal sealed class DaybreakModuleAttribute(bool loadCycle = true, string? par
             throw new InvalidOperationException(
                 "An error occurred loading a DAYBREAK module. THIS IS *NOT* DAYBREAK'S FAULT, tModLoader should indicate the mod that made the mistake."
               + "\n\nAttempted to load a Daybreak-style module without Daybreak loaded; this typically means the offending mod is not properly referencing one or more dependencies."
-              + "\n\nIf you are a player, report this to the currently-loading mod, which tModLoader should indicate."
+              + "\n\nIf you are a player, report this to the currently-loading mod's developers, which tModLoader should indicate."
               + "\n\nIf you are the developer, you're referencing a module in dllReferences when you shouldn't be. If you don't know how to fix this, contact a DAYBREAK developer through the mod homepage."
             );
         }

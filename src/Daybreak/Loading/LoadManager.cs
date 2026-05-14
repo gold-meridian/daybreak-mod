@@ -1,4 +1,8 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Core;
 
 namespace Daybreak.Loading;
 
@@ -8,6 +12,34 @@ namespace Daybreak.Loading;
 /// </summary>
 internal static class LoadManager
 {
+    // The assembly currently being loaded.  Does not stay in sync with actual
+    // mod loading.
+    private static string? AssemblyBeingLoaded { get; set; } = "Daybreak";
+
+#pragma warning disable CA2255
+    [ModuleInitializer]
+    public static void Setup()
+    {
+        // This should consistently run before any modules.  Should be safe to
+        // rely on this here, since any mods with modules that need to be loaded
+        // should always sort after Daybreak anyway.
+
+        // ModLoadContext.LoadAssemblies is how we determine the
+        // currently loading assembly.  We're already in this method when
+        // Daybreak's module initializers are run, so we can't rely on it for
+        // us, but we can obviously just assume we're the first assembly we see
+        // (hence setting AssemblyBeingLoaded to Daybreak on initialization).
+        MonoModHooks.Add(
+            typeof(AssemblyManager.ModLoadContext).GetMethod(nameof(AssemblyManager.ModLoadContext.LoadAssemblies), BindingFlags.Public | BindingFlags.Instance)!,
+            (Action<AssemblyManager.ModLoadContext> orig, AssemblyManager.ModLoadContext self) =>
+            {
+                AssemblyBeingLoaded = self.Name;
+                orig(self);
+            }
+        );
+    }
+#pragma warning restore CA2255
+
     /// <summary>
     ///     Registers a module.
     /// </summary>
@@ -15,11 +47,26 @@ internal static class LoadManager
     /// <param name="parentMod"></param>
     public static void RegisterModule(Assembly assembly, string? parentMod)
     {
-        
+        // This shouldn't really be possible, but ALC::Name can technically be
+        // null.
+        if (AssemblyBeingLoaded is null)
+        {
+            throw new InvalidOperationException($"AssemblyBeingLoaded is somehow null; can't load module: '{assembly.GetName().Name ?? assembly.FullName}'");
+        }
+
+        RegisterModule(AssemblyBeingLoaded, assembly, parentMod);
     }
 
     private static void RegisterModule(string loadingMod, Assembly assembly, string? parentMod)
     {
-        
+        if (parentMod is not null && parentMod != loadingMod)
+        {
+            throw new InvalidOperationException(
+                $"An error occurred loading a DAYBREAK module. THIS IS *NOT* DAYBREAK'S FAULT, it is likely the fault of: {loadingMod}"
+              + $"\n\nAttempted to load a Daybreak-style module into an unexpected mod; the module may only be loaded by '{parentMod}', but it was attempted to be loaded by '{loadingMod}'."
+              + $"\n\nIf you are a player, report this to the '{loadingMod}' mod's developers."
+              + $"\n\nIf you are a developer, you are probably dllReferencing a module expected to be loaded by a single canonical mod. If you don't know how to fix this, contact a DAYBREAK developer through the mod homepage."
+            );
+        }
     }
 }
