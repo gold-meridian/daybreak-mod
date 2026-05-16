@@ -117,7 +117,6 @@ public class InputField : UIPanel
         if (evt.Target != this || !this.InnerDimensions.Contains(evt.MousePosition.ToPoint()))
         {
             currentlyWriting = false;
-            return;
         }
     }
 
@@ -125,6 +124,8 @@ public class InputField : UIPanel
     public override void LeftClick(UIMouseEvent evt)
     {
         base.LeftClick(evt);
+
+        Main.ClosePlayerChat();
 
         InputHelpers.SyncBlinkerStartTime();
         currentlyWriting = true;

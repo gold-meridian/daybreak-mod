@@ -72,6 +72,7 @@ internal static class InputHelpers
     {
         On_Main.DoUpdate_HandleInput += DoUpdate_HandleInput_UpdateWasWritingText;
         On_UILinksInitializer.FancyExit += FancyExit_IgnoreExitIfWriting;
+        On_Main.DoUpdate_Enter_ToggleChat += DoUpdate_Enter_ToggleChat_BlockInput;
         Platform.Get<IImeService>().AddKeyListener(OnKeyStroke);
     }
 
@@ -87,20 +88,28 @@ internal static class InputHelpers
         orig(self);
     }
 
+    private static void FancyExit_IgnoreExitIfWriting(On_UILinksInitializer.orig_FancyExit orig)
+    {
+        if (!wasWritingText)
+        {
+            orig();
+        }
+    }
+
+    private static void DoUpdate_Enter_ToggleChat_BlockInput(On_Main.orig_DoUpdate_Enter_ToggleChat orig)
+    {
+        if (!wasWritingText || Main.drawingPlayerChat)
+        {
+            orig();
+        }
+    }
+
     private static void OnKeyStroke(char key)
     {
         if (WritingText &&
             keyStroke.Length <= max_stroke_length)
         {
             keyStroke.Append(key);
-        }
-    }
-
-    private static void FancyExit_IgnoreExitIfWriting(On_UILinksInitializer.orig_FancyExit orig)
-    {
-        if (!wasWritingText)
-        {
-            orig();
         }
     }
 
