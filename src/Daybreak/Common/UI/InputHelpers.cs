@@ -98,10 +98,9 @@ internal static class InputHelpers
 
     private static void DoUpdate_Enter_ToggleChat_BlockInput(On_Main.orig_DoUpdate_Enter_ToggleChat orig)
     {
-        if (!wasWritingText || Main.drawingPlayerChat)
-        {
-            orig();
-        }
+        Main.chatRelease &= !wasWritingText;
+
+        orig();
     }
 
     private static void OnKeyStroke(char key)
