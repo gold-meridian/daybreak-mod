@@ -70,7 +70,7 @@ internal static class InputHelpers
     [OnLoad]
     public static void Load()
     {
-        On_Main.DoUpdate_HandleInput += DoUpdate_HandleInput_UpdateWasWritingText;
+        On_Main.DoUpdate += DoUpdate_UpdateWasWritingText;
         On_UILinksInitializer.FancyExit += FancyExit_IgnoreExitIfWriting;
         On_Main.DoUpdate_Enter_ToggleChat += DoUpdate_Enter_ToggleChat_BlockInput;
         Platform.Get<IImeService>().AddKeyListener(OnKeyStroke);
@@ -82,10 +82,10 @@ internal static class InputHelpers
         Platform.Get<IImeService>().RemoveKeyListener(OnKeyStroke);
     }
 
-    private static void DoUpdate_HandleInput_UpdateWasWritingText(On_Main.orig_DoUpdate_HandleInput orig, Main self)
+    private static void DoUpdate_UpdateWasWritingText(On_Main.orig_DoUpdate orig, Main self, ref GameTime gameTime)
     {
+        orig(self, ref gameTime);
         wasWritingText = WritingText;
-        orig(self);
     }
 
     private static void FancyExit_IgnoreExitIfWriting(On_UILinksInitializer.orig_FancyExit orig)
