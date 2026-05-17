@@ -443,8 +443,6 @@ internal static class InputHelpers
 
                 blinkerX += blinker_x_offset;
 
-                blinkerX *= scale.X;
-
                 var blinkerOffset = new Vector2(blinkerX, 0) - origin;
                 blinkerOffset *= scale;
 
@@ -533,7 +531,7 @@ internal static class InputHelpers
     {
         mousePosition -= position;
         mousePosition -= origin;
-        mousePosition *= scale;
+        mousePosition /= scale;
 
         if (allowChatTags)
         {
@@ -594,7 +592,7 @@ internal static class InputHelpers
             {
                 var c = text[i];
 
-                var charSize = font.MeasureChar(c, first, scale, lastKerning, out lastKerning);
+                var charSize = font.MeasureChar(c, first, Vector2.One, lastKerning, out lastKerning);
 
                 if (mousePosition.X >= totalWidth && mousePosition.X <= totalWidth + charSize.X)
                 {
