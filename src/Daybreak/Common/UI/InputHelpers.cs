@@ -35,19 +35,21 @@ internal static class InputHelpers
     private const int key_timer_delay = 45;
 
     private static readonly char[] invalidChars =
-        [.. Enumerable.Range('\x0', '\x1F' + 1).Select(i => (char)i), // Invisible characters from Null to Unit Separator, stopping before Space.
-        '\x7F',                                                       // Delete.
+        [.. Enumerable.Range('\x0', '\x1F' + 1).Select(i => (char)i), // Invisible characters from Null to Unit Separator, stopping before Space
+        '\x7F',                                                       // Delete
         ];
-
-    private static int backspaceTimer = key_timer_delay;
 
     private static int leftArrowTimer = key_timer_delay;
 
     private static int rightArrowTimer = key_timer_delay;
 
+    private static int backspaceTimer = key_timer_delay;
+
+    private static int deleteTimer = key_timer_delay;
+
     private static readonly StringBuilder keyStroke = new StringBuilder();
 
-    // Stores the state of WritingText for use outside of drawing scopes.
+    // Stores the state of WritingText for use outside of drawing scopes
     private static bool wasWritingText;
 
     private static float blinkerStartTime;
@@ -70,7 +72,7 @@ internal static class InputHelpers
     [OnLoad]
     public static void Load()
     {
-        On_Main.DoUpdate += DoUpdate_UpdateWasWritingText;
+        On_PlayerInput.UpdateInput += UpdateInput_UpdateWasWritingText;
         On_UILinksInitializer.FancyExit += FancyExit_IgnoreExitIfWriting;
         On_Main.DoUpdate_Enter_ToggleChat += DoUpdate_Enter_ToggleChat_BlockInput;
         Platform.Get<IImeService>().AddKeyListener(OnKeyStroke);
@@ -82,10 +84,11 @@ internal static class InputHelpers
         Platform.Get<IImeService>().RemoveKeyListener(OnKeyStroke);
     }
 
-    private static void DoUpdate_UpdateWasWritingText(On_Main.orig_DoUpdate orig, Main self, ref GameTime gameTime)
+    private static void UpdateInput_UpdateWasWritingText(On_PlayerInput.orig_UpdateInput orig)
     {
-        orig(self, ref gameTime);
         wasWritingText = WritingText;
+
+        orig();
     }
 
     private static void FancyExit_IgnoreExitIfWriting(On_UILinksInitializer.orig_FancyExit orig)
@@ -122,7 +125,6 @@ internal static class InputHelpers
     {
         output = input;
 
-        // Perhaps use our own KeyboardStates?
         Main.oldInputText = Main.inputText;
         Main.inputText = Keyboard.GetState();
 
@@ -183,6 +185,19 @@ internal static class InputHelpers
                 rightArrowTimer <= 0))
             {
                 CursorPositon += right;
+            }
+        }
+
+        // Home/End
+        {
+            if (Keys.Home.JustPressed)
+            {
+                CursorPositon = 0;
+            }
+
+            if (Keys.End.JustPressed)
+            {
+                CursorPositon = output.Length;
             }
         }
 
@@ -270,13 +285,35 @@ internal static class InputHelpers
             }
         }
 
+        {
+            if (Keys.Delete.Held)
+            {
+                deleteTimer--;
+            }
+            else
+            {
+                deleteTimer = key_timer_delay;
+            }
+
+            if ((Keys.Delete.JustPressed ||
+                 (Keys.Delete.Held &&
+                  deleteTimer <= 0)) &&
+                CursorPositon < output.Length)
+            {
+                output = string.Concat(
+                    output.AsSpan(0, CursorPositon),
+                    output.AsSpan(CursorPositon + 1, output.Length - CursorPositon - 1)
+                );
+            }
+        }
+
         // Escapes
         {
-            // Unsure of why vanilla checks if you're on Windows before allowing escape inputs.
+            // Unsure of why vanilla checks if you're on Windows before allowing escape inputs
             // if (!Platform.IsWindows && Main.inputText.IsKeyDown(Keys.Escape) && !Main.oldInputText.IsKeyDown(Keys.Escape))
             if (Keys.Escape.JustPressed)
             {
-                // Definitly sketchy, but is designed to prevent UI from vanishing whilst typing.
+                // Definitely sketchy, but is designed to prevent UI from vanishing whilst typing
                 PlayerInput.WritingText = false;
                 return InputCancellationType.Escaped;
             }
@@ -290,32 +327,32 @@ internal static class InputHelpers
 
         return InputCancellationType.None;
 
-        void TryGetNeighborSnippets(string input, out TextSnippet? previous, out TextSnippet? next)
+        static void TryGetNeighborSnippets(string input, out TextSnippet? previous, out TextSnippet? next)
         {
             var snippets = ChatManager.ParseMessage(input, Color.White);
 
             previous = null;
             next = null;
 
-            int length = 0;
+            var length = 0;
 
-            for (int i = 0; i < snippets.Count; i++)
+            foreach (TextSnippet snippet in snippets)
             {
-                if (length + snippets[i].TextOriginal.Length > CursorPositon)
+                if (length + snippet.TextOriginal.Length > CursorPositon)
                 {
-                    next = snippets[i];
+                    next = snippet;
 
                     if (CursorPositon > length)
                     {
-                        previous = snippets[i];
+                        previous = snippet;
                     }
 
                     break;
                 }
 
-                length += snippets[i].TextOriginal.Length;
+                length += snippet.TextOriginal.Length;
 
-                previous = snippets[i];
+                previous = snippet;
             }
         }
 
@@ -338,11 +375,10 @@ internal static class InputHelpers
 
     private static string GetPaste(string input, bool allowLineBreaks)
     {
-        return input.Insert(
-                            CursorPositon,
-                            allowLineBreaks ?
-                                Platform.Get<IClipboard>().MultiLineValue :
-                                Platform.Get<IClipboard>().Value);
+        return input.Insert(CursorPositon,
+                            allowLineBreaks
+                          ? Platform.Get<IClipboard>().MultiLineValue
+                          : Platform.Get<IClipboard>().Value);
     }
 
     public static void DrawInputString(
@@ -555,7 +591,7 @@ internal static class InputHelpers
                 {
                     return charCount + snippet.TextOriginal.Length;
                 }
-                else if (FindHoveredCharacter(charCount, snippet.TextOriginal.Length, out int index))
+                if (FindHoveredCharacter(charCount, snippet.TextOriginal.Length, out int index))
                 {
                     return index;
                 }
