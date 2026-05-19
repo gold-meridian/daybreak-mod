@@ -248,10 +248,7 @@ public class InputField : UIPanel
             var font = FontAssets.MouseText.Value;
             var position = CalculateTextPositon(font, text, dims);
 
-            var textSize =
-                AllowChatTags
-                ? ChatManager.GetStringSize(font, text, Vector2.One)
-                : font.MeasureString(text);
+            var textSize = font.MeasureString(text, AllowChatTags);
 
             var origin = new Vector2(textSize.X * TextAlignX, textSize.Y * 0.5f);
 
@@ -299,10 +296,7 @@ public class InputField : UIPanel
     {
         var position = new Vector2(dims.X + dims.Width * TextAlignX + 2f, dims.Y + dims.Height * 0.5f + 4);
 
-        var textSize =
-            AllowChatTags
-            ? ChatManager.GetStringSize(font, text, Vector2.One)
-            : font.MeasureString(text);
+        var textSize = font.MeasureString(text, AllowChatTags);
 
         var origin = new Vector2(textSize.X * TextAlignX, textSize.Y * 0.5f);
 

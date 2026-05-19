@@ -608,6 +608,22 @@ internal static class InputHelpers
         }
     }
 
+    public static Vector2 MeasureString(this DynamicSpriteFont font, string text, bool allowChatTags)
+    {
+        var textSize =
+            allowChatTags
+          ? ChatManager.GetStringSize(font, text, Vector2.One)
+          : font.MeasureString(text);
+
+        // Prevents the blinker from appearing offset vertically
+        if (textSize.Y <= 0)
+        {
+            textSize.Y = font.MeasureChar(' ', false, Vector2.One, 0f, out _).Y;
+        }
+
+        return textSize;
+    }
+
     private static Vector2 MeasureChar(this DynamicSpriteFont font, char c, bool firstChar, Vector2 scale, float lastKerning, out float kerningZ)
     {
         var output = Vector2.Zero;
