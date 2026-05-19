@@ -313,11 +313,11 @@ public class InputField : UIPanel
 
             var offset = cursorPosition * TextScale;
 
-            // Each half of the text seperated by the alignment.
+            // Each half of the text separated by the alignment
             var width =
                 Math.Sign(offset) <= 0
-                ? (dims.Width * TextAlignX)
-                : (dims.Width * (1f - TextAlignX));
+              ? (dims.Width * TextAlignX)
+              : (dims.Width * (1f - TextAlignX));
 
             offset = Utils.Remap(Math.Abs(offset), width, textSize.X * TextScale, 0f, (textSize.X * TextScale) - width) * Math.Sign(offset);
             {
