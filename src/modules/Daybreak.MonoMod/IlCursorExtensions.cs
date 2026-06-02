@@ -1,15 +1,13 @@
 using System;
-using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 
-namespace Daybreak.Common.CIL;
+namespace Daybreak.MonoMod;
 
 /// <summary>
 ///     API extensions for <see cref="ILCursor" />s and related APIs.
 /// </summary>
-[PublicAPI]
 public static class IlCursorExtensions
 {
 #region Substitute
