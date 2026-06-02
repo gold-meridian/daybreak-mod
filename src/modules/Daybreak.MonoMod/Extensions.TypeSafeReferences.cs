@@ -105,6 +105,25 @@ partial class Extensions
             return ret;
         }
         
+        /// <inheritdoc cref="ILPatternMatchingExt.MatchLdloca(Instruction, int)"/>
+        public bool MatchLdloca(VariableIndex idx)
+        {
+            if (idx <= VariableIndex.Invalid)
+            {
+                return false;
+            }
+
+            return instr.MatchLdloca((int)idx);
+        }
+        
+        /// <inheritdoc cref="ILPatternMatchingExt.MatchLdloca(Instruction, out int)"/>
+        public bool MatchLdloca(out VariableIndex idx)
+        {
+            var ret = instr.MatchLdloca(out int i);
+            idx = (VariableIndex)i;
+            return ret;
+        }
+        
         /// <inheritdoc cref="ILPatternMatchingExt.MatchStloc(Instruction, int)"/>
         public bool MatchStloc(VariableIndex idx)
         {
