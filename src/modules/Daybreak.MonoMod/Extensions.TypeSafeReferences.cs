@@ -67,6 +67,25 @@ partial class Extensions
             return ret;
         }
         
+        /// <inheritdoc cref="ILPatternMatchingExt.MatchStarg(Instruction, int)"/>
+        public bool MatchStarg(ParameterIndex idx)
+        {
+            if (idx <= ParameterIndex.Invalid)
+            {
+                return false;
+            }
+
+            return instr.MatchStarg((int)idx);
+        }
+        
+        /// <inheritdoc cref="ILPatternMatchingExt.MatchStarg(Instruction, out int)"/>
+        public bool MatchStarg(out ParameterIndex idx)
+        {
+            var ret = instr.MatchStarg(out int i);
+            idx = (ParameterIndex)i;
+            return ret;
+        }
+        
         /// <inheritdoc cref="ILPatternMatchingExt.MatchLdloc(Instruction, int)"/>
         public bool MatchLdloc(VariableIndex idx)
         {
