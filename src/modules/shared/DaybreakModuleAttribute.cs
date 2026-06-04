@@ -1,93 +1,151 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Loader;
 using JetBrains.Annotations;
+using log4net;
+using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
 namespace Daybreak;
 
 /// <summary>
-///     Decorated assemblies are known to participate in DAYBREAK's dependency
-///     cycle loading.
+///     A DAYBREAK Module is a special kind of assembly, which has unique
+///     loading behavior.
 ///     <br />
-///     This enables an assembly to be included in the loading cycle of a parent
-///     mod as if it were part of the same assembly.
+///     Inclusion of this type in your assembly implicitly opts you into this
+///     behavior, allowing certain on-module-load actions to be configured.
 /// </summary>
-/// <param name="loadCycle">
-///     Whether the assembly actually participates in the including mod's load
-///     cycle.
-/// </param>
-/// <param name="parentMod">
-///     If specified, indicates this module is only valid to be loaded by the
-///     named mod.  Use this for modules that may be dependencies of other mods
-///     but may not be directly loaded by them (instead having to be provided by
-///     the parent mod).
-/// </param>
 [UsedImplicitly]
 [AttributeUsage(AttributeTargets.Assembly)]
-internal sealed class DaybreakModuleAttribute(bool loadCycle = true, string? parentMod = null) : Attribute
+internal sealed class DaybreakModuleAttribute : Attribute
 {
-    private static readonly DaybreakModuleAttribute default_attribute = new(loadCycle: false, parentMod: null);
+    /// <summary>
+    ///     If <see langword="true"/>, this module should participate in the
+    ///     load cycle of the mod that loads it.  This means it will be part of
+    ///     <see cref="AssemblyManager.GetLoadableTypes(Assembly)"/> and will
+    ///     have its special types (e.g. <see cref="ILoadable"/>) handled
+    ///     accordingly.
+    /// </summary>
+    public bool UseModLoadCycle { get; init; } = false;
 
-    private bool ParticipatesInLoadCycle => loadCycle;
-
-    private string? ParentMod => parentMod;
-
-    private const string daybreak_mod = "Daybreak";
-    private const string daybreak_load_manager_type = "Daybreak.Loading.LoadManager";
-    private const string load_manager_register_module_method = "RegisterModule";
+    /// <summary>
+    ///     The mod that owns this module.  If set, then the module may only be
+    ///     loaded by that mod.  This is useful for enforcing exclusivity of an
+    ///     implementation, distributing references to consuming mods while
+    ///     preventing them from accidentally loading the assembly themselves.
+    /// </summary>
+    public string? OwningMod { get; init; } = null;
 
 #pragma warning disable CA2255
     [ModuleInitializer]
     public static void VerifyAndRegisterModule()
     {
         var asm = typeof(DaybreakModuleAttribute).Assembly;
-        var settings = asm.GetCustomAttribute<DaybreakModuleAttribute>()
-                    ?? default_attribute;
+        var settings = asm.GetCustomAttribute<DaybreakModuleAttribute>();
 
-        // Nothing to do.  If the module doesn't participate in the load cycle,
-        // it's not actually a Daybreak-style module and does not need special
-        // handling (nor does Daybreak need to know about its presence).
-        if (!settings.ParticipatesInLoadCycle)
+        // No configuration, just treat it as a regular assembly.  Whatever.
+        // TODO: This may be better considered an "error" if the user has chosen
+        //       to include it?
+        if (settings is null)
         {
             return;
         }
 
-        // ModuleInitializers run early enough in the load process that
-        // ModLoader.HasMod and related APIs simply won't work.  We can get
-        // around this by manually fiddling with the assembly load contexts.
-        if (!AssemblyManager.loadedModContexts.TryGetValue(daybreak_mod, out var daybreakAlc))
+        ModuleLoader.LoadModule(settings);
+    }
+#pragma warning restore CA2255
+}
+
+/// <summary>
+///     Responsible for handling the loading of the DAYBREAK Module.
+/// </summary>
+file static class ModuleLoader
+{
+    private static ILog Logger => Logging.tML;
+
+    private static readonly Assembly module_assembly = typeof(ModuleLoader).Assembly;
+    private static string? owningMod;
+
+    public static void LoadModule(DaybreakModuleAttribute moduleSettings)
+    {
+        Logger.Debug($"Loading module: {module_assembly.GetName().FullName}");
+
+        var expectedMod = moduleSettings.OwningMod;
+        if (expectedMod is not null)
         {
-            // This is primarily a safeguard against improper dependency
-            // management, typically a result of including modules in
-            // dllReferences when it's inappropriate.  Any modules that mark
-            // loadCycle as true (default) should never be dllReferences'd by
-            // anything other than the mod whose responsibility it is to
-            // distribute the module to other mods.
-            // That means this error will basically only throw when a dependent
-            // mod includes a module as a dllReference, which it should never
-            // do.
-            // If a mod is strongly referencing Daybreak (or whatever mod is
-            // providing the module they need), they only need to modReference
-            // or weakReference the providing mod, as dependencies will be
-            // transiently provided.
-            // If a mod fails to load with weak references alone, you just need
-            // to consult the tModLoader Expert Cross Mod Guide. It will teach
-            // you how to only load assemblies when they're actually needed.
+            Logger.Debug($"Module expects to be loaded by mod: {expectedMod}");
+        }
+
+        if (AssemblyLoadContext.GetLoadContext(module_assembly) is not { } alc)
+        {
+            throw new InvalidOperationException("Failed to load module; could not resolve owning AssemblyLoadContext!");
+        }
+
+        owningMod = alc.Name;
+        Logger.Debug($"Module is being loaded by: {owningMod}");
+        if (expectedMod is not null && !string.Equals(owningMod, expectedMod, StringComparison.InvariantCultureIgnoreCase))
+        {
             throw new InvalidOperationException(
-                "An error occurred loading a DAYBREAK module. THIS IS *NOT* DAYBREAK'S FAULT, tModLoader should indicate the mod that made the mistake."
-              + "\n\nAttempted to load a Daybreak-style module without Daybreak loaded; this typically means the offending mod is not properly referencing one or more dependencies."
-              + "\n\nIf you are a player, report this to the currently-loading mod's developers, which tModLoader should indicate."
-              + "\n\nIf you are the developer, you're referencing a module in dllReferences when you shouldn't be. If you don't know how to fix this, contact a DAYBREAK developer through the mod homepage."
+                $"The mod '{owningMod}' failed to load due to misconfigured DAYBREAK-style modules."
+              + $"\'{owningMod}' attempted to load the module '{module_assembly.GetName().FullName}', but the module may only be loaded by '{expectedMod}'!"
+              + $"\n\nIf you are a player, simply report this to the developers of '{owningMod}'."
+              + $"\n\nIf you're a developer, you have attempted to load an assembly owned by another mod.  Do not reference this module with dllReferences."
+              + $"\nIf you're a developer and need help fixing this, talk to the DAYBREAK developers in the NIGHTSHADE Discord: discord.gg/yog"
             );
         }
 
-        // Transfer handling to the loaded Daybreak copy now, so we can record
-        // the module's presence.
-        daybreakAlc.assembly
-                   .GetType(daybreak_load_manager_type)!
-                   .GetMethod(load_manager_register_module_method, BindingFlags.Public | BindingFlags.Static, [typeof(Assembly), typeof(string)])!
-                   .Invoke(null, [asm, settings.ParentMod]);
+        if (moduleSettings.UseModLoadCycle)
+        {
+            Logger.Debug("Module has requested to participate in the mod load cycle.");
+            InjectIntoLoadCycle();
+        }
+        else
+        {
+            Logger.Debug("Module has not requested to participate in the mod load cycle.");
+        }
     }
-#pragma warning restore CA2255
+
+    private static void InjectIntoLoadCycle()
+    {
+        Logger.Debug("Injecting into the mod load cycle...");
+
+        if (owningMod is null)
+        {
+            throw new InvalidOperationException($"Module had no resolved loading mod; {nameof(owningMod)} was null!");
+        }
+        
+        MonoModHooks.Add(
+            typeof(AssemblyManager).GetMethod(nameof(AssemblyManager.GetLoadableTypes), BindingFlags.NonPublic | BindingFlags.Static, [typeof(AssemblyManager.ModLoadContext), typeof(MetadataLoadContext)])!,
+            (Func<AssemblyManager.ModLoadContext, MetadataLoadContext, Dictionary<Assembly, Type[]>> orig, AssemblyManager.ModLoadContext mod, MetadataLoadContext mlc) =>
+            {
+                var typeMap = orig(mod, mlc);
+                if (owningMod != mod.Name)
+                {
+                    return typeMap;
+                }
+
+                if (!typeMap.TryGetValue(module_assembly, out var types))
+                {
+                    Logger.Warn($"Failed to find assembly types in GetLoadableTypes type map for mod: {owningMod}");
+                    return typeMap;
+                }
+                
+                // Clear it out to avoid duplicated logic but also to avoid
+                // null references, since I think a mod could try to request
+                // loadable types of our assembly by checking
+                // ModLoadContext::assemblies.
+                typeMap[module_assembly] = [];
+                
+                // Actually add our types to the main mod.  This is a little
+                // gross due to ordering, but tModLoader makes no guarantees
+                // about it, and we can call it an implementation detail.
+                typeMap[mod.assembly] = typeMap[mod.assembly].Concat(types).ToArray();
+                
+                return typeMap;
+            }
+        );
+    }
 }
