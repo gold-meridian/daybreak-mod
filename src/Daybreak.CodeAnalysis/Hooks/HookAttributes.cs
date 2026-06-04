@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace Daybreak.CodeAnalysis;
+namespace Daybreak.CodeAnalysis.Hooks;
 
 public readonly record struct HookAttributes(
     INamedTypeSymbol BaseHook,

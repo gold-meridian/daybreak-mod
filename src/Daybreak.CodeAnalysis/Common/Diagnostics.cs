@@ -9,6 +9,7 @@ public static class Diagnostics
         public const string MAINTAINABILITY = "Maintainability";
     }
 
+#region Hooks
     public static DiagnosticDescriptor HookInstanceMismatch { get; } = new(
         id: "DB1001",
         title: "Target method instancing mismatch",
@@ -48,4 +49,5 @@ public static class Diagnostics
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true
     );
+#endregion
 }

@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Daybreak.CodeAnalysis;
+namespace Daybreak.CodeAnalysis.Hooks.Analyzers;
 
 public static class InvalidHookStacking
 {
