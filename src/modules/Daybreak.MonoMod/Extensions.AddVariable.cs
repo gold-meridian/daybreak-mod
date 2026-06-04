@@ -27,13 +27,13 @@ partial class Extensions
         /// <inheritdoc cref="AddVariable(MethodBody, TypeReference, bool)"/>
         public VariableDefinition AddVariable<T>(bool makePinned = false)
         {
-            return AddVariable(il.Body, il.Import(typeof(T)), makePinned);
+            return il.Body.AddVariable(il.Import(typeof(T)), makePinned);
         }
 
         /// <inheritdoc cref="AddVariable(MethodBody, TypeReference, bool)"/>
         public VariableDefinition AddVariable(TypeReference type,bool makePinned = false)
         {
-            return AddVariable(il.Body, type, makePinned);
+            return il.Body.AddVariable(type, makePinned);
         }
     }
 
