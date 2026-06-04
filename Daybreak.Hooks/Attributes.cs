@@ -50,7 +50,8 @@ public sealed class OriginalNameAttribute(string name) : Attribute
 }
 
 /// <summary>
-///     
+///     Indicates that a hook may omit the return value, opting to return
+///     <see langword="void"/> instead.
 /// </summary>
 [AttributeUsage(AttributeTargets.ReturnValue)]
 public abstract class AbstractPermitsVoidAttribute : Attribute
@@ -63,6 +64,10 @@ public abstract class AbstractPermitsVoidAttribute : Attribute
     );
 }
 
+/// <summary>
+///     An implementation of <see cref="AbstractPermitsVoidAttribute"/> that
+///     automatically invokes the original delegate of a hook.
+/// </summary>
 [AttributeUsage(AttributeTargets.ReturnValue)]
 public sealed class PermitsVoidInvokeParameterWithParametersAttribute(string parameterName) : AbstractPermitsVoidAttribute
 {
