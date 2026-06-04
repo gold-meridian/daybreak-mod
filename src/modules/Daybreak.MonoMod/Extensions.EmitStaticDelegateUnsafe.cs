@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Mono.Cecil;
 using MonoMod.Cil;
 using MonoMod.Utils;
@@ -45,58 +46,70 @@ partial class Extensions
         /// </param>
         public void EmitStaticDelegateUnsafe(Delegate @delegate)
         {
-            using var dmd = new DynamicMethodDefinition(@delegate.Method);
-            var method = dmd.Definition;
-
-            if (method is { HasThis: false, IsStatic: true })
+            var compiled = DelegateLifter.LiftDelegateToStaticMethod(@delegate);
+            if (compiled is null)
             {
-                // It's assumedly fine for this to be emitted directly?
                 c.EmitDelegate(@delegate);
-                return;
+                return;   
             }
-
-            using (var methodCtx = new ILContext(method))
-            {
-                var methodCursor = new ILCursor(methodCtx);
-
-                // Convert raw argument-referencing opcodes to their Cecil
-                // "safe" variants.  MonoMod already resolves the raw index from
-                // "safe" variants, so remaking them here is fine.
-                while (true)
-                {
-                    var parameterIdx = -1;
-                    if (methodCursor.TryGotoNext(MoveType.Before, x => x.MatchLdarg(out parameterIdx)))
-                    {
-                        VerifyAndModifyInstruction(methodCursor, parameterIdx, methodCursor.EmitLdarg);
-                        continue;
-                    }
-
-                    if (methodCursor.TryGotoNext(MoveType.Before, x => x.MatchLdarga(out parameterIdx)))
-                    {
-                        VerifyAndModifyInstruction(methodCursor, parameterIdx, methodCursor.EmitLdarga);
-                        continue;
-                    }
-
-                    if (methodCursor.TryGotoNext(MoveType.Before, x => x.MatchStarg(out parameterIdx)))
-                    {
-                        VerifyAndModifyInstruction(methodCursor, parameterIdx, methodCursor.EmitStarg);
-                        continue;
-                    }
-
-                    break;
-                }
-            }
-
-            // Doesn't matter much where this happens as long as it's after
-            // we analyze and edit the method (and before we generate the
-            // new method, duh).
-            method.HasThis = false;
-            method.ExplicitThis = false;
-            method.IsStatic = true;
-
-            var compiled = dmd.Generate();
+            
             c.EmitCall(compiled);
         }
+    }
+}
+
+internal static class DelegateLifter
+{
+    public static MethodInfo? LiftDelegateToStaticMethod(Delegate @delegate)
+    {
+        using var dmd = new DynamicMethodDefinition(@delegate.Method);
+        var method = dmd.Definition;
+
+        if (method is { HasThis: false, IsStatic: true })
+        {
+            return null;
+        }
+
+        using (var methodCtx = new ILContext(method))
+        {
+            var methodCursor = new ILCursor(methodCtx);
+
+            // Convert raw argument-referencing opcodes to their Cecil
+            // "safe" variants.  MonoMod already resolves the raw index from
+            // "safe" variants, so remaking them here is fine.
+            while (true)
+            {
+                var parameterIdx = -1;
+                if (methodCursor.TryGotoNext(MoveType.Before, x => x.MatchLdarg(out parameterIdx)))
+                {
+                    VerifyAndModifyInstruction(methodCursor, parameterIdx, methodCursor.EmitLdarg);
+                    continue;
+                }
+
+                if (methodCursor.TryGotoNext(MoveType.Before, x => x.MatchLdarga(out parameterIdx)))
+                {
+                    VerifyAndModifyInstruction(methodCursor, parameterIdx, methodCursor.EmitLdarga);
+                    continue;
+                }
+
+                if (methodCursor.TryGotoNext(MoveType.Before, x => x.MatchStarg(out parameterIdx)))
+                {
+                    VerifyAndModifyInstruction(methodCursor, parameterIdx, methodCursor.EmitStarg);
+                    continue;
+                }
+
+                break;
+            }
+        }
+
+        // Doesn't matter much where this happens as long as it's after
+        // we analyze and edit the method (and before we generate the
+        // new method, duh).
+        method.HasThis = false;
+        method.ExplicitThis = false;
+        method.IsStatic = true;
+
+        return dmd.Generate();
     }
 
     private static void VerifyAndModifyInstruction(ILCursor c, int parameterIndex, Func<ParameterDefinition, ILCursor> emitter)
