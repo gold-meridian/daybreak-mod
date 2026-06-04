@@ -21,6 +21,18 @@ public static class EarlyLoadHooks
 
     private static readonly Dictionary<nint, bool> type_runs_cctor = [];
     private static readonly Dictionary<Assembly, Type[]> loadable_types = [];
+    
+    /// <summary>
+    ///     Internally used to hook into the start of mod loading; useful for
+    ///     injecting content into other mods.
+    /// </summary>
+    public static event Action<Mod>? OnEarlyModLoad;
+
+    /// <summary>
+    ///     Internally used to hook into the start of mod unloading; useful for
+    ///     terminating certain systems early.
+    /// </summary>
+    public static event Action<Mod>? OnEarlyModUnload;
 
     /// <summary>
     ///     Returns the currently loading mod or throws an exception when there
@@ -81,9 +93,7 @@ public static class EarlyLoadHooks
                 Debug.Assert(currentlyLoadingMod is null);
 
                 currentlyLoadingMod = self;
-
-                // OnEarlyModLoad?.Invoke(self);
-
+                OnEarlyModLoad?.Invoke(self);
                 orig(self);
             }
         );
@@ -220,7 +230,7 @@ public static class EarlyLoadHooks
     private static void UnloadContent_WrapToMarkUnloadingMod(Action<Mod> orig, Mod mod)
     {
         currentlyUnloadingMod = mod;
-        // OnEarlyModUnload?.Invoke(mod);
+        OnEarlyModUnload?.Invoke(mod);
         orig(mod);
         currentlyUnloadingMod = null;
     }
