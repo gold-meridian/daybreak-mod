@@ -21,8 +21,11 @@ public static class EarlyLoadHooks
 
     private static readonly Dictionary<nint, bool> type_runs_cctor = [];
     private static readonly Dictionary<Assembly, Type[]> loadable_types = [];
-    private static readonly string assembly_name = typeof(HookLoader).Assembly.GetName().Name ?? "Daybreak";
 
+    /// <summary>
+    ///     Returns the currently loading mod or throws an exception when there
+    ///     is none.
+    /// </summary>
     public static Mod GetModOrThrow()
     {
         return currentlyLoadingMod ?? throw new InvalidOperationException("Cannot continue with operation as no mod is currently applicable to load content through Mod::AddContent");
@@ -37,12 +40,12 @@ public static class EarlyLoadHooks
         // them.
         MonoModHooks.Add(
             typeof(Mod).GetMethods().Single(x => x.Name.Equals(nameof(Mod.AddContent)) && !x.IsGenericMethod),
-            AddContent_ResolveInstancedHooks_CallOnLoads
+            AddContent_Instanced_OnLoads
         );
 
         MonoModHooks.Add(
             typeof(Mod).GetMethod(nameof(Mod.Autoload), BindingFlags.NonPublic | BindingFlags.Instance)!,
-            Autoload_ResolveStaticHooks_CallOnLoads
+            Autoload_Static_OnLoads
         );
 
         /*
@@ -54,12 +57,12 @@ public static class EarlyLoadHooks
 
         MonoModHooks.Add(
             typeof(MonoModHooks).GetMethod(nameof(MonoModHooks.RemoveAll), BindingFlags.NonPublic | BindingFlags.Static)!,
-            RemoveAll_SkipUs
+            RemoveAll_PostponeRemovingOurHooks
         );
 
         MonoModHooks.Modify(
             typeof(Mod).GetMethod(nameof(Mod.UnloadContent), BindingFlags.NonPublic | BindingFlags.Instance)!,
-            UnloadContent_CallOnUnloads
+            UnloadContent_CallAllOnUnloads
         );
 
         MonoModHooks.Add(
@@ -79,7 +82,7 @@ public static class EarlyLoadHooks
 
                 currentlyLoadingMod = self;
 
-                OnEarlyModLoad?.Invoke(self);
+                // OnEarlyModLoad?.Invoke(self);
 
                 orig(self);
             }
@@ -104,7 +107,7 @@ public static class EarlyLoadHooks
         return mod.Name == ModuleLoader.OwningMod || mod.Code.GetReferencedAssemblies().Any(x => x.Name == ModuleLoader.OwningMod);
     }
 
-    private static bool AddContent_ResolveInstancedHooks_CallOnLoads(Func<Mod, ILoadable, bool> orig, Mod self, ILoadable instance)
+    private static bool AddContent_Instanced_OnLoads(Func<Mod, ILoadable, bool> orig, Mod self, ILoadable instance)
     {
         // Only attempt to resolve and apply hooks if the instance actually
         // loaded...
@@ -120,11 +123,11 @@ public static class EarlyLoadHooks
         return true;
     }
 
-    private static void Autoload_ResolveStaticHooks_CallOnLoads(Action<Mod> orig, Mod self)
+    private static void Autoload_Static_OnLoads(Action<Mod> orig, Mod self)
     {
         orig(self);
 
-        if (self.Code is null || !ModIsEligibleForDaybreakLoading(self))
+        if (self.Code is null || !ModIsEligibleForSpecialLoading(self))
         {
             return;
         }
@@ -160,7 +163,7 @@ public static class EarlyLoadHooks
     }
     */
 
-    private static void RemoveAll_SkipUs(Action<Mod> orig, Mod mod)
+    private static void RemoveAll_PostponeRemovingOurHooks(Action<Mod> orig, Mod mod)
     {
         if (mod.Name == ModuleLoader.OwningMod)
         {
@@ -170,16 +173,19 @@ public static class EarlyLoadHooks
         // Force our edits to unload when it gets to ModLoaderMod instead (late
         // stage).
         // Use TryGetMod because GetInstance may return null in early unload stages.
-        if (mod is ModLoaderMod && ModLoader.TryGetMod("Daybreak", out var modImpl))
+        if (mod is ModLoaderMod && ModLoader.TryGetMod(ModuleLoader.OwningMod, out var modImpl))
         {
             orig(modImpl);
-            return;
+
+            // DAYBREAK used to return here, skipping RemoveAll for ModLoaderMod
+            // since it's a no-op.  DON'T DO THIS HERE.  This detour may be
+            // layered now by multiple mods including this module.
         }
 
         orig(mod);
     }
 
-    private static void UnloadContent_CallOnUnloads(ILContext il)
+    private static void UnloadContent_CallAllOnUnloads(ILContext il)
     {
         var c = new ILCursor(il);
 
@@ -214,7 +220,7 @@ public static class EarlyLoadHooks
     private static void UnloadContent_WrapToMarkUnloadingMod(Action<Mod> orig, Mod mod)
     {
         currentlyUnloadingMod = mod;
-        OnEarlyModUnload?.Invoke(mod);
+        // OnEarlyModUnload?.Invoke(mod);
         orig(mod);
         currentlyUnloadingMod = null;
     }
