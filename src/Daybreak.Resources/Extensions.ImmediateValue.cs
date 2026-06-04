@@ -2,7 +2,7 @@
 
 namespace Daybreak.Resources;
 
-partial class AssetExtensions
+partial class Extensions
 {
     extension<T>(Asset<T> asset)
         where T : class
