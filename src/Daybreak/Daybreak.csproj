@@ -16,8 +16,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Daybreak.CodeAnalysis\Daybreak.CodeAnalysis.csproj" PrivateAssets="All" ReferenceOutputAssembly="false" OutputItemType="Analyzer"/>
-        <ProjectReference Include="..\modules\Daybreak.MonoMod\Daybreak.MonoMod.csproj"/>
-        <ProjectReference Include="..\modules\Daybreak.Resources\Daybreak.Resources.csproj"/>
+        <ProjectReference Include="..\Daybreak.MonoMod\Daybreak.MonoMod.csproj"/>
+        <ProjectReference Include="..\Daybreak.Resources\Daybreak.Resources.csproj"/>
     </ItemGroup>
 
 </Project>

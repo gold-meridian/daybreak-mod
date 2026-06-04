@@ -12,7 +12,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="$(MSBuildThisFileDirectory)\shared\DaybreakModuleAttribute.cs">
+        <Compile Include="$(MSBuildThisFileDirectory)\DaybreakModuleAttribute.cs">
             <Link>include/%(Filename)%(Extension)</Link>
         </Compile>
     </ItemGroup>
