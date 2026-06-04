@@ -69,7 +69,7 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
             sb.AppendLine($"//     {hook}");
         }
 
-        sb.AppendLine($"public static partial class {typeName}");
+        sb.AppendLine($"internal static partial class {typeName}");
         sb.AppendLine("{");
         var ranOnce = false;
         foreach (var method in hooks)
@@ -104,7 +104,7 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
 
         var implName = $"{type.Name}_{hookName}_Impl";
         sb.AppendLine("[Terraria.ModLoader.Autoload(false)]");
-        sb.AppendLine($"public sealed partial class {implName} : {type.GetFullMetadataName()}");
+        sb.AppendLine($"internal sealed partial class {implName} : {type.GetFullMetadataName()}");
         sb.AppendLine("{");
 
         sb.AppendLine("    [field: Terraria.ModLoader.CloneByReference]");
@@ -433,7 +433,7 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
         return sb.ToString();
     }
 
-    public static string GetParameterDefinition(IParameterSymbol parameter)
+    private static string GetParameterDefinition(IParameterSymbol parameter)
     {
         var prefix = GetReferencePrefix(parameter);
         var type = GetFullTypeNameOrCSharpKeyword(parameter.Type, isByRef: false, includeRefPrefix: false);
@@ -442,7 +442,7 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
         return prefix + type + ' ' + name;
     }
 
-    public static string GetFullTypeNameOrCSharpKeyword(ITypeSymbol type, bool isByRef, bool includeRefPrefix = false)
+    private static string GetFullTypeNameOrCSharpKeyword(ITypeSymbol type, bool isByRef, bool includeRefPrefix = false)
     {
         var prefix = includeRefPrefix && isByRef ? "ref " : "";
 
@@ -497,7 +497,7 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
         return prefix + GetCSharpRepresentation(fallback);
     }
 
-    public static string GetReferencePrefix(IParameterSymbol parameter)
+    private static string GetReferencePrefix(IParameterSymbol parameter)
     {
         return parameter.RefKind switch
         {
@@ -509,7 +509,7 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
         };
     }
 
-    public static string GetCSharpRepresentation(string fullName)
+    private static string GetCSharpRepresentation(string fullName)
     {
         fullName = fullName.Replace('/', '.');
         fullName = fullName.Replace('+', '.');
@@ -530,7 +530,7 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
         return fullName;
     }
 
-    public static string GetParameterReference(IParameterSymbol parameter)
+    private static string GetParameterReference(IParameterSymbol parameter)
     {
         return GetReferencePrefix(parameter) + parameter.Name;
     }
