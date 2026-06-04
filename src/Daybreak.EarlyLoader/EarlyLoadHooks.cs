@@ -17,9 +17,7 @@ namespace Daybreak.EarlyLoader;
 public static class EarlyLoadHooks
 {
     private static Mod? currentlyLoadingMod;
-    private static Mod? currentlyUnloadingMod;
 
-    private static readonly Dictionary<nint, bool> type_runs_cctor = [];
     private static readonly Dictionary<Assembly, Type[]> loadable_types = [];
 
     /// <summary>
