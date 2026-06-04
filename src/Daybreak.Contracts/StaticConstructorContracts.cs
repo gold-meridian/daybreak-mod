@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Daybreak.Hooks;
+namespace Daybreak.Contracts;
 
 /// <summary>
 ///     Any types decorated with this attribute will cause a type to run its

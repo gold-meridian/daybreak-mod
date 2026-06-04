@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -11,8 +10,6 @@ namespace Daybreak.Hooks;
 
 internal static class HookLoader
 {
-    private static readonly Dictionary<nint, bool> type_runs_cctor = [];
-
 #pragma warning disable CA2255
     [ModuleInitializer]
     internal static void HookIntoEarlyLoads()
@@ -63,8 +60,6 @@ internal static class HookLoader
 
     private static void LoadInstance(Mod mod, ILoadable loadable)
     {
-        // TODO: ContractEnforcer.ValidateLoadable(instance);
-
         SubscribeToHooks(
             loadable.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance),
             loadable
@@ -177,33 +172,6 @@ internal static class HookLoader
 
                 attribute.Apply(method, instance);
             }
-        }
-    }
-
-    private static void RunStaticConstructors(Type type)
-    {
-        var fields = type.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-
-        foreach (var field in fields)
-        {
-            var handle = field.FieldType.TypeHandle.Value;
-            if (!type_runs_cctor.TryGetValue(handle, out var runsStaticCtor))
-            {
-                runsStaticCtor = type_runs_cctor[handle] = field.FieldType.GetCustomAttribute<RunsStaticConstructorsAttribute>(inherit: false) is not null;
-            }
-
-            if (!runsStaticCtor)
-            {
-                continue;
-            }
-
-            if (field.GetCustomAttribute<DontForceStaticConstructorAttribute>(inherit: false) is not null)
-            {
-                continue;
-            }
-
-            RuntimeHelpers.RunClassConstructor(type.TypeHandle);
-            return;
         }
     }
 }

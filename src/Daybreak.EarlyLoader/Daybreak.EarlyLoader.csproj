@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
 
-    <Import Project="../Module.props"/>
+    <Import Project="../Module.props" />
 
 </Project>
