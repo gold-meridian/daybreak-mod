@@ -1,10 +1,51 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Microsoft.CodeAnalysis;
 
 namespace Daybreak.CodeAnalysis;
 
 internal static class Extensions
 {
+    extension(ISymbol? symbol)
+    {
+        // https://stackoverflow.com/a/27106959
+        public string GetFullMetadataName() 
+        {
+            if (symbol is null || symbol.IsRootNamespace())
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder(symbol.MetadataName);
+            var last = symbol;
+
+            symbol = symbol.ContainingSymbol;
+
+            while (!symbol.IsRootNamespace())
+            {
+                if (symbol is ITypeSymbol && last is ITypeSymbol)
+                {
+                    sb.Insert(0, '+');
+                }
+                else
+                {
+                    sb.Insert(0, '.');
+                }
+
+                sb.Insert(0, symbol.OriginalDefinition.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
+                // sb.Insert(0, s.MetadataName);
+                symbol = symbol.ContainingSymbol;
+            }
+
+            return sb.ToString();
+        }
+
+        private bool IsRootNamespace() 
+        {
+            return symbol is INamespaceSymbol { IsGlobalNamespace: true };
+        }
+    }
+    
     extension(INamedTypeSymbol? symbol)
     {
         public bool InheritsFrom(INamedTypeSymbol baseType)

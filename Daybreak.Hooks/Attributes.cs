@@ -64,7 +64,7 @@ public abstract class AbstractPermitsVoidAttribute : Attribute
 }
 
 [AttributeUsage(AttributeTargets.ReturnValue)]
-internal sealed class PermitsVoidInvokeParameterWithParametersAttribute(string parameterName) : AbstractPermitsVoidAttribute
+public sealed class PermitsVoidInvokeParameterWithParametersAttribute(string parameterName) : AbstractPermitsVoidAttribute
 {
     public string ParameterName => parameterName;
 
