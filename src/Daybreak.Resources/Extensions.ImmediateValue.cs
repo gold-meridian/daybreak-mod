@@ -2,10 +2,7 @@
 
 namespace Daybreak.Resources;
 
-/// <summary>
-///     Extensions to <see cref="Asset{T}"/>.
-/// </summary>
-public static class AssetExtensions
+partial class AssetExtensions
 {
     extension<T>(Asset<T> asset)
         where T : class
