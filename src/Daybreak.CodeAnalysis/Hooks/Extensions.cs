@@ -1,0 +1,123 @@
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using Microsoft.CodeAnalysis;
+
+namespace Daybreak.CodeAnalysis.Hooks;
+
+internal static class Extensions
+{
+    extension(INamedTypeSymbol? symbol)
+    {
+        public HookDefinition? GetHookDefinition(HookAttributes attrs)
+        {
+            if (!symbol?.InheritsFrom(attrs.BaseHook) ?? false)
+            {
+                return null;
+            }
+
+            var candidates = symbol!.GetAttributes();
+            foreach (var candidate in candidates)
+            {
+                if (!candidate.AttributeClass?.InheritsFrom(attrs.HookMetadata) ?? false)
+                {
+                    continue;
+                }
+
+                var arguments = candidate.NamedArguments;
+
+                var delegateType = arguments
+                                  .FirstOrDefault(x => x.Key == "DelegateType")
+                                  .Value.Value as INamedTypeSymbol;
+
+                var typeContainingEvent = arguments
+                                         .FirstOrDefault(x => x.Key == "TypeContainingEvent")
+                                         .Value.Value as INamedTypeSymbol;
+
+                var eventName = arguments
+                               .FirstOrDefault(x => x.Key == "EventName")
+                               .Value.Value as string;
+
+                var delegateName = arguments
+                                  .FirstOrDefault(x => x.Key == "DelegateName")
+                                  .Value.Value as string;
+
+                var canStack = arguments
+                              .FirstOrDefault(x => x.Key == "CanStack")
+                              .Value.Value is true;
+
+                return new HookDefinition(
+                    symbol,
+                    delegateType,
+                    typeContainingEvent,
+                    eventName,
+                    delegateName,
+                    canStack
+                );
+            }
+
+            return null;
+        }
+    }
+
+    extension(Compilation compilation)
+    {
+        public INamedTypeSymbol? BaseHook => compilation.GetTypeByMetadataName("Daybreak.Hooks.BaseHookAttribute");
+
+        public INamedTypeSymbol? HookMetadata => compilation.GetTypeByMetadataName("Daybreak.Hooks.HookMetadataAttribute");
+
+        public INamedTypeSymbol? Omittable => compilation.GetTypeByMetadataName("Daybreak.Hooks.OmittableAttribute");
+
+        public INamedTypeSymbol? OriginalName => compilation.GetTypeByMetadataName("Daybreak.Hooks.OriginalNameAttribute");
+
+        public INamedTypeSymbol? AbstractPermitsVoid => compilation.GetTypeByMetadataName("Daybreak.Hooks.AbstractPermitsVoidAttribute");
+
+        public bool TryGetHookAttributes(out HookAttributes attributes)
+        {
+            if (
+                compilation.BaseHook is not { } baseHook
+             || compilation.HookMetadata is not { } hookMetadata
+             || compilation.Omittable is not { } omittable
+             || compilation.OriginalName is not { } originalName
+             || compilation.AbstractPermitsVoid is not { } abstractPermitsVoid
+            )
+            {
+                attributes = default(HookAttributes);
+                return false;
+            }
+
+            attributes = new HookAttributes(
+                baseHook,
+                hookMetadata,
+                omittable,
+                originalName,
+                abstractPermitsVoid
+            );
+            return true;
+        }
+    }
+
+    extension(ImmutableArray<AttributeData> attributes)
+    {
+        public IEnumerable<HookDefinition> GetHooks(HookAttributes attrs)
+        {
+            return attributes.Select(attribute => attribute.AttributeClass?.GetHookDefinition(attrs)).OfType<HookDefinition>();
+        }
+
+        public AttributeHookPair? GetFirstHookAttribute(HookAttributes attrs)
+        {
+            foreach (var attribute in attributes)
+            {
+                var hook = attribute.AttributeClass?.GetHookDefinition(attrs);
+                if (hook is null)
+                {
+                    continue;
+                }
+
+                return new AttributeHookPair(attribute.AttributeClass!, hook);
+            }
+
+            return null;
+        }
+    }
+}

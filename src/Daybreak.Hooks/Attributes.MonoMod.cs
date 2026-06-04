@@ -1,7 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
-
-namespace Daybreak.Common.Features.Hooks;
+﻿namespace Daybreak.Hooks;
 
 /*
 [PublicAPI]

@@ -1,4 +1,4 @@
-﻿namespace Daybreak.CodeAnalysis;
+﻿namespace Daybreak.CodeAnalysis.Hooks;
 
 public enum HookInstancing
 {

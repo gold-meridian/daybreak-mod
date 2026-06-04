@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Editing;
 
-namespace Daybreak.CodeAnalysis;
+namespace Daybreak.CodeAnalysis.Hooks.Analyzers;
 
 public static class HookInstanceMismatch
 {

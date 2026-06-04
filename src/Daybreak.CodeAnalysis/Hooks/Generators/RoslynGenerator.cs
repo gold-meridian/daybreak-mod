@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Mono.Cecil;
-using Mono.Cecil.Rocks;
-using MonoMod.Utils;
+using Microsoft.CodeAnalysis;
 
-namespace DaybreakHookGenerator;
+namespace Daybreak.CodeAnalysis.Hooks.Generators;
 
-public sealed class Generator(ModuleDefinition module, TypeDefinition type)
+// Ported grossly from the original text file generator... :(
+
+internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol type)
 {
     private static readonly Dictionary<string, string> csharp_keyword_map = new()
     {
@@ -32,18 +31,27 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         { typeof(nuint).FullName!, "nuint" },
     };
 
-    public string BuildType(string typeNamespace, string typeName, TypeHookDefinition hookDefinition)
+    public string BuildType(string ns, string typeName, TypeHookDefinition def)
     {
         var sb = new StringBuilder();
 
-        var hooks = ResolveHooksFromType(type, hookDefinition.Exclusions);
-        foreach (var superType in hookDefinition.SuperTypes)
+        var hooks = ResolveHooksFromType(type, def.Exclusions);
+        foreach (var super in def.SuperTypes)
         {
-            var superHooks = ResolveHooksFromType(module.GetType(superType.Type.FullName), superType.Exclusions);
-            hooks = hooks.Concat(superHooks).ToArray();
+            var superType = compilation.GetTypeByMetadataName(super.TypeMetadataName);
+            if (superType is null)
+            {
+                continue;
+            }
+
+            hooks = hooks.Concat(ResolveHooksFromType(superType, super.Exclusions)).ToArray();
         }
 
-        sb.AppendLine($"namespace {typeNamespace};");
+        sb.AppendLine("#nullable enable");
+        sb.AppendLine();
+        sb.AppendLine("using Daybreak.EarlyLoader;");
+        sb.AppendLine("using Daybreak.Hooks;");
+        sb.AppendLine("using Terraria.ModLoader;");
         sb.AppendLine();
         sb.AppendLine("// ReSharper disable ConvertToPrimaryConstructor");
         sb.AppendLine("// ReSharper disable RedundantLambdaParameterType");
@@ -54,16 +62,18 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         sb.AppendLine("// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract");
         sb.AppendLine("#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member");
         sb.AppendLine();
-        sb.AppendLine($"// Hooks to generate for '{type.FullName}':");
+        sb.AppendLine($"namespace {ns};");
+        sb.AppendLine();
+        sb.AppendLine($"// Hooks to generate for '{def.TypeMetadataName}':");
         foreach (var hook in hooks)
         {
             sb.AppendLine($"//     {hook}");
         }
 
-        sb.AppendLine($"public static partial class {typeName}");
+        sb.AppendLine($"internal static partial class {typeName}");
         sb.AppendLine("{");
         var ranOnce = false;
-        foreach (var hook in hooks)
+        foreach (var method in hooks)
         {
             if (ranOnce)
             {
@@ -72,21 +82,21 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
             ranOnce = true;
 
-            sb.Append(BuildHook(hook, hasOverloads: type.GetMethods().Count(x => x.Name == hook.Name) > 1));
+            sb.Append(BuildHook(method, hasOverloads: type.GetMembers().OfType<IMethodSymbol>().Count(x => x.Name == method.Name) > 1));
         }
 
         sb.AppendLine("}");
 
-        foreach (var hook in hooks)
+        foreach (var method in hooks)
         {
             sb.AppendLine();
-            sb.Append(BuildImpl(hook, hasOverloads: type.GetMethods().Count(x => x.Name == hook.Name) > 1, typeName));
+            sb.Append(BuildImpl(method, hasOverloads: type.GetMembers().OfType<IMethodSymbol>().Count(x => x.Name == method.Name) > 1, typeName));
         }
 
         return sb.ToString().TrimEnd();
     }
 
-    private string BuildImpl(MethodDefinition method, bool hasOverloads, string hooksName)
+    private string BuildImpl(IMethodSymbol method, bool hasOverloads, string hooksName)
     {
         var sb = new StringBuilder();
 
@@ -95,7 +105,7 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
         var implName = $"{type.Name}_{hookName}_Impl";
         sb.AppendLine("[Terraria.ModLoader.Autoload(false)]");
-        sb.AppendLine($"public sealed partial class {implName} : {type.FullName}");
+        sb.AppendLine($"internal sealed partial class {implName} : {type.GetFullMetadataName()}");
         sb.AppendLine("{");
 
         sb.AppendLine("    [field: Terraria.ModLoader.CloneByReference]");
@@ -148,16 +158,16 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         }
         */
 
-        sb.Append($"    public override {GetFullTypeNameOrCSharpKeyword(method.ReturnType, includeRefPrefix: true)} {name}(");
-        if (method.Parameters.Count > 0)
+        sb.Append($"    public override {GetFullTypeNameOrCSharpKeyword(method.ReturnType, method.ReturnsByRef, includeRefPrefix: true)} {name}(");
+        if (method.Parameters.Length > 0)
         {
             sb.AppendLine();
 
-            for (var i = 0; i < method.Parameters.Count; i++)
+            for (var i = 0; i < method.Parameters.Length; i++)
             {
                 var parameter = method.Parameters[i];
                 sb.Append($"        {GetParameterDefinition(parameter)}");
-                if (i < method.Parameters.Count - 1)
+                if (i < method.Parameters.Length - 1)
                 {
                     sb.AppendLine(",");
                 }
@@ -176,7 +186,7 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
         sb.AppendLine("    {");
 
-        if (method.ReturnType.FullName == "System.Void")
+        if (method.ReturnType.SpecialType == SpecialType.System_Void)
         {
             sb.AppendLine("        hook(");
         }
@@ -185,15 +195,15 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
             sb.AppendLine("        return hook(");
         }
 
-        if (method.Parameters.Count > 0)
+        if (method.Parameters.Length > 0)
         {
             sb.AppendLine("            (");
 
-            for (var i = 0; i < method.Parameters.Count; i++)
+            for (var i = 0; i < method.Parameters.Length; i++)
             {
                 var parameter = method.Parameters[i];
                 sb.Append($"                {GetParameterDefinition(parameter)}_captured");
-                if (i < method.Parameters.Count - 1)
+                if (i < method.Parameters.Length - 1)
                 {
                     sb.AppendLine(",");
                 }
@@ -210,14 +220,14 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
             sb.Append("            ()");
         }
 
-        if (method.Parameters.Count > 0)
+        if (method.Parameters.Length > 0)
         {
             sb.AppendLine($" => base.{name}(");
 
-            for (var i = 0; i < method.Parameters.Count; i++)
+            for (var i = 0; i < method.Parameters.Length; i++)
             {
                 var parameter = method.Parameters[i];
-                sb.AppendLine($"                {GetParameterReference(parameter)}_captured{(i < method.Parameters.Count - 1 ? "," : "")}");
+                sb.AppendLine($"                {GetParameterReference(parameter)}_captured{(i < method.Parameters.Length - 1 ? "," : "")}");
             }
 
             sb.AppendLine("            ),");
@@ -229,14 +239,14 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
         sb.Append("            this");
 
-        if (method.Parameters.Count > 0)
+        if (method.Parameters.Length > 0)
         {
             sb.AppendLine(",");
 
-            for (var i = 0; i < method.Parameters.Count; i++)
+            for (var i = 0; i < method.Parameters.Length; i++)
             {
                 var parameter = method.Parameters[i];
-                sb.AppendLine($"            {GetParameterReference(parameter)}{(i < method.Parameters.Count - 1 ? "," : "")}");
+                sb.AppendLine($"            {GetParameterReference(parameter)}{(i < method.Parameters.Length - 1 ? "," : "")}");
             }
         }
         else
@@ -252,6 +262,7 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
         return sb.ToString();
 
+        /*
         static GenericInstanceType? GetGenericTypeOfName(TypeDefinition? type, string name)
         {
             while (type is not null)
@@ -266,8 +277,9 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
             return null;
         }
+        */
 
-        static bool HasProperty(TypeDefinition? type, string name)
+        static bool HasProperty(ITypeSymbol? type, string name)
         {
             while (true)
             {
@@ -276,20 +288,17 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
                     return false;
                 }
 
-                if (type.FindProperty(name) is not null)
+                if (type.GetMembers(name).OfType<IPropertySymbol>().Any())
                 {
                     return true;
                 }
 
-                type = type.BaseType?.Resolve();
+                type = type.BaseType;
             }
         }
     }
 
-    private string BuildHook(
-        MethodDefinition method,
-        bool hasOverloads
-    )
+    private string BuildHook(IMethodSymbol method, bool hasOverloads)
     {
         var sb = new StringBuilder();
         var name = GetNameWithoutOverloadCollision(method, hasOverloads);
@@ -308,7 +317,7 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         sb.AppendLine();
         sb.AppendLine("        public static event Definition? Event");
         sb.AppendLine("        {");
-        sb.AppendLine($"            add => HookLoader.GetModOrThrow().AddContent(new {typeName}_{name}_Impl(value ?? throw new System.InvalidOperationException(\"Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: {typeName}::{name}\")));");
+        sb.AppendLine($"            add => EarlyLoadHooks.GetModOrThrow().AddContent(new {typeName}_{name}_Impl(value ?? throw new System.InvalidOperationException(\"Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: {typeName}::{name}\")));");
         sb.AppendLine();
         sb.AppendLine($"            remove => throw new System.InvalidOperationException(\"Cannot remove DAYBREAK-generated mod loader hook: {typeName}::{name}; use a flag to disable behavior.\");");
         sb.AppendLine("        }");
@@ -317,7 +326,7 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         return sb.ToString();
     }
 
-    private static string GetNameWithoutOverloadCollision(MethodDefinition method, bool hasOverloads)
+    private static string GetNameWithoutOverloadCollision(IMethodSymbol method, bool hasOverloads)
     {
         // TODO: This logic for resolving overloads is *very* naive.  For a more
         //       reliable approach, see how MonoMod does it:
@@ -331,40 +340,46 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
 
         foreach (var param in method.Parameters)
         {
-            name += "_" + GetFullTypeNameOrCSharpKeyword(param.ParameterType, includeRefPrefix: false).Split('.').Last();
+            name += "_" + GetFullTypeNameOrCSharpKeyword(param.Type, isByRef: false, includeRefPrefix: false).Split('.').Last();
         }
 
         return name;
     }
 
-    private static MethodDefinition[] ResolveHooksFromType(TypeDefinition typeDef, List<string> excludedHooks)
+    private static IMethodSymbol[] ResolveHooksFromType(INamedTypeSymbol type, List<string> exclusions)
     {
-        var methods = typeDef.GetMethods().Where(
-            x => x is
-                 {
-                     IsPublic: true,  // Is accessible (ignore protected, too)
-                     IsVirtual: true, // Is overridable
-                     IsFinal: false,  // Is not sealed
-                 }
-              && !excludedHooks.Contains(x.Name)
-              && x.GetCustomAttribute(typeof(ObsoleteAttribute).FullName!) is null
-        );
-
-        return methods.ToArray();
+        return type.GetMembers()
+                   .OfType<IMethodSymbol>()
+                   .Where(
+                        m =>
+                            m.DeclaredAccessibility == Accessibility.Public
+                         && m is
+                            {
+                                IsVirtual: true,
+                                IsSealed: false,
+                                IsStatic: false,
+                            }
+                         && !exclusions.Contains(m.Name)
+                         && !m.GetAttributes().Any(
+                                a =>
+                                    a.AttributeClass?.ToDisplayString() == typeof(System.ObsoleteAttribute).FullName
+                            )
+                    )
+                   .ToArray();
     }
 
-    private static string GetDescriptionForMethod(MethodDefinition method, bool original)
+    private static string GetDescriptionForMethod(IMethodSymbol method, bool original)
     {
         var sb = new StringBuilder();
 
         var name = original ? "Original" : "Definition";
 
-        if (!original && method.ReturnType.FullName != typeof(void).FullName)
+        if (!original && method.ReturnType.SpecialType != SpecialType.System_Void)
         {
             sb.AppendLine($"        [return: PermitsVoidInvokeParameterWithParameters(\"orig\")]");
         }
 
-        sb.Append($"        public delegate {GetFullTypeNameOrCSharpKeyword(method.ReturnType, includeRefPrefix: true)} {name}(");
+        sb.Append($"        public delegate {GetFullTypeNameOrCSharpKeyword(method.ReturnType, method.ReturnsByRef, includeRefPrefix: true)} {name}(");
 
         var parameters = method.Parameters;
 
@@ -373,10 +388,10 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
             sb.AppendLine();
 
             sb.AppendLine("            [Omittable] Original orig,");
-            sb.Append($"            [Omittable] {GetFullTypeNameOrCSharpKeyword(method.DeclaringType, includeRefPrefix: false)} self");
+            sb.Append($"            [Omittable] {GetFullTypeNameOrCSharpKeyword(method.ContainingType, isByRef: false, includeRefPrefix: false)} self");
         }
 
-        if (parameters.Count > 0)
+        if (parameters.Length > 0)
         {
             if (!original)
             {
@@ -387,11 +402,11 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
                 sb.AppendLine();
             }
 
-            for (var i = 0; i < parameters.Count; i++)
+            for (var i = 0; i < parameters.Length; i++)
             {
                 var parameter = parameters[i];
                 sb.Append($"            {GetParameterDefinition(parameter)}");
-                if (i < parameters.Count - 1)
+                if (i < parameters.Length - 1)
                 {
                     sb.AppendLine(",");
                 }
@@ -402,13 +417,13 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
             }
         }
 
-        if (original && parameters.Count == 0)
+        if (original && parameters.Length == 0)
         {
             sb.Append(");");
         }
         else
         {
-            if (!original && parameters.Count == 0)
+            if (!original && parameters.Length == 0)
             {
                 sb.AppendLine();
             }
@@ -419,75 +434,88 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         return sb.ToString();
     }
 
-    public static string GetParameterDefinition(ParameterDefinition parameter)
+    private static string GetParameterDefinition(IParameterSymbol parameter)
     {
         var prefix = GetReferencePrefix(parameter);
-        var type = GetFullTypeNameOrCSharpKeyword(parameter.ParameterType, includeRefPrefix: false);
+        var type = GetFullTypeNameOrCSharpKeyword(parameter.Type, isByRef: false, includeRefPrefix: false);
         var name = parameter.Name;
 
         return prefix + type + ' ' + name;
     }
 
-    public static string GetFullTypeNameOrCSharpKeyword(TypeReference type, bool includeRefPrefix)
+    private static string GetFullTypeNameOrCSharpKeyword(ITypeSymbol type, bool isByRef, bool includeRefPrefix = false)
     {
-        var prefix = includeRefPrefix && type.IsByReference ? "ref " : "";
+        var prefix = includeRefPrefix && isByRef ? "ref " : "";
 
-        if (type is GenericInstanceType genericType)
+        // Nullable<T>
+        if (type is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Nullable_T } nullable)
         {
-            // Special case for System.Nullable
-            if (genericType.ElementType.FullName == "System.Nullable`1")
-            {
-                return prefix + GetFullTypeNameOrCSharpKeyword(genericType.GenericArguments[0], includeRefPrefix) + "?";
-            }
-
-            var genericArgs = string.Join(", ", genericType.GenericArguments.Select(arg => GetFullTypeNameOrCSharpKeyword(arg, includeRefPrefix: false)));
-            var baseTypeName = GetCSharpRepresentation(genericType.ElementType.FullName);
-            return prefix + $"{baseTypeName}<{genericArgs}>";
+            var inner = nullable.TypeArguments[0];
+            return prefix +
+                   GetFullTypeNameOrCSharpKeyword(inner, isByRef: false, includeRefPrefix: false) +
+                   "?";
         }
 
-        if (type is ArrayType arrayType)
+        // Arrays
+        if (type is IArrayTypeSymbol arrayType)
         {
-            var elementType = GetFullTypeNameOrCSharpKeyword(arrayType.ElementType, includeRefPrefix: false);
+            var elementType = GetFullTypeNameOrCSharpKeyword(arrayType.ElementType, isByRef: false, includeRefPrefix: false);
             var rank = new string(',', arrayType.Rank - 1);
             return prefix + $"{elementType}[{rank}]";
         }
 
-        var csharpName = GetCSharpRepresentation(type.FullName);
-
-        if (csharp_keyword_map.TryGetValue(csharpName, out var keyword))
+        // Named types (classes, structs, generics, primitives)
+        if (type is INamedTypeSymbol named)
         {
-            return prefix + keyword;
+            // Generic types aside from Nullable<T>
+            if (named.IsGenericType)
+            {
+                var baseName = GetCSharpRepresentation(named.OriginalDefinition.GetFullMetadataName());
+
+                var args = string.Join(
+                    ", ",
+                    named.TypeArguments.Select(
+                        a =>
+                            GetFullTypeNameOrCSharpKeyword(a, isByRef: false, includeRefPrefix: false)
+                    )
+                );
+
+                return prefix + $"{baseName}<{args}>";
+            }
+            
+            var simpleName = GetCSharpRepresentation(named.GetFullMetadataName());
+
+            if (csharp_keyword_map.TryGetValue(simpleName, out var keyword))
+            {
+                return prefix + keyword;
+            }
+
+            return prefix + simpleName;
         }
 
-        return prefix + csharpName;
+        // Fallback (type parameters, pointers, etc.)
+        var fallback = type.GetFullMetadataName();
+        return prefix + GetCSharpRepresentation(fallback);
     }
 
-    public static string GetReferencePrefix(ParameterDefinition parameter)
+    private static string GetReferencePrefix(IParameterSymbol parameter)
     {
-        if (parameter.IsOut)
+        return parameter.RefKind switch
         {
-            return "out ";
-        }
-
-        if (parameter.IsIn)
-        {
-            return "in ";
-        }
-
-        if (parameter.ParameterType.IsByReference)
-        {
-            return "ref ";
-        }
-
-        return "";
+            RefKind.None => "",
+            RefKind.Ref => "ref ",
+            RefKind.Out => "out ",
+            RefKind.In => "in ",
+            _ => "", // TODO: scary
+        };
     }
 
-    public static string GetCSharpRepresentation(string fullName)
+    private static string GetCSharpRepresentation(string fullName)
     {
         fullName = fullName.Replace('/', '.');
         fullName = fullName.Replace('+', '.');
 
-        if (fullName.EndsWith('&'))
+        if (fullName.EndsWith("&"))
         {
             fullName = fullName[..^1];
         }
@@ -503,7 +531,7 @@ public sealed class Generator(ModuleDefinition module, TypeDefinition type)
         return fullName;
     }
 
-    public static string GetParameterReference(ParameterDefinition parameter)
+    private static string GetParameterReference(IParameterSymbol parameter)
     {
         return GetReferencePrefix(parameter) + parameter.Name;
     }

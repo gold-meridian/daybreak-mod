@@ -6,28 +6,12 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Terraria.ModLoader;
 
-namespace Daybreak.Common.Features.Hooks;
+namespace Daybreak.Hooks;
 
 internal interface IHasSide
 {
     ModSide Side { get; }
 }
-
-/// <summary>
-///     Any types decorated with this attribute will cause a type to run its
-///     static constructor if it contains static fields or properties of the
-///     type.  Use <see cref="DontForceStaticConstructorAttribute"/> for members
-///     that should not respect this behavior.
-/// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-public sealed class RunsStaticConstructorsAttribute : Attribute;
-
-/// <summary>
-///     Overrides the behavior of <see cref="RunsStaticConstructorsAttribute"/>
-///     to not apply for the given member.
-/// </summary>
-[AttributeUsage(AttributeTargets.Field)]
-public sealed class DontForceStaticConstructorAttribute : Attribute;
 
 /// <summary>
 ///     Indicates a parameter in a delegate is omittable.
@@ -50,7 +34,8 @@ public sealed class OriginalNameAttribute(string name) : Attribute
 }
 
 /// <summary>
-///     
+///     Indicates that a hook may omit the return value, opting to return
+///     <see langword="void"/> instead.
 /// </summary>
 [AttributeUsage(AttributeTargets.ReturnValue)]
 public abstract class AbstractPermitsVoidAttribute : Attribute
@@ -63,8 +48,12 @@ public abstract class AbstractPermitsVoidAttribute : Attribute
     );
 }
 
+/// <summary>
+///     An implementation of <see cref="AbstractPermitsVoidAttribute"/> that
+///     automatically invokes the original delegate of a hook.
+/// </summary>
 [AttributeUsage(AttributeTargets.ReturnValue)]
-internal sealed class PermitsVoidInvokeParameterWithParametersAttribute(string parameterName) : AbstractPermitsVoidAttribute
+public sealed class PermitsVoidInvokeParameterWithParametersAttribute(string parameterName) : AbstractPermitsVoidAttribute
 {
     public string ParameterName => parameterName;
 

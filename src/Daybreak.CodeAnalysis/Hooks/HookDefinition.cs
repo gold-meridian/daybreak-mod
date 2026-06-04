@@ -1,8 +1,8 @@
-﻿using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Linq;
+using Daybreak.CodeAnalysis.Hooks.Analyzers;
 using Microsoft.CodeAnalysis;
 
-namespace Daybreak.CodeAnalysis;
+namespace Daybreak.CodeAnalysis.Hooks;
 
 public sealed class HookDefinition(
     INamedTypeSymbol hookAttribute,

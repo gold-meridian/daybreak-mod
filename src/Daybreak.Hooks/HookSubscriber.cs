@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Daybreak.Common.Features.Hooks;
+namespace Daybreak.Hooks;
 
 /// <summary>
 ///     Provides utilities and APIs for generating delegates with omitted

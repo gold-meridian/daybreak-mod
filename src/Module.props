@@ -8,7 +8,7 @@
 
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
-        <DirectoryToCopyImportantFilesTo>$(MSBuildThisFileDirectory)\..\Daybreak\lib\modules\</DirectoryToCopyImportantFilesTo>
+        <DirectoryToCopyImportantFilesTo>$(MSBuildThisFileDirectory)\Daybreak\lib\modules\</DirectoryToCopyImportantFilesTo>
     </PropertyGroup>
 
     <ItemGroup>
