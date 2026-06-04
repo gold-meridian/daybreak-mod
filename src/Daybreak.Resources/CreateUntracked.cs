@@ -27,10 +27,13 @@ public static class UntrackedAssetProvider
             IsDisposed = false,
             Source = null, // This is fine to be null.
             ownValue = value,
-            Continuation = () => { },
-            Wait = () => { },
+            Continuation = NoOp,
+            Wait = NoOp,
         };
     }
+
+    // avoid allocations
+    private static void NoOp() { }
 
     // An extension for asset repo instances to match the regular instanced
     // syntax.
