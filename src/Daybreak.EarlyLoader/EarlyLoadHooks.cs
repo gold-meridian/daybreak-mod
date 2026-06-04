@@ -36,34 +36,21 @@ public static class EarlyLoadHooks
     ///     Invoked whenever a type is loaded.
     /// </summary>
     public static event Action<Mod, Type>? OnLoadStatic;
-    /*
-        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, ResolveStaticHooks);
-        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, CallOnLoads);
-        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes.Where(self.PreJITFilter.ShouldJIT), RunStaticConstructors);
-     */
 
     /// <summary>
     ///     Invoked whenever an instance is loaded.
     /// </summary>
     public static event Action<Mod, ILoadable>? OnLoadInstance;
-    /*
-        ContractEnforcer.ValidateLoadable(instance);
-
-        ResolveInstancedHooks(instance);
-        CallOnLoads(instance, self);
-     */
 
     /// <summary>
     ///     Invoked whenever a type is unloaded.
     /// </summary>
     public static event Action<Mod, Type>? OnUnloadStatic;
-    // LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), CallOnUnloads);
 
     /// <summary>
     ///     Invoked whenever an instance is unloaded.
     /// </summary>
     public static event Action<Mod, ILoadable>? OnUnloadInstance;
-    // CallOnUnloads(loadable);
 
     /// <summary>
     ///     Returns the currently loading mod or throws an exception when there

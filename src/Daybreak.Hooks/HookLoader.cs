@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Daybreak.EarlyLoader;
-using MonoMod.Cil;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
-using Terraria.ModLoader.Default;
 
 namespace Daybreak.Hooks;
 
@@ -60,10 +57,14 @@ internal static class HookLoader
             HookSubscriber.BuildWrapper<OnLoadHook.Definition>(method, null)
                           .Invoke(mod);
         }
+
+        // TODO: LoaderUtils.ForEachAndAggregateExceptions(loadableTypes.Where(self.PreJITFilter.ShouldJIT), RunStaticConstructors);
     }
 
     private static void LoadInstance(Mod mod, ILoadable loadable)
     {
+        // TODO: ContractEnforcer.ValidateLoadable(instance);
+
         SubscribeToHooks(
             loadable.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance),
             loadable
