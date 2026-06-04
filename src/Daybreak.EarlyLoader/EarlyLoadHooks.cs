@@ -23,16 +23,49 @@ public static class EarlyLoadHooks
     private static readonly Dictionary<Assembly, Type[]> loadable_types = [];
 
     /// <summary>
-    ///     Internally used to hook into the start of mod loading; useful for
-    ///     injecting content into other mods.
+    ///     Used to hook into the start of mod loading; useful for injecting
+    ///     content into other mods.
     /// </summary>
     public static event Action<Mod>? OnEarlyModLoad;
 
     /// <summary>
-    ///     Internally used to hook into the start of mod unloading; useful for
-    ///     terminating certain systems early.
+    ///     Used to hook into the start of mod unloading; useful for terminating
+    ///     systems early.
     /// </summary>
     public static event Action<Mod>? OnEarlyModUnload;
+
+    /// <summary>
+    ///     Invoked whenever a type is loaded.
+    /// </summary>
+    public static event Action<Mod, Type>? OnLoadStatic;
+    /*
+        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, ResolveStaticHooks);
+        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, CallOnLoads);
+        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes.Where(self.PreJITFilter.ShouldJIT), RunStaticConstructors);
+     */
+
+    /// <summary>
+    ///     Invoked whenever an instance is loaded.
+    /// </summary>
+    public static event Action<Mod, ILoadable>? OnLoadInstance;
+    /*
+        ContractEnforcer.ValidateLoadable(instance);
+
+        ResolveInstancedHooks(instance);
+        CallOnLoads(instance, self);
+     */
+
+    /// <summary>
+    ///     Invoked whenever a type is unloaded.
+    /// </summary>
+    public static event Action<Mod, Type>? OnUnloadStatic;
+    // LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), CallOnUnloads);
+
+    /// <summary>
+    ///     Invoked whenever an instance is unloaded.
+    /// </summary>
+    public static event Action<Mod, ILoadable>? OnUnloadInstance;
+    // CallOnUnloads(loadable);
 
     /// <summary>
     ///     Returns the currently loading mod or throws an exception when there
@@ -126,10 +159,7 @@ public static class EarlyLoadHooks
             return false;
         }
 
-        ContractEnforcer.ValidateLoadable(instance);
-
-        ResolveInstancedHooks(instance);
-        CallOnLoads(instance, self);
+        OnLoadInstance?.Invoke(self, instance);
         return true;
     }
 
@@ -148,9 +178,7 @@ public static class EarlyLoadHooks
                            .OrderBy(x => x.FullName, StringComparer.InvariantCulture)
                            .ToArray();
 
-        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, ResolveStaticHooks);
-        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, CallOnLoads);
-        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes.Where(self.PreJITFilter.ShouldJIT), RunStaticConstructors);
+        LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, x => OnLoadStatic?.Invoke(self, x));
     }
 
     /*
@@ -212,17 +240,18 @@ public static class EarlyLoadHooks
 
                 loadableTypes = loadableTypes.AsEnumerable().Reverse().ToArray();
 
-                LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), CallOnUnloads);
+                LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), x => OnUnloadStatic?.Invoke(mod, x));
             }
         );
 
         c.GotoNext(MoveType.Before, x => x.MatchCallvirt<ILoadable>(nameof(ILoadable.Unload)));
 
         c.EmitDup();
+        c.EmitLdarg0(); // Mod this
         c.EmitDelegate(
-            static (ILoadable loadable) =>
+            static (ILoadable loadable, Mod self) =>
             {
-                CallOnUnloads(loadable);
+                OnUnloadInstance?.Invoke(self, loadable);
             }
         );
     }
