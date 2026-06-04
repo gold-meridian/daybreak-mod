@@ -1,12 +1,25 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using Daybreak.EarlyLoader;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
-namespace Daybreak.Common.CodeAnalysis;
+namespace Daybreak.Contracts;
 
 internal static partial class ContractEnforcer
 {
-    public static void ValidateLoadable(ILoadable loadable)
+#pragma warning disable CA2255
+    [ModuleInitializer]
+    internal static void HookIntoEarlyLoads()
+    {
+        EarlyLoadHooks.OnLoadInstance += (_, loadable) =>
+        {
+            ValidateLoadable(loadable);
+        };
+    }
+#pragma warning restore CA2255
+
+    private static void ValidateLoadable(ILoadable loadable)
     {
         if (!ModCompile.DeveloperMode)
         {
@@ -33,7 +46,7 @@ internal static partial class ContractEnforcer
             {
                 return true;
             }
-            
+
             checkType = checkType.BaseType;
         }
 

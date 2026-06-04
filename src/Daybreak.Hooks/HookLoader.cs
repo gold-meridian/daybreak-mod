@@ -63,8 +63,6 @@ internal static class HookLoader
 
     private static void LoadInstance(Mod mod, ILoadable loadable)
     {
-        // TODO: ContractEnforcer.ValidateLoadable(instance);
-
         SubscribeToHooks(
             loadable.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance),
             loadable
