@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Daybreak.EarlyLoader;
 using Terraria.ModLoader;
@@ -8,10 +10,17 @@ namespace Daybreak.Contracts;
 
 internal static partial class ContractEnforcer
 {
+    private static readonly Dictionary<nint, bool> type_runs_cctor = [];
+
 #pragma warning disable CA2255
     [ModuleInitializer]
     internal static void HookIntoEarlyLoads()
     {
+        EarlyLoadHooks.OnLoadStatic += (_, type) =>
+        {
+            RunStaticConstructors(type);
+        };
+
         EarlyLoadHooks.OnLoadInstance += (_, loadable) =>
         {
             ValidateLoadable(loadable);
@@ -27,6 +36,33 @@ internal static partial class ContractEnforcer
         }
 
         CheckCloneabilityContracts(loadable);
+    }
+
+    private static void RunStaticConstructors(Type type)
+    {
+        var fields = type.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+
+        foreach (var field in fields)
+        {
+            var handle = field.FieldType.TypeHandle.Value;
+            if (!type_runs_cctor.TryGetValue(handle, out var runsStaticCtor))
+            {
+                runsStaticCtor = type_runs_cctor[handle] = field.FieldType.GetCustomAttribute<RunsStaticConstructorsAttribute>(inherit: false) is not null;
+            }
+
+            if (!runsStaticCtor)
+            {
+                continue;
+            }
+
+            if (field.GetCustomAttribute<DontForceStaticConstructorAttribute>(inherit: false) is not null)
+            {
+                continue;
+            }
+
+            RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+            return;
+        }
     }
 
     private static bool IsSubclassOfGeneric(this Type? checkType, Type baseType)
