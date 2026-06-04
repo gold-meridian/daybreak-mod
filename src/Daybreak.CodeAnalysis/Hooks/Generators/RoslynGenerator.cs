@@ -49,6 +49,7 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
 
         sb.AppendLine("#nullable enable");
         sb.AppendLine();
+        sb.AppendLine("using Daybreak.EarlyLoader;");
         sb.AppendLine("using Daybreak.Hooks;");
         sb.AppendLine("using Terraria.ModLoader;");
         sb.AppendLine();
@@ -316,7 +317,7 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
         sb.AppendLine();
         sb.AppendLine("        public static event Definition? Event");
         sb.AppendLine("        {");
-        sb.AppendLine($"            add => HookLoader.GetModOrThrow().AddContent(new {typeName}_{name}_Impl(value ?? throw new System.InvalidOperationException(\"Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: {typeName}::{name}\")));");
+        sb.AppendLine($"            add => EarlyLoadHooks.GetModOrThrow().AddContent(new {typeName}_{name}_Impl(value ?? throw new System.InvalidOperationException(\"Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: {typeName}::{name}\")));");
         sb.AppendLine();
         sb.AppendLine($"            remove => throw new System.InvalidOperationException(\"Cannot remove DAYBREAK-generated mod loader hook: {typeName}::{name}; use a flag to disable behavior.\");");
         sb.AppendLine("        }");

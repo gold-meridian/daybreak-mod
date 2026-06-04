@@ -11,7 +11,7 @@ using Terraria.ModLoader.Default;
 
 namespace Daybreak.Hooks;
 
-public static class HookLoader
+internal static class HookLoader
 {
     private static Mod? currentlyLoadingMod;
     private static Mod? currentlyUnloadingMod;
