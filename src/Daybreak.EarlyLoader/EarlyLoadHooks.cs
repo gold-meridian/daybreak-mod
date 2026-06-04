@@ -256,9 +256,7 @@ public static class EarlyLoadHooks
 
     private static void UnloadContent_WrapToMarkUnloadingMod(Action<Mod> orig, Mod mod)
     {
-        currentlyUnloadingMod = mod;
         OnEarlyModUnload?.Invoke(mod);
         orig(mod);
-        currentlyUnloadingMod = null;
     }
 }
