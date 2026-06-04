@@ -12,14 +12,14 @@ public readonly struct AssetReplacementHandle<T> : IDisposable
     where T : class
 {
     private readonly T original;
-    private readonly IMutableAssetProvider<T> source;
+    private readonly Asset<T> source;
 
-    internal AssetReplacementHandle(IMutableAssetProvider<T> source, T target)
+    internal AssetReplacementHandle(Asset<T> source, T target)
     {
         this.source = source;
 
-        original = source.Asset;
-        source.Asset = target;
+        original = source.Value;
+        source.ownValue = target;
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public readonly struct AssetReplacementHandle<T> : IDisposable
     /// </summary>
     public void Dispose()
     {
-        source.Asset = original;
+        source.ownValue = original;
     }
 }
 
@@ -57,33 +57,7 @@ partial class Extensions
                 asset.Wait();
             }
 
-            return new AssetReplacementHandle<T>(new ReLogicMutableAssetProvider<T>(asset), newAsset);
+            return new AssetReplacementHandle<T>(asset, newAsset);
         }
     }
 }
-
-#region Asset provision
-/// <summary>
-///     Provides an API to get and set the value of an asset of type
-///     <typeparamref name="T"/>.
-/// </summary>
-/// <typeparam name="T">The asset type.</typeparam>
-internal interface IMutableAssetProvider<T>
-    where T : class
-{
-    /// <summary>
-    ///     The mutable asset.
-    /// </summary>
-    T Asset { get; set; }
-}
-
-internal readonly struct ReLogicMutableAssetProvider<T>(Asset<T> source) : IMutableAssetProvider<T>
-    where T : class
-{
-    public T Asset
-    {
-        get => source.Value;
-        set => source.ownValue = value;
-    }
-}
-#endregion
