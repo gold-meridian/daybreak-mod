@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
-namespace Daybreak.Common.Features.Hooks;
+namespace Daybreak.Hooks;
 
 /*
 [PublicAPI]

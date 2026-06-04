@@ -6,7 +6,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Terraria.ModLoader;
 
-namespace Daybreak.Common.Features.Hooks;
+namespace Daybreak.Hooks;
 
 internal interface IHasSide
 {

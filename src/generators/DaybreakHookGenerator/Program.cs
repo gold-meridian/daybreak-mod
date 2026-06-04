@@ -29,7 +29,7 @@ public sealed class TypeHookDefinition(Type type)
 
 internal static class Program
 {
-    private const string the_namespace = "Daybreak.Common.Features.Hooks";
+    private const string the_namespace = "Daybreak.Hooks";
 
     public static void Main()
     {
