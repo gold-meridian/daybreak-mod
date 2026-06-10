@@ -68,14 +68,15 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalNPC::SpawnNPC(System.Int32,System.Int32,System.Int32)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalNPC::CanChat(Terraria.NPC)
 //     System.Void Terraria.ModLoader.GlobalNPC::GetChat(Terraria.NPC,System.String&)
-//     System.Boolean Terraria.ModLoader.GlobalNPC::PreChatButtonClicked(Terraria.NPC,System.Boolean)
-//     System.Void Terraria.ModLoader.GlobalNPC::OnChatButtonClicked(Terraria.NPC,System.Boolean)
+//     System.Boolean Terraria.ModLoader.GlobalNPC::PreChatButtonClicked(Terraria.NPC,Terraria.GameContent.NPCInteraction)
+//     System.Void Terraria.ModLoader.GlobalNPC::RegisterChatButtons(Terraria.NPC,Terraria.ModLoader.NPCInteractionList)
+//     System.Void Terraria.ModLoader.GlobalNPC::OnChatButtonClicked(Terraria.NPC,Terraria.GameContent.NPCInteraction)
 //     System.Void Terraria.ModLoader.GlobalNPC::ModifyShop(Terraria.ModLoader.NPCShop)
 //     System.Void Terraria.ModLoader.GlobalNPC::ModifyActiveShop(Terraria.NPC,System.String,Terraria.Item[])
 //     System.Void Terraria.ModLoader.GlobalNPC::SetupTravelShop(System.Int32[],System.Int32&)
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalNPC::CanGoToStatue(Terraria.NPC,System.Boolean)
 //     System.Void Terraria.ModLoader.GlobalNPC::OnGoToStatue(Terraria.NPC,System.Boolean)
-//     System.Void Terraria.ModLoader.GlobalNPC::BuffTownNPC(System.Single&,System.Int32&)
+//     System.Void Terraria.ModLoader.GlobalNPC::BuffTownNPC(Terraria.NPC,System.Single&,System.Single&,System.Int32&,System.Int32&)
 //     System.Boolean Terraria.ModLoader.GlobalNPC::ModifyDeathMessage(Terraria.NPC,Terraria.Localization.NetworkText&,Microsoft.Xna.Framework.Color&)
 //     System.Void Terraria.ModLoader.GlobalNPC::TownNPCAttackStrength(Terraria.NPC,System.Int32&,System.Single&)
 //     System.Void Terraria.ModLoader.GlobalNPC::TownNPCAttackCooldown(Terraria.NPC,System.Int32&,System.Int32&)
@@ -1663,7 +1664,7 @@ public static partial class GlobalNPCHooks
     {
         public delegate bool Original(
             Terraria.NPC npc,
-            bool firstButton
+            Terraria.GameContent.NPCInteraction interaction
         );
 
         [return: PermitsVoidInvokeParameterWithParameters("orig")]
@@ -1671,7 +1672,7 @@ public static partial class GlobalNPCHooks
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
-            bool firstButton
+            Terraria.GameContent.NPCInteraction interaction
         );
 
         public static event Definition? Event
@@ -1683,6 +1684,32 @@ public static partial class GlobalNPCHooks
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(RegisterChatButtons), EventName = "Event", DelegateName = "Definition")]
+    public sealed class RegisterChatButtonsAttribute : SubscribesToAttribute;
+
+    public sealed partial class RegisterChatButtons
+    {
+        public delegate void Original(
+            Terraria.NPC npc,
+            Terraria.ModLoader.NPCInteractionList interactions
+        );
+
+        public delegate void Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalNPC self,
+            Terraria.NPC npc,
+            Terraria.ModLoader.NPCInteractionList interactions
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalNPC_RegisterChatButtons_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalNPC::RegisterChatButtons")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalNPC::RegisterChatButtons; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     [HookMetadata(TypeContainingEvent = typeof(OnChatButtonClicked), EventName = "Event", DelegateName = "Definition")]
     public sealed class OnChatButtonClickedAttribute : SubscribesToAttribute;
 
@@ -1690,14 +1717,14 @@ public static partial class GlobalNPCHooks
     {
         public delegate void Original(
             Terraria.NPC npc,
-            bool firstButton
+            Terraria.GameContent.NPCInteraction interaction
         );
 
         public delegate void Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalNPC self,
             Terraria.NPC npc,
-            bool firstButton
+            Terraria.GameContent.NPCInteraction interaction
         );
 
         public static event Definition? Event
@@ -1846,15 +1873,21 @@ public static partial class GlobalNPCHooks
     public sealed partial class BuffTownNPC
     {
         public delegate void Original(
+            Terraria.NPC npc,
             ref float damageMult,
-            ref int defense
+            ref float attackSpeedMult,
+            ref int defense,
+            ref int maxLife
         );
 
         public delegate void Definition(
             [Omittable] Original orig,
             [Omittable] Terraria.ModLoader.GlobalNPC self,
+            Terraria.NPC npc,
             ref float damageMult,
-            ref int defense
+            ref float attackSpeedMult,
+            ref int defense,
+            ref int maxLife
         );
 
         public static event Definition? Event
@@ -4679,20 +4712,59 @@ public sealed partial class GlobalNPC_PreChatButtonClicked_Impl : Terraria.ModLo
 
     public override bool PreChatButtonClicked(
         Terraria.NPC npc,
-        bool firstButton
+        Terraria.GameContent.NPCInteraction interaction
     )
     {
         return hook(
             (
                 Terraria.NPC npc_captured,
-                bool firstButton_captured
+                Terraria.GameContent.NPCInteraction interaction_captured
             ) => base.PreChatButtonClicked(
                 npc_captured,
-                firstButton_captured
+                interaction_captured
             ),
             this,
             npc,
-            firstButton
+            interaction
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalNPC_RegisterChatButtons_Impl : Terraria.ModLoader.GlobalNPC
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalNPCHooks.RegisterChatButtons.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public GlobalNPC_RegisterChatButtons_Impl(GlobalNPCHooks.RegisterChatButtons.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override void RegisterChatButtons(
+        Terraria.NPC npc,
+        Terraria.ModLoader.NPCInteractionList interactions
+    )
+    {
+        hook(
+            (
+                Terraria.NPC npc_captured,
+                Terraria.ModLoader.NPCInteractionList interactions_captured
+            ) => base.RegisterChatButtons(
+                npc_captured,
+                interactions_captured
+            ),
+            this,
+            npc,
+            interactions
         );
     }
 }
@@ -4718,20 +4790,20 @@ public sealed partial class GlobalNPC_OnChatButtonClicked_Impl : Terraria.ModLoa
 
     public override void OnChatButtonClicked(
         Terraria.NPC npc,
-        bool firstButton
+        Terraria.GameContent.NPCInteraction interaction
     )
     {
         hook(
             (
                 Terraria.NPC npc_captured,
-                bool firstButton_captured
+                Terraria.GameContent.NPCInteraction interaction_captured
             ) => base.OnChatButtonClicked(
                 npc_captured,
-                firstButton_captured
+                interaction_captured
             ),
             this,
             npc,
-            firstButton
+            interaction
         );
     }
 }
@@ -4951,21 +5023,33 @@ public sealed partial class GlobalNPC_BuffTownNPC_Impl : Terraria.ModLoader.Glob
     }
 
     public override void BuffTownNPC(
+        Terraria.NPC npc,
         ref float damageMult,
-        ref int defense
+        ref float attackSpeedMult,
+        ref int defense,
+        ref int maxLife
     )
     {
         hook(
             (
+                Terraria.NPC npc_captured,
                 ref float damageMult_captured,
-                ref int defense_captured
+                ref float attackSpeedMult_captured,
+                ref int defense_captured,
+                ref int maxLife_captured
             ) => base.BuffTownNPC(
+                npc_captured,
                 ref damageMult_captured,
-                ref defense_captured
+                ref attackSpeedMult_captured,
+                ref defense_captured,
+                ref maxLife_captured
             ),
             this,
+            npc,
             ref damageMult,
-            ref defense
+            ref attackSpeedMult,
+            ref defense,
+            ref maxLife
         );
     }
 }
