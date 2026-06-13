@@ -525,12 +525,8 @@ internal static class InfoIcons
                 }
                 elem.Append(listContainer);
 
-                var icons = worldIcons.Where(x => x.IsVisible(elem.Data)).ToList();
-                for (var i = 0; i < 4; i++)
-                {
-                    icons.AddRange(icons);
-                }
-                var iconList = new ScrollableIconPanel(icons.ToArray());
+                var icons = worldIcons.Where(x => x.IsVisible(elem.Data)).ToArray();
+                var iconList = new ScrollableIconPanel(icons);
                 {
                     iconList.Width.Set(0f, 1f);
                     iconList.Height.Set(0f, 1f);
