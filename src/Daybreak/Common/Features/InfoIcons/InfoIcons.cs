@@ -162,6 +162,9 @@ internal static class InfoIcons
         private float horizontalViewPosition;
         private float innerListWidth;
 
+        private bool isActuallyHoveringOverPartOfList;
+        private bool isHoveringBlockedForIcons;
+
         public ScrollableIconPanel(IEnumerable<InfoIcon> icons)
         {
             foreach (var icon in icons)
@@ -177,7 +180,7 @@ internal static class InfoIcons
                 {
                     element.OnDraw += e =>
                     {
-                        if (e.IsMouseHovering)
+                        if (e.IsMouseHovering && !isHoveringBlockedForIcons)
                         {
                             icon.OnHover();
                         }
@@ -185,6 +188,13 @@ internal static class InfoIcons
                 }
                 Add(element);
             }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            Parent?.IgnoresMouseInteraction = !isActuallyHoveringOverPartOfList;
         }
 
         public override void RecalculateChildren()
@@ -243,6 +253,9 @@ internal static class InfoIcons
 
             var extraOffset = _items.Count > 1 ? 5 : 10;
             DrawPanel(spriteBatch, dims.TopLeft(), MathF.Min(innerListWidth + extraOffset, dims.Width));
+
+            var visibleDims = dims with { Width = (int)MathF.Min(dims.Width, innerListWidth) };
+            isActuallyHoveringOverPartOfList = visibleDims.Contains(Main.MouseScreen.ToPoint());
 
             if (innerListWidth <= dims.Width)
             {
@@ -304,6 +317,8 @@ internal static class InfoIcons
                     Origin = Vector2.UnitY * rightAsset.Height() / 2f,
                 }
             );
+            
+            isHoveringBlockedForIcons = leftHovered || rightHovered;
 
             if (!Main.mouseLeft)
             {
@@ -472,8 +487,12 @@ internal static class InfoIcons
                 }
                 elem.Append(listContainer);
 
-                var icons = worldIcons.Where(x => x.IsVisible(elem.Data)).ToArray();
-                var iconList = new ScrollableIconPanel(icons);
+                var icons = worldIcons.Where(x => x.IsVisible(elem.Data)).ToList();
+                for (var i = 0; i < 4; i++)
+                {
+                    icons.AddRange(icons);
+                }
+                var iconList = new ScrollableIconPanel(icons.ToArray());
                 {
                     iconList.Width.Set(0f, 1f);
                     iconList.Height.Set(0f, 1f);
