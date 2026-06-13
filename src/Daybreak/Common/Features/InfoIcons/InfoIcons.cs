@@ -49,11 +49,49 @@ public abstract class InfoIcon : ModTexturedType, ILocalizedModType
 
             var dims = this.Dimensions;
 
+            if (IsMouseHovering)
+            {
+                const int backglow_count = 8;
+                for (var i = 0; i < backglow_count; i++)
+                {
+                    var drawOffset = (float.Tau * i / backglow_count).ToRotationVector2() * 2f;
+                    spriteBatch.Draw(
+                        new DrawParameters(Asset)
+                        {
+                            Destination = dims with { X = dims.X + (int)drawOffset.X + 2, Y = dims.Y + (int)drawOffset.Y + 2 },
+                            Color = Color.Black * 0.15f,
+                        }
+                    );
+                }
+
+                for (var i = 0; i < backglow_count; i++)
+                {
+                    var drawOffset = (float.Tau * i / backglow_count).ToRotationVector2() * 1.25f;
+                    spriteBatch.Draw(
+                        new DrawParameters(Asset)
+                        {
+                            Destination = dims with { X = dims.X + (int)drawOffset.X, Y = dims.Y + (int)drawOffset.Y },
+                            Color = Color.White with { A = 0 } * 0.59f,
+                        }
+                    );
+                }
+            }
+
+            // Dropshadow
+            spriteBatch.Draw(
+                new DrawParameters(Asset)
+                {
+                    Destination = dims with { X = dims.X + 2, Y = dims.Y + 2 },
+                    Color = Color.Black * 0.3f,
+                }
+            );
+
+            // Main icon
             spriteBatch.Draw(
                 new DrawParameters(Asset)
                 {
                     Destination = dims,
-                    Color = Color.White * (IsMouseHovering ? VisibilityActive : VisibilityInactive),
+                    Color = Color.White,
                 }
             );
         }
