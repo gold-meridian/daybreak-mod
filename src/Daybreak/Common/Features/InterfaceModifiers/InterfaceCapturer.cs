@@ -38,6 +38,7 @@ public sealed class InterfaceCapturer : ModSystem
         );
     }
 
+    [StackTraceHidden]
     private static void BlockMenuInput(On_Main.orig_DoUpdate_WhilePaused orig)
     {
         var blockInputOrig = Main.blockInput;

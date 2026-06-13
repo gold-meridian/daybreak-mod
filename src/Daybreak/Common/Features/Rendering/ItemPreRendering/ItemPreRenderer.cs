@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.IDs;
@@ -107,14 +108,19 @@ internal sealed class ItemPreRenderer : ModSystem
         );
     }
 
+    [StackTraceHidden]
     private static void UpdateItemRenders(On_Main.orig_DoDraw orig, Main self, GameTime gameTime)
     {
-        if (unloading)
+        if (!unloading)
         {
-            orig(self, gameTime);
-            return;
+            PopulateTargets();
         }
 
+        orig(self, gameTime);
+    }
+
+    private static void PopulateTargets()
+    {
         foreach (var (itemType, preRenderedItem) in pre_rendered_items)
         {
             if (!render_targets.ContainsKey(itemType))
@@ -134,8 +140,6 @@ internal sealed class ItemPreRenderer : ModSystem
 
             Main.graphics.GraphicsDevice.SetRenderTarget(null);
         }
-
-        orig(self, gameTime);
     }
 
     private static bool TryGetPreRenderedItem(
