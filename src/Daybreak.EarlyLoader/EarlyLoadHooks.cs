@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Mono.Cecil;
 using MonoMod.Cil;
+using MonoMod.Utils;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.ModLoader.Default;
@@ -100,34 +102,60 @@ public static class EarlyLoadHooks
             UnloadContent_WrapToMarkUnloadingMod
         );
 
-        // AutoloadConfig and EnsureResizeArraysAttributeStaticCtorsRun are the
-        // first and last methods called in the routine where Mod::loading is
-        // set to true.  We use these to know what mod is currently being
-        // loaded.
-        MonoModHooks.Add(
-            typeof(Mod).GetMethod(nameof(Mod.AutoloadConfig), BindingFlags.NonPublic | BindingFlags.Instance),
-            (Action<Mod> orig, Mod self) =>
+        
+        var lmc = GetFirstLoadModContentCallback();
+        MonoModHooks.Modify(
+            lmc,
+            il =>
             {
-                Debug.Assert(currentlyLoadingMod is null);
+                // Used to detour AutoloadConfig and
+                // EnsureResizeArraysAttributeStaticCtorsRun, since they were
+                // the first and last methods ran when Mod::loading was true.
+                // This fell through when AutoloadConfig seemingly started
+                // getting inlined, so we use an IL edit now.
 
-                currentlyLoadingMod = self;
-                OnEarlyModLoad?.Invoke(self);
-                orig(self);
-            }
-        );
+                var c = new ILCursor(il);
 
-        MonoModHooks.Add(
-            typeof(SystemLoader).GetMethod(nameof(SystemLoader.EnsureResizeArraysAttributeStaticCtorsRun), BindingFlags.NonPublic | BindingFlags.Static),
-            (Action<Mod> orig, Mod mod) =>
-            {
-                Debug.Assert(currentlyLoadingMod == mod);
+                c.GotoNext(MoveType.After, x => x.MatchStfld<Mod>(nameof(Mod.loading)));
+                c.EmitLdarg1();
+                c.EmitDelegate(
+                    (Mod mod) =>
+                    {
+                        Debug.Assert(currentlyLoadingMod is null);
 
-                orig(mod);
-                currentlyLoadingMod = null;
+                        currentlyLoadingMod = mod;
+                        OnEarlyModLoad?.Invoke(mod);
+                    }
+                );
+
+                c.GotoNext(MoveType.Before, x => x.MatchStfld<Mod>(nameof(Mod.loading)));
+                c.EmitDelegate(
+                    (Mod mod) =>
+                    {
+                        Debug.Assert(currentlyLoadingMod == mod);
+                        currentlyLoadingMod = null;
+
+                        return mod;
+                    }
+                );
             }
         );
     }
 #pragma warning restore CA2255
+
+    private static MethodBase GetFirstLoadModContentCallback()
+    {
+        using var lmcDef = new DynamicMethodDefinition(typeof(ModContent).GetMethod(nameof(ModContent.Load), BindingFlags.NonPublic | BindingFlags.Static)!);
+        using var il = new ILContext(lmcDef.Definition);
+
+        var c = new ILCursor(il);
+
+        var methodRef = default(MethodReference)!;
+        c.GotoNext(x => x.MatchCall(typeof(ModContent), nameof(ModContent.LoadModContent)));
+        c.GotoPrev(x => x.MatchLdftn(out methodRef));
+
+        return typeof(ModContent).Module.ResolveMethod(methodRef.Resolve().MetadataToken.ToInt32())!;
+    }
 
     private static bool ModIsEligibleForSpecialLoading(Mod mod)
     {
