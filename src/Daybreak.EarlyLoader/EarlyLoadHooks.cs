@@ -177,19 +177,15 @@ public static class EarlyLoadHooks
             return;
         }
 
+        orig(mod);
+
         // Force our edits to unload when it gets to ModLoaderMod instead (late
         // stage).
         // Use TryGetMod because GetInstance may return null in early unload stages.
         if (mod is ModLoaderMod && ModLoader.TryGetMod(ModuleLoader.OwningMod, out var modImpl))
         {
             orig(modImpl);
-
-            // DAYBREAK used to return here, skipping RemoveAll for ModLoaderMod
-            // since it's a no-op.  DON'T DO THIS HERE.  This detour may be
-            // layered now by multiple mods including this module.
         }
-
-        orig(mod);
     }
 
     private static void UnloadContent_CallAllOnUnloads(ILContext il)
