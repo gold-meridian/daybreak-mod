@@ -4,9 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Mono.Cecil;
 using MonoMod.Cil;
-using MonoMod.Utils;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.ModLoader.Default;
@@ -122,32 +120,14 @@ public static class EarlyLoadHooks
             typeof(SystemLoader).GetMethod(nameof(SystemLoader.EnsureResizeArraysAttributeStaticCtorsRun), BindingFlags.NonPublic | BindingFlags.Static),
             (Action<Mod> orig, Mod mod) =>
             {
-                Debug.Assert(currentlyLoadingMod == mod);
+                Debug.Assert(mod is ModLoaderMod || currentlyLoadingMod == mod);
 
                 orig(mod);
                 currentlyLoadingMod = null;
             }
         );
-
-        // AutoloadConfig appears to get inlined?  So let's re-JIT it.
-        var lmc = GetFirstLoadModContentCallback();
-        MonoModHooks.Modify(lmc, _ => { });
     }
 #pragma warning restore CA2255
-
-    private static MethodBase GetFirstLoadModContentCallback()
-    {
-        using var lmcDef = new DynamicMethodDefinition(typeof(ModContent).GetMethod(nameof(ModContent.Load), BindingFlags.NonPublic | BindingFlags.Static)!);
-        using var il = new ILContext(lmcDef.Definition);
-
-        var c = new ILCursor(il);
-
-        var methodRef = default(MethodReference)!;
-        c.GotoNext(x => x.MatchCall(typeof(ModContent), nameof(ModContent.LoadModContent)));
-        c.GotoPrev(x => x.MatchLdftn(out methodRef));
-
-        return typeof(ModContent).Module.ResolveMethod(methodRef.Resolve().MetadataToken.ToInt32())!;
-    }
 
     private static bool ModIsEligibleForSpecialLoading(Mod mod)
     {
@@ -164,7 +144,11 @@ public static class EarlyLoadHooks
             return false;
         }
 
-        OnLoadInstance?.Invoke(self, instance);
+        if (ModIsEligibleForSpecialLoading(self))
+        {
+            OnLoadInstance?.Invoke(self, instance);
+        }
+
         return true;
     }
 
@@ -185,26 +169,6 @@ public static class EarlyLoadHooks
 
         LoaderUtils.ForEachAndAggregateExceptions(loadableTypes, x => OnLoadStatic?.Invoke(self, x));
     }
-
-    /*
-    private static void Unload_CallOnUnloads(Action orig)
-    {
-        foreach (var mod in ModLoader.Mods)
-        {
-            var loadableTypes = AssemblyManager.GetLoadableTypes(mod.Code)
-                                               .OrderBy(x => x.FullName, StringComparer.InvariantCulture)
-                                               .ToArray();
-            LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), CallOnUnloads);
-
-            foreach (var loadable in mod.GetContent().Reverse())
-            {
-                CallOnUnloads(loadable);
-            }
-        }
-
-        orig();
-    }
-    */
 
     private static void RemoveAll_PostponeRemovingOurHooks(Action<Mod> orig, Mod mod)
     {
@@ -238,12 +202,10 @@ public static class EarlyLoadHooks
         c.EmitDelegate(
             static (Mod mod) =>
             {
-                if (!loadable_types.TryGetValue(mod.Code, out var loadableTypes))
+                if (!ModIsEligibleForSpecialLoading(mod) || !loadable_types.TryGetValue(mod.Code, out var loadableTypes))
                 {
                     return;
                 }
-
-                loadableTypes = loadableTypes.AsEnumerable().Reverse().ToArray();
 
                 LoaderUtils.ForEachAndAggregateExceptions(Enumerable.Reverse(loadableTypes), x => OnUnloadStatic?.Invoke(mod, x));
             }
@@ -256,14 +218,21 @@ public static class EarlyLoadHooks
         c.EmitDelegate(
             static (ILoadable loadable, Mod self) =>
             {
-                OnUnloadInstance?.Invoke(self, loadable);
+                if (!ModIsEligibleForSpecialLoading(self))
+                {
+                    OnUnloadInstance?.Invoke(self, loadable);
+                }
             }
         );
     }
 
     private static void UnloadContent_WrapToMarkUnloadingMod(Action<Mod> orig, Mod mod)
     {
-        OnEarlyModUnload?.Invoke(mod);
+        if (ModIsEligibleForSpecialLoading(mod))
+        {
+            OnEarlyModUnload?.Invoke(mod);
+        }
+
         orig(mod);
     }
 }
