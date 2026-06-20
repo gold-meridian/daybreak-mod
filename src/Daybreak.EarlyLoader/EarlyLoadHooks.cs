@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using MonoMod.Cil;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.ModLoader.Default;
@@ -65,7 +66,13 @@ public static class EarlyLoadHooks
     [ModuleInitializer]
     internal static void HookIntoContentLoadingRoutine()
     {
-        // Hijack the content loading process to allow us to handle every added
+        Main.RunOnMainThread(ApplyHooks);
+    }
+#pragma warning restore CA2255
+
+    private static void ApplyHooks()
+    {
+                // Hijack the content loading process to allow us to handle every added
         // loadable.  For every loadable, resolve instanced hooks and apply
         // them.
         MonoModHooks.Add(
@@ -127,7 +134,6 @@ public static class EarlyLoadHooks
             }
         );
     }
-#pragma warning restore CA2255
 
     private static bool ModIsEligibleForSpecialLoading(Mod mod)
     {
