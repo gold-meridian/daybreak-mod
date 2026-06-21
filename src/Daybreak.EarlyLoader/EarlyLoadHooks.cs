@@ -66,13 +66,35 @@ public static class EarlyLoadHooks
     [ModuleInitializer]
     internal static void HookIntoContentLoadingRoutine()
     {
-        Main.RunOnMainThread(ApplyHooks);
+        // IN CASE ANYTHING BAD HAPPENS AGAIN: There was a quite evil bug where
+        // the module initializer for modules would delay running until the mods
+        // were being JITed on worker threads.  This is because the mods,
+        // despite having their Mod-extending types instantiated much earlier,
+        // would not run dependent module initializers (as they held no
+        // references in them).  This has been solved with a source generator
+        // that emits code ensuring they run when the mod itself runs its module
+        // initializer.
+        // This solves some hard-to-debug race conditions, such as the
+        // AutoloadConfig hook not being run (resulting in an assertion
+        // failure), and deadlocks in MonoMod hook application pertaining to mod
+        // loading-thread APIs such as Mod::AddContent.
+        
+        // Main.RunOnMainThread(ApplyHooks);
+
+        /*
+        lock (AssemblyManager.loadedModContexts)
+        {
+            ApplyHooks();
+        }
+        */
+        
+        ApplyHooks();
     }
 #pragma warning restore CA2255
 
     private static void ApplyHooks()
     {
-                // Hijack the content loading process to allow us to handle every added
+        // Hijack the content loading process to allow us to handle every added
         // loadable.  For every loadable, resolve instanced hooks and apply
         // them.
         MonoModHooks.Add(
