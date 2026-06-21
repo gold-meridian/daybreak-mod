@@ -149,7 +149,7 @@ public static class EarlyLoadHooks
             typeof(SystemLoader).GetMethod(nameof(SystemLoader.EnsureResizeArraysAttributeStaticCtorsRun), BindingFlags.NonPublic | BindingFlags.Static),
             (Action<Mod> orig, Mod mod) =>
             {
-                Debug.Assert(mod is ModLoaderMod || currentlyLoadingMod == mod);
+                Debug.Assert(currentlyLoadingMod == mod);
 
                 orig(mod);
                 currentlyLoadingMod = null;
