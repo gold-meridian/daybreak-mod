@@ -4,41 +4,19 @@ AuthorTags: {
 	Tomat.DisplayName: tomat
 }
 
-UI.ModIcon.ModName: DAYBREAK
+UI: {
+	ModIcon.ModName: DAYBREAK
+	SwitchToDaybreak: Switch to the DAYBREAK settings UI
+	SwitchToVanilla: Switch to the Vanilla settings UI
+	SwitchToModLoader: Switch to the tModLoader settings UI
+	DefaultConfigDescription: Hover over an option for more information.
+	DefaultMetadataDescription: Item metadata will appear here.
+	ConfigSearchHint: Search settings...
+}
+
+ConfigRepository.Settings.DisplayName: Settings
 
 Configs: {
-	AchievementConfig: {
-		DisplayName: Modded Achievements
-
-		AreAchievementsPresent: {
-			Label: Are achievements present?
-			Tooltip:
-				'''
-				[c/ff0000:Strictly informative.]
-				Indicates whether modded achievements are present that expect this feature to be enabled.
-				On: Modded achievements have been loaded, not just vanilla achievements.
-				Off: Only vanilla achievements have been loaded.
-				'''
-		}
-
-		UseAchievements: {
-			Label: Use DAYBREAK's Achievement System
-			Tooltip:
-				'''
-				Determines whether to use DAYBREAK's achievement system.
-				DAYBREAK makes several changes to the game to replace Terraria's achievements handling with its own.
-				It should be relatively un-invasive. It is disabled by default unless a mod adds modded achievements.
-				'''
-		}
-	}
-
-	AchievementOverride: {
-		Tooltip: ""
-		Default.Label: Default
-		AlwaysEnable.Label: Always Enable
-		AlwaysDisable.Label: Always Disable
-	}
-
 	ConditionalContainer: {
 		Enabled: {
 			Label: Enabled

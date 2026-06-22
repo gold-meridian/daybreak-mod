@@ -6,11 +6,8 @@ namespace Daybreak.Common.UI;
 /// <summary>
 ///     Extensions for <see cref="UIElement"/>s.
 /// </summary>
-public static class UiElementExtensions
+public static class ElementExtensions
 {
-    /// <summary>
-    ///     Extensions for <see cref="UIElement"/>s.
-    /// </summary>
     extension(UIElement element)
     {
         /// <summary>
