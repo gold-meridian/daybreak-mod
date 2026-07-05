@@ -39,11 +39,11 @@ namespace Daybreak.Rendering;
 ///         </item>
 ///         <item>
 ///             <description>
-///                 While <see cref="Origin"/> does not directly read or write
+///                 <see cref="Origin"/> does not directly read or write
 ///                 to any other properties, nor is it written to or read by any
-///                 others.  It offers unique control for resolving an origin
-///                 point from an arbitrary rectangle by providing default
-///                 anchor points and a provider system.
+///                 others.  Regardless, it offers unique control for resolving
+///                 an origin point from an arbitrary rectangle by providing
+///                 default anchor points and a provider system.
 ///             </description>
 ///         </item>
 ///     </list>
@@ -62,13 +62,11 @@ public struct DrawParameters
         public Rectangle Source => new((int)SrcX, (int)SrcY, (int)SrcW, (int)SrcH);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Resolved(DrawParameters parameters)
+        public Resolved(scoped in DrawParameters parameters)
         {
-            var tex = parameters.Texture;
             SrcX = parameters.Source?.X ?? 0f;
             SrcY = parameters.Source?.Y ?? 0f;
-            SrcW = parameters.Source?.Width ?? tex.Width;
-            SrcH = parameters.Source?.Height ?? tex.Height;
+            (SrcW, SrcH) = parameters.SourceDimensions;
 
             Scale = parameters.sizeOverride is { } size
                 ? new Vector2(size.X / SrcW, size.Y / SrcH)
@@ -106,12 +104,24 @@ public struct DrawParameters
 
     /// <summary>
     ///     The scale factor applied to the source texture.
-    ///     <br />
-    ///     <br />
-    ///     Ignored if <see cref="Size"/> or <see cref="Destination"/> have also
-    ///     been set.
     /// </summary>
-    public Vector2 Scale { get; set; } = Vector2.One;
+    public Vector2 Scale
+    {
+        readonly get
+        {
+            if (sizeOverride is { } size)
+            {
+                var (sw, sh) = SourceDimensions;
+                return new Vector2(size.X / sw, size.Y / sh);
+            }
+
+            return rawScale;
+        }
+        
+        set => rawScale = value;
+    }
+
+    private Vector2 rawScale = Vector2.One;
 
     /// <summary>
     ///     Gets or sets the absolute, on-screen size of the rendered quad.
@@ -130,9 +140,8 @@ public struct DrawParameters
                 return size;
             }
 
-            float sw = Source?.Width ?? Texture.Width;
-            float sh = Source?.Height ?? Texture.Height;
-            return new Vector2(sw * Scale.X, sh * Scale.Y);
+            var (sw, sh) = SourceDimensions;
+            return new Vector2(sw * rawScale.X, sh * rawScale.Y);
         }
 
         set => sizeOverride = value;
@@ -157,7 +166,7 @@ public struct DrawParameters
             return new Rectangle((int)Position.X, (int)Position.Y, (int)size.X, (int)size.Y);
         }
 
-        init
+        set
         {
             Position = new Vector2(value.X, value.Y);
             sizeOverride = new Vector2(value.Width, value.Height);
@@ -169,20 +178,20 @@ public struct DrawParameters
     ///     <br />
     ///     <see cref="Color.White"/> results in no tinting.
     /// </summary>
-    public Color Color { get; init; } = Color.White;
+    public Color Color { get; set; } = Color.White;
 
     /// <summary>
     ///     The angle, in radians, used to rotate the texture around the
     ///     <see cref="Origin"/>.
     /// </summary>
-    public Angle Rotation { get; init; } = Angle.Zero;
+    public Angle Rotation { get; set; } = Angle.Zero;
 
     /// <summary>
     ///     The origin point.  This may be an explicit point in
     ///     source-texture-space pixel coordinates, an anchor point evaluated
     ///     during resolution, and an arbitrary function. 
     /// </summary>
-    public Origin Origin { get; init; } = Origin.TopLeft;
+    public Origin Origin { get; set; } = Origin.TopLeft;
 
     /// <summary>
     ///     Additional, built-in effects provided by <see cref="BasicEffect"/>.
@@ -190,7 +199,7 @@ public struct DrawParameters
     ///     Includes options for mirroring and flipping the texture during
     ///     rendering.
     /// </summary>
-    public SpriteEffects Effects { get; init; } = SpriteEffects.None;
+    public SpriteEffects Effects { get; set; } = SpriteEffects.None;
 
     /// <summary>
     ///     The depth value used for draw ordering when the
@@ -199,7 +208,10 @@ public struct DrawParameters
     /// <remarks>
     ///     This is seldom used in Terraria rendering!
     /// </remarks>
-    public float LayerDepth { get; init; } = 0f;
+    public float LayerDepth { get; set; } = 0f;
+
+    private readonly (float Width, float Height) SourceDimensions =>
+        (Source?.Width ?? Texture.Width, Source?.Height ?? Texture.Height);
 
     /// <summary>
     ///     Initializes a new instance of <see cref="DrawParameters"/> which
@@ -234,7 +246,7 @@ public struct DrawParameters
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal readonly Resolved Resolve()
     {
-        return new Resolved(this);
+        return new Resolved(in this);
     }
 
     /// <summary>
