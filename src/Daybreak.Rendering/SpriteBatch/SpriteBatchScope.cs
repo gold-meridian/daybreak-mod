@@ -1,12 +1,29 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Daybreak.Common.Rendering;
+namespace Daybreak.Rendering;
 
 /// <summary>
-///     Starts a <see cref="SpriteBatch"/> and caches its old start parameters
-///     if it was begun to restore it on disposal.
+///     Temporarily suspends a <see cref="SpriteBatch"/>'s active <c>Begin</c>
+///     call for the duration of the scope, restoring its original parameters
+///     when the scope is disposed.
 /// </summary>
+/// <remarks>
+///     If the <see cref="SpriteBatch"/> has already begun when this scope is
+///     created, its current parameters are captured, and it is ended
+///     immediately.  On disposal, the <see cref="SpriteBatch"/> is ended again
+///     (if something began it in the meantime) and then restarted with the
+///     originally captured parameters.
+///     <br />
+///     If the <see cref="SpriteBatch"/> had not been begun when the scope was
+///     created, disposal will simply end it (if it was begun during the scope)
+///     without restarting it (as there is nothing to restore).
+///     <br />
+///     This is intended for cases (typically mods drawing &quot;on top of&quot;
+///     or &quot;in between&quot; someone else's rendering code) where you need
+///     to use a shared <see cref="SpriteBatch"/> without knowing or disturbing
+///     whatever state its owner left it in.
+/// </remarks>
 public readonly struct SpriteBatchScope : IDisposable
 {
     private readonly SpriteBatch spriteBatch;
@@ -56,7 +73,9 @@ public readonly struct SpriteBatchScope : IDisposable
 public static class SpriteBatchScopeExtensions
 {
     /// <summary>
-    ///     See <see cref="SpriteBatchScope"/>.
+    ///     Creates a <see cref="SpriteBatchScope"/> for this
+    ///     <see cref="SpriteBatch"/>, suspending any in-progress <c>Begin</c>
+    ///     calls and restoring it when the scope is disposed.
     /// </summary>
     public static SpriteBatchScope Scope(this SpriteBatch @this)
     {

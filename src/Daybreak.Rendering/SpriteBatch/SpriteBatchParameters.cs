@@ -1,12 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Daybreak.Common.Rendering;
+namespace Daybreak.Rendering;
 
 /// <summary>
-///     Wraps the parameters of a <see cref="SpriteBatch"/> initialization,
-///     permitting <see langword="null"/> values which may be replaced with
-///     defaults when being converted to a snapshot.
+///     Wraps the parameters of a <see cref="SpriteBatch"/> <c>Begin</c> call
+///     (&quot;initialization&quot;), permitting <see langword="null"/> values
+///     which may be replaced with defaults when being converted to a snapshot.
+///     <br />
+///     This parameter collection represents an indefinite composition of the
+///     <see cref="SpriteBatch"/> state (that is, a state with possibly
+///     undefined values).  For a definite composition, see
+///     <see cref="SpriteBatchSnapshot"/>.
 /// </summary>
 public struct SpriteBatchParameters
 {
@@ -76,7 +81,7 @@ public struct SpriteBatchParameters
     ///     Default values to populate <see langword="null"/>s with.
     /// </param>
     /// <returns>The new snapshot.</returns>
-    public readonly SpriteBatchSnapshot ToSnapshot(SpriteBatchSnapshot defaultValues)
+    public readonly SpriteBatchSnapshot ToSnapshot(in SpriteBatchSnapshot defaultValues)
     {
         return new SpriteBatchSnapshot(
             SortMode ?? defaultValues.SortMode,

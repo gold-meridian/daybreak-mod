@@ -2,17 +2,21 @@ using JetBrains.Annotations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Daybreak.Common.Rendering;
+namespace Daybreak.Rendering;
 
 /// <summary>
-///     A "snapshot" of the current state of a <see cref="SpriteBatch" />.
+///     A &quot;snapshot&quot; of the current state of a
+///     <see cref="SpriteBatch" />.  These values may be mutated freely.
 ///     <br />
-///     These values may be manipulated freely.
+///     This API exists to make preservation of a <see cref="SpriteBatch"/>'s
+///     <c>Begin</c>/<c>End</c> state trivial.
+///     <br />
+///     A snapshot represents a definite composition of the
+///     <see cref="SpriteBatch"/> state.  For an indefinite composition (that
+///     is, a state with possibly undefined values), see
+///     <see cref="SpriteBatchParameters"/>.
 /// </summary>
 /// <remarks>
-///     This API exists for making preservation of a <see cref="SpriteBatch" />'s
-///     state trivial.
-///     <br />
 ///     The act of taking a snapshot through this object's constructor is pure
 ///     (that is, it has no side effects).  It will not mutate the state of the
 ///     <see cref="SpriteBatch" /> being analyzed.  If you intend to modify the
@@ -99,7 +103,8 @@ public struct SpriteBatchSnapshot
     }
 
     /// <summary>
-    ///     Initializes a set of parameters from this snapshot.
+    ///     Initializes a set of <see cref="SpriteBatchParameters"/> from this
+    ///     snapshot.
     /// </summary>
     public readonly SpriteBatchParameters ToParameters()
     {
