@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Daybreak.Common.Features.Hooks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -234,19 +235,24 @@ public abstract class RenderTargetPool : IDisposable
         Main.RunOnMainThread(
             () =>
             {
-                On_Main.DoDraw += (orig, self, time) =>
+                On_Main.DoDraw += [StackTraceHidden] (orig, self, time) =>
                 {
-                    foreach (var lease in leases_to_clear)
-                    {
-                        lease.Dispose();
-                    }
-
-                    leases_to_clear.Clear();
+                    ClearAndDisposeOfLeases();
 
                     orig(self, time);
                 };
             }
         );
+    }
+
+    private static void ClearAndDisposeOfLeases()
+    {
+        foreach (var lease in leases_to_clear)
+        {
+            lease.Dispose();
+        }
+
+        leases_to_clear.Clear();
     }
 
     [OnUnload(Side = ModSide.Client)]

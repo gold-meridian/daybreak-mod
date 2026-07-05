@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Daybreak.Common.Features.Hooks;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -174,39 +175,44 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
     [OnLoad(Side = ModSide.Client)]
     private static void AddHooks()
     {
-        On_Main.EnsureRenderTargetContent += (orig, self) =>
+        On_Main.EnsureRenderTargetContent += [StackTraceHidden] (orig, self) =>
         {
             // Let it run first to ensure tileTarget is initialized.  We depend
             // on it as an arbitrary target to provide us a fully-sized target
             // when includes offscreenRage in the target size.
             orig(self);
 
-            GetTargetSizes(
-                self.GraphicsDevice,
-                out var backbufferWidth,
-                out var backbufferHeight,
-                out var offscreenTargetWidth,
-                out var offscreenTargetHeight
+            EnsureTargetSizes(self);
+        };
+    }
+
+    private static void EnsureTargetSizes(Main self)
+    {
+        GetTargetSizes(
+            self.GraphicsDevice,
+            out var backbufferWidth,
+            out var backbufferHeight,
+            out var offscreenTargetWidth,
+            out var offscreenTargetHeight
+        );
+
+        foreach (var (lease, sizeCallback) in Shared.cache)
+        {
+            var (width, height) = sizeCallback(
+                backbufferWidth,
+                backbufferHeight,
+                offscreenTargetWidth,
+                offscreenTargetHeight
             );
 
-            foreach (var (lease, sizeCallback) in Shared.cache)
+            if (lease.Target.Width == width && lease.Target.Height == height)
             {
-                var (width, height) = sizeCallback(
-                    backbufferWidth,
-                    backbufferHeight,
-                    offscreenTargetWidth,
-                    offscreenTargetHeight
-                );
-
-                if (lease.Target.Width == width && lease.Target.Height == height)
-                {
-                    continue;
-                }
-
-                lease.Target.Dispose();
-                lease.Target = RenderTargetDescriptor.From(lease.Target).Create(self.GraphicsDevice, width, height);
+                continue;
             }
-        };
+
+            lease.Target.Dispose();
+            lease.Target = RenderTargetDescriptor.From(lease.Target).Create(self.GraphicsDevice, width, height);
+        }
     }
 
     [OnUnload(Side = ModSide.Client)]

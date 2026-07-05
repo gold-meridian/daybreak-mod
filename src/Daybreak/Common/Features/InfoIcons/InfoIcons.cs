@@ -49,11 +49,49 @@ public abstract class InfoIcon : ModTexturedType, ILocalizedModType
 
             var dims = this.Dimensions;
 
+            if (IsMouseHovering)
+            {
+                const int backglow_count = 8;
+                for (var i = 0; i < backglow_count; i++)
+                {
+                    var drawOffset = (float.Tau * i / backglow_count).ToRotationVector2() * 2f;
+                    spriteBatch.Draw(
+                        new DrawParameters(Asset)
+                        {
+                            Destination = dims with { X = dims.X + (int)drawOffset.X + 2, Y = dims.Y + (int)drawOffset.Y + 2 },
+                            Color = Color.Black * 0.15f,
+                        }
+                    );
+                }
+
+                for (var i = 0; i < backglow_count; i++)
+                {
+                    var drawOffset = (float.Tau * i / backglow_count).ToRotationVector2() * 1.25f;
+                    spriteBatch.Draw(
+                        new DrawParameters(Asset)
+                        {
+                            Destination = dims with { X = dims.X + (int)drawOffset.X, Y = dims.Y + (int)drawOffset.Y },
+                            Color = Color.White with { A = 0 } * 0.59f,
+                        }
+                    );
+                }
+            }
+
+            // Dropshadow
+            spriteBatch.Draw(
+                new DrawParameters(Asset)
+                {
+                    Destination = dims with { X = dims.X + 2, Y = dims.Y + 2 },
+                    Color = Color.Black * 0.3f,
+                }
+            );
+
+            // Main icon
             spriteBatch.Draw(
                 new DrawParameters(Asset)
                 {
                     Destination = dims,
-                    Color = Color.White * (IsMouseHovering ? VisibilityActive : VisibilityInactive),
+                    Color = Color.White,
                 }
             );
         }
@@ -162,6 +200,9 @@ internal static class InfoIcons
         private float horizontalViewPosition;
         private float innerListWidth;
 
+        private bool isActuallyHoveringOverPartOfList;
+        private bool isHoveringBlockedForIcons;
+
         public ScrollableIconPanel(IEnumerable<InfoIcon> icons)
         {
             foreach (var icon in icons)
@@ -177,7 +218,7 @@ internal static class InfoIcons
                 {
                     element.OnDraw += (e, _) =>
                     {
-                        if (e.IsMouseHovering)
+                        if (e.IsMouseHovering && !isHoveringBlockedForIcons)
                         {
                             icon.OnHover();
                         }
@@ -185,6 +226,13 @@ internal static class InfoIcons
                 }
                 Add(element);
             }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            Parent?.IgnoresMouseInteraction = !isActuallyHoveringOverPartOfList;
         }
 
         public override void RecalculateChildren()
@@ -243,6 +291,9 @@ internal static class InfoIcons
 
             var extraOffset = _items.Count > 1 ? 5 : 10;
             DrawPanel(spriteBatch, dims.TopLeft(), MathF.Min(innerListWidth + extraOffset, dims.Width));
+
+            var visibleDims = dims with { Width = (int)MathF.Min(dims.Width, innerListWidth) };
+            isActuallyHoveringOverPartOfList = visibleDims.Contains(Main.MouseScreen.ToPoint());
 
             if (innerListWidth <= dims.Width)
             {
@@ -304,6 +355,8 @@ internal static class InfoIcons
                     Origin = Vector2.UnitY * rightAsset.Height() / 2f,
                 }
             );
+            
+            isHoveringBlockedForIcons = leftHovered || rightHovered;
 
             if (!Main.mouseLeft)
             {

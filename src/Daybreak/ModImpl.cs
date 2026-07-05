@@ -1,5 +1,6 @@
 using System;
 using Daybreak.Common.Features.Authorship;
+using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Features.Models;
 using Daybreak.Common.Features.ModPanel;
 using Daybreak.Content.UI;
@@ -41,5 +42,14 @@ partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage, INam
     string INameProvider.GetName(Type type)
     {
         return NameProvider.GetNestedName(type);
+    }
+}
+
+class Test
+{
+    [ModSystemHooks.PostDrawInterface]
+    public void A(ModSystemHooks.PostDrawInterface.Original orig, ModSystem self, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+    {
+        throw new NotImplementedException();
     }
 }
