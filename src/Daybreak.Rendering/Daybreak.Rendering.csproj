@@ -2,4 +2,8 @@
 
     <Import Project="../Module.props" />
 
+    <ItemGroup>
+        <ProjectReference Include="..\Daybreak.Mathematics\Daybreak.Mathematics.csproj" />
+    </ItemGroup>
+
 </Project>

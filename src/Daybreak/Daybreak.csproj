@@ -23,4 +23,8 @@
         <ProjectReference Include="..\Daybreak.Resources\Daybreak.Resources.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Common\Mathematics\" />
+    </ItemGroup>
+
 </Project>

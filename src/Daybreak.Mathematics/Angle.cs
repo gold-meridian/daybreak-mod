@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
-namespace Daybreak.Common.Mathematics;
+namespace Daybreak.Mathematics;
 
 /// <summary>
 ///     A type-safe representation of an angle, stored in radians.
@@ -17,7 +17,7 @@ namespace Daybreak.Common.Mathematics;
 ///     which perform linear (non-wrapping) comparisons.
 ///     <br />
 ///     For circular or directional semantics, see
-///     <see cref="ShortestDeltaTo"/>, <see cref="ShortestDistance"/>,
+///     <see cref="ShortestDeltaTo"/>, <see cref="ShortestDistanceTo"/>,
 ///     <see cref="IsClockwiseFrom"/>, <see cref="IsCounterClockwiseFrom"/>,
 ///     and <see cref="IsBetween"/>.
 /// </summary>
@@ -55,24 +55,17 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
     /// <summary>
     ///     An angle of π radians (180 degrees).
     /// </summary>
-    public static Angle Pi => new(MathF.PI);
+    public static Angle Pi => new(float.Pi);
 
     /// <summary>
     ///     An angle of 2π (or τ) radians (360 degrees).
     /// </summary>
-    /// <seealso cref="Tau"/>
-    public static Angle TwoPi => new(MathF.Tau);
-
-    /// <summary>
-    ///     An angle of 2π (or τ) radians (360 degrees).
-    /// </summary>
-    /// <seealso cref="TwoPi"/>
-    public static Angle Tau => new(MathF.Tau);
+    public static Angle Tau => new(float.Tau);
 
     /// <summary>
     ///     An angle of π radians (90 degrees); a right angle.
     /// </summary>
-    public static Angle HalfPi => new(MathF.PI * 0.5f);
+    public static Angle HalfPi => new(float.Pi * 0.5f);
 
     /// <summary>
     ///     The value of this angle in radians.
