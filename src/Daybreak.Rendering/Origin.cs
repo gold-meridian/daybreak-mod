@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
 using Terraria;
 
 namespace Daybreak.Rendering;
@@ -345,6 +346,126 @@ public static class OriginExtensions
             sb.DrawString(
                 spriteFont,
                 text,
+                position,
+                color,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                effects,
+                layerDepth
+            );
+        }
+#endregion
+
+#region ReLogic DrawString
+        /// <inheritdoc cref="DynamicSpriteFontExtensionMethods.DrawString(SpriteBatch, DynamicSpriteFont, string, Vector2, Color, float, Vector2, float, SpriteEffects, float, Vector2[], Color[])"/>
+        public void DrawString(
+            DynamicSpriteFont spriteFont,
+            string text,
+            Vector2 position,
+            Color color,
+            float rotation,
+            Origin origin,
+            float scale,
+            SpriteEffects effects,
+            float layerDepth,
+            Vector2[]? charOffsets = null,
+            Color[]? charColors = null
+        )
+        {
+            var size = spriteFont.MeasureString(text);
+
+            sb.DrawString(
+                spriteFont,
+                text,
+                position,
+                color,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                effects,
+                layerDepth,
+                charOffsets,
+                charColors
+            );
+        }
+
+        /// <inheritdoc cref="DynamicSpriteFontExtensionMethods.DrawString(SpriteBatch, DynamicSpriteFont, StringBuilder, Vector2, Color, float, Vector2, float, SpriteEffects, float)"/>
+        public void DrawString(
+            DynamicSpriteFont spriteFont,
+            StringBuilder text,
+            Vector2 position,
+            Color color,
+            float rotation,
+            Origin origin,
+            float scale,
+            SpriteEffects effects,
+            float layerDepth
+        )
+        {
+            var realText = text.ToString();
+            var size = spriteFont.MeasureString(realText);
+
+            sb.DrawString(
+                spriteFont,
+                realText,
+                position,
+                color,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                effects,
+                layerDepth
+            );
+        }
+
+        /// <inheritdoc cref="DynamicSpriteFontExtensionMethods.DrawString(SpriteBatch, DynamicSpriteFont, string, Vector2, Color, float, Vector2, Vector2, SpriteEffects, float)"/>
+        public void DrawString(
+            DynamicSpriteFont spriteFont,
+            string text,
+            Vector2 position,
+            Color color,
+            float rotation,
+            Origin origin,
+            Vector2 scale,
+            SpriteEffects effects,
+            float layerDepth
+        )
+        {
+            var size = spriteFont.MeasureString(text);
+
+            sb.DrawString(
+                spriteFont,
+                text,
+                position,
+                color,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                effects,
+                layerDepth
+            );
+        }
+
+        /// <inheritdoc cref="DynamicSpriteFontExtensionMethods.DrawString(SpriteBatch, DynamicSpriteFont, StringBuilder, Vector2, Color, float, Vector2, Vector2, SpriteEffects, float)"/>
+        public void DrawString(
+            DynamicSpriteFont spriteFont,
+            StringBuilder text,
+            Vector2 position,
+            Color color,
+            float rotation,
+            Origin origin,
+            Vector2 scale,
+            SpriteEffects effects,
+            float layerDepth
+        )
+        {
+            var realText = text.ToString();
+            var size = spriteFont.MeasureString(realText);
+
+            sb.DrawString(
+                spriteFont,
+                realText,
                 position,
                 color,
                 rotation,
