@@ -19,35 +19,6 @@ namespace Daybreak.Rendering;
 ///     allows for more eloquent expression of values without specifying
 ///     redundant variables.
 /// </summary>
-/// <remarks>
-///     Several properties are derived from others:
-///     <list type="bullet">
-///         <item>
-///             <description>
-///                 <see cref="Size"/> and <see cref="Destination"/> are
-///                 alternate views over <see cref="Scale"/>.  Setting either
-///                 one records the requested absolute size; it is only
-///                 converted into an effective <see cref="Scale"/> when the
-///                 parameters are actually resolved (i.e., when read back via
-///                 <see cref="Size"/> or <see cref="Destination"/>, or when
-///                 resolved for submission).  This is deliberate: it means you
-///                 may set <see cref="Source"/>, <see cref="Size"/>, and
-///                 <see cref="Destination"/> in <i>any order</i> in an object
-///                 initializer and always get correct results, because none of
-///                 them read each other until construction is complete.
-///             </description>
-///         </item>
-///         <item>
-///             <description>
-///                 <see cref="Origin"/> does not directly read or write
-///                 to any other properties, nor is it written to or read by any
-///                 others.  Regardless, it offers unique control for resolving
-///                 an origin point from an arbitrary rectangle by providing
-///                 default anchor points and a provider system.
-///             </description>
-///         </item>
-///     </list>
-/// </remarks>
 public struct DrawParameters
 {
     internal readonly ref struct Resolved
@@ -70,7 +41,7 @@ public struct DrawParameters
 
             Scale = parameters.sizeOverride is { } size
                 ? new Vector2(size.X / SrcW, size.Y / SrcH)
-                : parameters.Scale;
+                : parameters.rawScale;
 
             Origin = parameters.Origin.GetOrigin(new Vector2(SrcW, SrcH));
         }
@@ -117,19 +88,18 @@ public struct DrawParameters
 
             return rawScale;
         }
-        
-        set => rawScale = value;
+
+        set
+        {
+            rawScale = value;
+            sizeOverride = null;
+        }
     }
 
     private Vector2 rawScale = Vector2.One;
 
     /// <summary>
     ///     Gets or sets the absolute, on-screen size of the rendered quad.
-    ///     <br />
-    ///     <br />
-    ///     Reading this value derives it from the <see cref="Scale"/> and the
-    ///     source dimensions of the texture.  Writing this value updates
-    ///     <see cref="Scale"/> so that the requested size is preserved.
     /// </summary>
     public Vector2 Size
     {
