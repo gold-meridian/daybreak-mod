@@ -19,7 +19,10 @@
         <ProjectReference Include="..\Daybreak.Contracts\Daybreak.Contracts.csproj"/>
         <ProjectReference Include="..\Daybreak.EarlyLoader\Daybreak.EarlyLoader.csproj"/>
         <ProjectReference Include="..\Daybreak.Hooks\Daybreak.Hooks.csproj"/>
+        <ProjectReference Include="..\Daybreak.Mathematics\Daybreak.Mathematics.csproj"/>
         <ProjectReference Include="..\Daybreak.MonoMod\Daybreak.MonoMod.csproj"/>
+        <ProjectReference Include="..\Daybreak.Rendering.Buffers\Daybreak.Rendering.Buffers.csproj"/>
+        <ProjectReference Include="..\Daybreak.Rendering\Daybreak.Rendering.csproj"/>
         <ProjectReference Include="..\Daybreak.Resources\Daybreak.Resources.csproj"/>
     </ItemGroup>
 
