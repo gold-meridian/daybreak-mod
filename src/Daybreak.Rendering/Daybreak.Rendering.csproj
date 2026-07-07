@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
 
-    <Import Project="../Module.props" />
+    <Import Project="../Module.props"/>
 
     <ItemGroup>
-        <ProjectReference Include="..\Daybreak.Mathematics\Daybreak.Mathematics.csproj" />
+        <ProjectReference Include="..\Daybreak.Mathematics\Daybreak.Mathematics.csproj"/>
     </ItemGroup>
 
 </Project>
