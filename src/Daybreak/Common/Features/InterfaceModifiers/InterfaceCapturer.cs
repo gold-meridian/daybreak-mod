@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Rendering;
+using Daybreak.Rendering.Buffers;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using Terraria;

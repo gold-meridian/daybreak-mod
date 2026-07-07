@@ -1,4 +1,5 @@
 ﻿using System;
+using Daybreak.Rendering.Buffers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

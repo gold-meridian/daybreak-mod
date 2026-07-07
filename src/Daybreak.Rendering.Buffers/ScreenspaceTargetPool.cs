@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Daybreak.Common.Features.Hooks;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Daybreak.Common.Rendering;
+namespace Daybreak.Rendering.Buffers;
 
 /// <summary>
 ///     A <see cref="RenderTargetPool"/> that provides APIs for creating

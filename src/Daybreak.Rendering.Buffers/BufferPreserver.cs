@@ -1,9 +1,12 @@
-﻿using Daybreak.Common.Features.Hooks;
+﻿// Historically, this was used to modify the state of RenderTarget2Ds.  This
+// wouldn't restore them, and a better solution has since been found (for our
+// use case, anyway).  See RenderTargetScope.
+
+/*
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ModLoader;
 
-namespace Daybreak.Common.Rendering;
+namespace Daybreak.Rendering.Buffers;
 
 /// <summary>
 ///     Handles preserving the contents of <see cref="RenderTarget2D" />s.
@@ -11,7 +14,7 @@ namespace Daybreak.Common.Rendering;
 ///     For most cases, <see cref="RenderTargetScope"/> is preferred for
 ///     temporarily swapping render targets.
 /// </summary>
-public static class RenderTargetPreserver
+public static class BufferPreserver
 {
     /// <summary>
     ///     Forcefully sets the usage of a given set of render target bindings to
@@ -58,3 +61,4 @@ public static class RenderTargetPreserver
         );
     }
 }
+*/

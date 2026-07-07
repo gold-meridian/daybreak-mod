@@ -3,6 +3,7 @@
     <Import Project="../Module.props" />
 
     <ItemGroup>
+        <ProjectReference Include="..\Daybreak.Hooks\Daybreak.Hooks.csproj" />
         <ProjectReference Include="..\Daybreak.Rendering\Daybreak.Rendering.csproj" />
     </ItemGroup>
 

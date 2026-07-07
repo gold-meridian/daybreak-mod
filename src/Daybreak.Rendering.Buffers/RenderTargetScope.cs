@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Daybreak.Common.Rendering;
+namespace Daybreak.Rendering.Buffers;
 
 /* Credit to Verminoid Creature for the original implementation, based on:
  * <https://github.com/JasperDawg/Cataphract/blob/f33541642d1f2aec575b2a4f580afe13a2de2cfa/Common/Buffers.cs>.
@@ -10,15 +11,23 @@ namespace Daybreak.Common.Rendering;
  * Generously licensed to us under AGPL v3.0.
  */
 
+// TODO: Support binding multiple targets, including cubes?
+//       Multiple targets would require allocations generally.  Graphics
+//       extensions exist in Daybreak.Rendering to avoid it on the FNA side, but
+//       scopes would still need to track them.  Provide scoped and unscoped
+//       overloads?
+
 /// <summary>
 ///     Manages the scope of a render target to be rendered to, swapping out the
-///     currently-used targets of a device on creation and replacing it with the
+///     currently used targets of a device on creation and replacing it with the
 ///     given target.  Switches back to the old targets upon disposal.
 /// </summary>
 public readonly struct RenderTargetScope : IDisposable
 {
-    private readonly GraphicsDevice graphicsDevice;
+    private static GraphicsDevice GraphicsDevice => Graphics.Device;
+
     private readonly RenderTargetBinding[] previous;
+    private readonly RenderTargetUsage? oldUsage;
 
     /// <summary>
     ///     Creates a new scope, saving the current device targets and starts
@@ -39,19 +48,44 @@ public readonly struct RenderTargetScope : IDisposable
     {
         ArgumentNullException.ThrowIfNull(target);
 
-        graphicsDevice = target.GraphicsDevice;
-        previous = graphicsDevice.GetRenderTargets();
+        // PERF: If we're going to be clearing it anyway, no reason to permit
+        // the default discard behavior!
+        // The default overload for Clear mirrors the settings explicitly used
+        // in SetRenderTargets.
+        preserveContents |= clearColor.HasValue;
 
+        previous = GraphicsDevice.GetRenderTargets();
+
+        // If you're coming here from BufferPreserver, you'll see we can just
+        // inline out logic here without issue.  RenderTargetUsage is only
+        // acknowledged by SetRenderTarget, so we just need our logic to happen
+        // before it.
         if (preserveContents)
         {
-            RenderTargetPreserver.PreserveBindings(previous);
+            if (previous.Length > 0)
+            {
+                // Whether targets are cleared is entirely dependent on the
+                // first target.
+
+                Debug.Assert(previous[0].RenderTarget is IRenderTarget);
+
+                oldUsage = ((IRenderTarget)previous[0].RenderTarget).RenderTargetUsage;
+            }
+            else
+            {
+                // In the case of the backbuffer.
+
+                oldUsage = GraphicsDevice.PresentationParameters.RenderTargetUsage;
+            }
+
+            Debug.Assert(oldUsage.HasValue);
         }
 
-        graphicsDevice.SetRenderTarget(target);
+        GraphicsDevice.SetRenderTargets(target);
 
         if (clearColor.HasValue)
         {
-            graphicsDevice.Clear(clearColor.Value);
+            GraphicsDevice.Clear(clearColor.Value);
         }
     }
 
@@ -61,7 +95,35 @@ public readonly struct RenderTargetScope : IDisposable
     /// </summary>
     public void Dispose()
     {
-        graphicsDevice.SetRenderTargets(previous);
+        GraphicsDevice.SetRenderTargets(previous);
+
+        // Restore target usage now that we've run SetRenderTargets a second
+        // time.
+        if (oldUsage is not { } usage)
+        {
+            return;
+        }
+
+        if (previous.Length > 0)
+        {
+            switch (previous[0].RenderTarget)
+            {
+                case RenderTarget2D target2D:
+                    target2D.RenderTargetUsage = usage;
+                    break;
+
+                case RenderTargetCube targetCube:
+                    targetCube.RenderTargetUsage = usage;
+                    break;
+
+                default:
+                    throw new InvalidOperationException($"Unknown render target type: {previous[0].RenderTarget.GetType()}");
+            }
+        }
+        else
+        {
+            GraphicsDevice.PresentationParameters.RenderTargetUsage = usage;
+        }
     }
 }
 
