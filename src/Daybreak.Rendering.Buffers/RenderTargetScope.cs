@@ -156,25 +156,15 @@ public static class RenderTargetScopeExtensions
         );
     }
 
-    /// <summary>
-    ///     Creates a new scope, saving the current device targets and starts
-    ///     rendering to the new one instead.
-    /// </summary>
-    /// <param name="target">The target to render to.</param>
-    /// <param name="preserveContents">
-    ///     Whether to ensure swapped targets preserve their contents.
-    /// </param>
-    /// <param name="clearColor">
-    ///     If not null, clears the target to the given color.
-    /// </param>
+    /// <inheritdoc cref="Scope(RenderTarget2D, bool, Color?)"/>
     public static RenderTargetScope Scope(
-        this RenderTargetLease target,
+        this IBufferLease<RenderTarget2D> target,
         bool preserveContents = true,
         Color? clearColor = null
     )
     {
         return new RenderTargetScope(
-            target.Target,
+            target.Buffer,
             preserveContents,
             clearColor
         );
