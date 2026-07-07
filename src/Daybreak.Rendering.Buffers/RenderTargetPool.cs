@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Daybreak.Hooks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -24,10 +25,10 @@ namespace Daybreak.Rendering.Buffers;
 ///     destroyed frequently, resulting in excessive use of VRAM.
 ///     <br />
 ///     This class is not thread-safe, and all methods and their implementations
-///     are expected to be invoked solely on the Main Thread unless explicitly
+///     are expected to be invoked solely on the main thread unless explicitly
 ///     specified otherwise.
 /// </remarks>
-public abstract class RenderTargetPool : IDisposable
+public abstract class RenderTargetPool : IBufferProvider<RenderTarget2D>, IDisposable
 {
     // Store as field of derived shared type so the JIT can de-virtualize calls
     // to it when the Shared property gets inlined.
@@ -100,7 +101,7 @@ public abstract class RenderTargetPool : IDisposable
     ///     order to rent it again, or it my release the returned buffer if it's
     ///     determined that the pool already has enough buffers stored.
     /// </remarks>
-    public abstract void Return(RenderTargetLease lease);
+    public abstract void Return(IBufferLease<RenderTarget2D> lease);
 
     /// <summary>
     ///     Disposes of the pool and releases any owned render targets,
@@ -113,7 +114,7 @@ public abstract class RenderTargetPool : IDisposable
     /// </summary>
     public abstract void Dispose();
 
-    private static readonly List<RenderTargetLease> leases_to_clear = [];
+    private static readonly List<IBufferLease<RenderTarget2D>> leases_to_clear = [];
 
     /// <summary>
     ///     Queues a lease to be disposed of on the next render frame for cases
@@ -128,7 +129,7 @@ public abstract class RenderTargetPool : IDisposable
     ///     last-resort option for when you cannot guarantee ownership over a
     ///     target.
     /// </remarks>
-    public static void ReturnNextFrame(RenderTargetLease lease)
+    public static void ReturnNextFrame(IBufferLease<RenderTarget2D> lease)
     {
         leases_to_clear.Add(lease);
     }
@@ -139,7 +140,7 @@ public abstract class RenderTargetPool : IDisposable
         Main.RunOnMainThread(
             () =>
             {
-                On_Main.DoDraw += [StackTraceHidden] (orig, self, time) =>
+                On_Main.DoDraw += [StackTraceHidden](orig, self, time) =>
                 {
                     ClearAndDisposeOfLeases();
 
@@ -209,7 +210,7 @@ public static class RenderTargetPoolExtensions
         /// <param name="baseSize">The base (unscaled) size of the target.</param>
         /// <param name="scale">The scale factor of the target.</param>
         /// <returns>
-        ///     A leased target which should be disposed upon use, automatically
+        ///     A leased target that should be disposed upon use, automatically
         ///     returning the target to the pool.
         /// </returns>
         public RenderTargetLease RentScaled(
@@ -236,7 +237,7 @@ public static class RenderTargetPoolExtensions
         /// <param name="scale">The scale factor of the target.</param>
         /// <param name="descriptor">The initialization parameters.</param>
         /// <returns>
-        ///     A leased target which should be disposed upon use, automatically
+        ///     A leased target that should be disposed upon use, automatically
         ///     returning the target to the pool.
         /// </returns>
         public RenderTargetLease RentScaled(
@@ -326,12 +327,12 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         }
     }
 
-    public override void Return(RenderTargetLease lease)
+    public override void Return(IBufferLease<RenderTarget2D> lease)
     {
         ArgumentNullException.ThrowIfNull(lease);
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        var key = Key.From(lease.Target);
+        var key = Key.From(lease.Buffer);
         if (!cache.TryGetValue(key, out var entry))
         {
             cache[key] = entry = new Entry();
@@ -347,16 +348,16 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         {
             if (totalCached >= max_total_targets)
             {
-                lease.Target.Dispose();
+                lease.Buffer.Dispose();
                 return;
             }
 
-            entry.Targets.Push(lease.Target);
+            entry.Targets.Push(lease.Buffer);
             totalCached++;
         }
         else
         {
-            lease.Target.Dispose();
+            lease.Buffer.Dispose();
         }
     }
 

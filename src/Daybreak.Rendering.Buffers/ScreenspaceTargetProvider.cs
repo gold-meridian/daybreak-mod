@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Daybreak.Hooks;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
@@ -8,25 +9,21 @@ using Terraria.ModLoader;
 namespace Daybreak.Rendering.Buffers;
 
 /// <summary>
-///     A <see cref="RenderTargetPool"/> that provides APIs for creating
-///     references to render targets that are dependent on the screen size.
+///     Provides <see cref="RenderTarget2D"/>s that are dependent on the screen
+///     size.
 ///     <br />
-///     Targets created by this pool are not cached for reuse later.  This API
-///     is designed to leverage the strong reference to a target provided by
-///     <see cref="RenderTargetLease"/>.
+///     Leased targets will automatically be resized upon viewport change.
 /// </summary>
-public sealed class ScreenspaceTargetPool : RenderTargetPool
+public sealed class ScreenspaceTargetProvider : IBufferProvider<RenderTarget2D>, IDisposable
 {
     /// <summary>
-    ///     Retrieves the shared <see cref="ScreenspaceTargetPool"/> instance.
+    ///     Retrieves the shared <see cref="ScreenspaceTargetProvider"/> instance.
     /// </summary>
-    /// <remarks>
-    ///     Disposed on unload.
-    /// </remarks>
-    public new static ScreenspaceTargetPool Shared { get; } = new();
+    public static ScreenspaceTargetProvider Shared { get; } = new();
 
     /// <summary>
-    /// 
+    ///     The callback for determining the size of a target based on the
+    ///     current backbuffer.
     /// </summary>
     public delegate (int Width, int Height) GetTargetSize(
         int backbufferWidth,
@@ -35,58 +32,42 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
         int offscreenTargetHeight
     );
 
-    private readonly Dictionary<RenderTargetLease, GetTargetSize> cache = [];
+    private readonly Dictionary<IBufferLease<RenderTarget2D>, GetTargetSize> cache = [];
     private bool disposed;
 
-    private ScreenspaceTargetPool() { }
+    private ScreenspaceTargetProvider() { }
 
-    /// <inheritdoc/>
-    public override RenderTargetLease Rent(
-        GraphicsDevice device,
-        int width,
-        int height,
-        RenderTargetDescriptor descriptor
-    )
-    {
-        ArgumentNullException.ThrowIfNull(device);
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(width, 0);
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(height, 0);
-        ObjectDisposedException.ThrowIf(disposed, this);
-
-        return Rent(device, (_, _, _, _) => (width, height), descriptor);
-    }
-
-    /// <inheritdoc cref="Rent(GraphicsDevice,GetTargetSize,RenderTargetDescriptor?)"/>
-    public RenderTargetLease Rent(
+    /// <inheritdoc cref="Create(GraphicsDevice, GetTargetSize, RenderTargetDescriptor?)"/>
+    public RenderTargetLease Create(
         GraphicsDevice device,
         RenderTargetDescriptor? descriptor = null
     )
     {
-        return Rent(
+        return Create(
             device,
             (width, height) => (width, height),
             descriptor
         );
     }
 
-    /// <inheritdoc cref="Rent(GraphicsDevice,GetTargetSize,RenderTargetDescriptor?)"/>
-    public RenderTargetLease Rent(
+    /// <inheritdoc cref="Create(GraphicsDevice, GetTargetSize, RenderTargetDescriptor?)"/>
+    public RenderTargetLease Create(
         GraphicsDevice device,
         Func<int, int, (int, int)> targetSizeCallback,
         RenderTargetDescriptor? descriptor = null
     )
     {
-        return Rent(device, (width, height, _, _) => targetSizeCallback(width, height), descriptor);
+        return Create(device, (width, height, _, _) => targetSizeCallback(width, height), descriptor);
     }
 
     /// <summary>
-    ///     Rents a target with varying width and height, to be recalculated
+    ///     Creates a target with varying width and height, to be recalculated
     ///     whenever the screen is resized.  For the lifetime of the lease, this
-    ///     pool will re-initialize the given target whenever the computed width
-    ///     and height do not match the current size of the target on screen
-    ///     size change/vanilla RT invalidation.
+    ///     provider will re-initialize the given target whenever the computed
+    ///     width and height do not match the current size of the target on
+    ///     screen size change/vanilla RT invalidation.
     /// </summary>
-    public RenderTargetLease Rent(
+    public RenderTargetLease Create(
         GraphicsDevice device,
         GetTargetSize targetSizeCallback,
         RenderTargetDescriptor? descriptor = null
@@ -121,8 +102,10 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
         return lease;
     }
 
-    /// <inheritdoc/>
-    public override void Return(RenderTargetLease lease)
+    /// <summary>
+    ///     Disposes of this lease and target.
+    /// </summary>
+    public void Return(IBufferLease<RenderTarget2D> lease)
     {
         ArgumentNullException.ThrowIfNull(lease);
         ObjectDisposedException.ThrowIf(disposed, this);
@@ -132,26 +115,21 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
             return;
         }
 
-        lease.Target.Dispose();
+        lease.Buffer.Dispose();
     }
 
-    /// <inheritdoc/>
-    public override void Dispose()
+    void IDisposable.Dispose()
     {
         if (disposed)
         {
             return;
         }
 
-        Trim();
         disposed = true;
-    }
 
-    private void Trim()
-    {
         foreach (var lease in cache.Keys)
         {
-            lease.Target.Dispose();
+            lease.Buffer.Dispose();
         }
 
         cache.Clear();
@@ -174,10 +152,10 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
     [OnLoad(Side = ModSide.Client)]
     private static void AddHooks()
     {
-        On_Main.EnsureRenderTargetContent += [StackTraceHidden] (orig, self) =>
+        On_Main.EnsureRenderTargetContent += [StackTraceHidden](orig, self) =>
         {
             // Let it run first to ensure tileTarget is initialized.  We depend
-            // on it as an arbitrary target to provide us a fully-sized target
+            // on it as an arbitrary target to provide us a fully sized target
             // when includes offscreenRage in the target size.
             orig(self);
 
@@ -204,13 +182,13 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
                 offscreenTargetHeight
             );
 
-            if (lease.Target.Width == width && lease.Target.Height == height)
+            if (lease.Buffer.Width == width && lease.Buffer.Height == height)
             {
                 continue;
             }
 
-            lease.Target.Dispose();
-            lease.Target = RenderTargetDescriptor.From(lease.Target).Create(self.GraphicsDevice, width, height);
+            lease.Buffer.Dispose();
+            lease.Buffer = RenderTargetDescriptor.From(lease.Buffer).Create(self.GraphicsDevice, width, height);
         }
     }
 
@@ -220,7 +198,7 @@ public sealed class ScreenspaceTargetPool : RenderTargetPool
         Main.RunOnMainThread(
             () =>
             {
-                Shared.Dispose();
+                ((IDisposable)Shared).Dispose();
             }
         );
     }
