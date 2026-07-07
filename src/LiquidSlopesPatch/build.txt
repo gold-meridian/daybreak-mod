@@ -1,5 +1,0 @@
-displayName = Liquid Slopes Patch
-author = Blockaroz, tomat
-version = 1.2.2
-homepage = https://discord.gg/6Fm4ZTHVub
-side = NoSync
