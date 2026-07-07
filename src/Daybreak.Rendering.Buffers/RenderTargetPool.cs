@@ -135,7 +135,7 @@ public abstract class RenderTargetPool : IBufferProvider<RenderTarget2D>, IDispo
     }
 
     [OnLoad(Side = ModSide.Client)]
-    private static void RegisterFrameLeaseDisposal()
+    private static void HandlePreFrameActions()
     {
         Main.RunOnMainThread(
             () =>
@@ -143,6 +143,7 @@ public abstract class RenderTargetPool : IBufferProvider<RenderTarget2D>, IDispo
                 On_Main.DoDraw += [StackTraceHidden](orig, self, time) =>
                 {
                     ClearAndDisposeOfLeases();
+                    TrimOldLeasesFromSharedPool();
 
                     orig(self, time);
                 };
@@ -158,6 +159,11 @@ public abstract class RenderTargetPool : IBufferProvider<RenderTarget2D>, IDispo
         }
 
         leases_to_clear.Clear();
+    }
+
+    private static void TrimOldLeasesFromSharedPool()
+    {
+        shared.TrimAged();
     }
 
     [OnUnload(Side = ModSide.Client)]
@@ -296,35 +302,28 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(height, 0);
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        try
+        var key = new Key(width, height, descriptor);
+        if (!cache.TryGetValue(key, out var entry))
         {
-            var key = new Key(width, height, descriptor);
-            if (!cache.TryGetValue(key, out var entry))
-            {
-                cache[key] = entry = new Entry();
-            }
-            else
-            {
-                entry.LastUsed = DateTime.UtcNow;
-            }
-
-            RenderTarget2D target;
-            if (entry.Targets.Count > 0)
-            {
-                target = entry.Targets.Pop();
-                totalCached--;
-            }
-            else
-            {
-                target = descriptor.Create(device, width, height);
-            }
-
-            return new RenderTargetLease(target, this);
+            cache[key] = entry = new Entry();
         }
-        finally
+        else
         {
-            TrimAged();
+            entry.LastUsed = DateTime.UtcNow;
         }
+
+        RenderTarget2D target;
+        if (entry.Targets.Count > 0)
+        {
+            target = entry.Targets.Pop();
+            totalCached--;
+        }
+        else
+        {
+            target = descriptor.Create(device, width, height);
+        }
+
+        return new RenderTargetLease(target, this);
     }
 
     public override void Return(IBufferLease<RenderTarget2D> lease)
@@ -368,12 +367,8 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
             return;
         }
 
-        Trim();
         disposed = true;
-    }
 
-    private void Trim()
-    {
         foreach (var entry in cache.Values)
         {
             while (entry.Targets.Count > 0)
@@ -386,7 +381,7 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
         cache.Clear();
     }
 
-    private void TrimAged()
+    internal void TrimAged()
     {
         var now = DateTime.UtcNow;
 
@@ -397,6 +392,7 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
 
         lastTrimmed = now;
 
+        var removed = new List<Key>();
         foreach (var (key, entry) in cache)
         {
             if (now - entry.LastUsed <= max_idle_time)
@@ -410,6 +406,11 @@ internal sealed class SharedRenderTargetPool : RenderTargetPool
                 totalCached--;
             }
 
+            removed.Add(key);
+        }
+
+        foreach (var key in removed)
+        {
             cache.Remove(key);
         }
     }
