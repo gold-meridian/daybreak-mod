@@ -118,11 +118,22 @@ internal static class ModuleLoader
             throw new InvalidOperationException($"Module had no resolved loading mod; {nameof(OwningMod)} was null!");
         }
 
+        // GetLoadableTypes runs after assembly loading but BEFORE our module
+        // initializers!  So it's re-run manually in the mod's module
+        // initializer through a source generator.  This means that when this
+        // hook is actually called, it's the second time around, and
+        // loadableTypes is already populated.  Because of this, we should avoid
+        // calling orig and prefer indexing loadableTypes directly. 
         MonoModHooks.Add(
             typeof(AssemblyManager).GetMethod(nameof(AssemblyManager.GetLoadableTypes), BindingFlags.NonPublic | BindingFlags.Static, [typeof(AssemblyManager.ModLoadContext), typeof(MetadataLoadContext)])!,
             (Func<AssemblyManager.ModLoadContext, MetadataLoadContext, Dictionary<Assembly, Type[]>> orig, AssemblyManager.ModLoadContext mod, MetadataLoadContext mlc) =>
             {
-                var typeMap = orig(mod, mlc);
+                var typeMap = mod.loadableTypes;
+                if (typeMap is null || !typeMap.TryGetValue(mod.assembly, out var modTypes))
+                {
+                    return orig(mod, mlc);
+                }
+                
                 if (OwningMod != mod.Name)
                 {
                     return typeMap;
@@ -143,7 +154,7 @@ internal static class ModuleLoader
                 // Actually add our types to the main mod.  This is a little
                 // gross due to ordering, but tModLoader makes no guarantees
                 // about it, and we can call it an implementation detail.
-                typeMap[mod.assembly] = typeMap[mod.assembly].Concat(types).ToArray();
+                typeMap[mod.assembly] = types.Concat(modTypes).ToArray();
 
                 return typeMap;
             }

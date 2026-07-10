@@ -25,7 +25,6 @@
         <ProjectReference Include="..\Daybreak.Networking\Daybreak.Networking.csproj"/>
         <ProjectReference Include="..\Daybreak.Rendering.Buffers\Daybreak.Rendering.Buffers.csproj"/>
         <ProjectReference Include="..\Daybreak.Rendering.ItemBuffering\Daybreak.Rendering.ItemBuffering.csproj"/>
-        <ProjectReference Include="..\Daybreak.Rendering.ItemPreRendering\Daybreak.Rendering.ItemPreRendering.csproj"/>
         <ProjectReference Include="..\Daybreak.Rendering\Daybreak.Rendering.csproj"/>
         <ProjectReference Include="..\Daybreak.Resources\Daybreak.Resources.csproj"/>
     </ItemGroup>

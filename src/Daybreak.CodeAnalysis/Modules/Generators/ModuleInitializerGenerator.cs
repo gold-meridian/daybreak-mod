@@ -21,6 +21,11 @@ public sealed class ModuleInitializerGenerator : IIncrementalGenerator
                     return;
                 }
 
+                if (compilation.GetTypeByMetadataName("Daybreak.DaybreakModuleAttribute") is not null)
+                {
+                    return;
+                }
+
                 ctx.AddSource("ModuleInitializerRunner.g.cs", SourceText.From(GenerateModuleInitializer(assemblyName), Encoding.UTF8));
             }
         );
@@ -32,6 +37,7 @@ public sealed class ModuleInitializerGenerator : IIncrementalGenerator
 
         sb.AppendLine("using System;");
         sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine("using System.Linq;");
         sb.AppendLine("using System.Reflection;");
         sb.AppendLine("using System.Runtime.CompilerServices;");
         sb.AppendLine("using System.Runtime.Loader;");
@@ -66,6 +72,10 @@ public sealed class ModuleInitializerGenerator : IIncrementalGenerator
         sb.AppendLine("                RuntimeHelpers.RunModuleConstructor(module.ModuleHandle);");
         sb.AppendLine("            }");
         sb.AppendLine("        }");
+        sb.AppendLine();
+        sb.AppendLine("        var metadataResolver = Activator.CreateInstance(type.GetNestedType(\"MetadataResolver\", BindingFlags.NonPublic), alc)!;");
+        sb.AppendLine("        var mlc = new MetadataLoadContext((MetadataAssemblyResolver)metadataResolver);");
+        sb.AppendLine("        type.GetField(\"loadableTypes\", BindingFlags.Public | BindingFlags.Instance)!.SetValue(alc, typeof(AssemblyManager).GetMethods(BindingFlags.NonPublic | BindingFlags.Static).First(x => x.Name == \"GetLoadableTypes\" && x.GetParameters().Length == 2)!.Invoke(null, [alc, mlc]));");
         sb.AppendLine("    }");
         sb.AppendLine("#pragma warning restore CA2255");
         sb.AppendLine("}");
