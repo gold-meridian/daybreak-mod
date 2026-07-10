@@ -47,14 +47,16 @@ public sealed class ModuleInitializerGenerator : IIncrementalGenerator
         sb.AppendLine("    {");
         sb.AppendLine("        if (AssemblyLoadContext.GetLoadContext(typeof(__ModuleInitializerRunner_ToFixDumbBug).Assembly) is not { } alc)");
         sb.AppendLine("        {");
-        sb.AppendLine($"            throw new InvalidOperationException(\"Failed to load mod '{assemblyName}'; could not resolve owning AssemblyLoadContext!\");");
+        sb.AppendLine($"            // throw new InvalidOperationException(\"Failed to load mod '{assemblyName}'; could not resolve owning AssemblyLoadContext!\");");
+        sb.AppendLine("            return;");
         sb.AppendLine("        }");
         sb.AppendLine();
         sb.AppendLine("        var type = alc.GetType();");
         sb.AppendLine("        var assembliesField = type.GetField(\"assemblies\", BindingFlags.Public | BindingFlags.Instance);");
         sb.AppendLine("        if (assembliesField is null || assembliesField.GetValue(alc) is not Dictionary<string, Assembly> assemblies)");
         sb.AppendLine("        {");
-        sb.AppendLine($"            throw new InvalidOperationException($\"Failed to load mod '{assemblyName}'; could not resolve 'assemblies' field from ALC: {{alc.GetType()}}!\");");
+        sb.AppendLine($"            // throw new InvalidOperationException($\"Failed to load mod '{assemblyName}'; could not resolve 'assemblies' field from ALC: {{alc.GetType()}}!\");");
+        sb.AppendLine("            return;");
         sb.AppendLine("        }");
         sb.AppendLine();
         sb.AppendLine("        foreach (var assembly in assemblies.Values)");
