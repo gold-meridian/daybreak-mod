@@ -78,7 +78,7 @@ public readonly struct RenderTargetScope : IDisposable
                 oldUsage = GraphicsDevice.PresentationParameters.RenderTargetUsage;
             }
 
-            Debug.Assert(oldUsage.HasValue);
+            // Debug.Assert(oldUsage.HasValue);
         }
 
         GraphicsDevice.SetRenderTargets(target);

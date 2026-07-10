@@ -132,8 +132,9 @@ public static class ItemTextureRenderer
                         continue;
                     }
 
+                    Main.instance.LoadItem(i);
                     var asset = original_assets[i] = TextureAssets.Item[i];
-                    var texture = asset.ImmediateValue;
+                    var texture = asset.Value;
                     var renderTarget = new RenderTarget2D(
                         Graphics.Device,
                         texture.Width,
@@ -150,7 +151,13 @@ public static class ItemTextureRenderer
     [StackTraceHidden]
     private static void UpdateItemRenders(On_Main.orig_DoDraw orig, Main self, GameTime gameTime)
     {
-        if (!unloading)
+        // Ensure isLoading is false so we don't get hit with a race condition
+        // when checking RenderSettings' length in relation to
+        // ItemLoader.ItemCount.  We still need to ensure it's equal to
+        // ItemLoader.ItemCount because if loading is canceled or an exception
+        // occurs during it, isLoading is set to false (while our hooks may
+        // still be applied).
+        if (!unloading && !ModLoader.isLoading && ItemID.Sets.RenderSettings.Length == ItemLoader.ItemCount)
         {
             PopulateTargets();
         }
