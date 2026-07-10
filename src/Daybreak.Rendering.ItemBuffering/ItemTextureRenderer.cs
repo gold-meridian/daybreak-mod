@@ -12,8 +12,6 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
 namespace Daybreak.Rendering.ItemBuffering;
 
 /// <summary>
@@ -22,7 +20,7 @@ namespace Daybreak.Rendering.ItemBuffering;
 public delegate bool ShouldRenderItemDelegate(
     int itemType,
     Asset<Texture2D> originalAsset,
-    Texture2D renderedTexture
+    Texture2D? renderedTexture
 );
 
 /// <summary>
@@ -50,6 +48,7 @@ public static class ItemTextureRenderer
 
     private static readonly Dictionary<int, Asset<Texture2D>> original_assets = [];
     private static readonly Dictionary<int, RenderTarget2D> render_targets = [];
+    private static readonly HashSet<int> has_rendered = [];
 
     private static bool unloading;
 
@@ -96,6 +95,8 @@ public static class ItemTextureRenderer
                 continue;
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
+            // ReSharper disable SuspiciousTypeConversion.Global
             if (modItem is IBufferedItemTexture buffered)
             {
                 ItemID.Sets.RenderSettings[i] = new RenderSettings(
@@ -117,6 +118,8 @@ public static class ItemTextureRenderer
                     }
                 );
             }
+            // ReSharper restore SuspiciousTypeConversion.Global
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         Main.RunOnMainThread(
@@ -129,7 +132,8 @@ public static class ItemTextureRenderer
                         continue;
                     }
 
-                    var texture = TextureAssets.Item[i].ImmediateValue;
+                    var asset = original_assets[i] = TextureAssets.Item[i];
+                    var texture = asset.ImmediateValue;
                     var renderTarget = new RenderTarget2D(
                         Graphics.Device,
                         texture.Width,
@@ -150,7 +154,7 @@ public static class ItemTextureRenderer
         {
             PopulateTargets();
         }
-        
+
         orig(self, gameTime);
     }
 
@@ -166,10 +170,12 @@ public static class ItemTextureRenderer
             var originalAsset = original_assets[i];
             var renderTarget = render_targets[i];
 
-            if (!settings.ShouldRender.Invoke(i, originalAsset, renderTarget))
+            if (!settings.ShouldRender.Invoke(i, originalAsset, has_rendered.Contains(i) ? renderTarget : null))
             {
                 continue;
             }
+
+            has_rendered.Add(i);
 
             using (render_targets[i].Scope(clearColor: Color.Transparent))
             {

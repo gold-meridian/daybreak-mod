@@ -23,7 +23,7 @@ public interface IBufferedItemTexture
     bool ShouldRenderCachedTexture(
         int itemType,
         Asset<Texture2D> originalAsset,
-        Texture2D renderedTexture
+        Texture2D? renderedTexture
     );
 
     /// <summary>
