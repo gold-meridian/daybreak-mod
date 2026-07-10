@@ -65,6 +65,12 @@ public static class PacketExtensions
 {
     extension(IPacket packet)
     {
+        /// <inheritdoc cref="IPacket.Send"/>
+        public void Send(PacketDestination dest)
+        {
+            packet.Send(dest);
+        }
+        
         /// <summary>
         ///     Sends the packet.  If sent from the client, sends it to the
         ///     server.  If sent from the server, sends it to all clients.
