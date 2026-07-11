@@ -70,12 +70,27 @@ public readonly struct RenderTargetScope : IDisposable
                 Debug.Assert(previous[0].RenderTarget is IRenderTarget);
 
                 oldUsage = ((IRenderTarget)previous[0].RenderTarget).RenderTargetUsage;
+
+                switch (previous[0].RenderTarget)
+                {
+                    case RenderTarget2D target2D:
+                        target2D.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+                        break;
+
+                    case RenderTargetCube targeCube:
+                        targeCube.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+                        break;
+
+                    default:
+                        throw new InvalidOperationException($"Unknown render target type: {previous[0].RenderTarget.GetType()}");
+                }
             }
             else
             {
                 // In the case of the backbuffer.
 
                 oldUsage = GraphicsDevice.PresentationParameters.RenderTargetUsage;
+                GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
             }
 
             // Debug.Assert(oldUsage.HasValue);
