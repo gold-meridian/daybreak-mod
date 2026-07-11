@@ -213,6 +213,23 @@ public struct DrawParameters
         return this with { Destination = Destination };
     }
 
+    /// <summary>
+    ///     Sets a new origin while keeping the resolved position the same.
+    /// </summary>
+    public readonly DrawParameters WithOrigin(Origin newOrigin)
+    {
+        var r = Resolve();
+        var newOriginPos = newOrigin.GetOrigin(new Vector2(r.SrcW, r.SrcH));
+
+        var result = this;
+        {
+            result.Position += (newOriginPos - r.Origin) * r.Scale;
+            result.Origin = newOrigin;
+        }
+
+        return result;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal readonly Resolved Resolve()
     {
