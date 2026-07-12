@@ -44,7 +44,8 @@ partial class Extensions
         /// <param name="delegate">
         ///     The delegate to clone and emit a call to.
         /// </param>
-        public void EmitStaticDelegateUnsafe(Delegate @delegate)
+        public void EmitStaticDelegateUnsafe<T>(T @delegate)
+            where T : Delegate
         {
             var compiled = DelegateLifter.LiftDelegateToStaticMethod(@delegate);
             if (compiled is null)
