@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.Utils;
 
@@ -61,12 +64,31 @@ partial class Extensions
 
 internal static class DelegateLifter
 {
+    private static DynamicMethodDefinition CloneMethodWithoutOrig(Delegate @delegate)
+    {
+        // This is a really dumb fix we need to use because when we override the
+        // parameters in LiftDelegateToStaticMethod, they get overwritten by the
+        // arguments of the original method.  Cloning it with the DMD overload
+        // will not preserve the original method.  Stupid.
+        using var dmd = new DynamicMethodDefinition(@delegate.Method);
+        return new DynamicMethodDefinition(dmd);
+    }
+    
     public static MethodInfo? LiftDelegateToStaticMethod(Delegate @delegate)
     {
-        using var dmd = new DynamicMethodDefinition(@delegate.Method);
+        using var dmd = CloneMethodWithoutOrig(@delegate);
         var method = dmd.Definition;
 
+        // Can't be reasonable and check this here because it isn't set when
+        // copying from MonoMod.
+        /*
         if (method is { HasThis: false, IsStatic: true })
+        {
+            return null;
+        }
+        */
+
+        if (@delegate.GetInvocationList().Length != 1 || @delegate.Target is null)
         {
             return null;
         }
@@ -83,19 +105,19 @@ internal static class DelegateLifter
                 var parameterIdx = -1;
                 if (methodCursor.TryGotoNext(MoveType.Before, x => x.MatchLdarg(out parameterIdx)))
                 {
-                    VerifyAndModifyInstruction(methodCursor, parameterIdx, methodCursor.EmitLdarg);
+                    VerifyAndModifyInstruction(methodCursor, parameterIdx, OpCodes.Ldarg);
                     continue;
                 }
 
                 if (methodCursor.TryGotoNext(MoveType.Before, x => x.MatchLdarga(out parameterIdx)))
                 {
-                    VerifyAndModifyInstruction(methodCursor, parameterIdx, methodCursor.EmitLdarga);
+                    VerifyAndModifyInstruction(methodCursor, parameterIdx, OpCodes.Ldarga);
                     continue;
                 }
 
                 if (methodCursor.TryGotoNext(MoveType.Before, x => x.MatchStarg(out parameterIdx)))
                 {
-                    VerifyAndModifyInstruction(methodCursor, parameterIdx, methodCursor.EmitStarg);
+                    VerifyAndModifyInstruction(methodCursor, parameterIdx, OpCodes.Starg);
                     continue;
                 }
 
@@ -109,18 +131,24 @@ internal static class DelegateLifter
         method.HasThis = false;
         method.ExplicitThis = false;
         method.IsStatic = true;
+        method.Parameters.RemoveAt(0);
 
         return dmd.Generate();
     }
 
-    private static void VerifyAndModifyInstruction(ILCursor c, int parameterIndex, Func<ParameterDefinition, ILCursor> emitter)
+    private static void VerifyAndModifyInstruction(ILCursor c, int parameterIndex, OpCode opcode)
     {
         if (parameterIndex == 0)
         {
             throw new InvalidOperationException("Cannot emit a static delegate that references the 'this' parameter.");
         }
 
-        c.Remove();
-        emitter(c.Method.Parameters[parameterIndex]);
+        var instr = c.Next;
+        {
+            Debug.Assert(instr is not null);
+        }
+
+        instr.OpCode = opcode;
+        instr.Operand = c.Method.Parameters[parameterIndex];
     }
 }
