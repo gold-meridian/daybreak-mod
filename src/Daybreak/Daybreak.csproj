@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Daybreak.ChatTags\Daybreak.ChatTags.csproj"/>
         <ProjectReference Include="..\Daybreak.CodeAnalysis\Daybreak.CodeAnalysis.csproj" PrivateAssets="All" ReferenceOutputAssembly="false" OutputItemType="Analyzer"/>
         <ProjectReference Include="..\Daybreak.Contracts\Daybreak.Contracts.csproj"/>
         <ProjectReference Include="..\Daybreak.EarlyLoader\Daybreak.EarlyLoader.csproj"/>
