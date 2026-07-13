@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
 
-    <Import Project="../Module.props"/>
+    <Import Project="../Module.props" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\Daybreak.Hooks\Daybreak.Hooks.csproj" />
+    </ItemGroup>
 
 </Project>

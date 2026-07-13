@@ -24,7 +24,7 @@ public abstract class ChatTag : ModType, ITagHandler
     /// <inheritdoc />
     protected sealed override void Register()
     {
-        ChatManager.Register(this, TagName, AliasNames);
+        ChatTags.Register(this, TagName, AliasNames);
     }
 
     /// <inheritdoc />
