@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using Terraria;
+using Terraria.UI.Chat;
 
 namespace Daybreak.Rendering;
 
@@ -155,12 +158,12 @@ public readonly struct Origin
 /// <summary>
 ///     Extensions for <see cref="Origin"/>.
 /// </summary>
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public static class OriginExtensions
 {
     extension(SpriteBatch sb)
     {
 #region Draw
-        /// <inheritdoc cref="SpriteBatch.Draw(Texture2D, Vector2, Rectangle?, Color, float, Vector2, float, SpriteEffects, float)"/>
         public void Draw(
             Texture2D texture,
             Vector2 position,
@@ -188,7 +191,6 @@ public static class OriginExtensions
             );
         }
 
-        /// <inheritdoc cref="SpriteBatch.Draw(Texture2D, Vector2, Rectangle?, Color, float, Vector2, Vector2, SpriteEffects, float)"/>
         public void Draw(
             Texture2D texture,
             Vector2 position,
@@ -216,7 +218,6 @@ public static class OriginExtensions
             );
         }
 
-        /// <inheritdoc cref="SpriteBatch.Draw(Texture2D, Rectangle, Rectangle?, Color, float, Vector2, SpriteEffects, float)"/>
         public void Draw(
             Texture2D texture,
             Rectangle destinationRectangle,
@@ -244,7 +245,6 @@ public static class OriginExtensions
 #endregion
 
 #region DrawString
-        /// <inheritdoc cref="SpriteBatch.DrawString(SpriteFont, StringBuilder, Vector2, Color, float, Vector2, float, SpriteEffects, float)"/>
         public void DrawString(
             SpriteFont spriteFont,
             StringBuilder text,
@@ -272,7 +272,6 @@ public static class OriginExtensions
             );
         }
 
-        /// <inheritdoc cref="SpriteBatch.DrawString(SpriteFont, StringBuilder, Vector2, Color, float, Vector2, Vector2, SpriteEffects, float)"/>
         public void DrawString(
             SpriteFont spriteFont,
             StringBuilder text,
@@ -300,7 +299,6 @@ public static class OriginExtensions
             );
         }
 
-        /// <inheritdoc cref="SpriteBatch.DrawString(SpriteFont, string, Vector2, Color, float, Vector2, float, SpriteEffects, float)"/>
         public void DrawString(
             SpriteFont spriteFont,
             string text,
@@ -328,7 +326,6 @@ public static class OriginExtensions
             );
         }
 
-        /// <inheritdoc cref="SpriteBatch.DrawString(SpriteFont, string, Vector2, Color, float, Vector2, Vector2, SpriteEffects, float)"/>
         public void DrawString(
             SpriteFont spriteFont,
             string text,
@@ -358,7 +355,6 @@ public static class OriginExtensions
 #endregion
 
 #region ReLogic DrawString
-        /// <inheritdoc cref="DynamicSpriteFontExtensionMethods.DrawString(SpriteBatch, DynamicSpriteFont, string, Vector2, Color, float, Vector2, float, SpriteEffects, float, Vector2[], Color[])"/>
         public void DrawString(
             DynamicSpriteFont spriteFont,
             string text,
@@ -375,7 +371,8 @@ public static class OriginExtensions
         {
             var size = spriteFont.MeasureString(text);
 
-            sb.DrawString(
+            DynamicSpriteFontExtensionMethods.DrawString(
+                sb,
                 spriteFont,
                 text,
                 position,
@@ -390,7 +387,6 @@ public static class OriginExtensions
             );
         }
 
-        /// <inheritdoc cref="DynamicSpriteFontExtensionMethods.DrawString(SpriteBatch, DynamicSpriteFont, StringBuilder, Vector2, Color, float, Vector2, float, SpriteEffects, float)"/>
         public void DrawString(
             DynamicSpriteFont spriteFont,
             StringBuilder text,
@@ -406,7 +402,8 @@ public static class OriginExtensions
             var realText = text.ToString();
             var size = spriteFont.MeasureString(realText);
 
-            sb.DrawString(
+            DynamicSpriteFontExtensionMethods.DrawString(
+                sb,
                 spriteFont,
                 realText,
                 position,
@@ -419,7 +416,6 @@ public static class OriginExtensions
             );
         }
 
-        /// <inheritdoc cref="DynamicSpriteFontExtensionMethods.DrawString(SpriteBatch, DynamicSpriteFont, string, Vector2, Color, float, Vector2, Vector2, SpriteEffects, float)"/>
         public void DrawString(
             DynamicSpriteFont spriteFont,
             string text,
@@ -434,7 +430,8 @@ public static class OriginExtensions
         {
             var size = spriteFont.MeasureString(text);
 
-            sb.DrawString(
+            DynamicSpriteFontExtensionMethods.DrawString(
+                sb,
                 spriteFont,
                 text,
                 position,
@@ -447,7 +444,6 @@ public static class OriginExtensions
             );
         }
 
-        /// <inheritdoc cref="DynamicSpriteFontExtensionMethods.DrawString(SpriteBatch, DynamicSpriteFont, StringBuilder, Vector2, Color, float, Vector2, Vector2, SpriteEffects, float)"/>
         public void DrawString(
             DynamicSpriteFont spriteFont,
             StringBuilder text,
@@ -463,7 +459,8 @@ public static class OriginExtensions
             var realText = text.ToString();
             var size = spriteFont.MeasureString(realText);
 
-            sb.DrawString(
+            DynamicSpriteFontExtensionMethods.DrawString(
+                sb,
                 spriteFont,
                 realText,
                 position,
@@ -477,4 +474,313 @@ public static class OriginExtensions
         }
 #endregion
     }
+
+#region ChatManager DrawColorCodedString
+    extension(ChatManager)
+    {
+        public static void DrawColorCodedStringShadow(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            IEnumerable<TextSnippet> snippets,
+            Vector2 position,
+            Color shadowColor,
+            float rotation,
+            Origin origin,
+            Vector2 scale,
+            float maxWidth = -1f,
+            float spread = 2f
+        )
+        {
+            snippets = snippets.ToArray();
+
+            var size = ChatManager.GetStringSize(font, snippets, scale, maxWidth);
+
+            ChatManager.DrawColorCodedStringShadow(
+                spriteBatch,
+                font,
+                snippets,
+                position,
+                shadowColor,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                maxWidth,
+                spread
+            );
+        }
+
+        public static void DrawColorCodedStringShadow(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            List<PositionedSnippet> snippets,
+            Vector2 position,
+            Color shadowColor,
+            float rotation,
+            Origin origin,
+            Vector2 scale,
+            float spread = 2f
+        )
+        {
+            var size = ChatManager.GetStringSize(snippets);
+
+            ChatManager.DrawColorCodedStringShadow(
+                spriteBatch,
+                font,
+                snippets,
+                position,
+                shadowColor,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                spread
+            );
+        }
+
+        public static void DrawColorCodedString(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            IEnumerable<TextSnippet> snippets,
+            Vector2 position,
+            Color baseColor,
+            float rotation,
+            Origin origin,
+            Vector2 scale,
+            out int hoveredSnippet,
+            float maxWidth = -1f,
+            bool ignoreColors = false
+        )
+        {
+            snippets = snippets.ToArray();
+
+            var size = ChatManager.GetStringSize(font, snippets, scale, maxWidth);
+
+            ChatManager.DrawColorCodedString(
+                spriteBatch,
+                font,
+                snippets,
+                position,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                out hoveredSnippet,
+                maxWidth
+            );
+        }
+
+        public static void DrawColorCodedString(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            IEnumerable<TextSnippet> snippets,
+            Vector2 position,
+            float rotation,
+            Origin origin,
+            Vector2 scale,
+            out int hoveredSnippet,
+            float maxWidth = -1f
+        )
+        {
+            snippets = snippets.ToArray();
+
+            var size = ChatManager.GetStringSize(font, snippets, scale, maxWidth);
+
+            ChatManager.DrawColorCodedString(
+                spriteBatch,
+                font,
+                snippets,
+                position,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                out hoveredSnippet,
+                maxWidth
+            );
+        }
+
+        public static void DrawColorCodedString(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            IEnumerable<PositionedSnippet> snippets,
+            Vector2 position,
+            float rotation,
+            Origin origin,
+            Vector2 scale,
+            out int hoveredSnippet,
+            Color? colorOverride = null
+        )
+        {
+            snippets = snippets.ToArray();
+
+            var size = ChatManager.GetStringSize(snippets);
+
+            ChatManager.DrawColorCodedString(
+                spriteBatch,
+                font,
+                snippets,
+                position,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                out hoveredSnippet,
+                colorOverride
+            );
+        }
+
+        public static void DrawColorCodedStringWithShadow(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            TextSnippet[] snippets,
+            Vector2 position,
+            float rotation,
+            Origin origin,
+            Vector2 baseScale,
+            out int hoveredSnippet,
+            float maxWidth = -1f,
+            float spread = 2f
+        )
+        {
+            var size = ChatManager.GetStringSize(font, snippets, baseScale, maxWidth);
+
+            ChatManager.DrawColorCodedStringWithShadow(
+                spriteBatch,
+                font,
+                snippets,
+                position,
+                rotation,
+                origin.GetOrigin(size),
+                baseScale,
+                out hoveredSnippet,
+                maxWidth,
+                spread
+            );
+        }
+
+        public static void DrawColorCodedStringWithShadow(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            TextSnippet[] snippets,
+            Vector2 position,
+            Color color,
+            float rotation,
+            Origin origin,
+            Vector2 baseScale,
+            out int hoveredSnippet,
+            float maxWidth = -1f,
+            float spread = 2f
+        )
+        {
+            var size = ChatManager.GetStringSize(font, snippets, baseScale, maxWidth);
+
+            ChatManager.DrawColorCodedStringWithShadow(
+                spriteBatch,
+                font,
+                snippets,
+                position,
+                color,
+                rotation,
+                origin.GetOrigin(size),
+                baseScale,
+                out hoveredSnippet,
+                maxWidth,
+                spread
+            );
+        }
+
+        public static void DrawColorCodedStringShadow(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            string text,
+            Vector2 position,
+            Color baseColor,
+            float rotation,
+            Origin origin,
+            Vector2 baseScale,
+            float maxWidth = -1f,
+            float spread = 2f,
+            bool useRawStringSize = false
+        )
+        {
+            var size = useRawStringSize
+                ? font.MeasureString(text)
+                : ChatManager.GetStringSize(font, text, baseScale, maxWidth);
+
+            ChatManager.DrawColorCodedStringShadow(
+                spriteBatch,
+                font,
+                text,
+                position,
+                baseColor,
+                rotation,
+                origin.GetOrigin(size),
+                baseScale,
+                maxWidth,
+                spread
+            );
+        }
+
+        public static Vector2 DrawColorCodedString(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            string text,
+            Vector2 position,
+            Color baseColor,
+            float rotation,
+            Origin origin,
+            Vector2 baseScale,
+            float maxWidth = -1f,
+            bool ignoreColors = false,
+            bool useRawStringSize = false
+        )
+        {
+            var size = useRawStringSize
+                ? font.MeasureString(text)
+                : ChatManager.GetStringSize(font, text, baseScale, maxWidth);
+
+            return ChatManager.DrawColorCodedString(
+                spriteBatch,
+                font,
+                text,
+                position,
+                baseColor,
+                rotation,
+                origin.GetOrigin(size),
+                baseScale,
+                maxWidth,
+                ignoreColors
+            );
+        }
+
+        public static void DrawColorCodedStringWithShadow(
+            SpriteBatch spriteBatch,
+            DynamicSpriteFont font,
+            string text,
+            Vector2 position,
+            Color baseColor,
+            float rotation,
+            Origin origin,
+            Vector2 scale,
+            float maxWidth = -1f,
+            float spread = 2f,
+            bool useRawStringSize = false
+        )
+        {
+            var size = useRawStringSize
+                ? font.MeasureString(text)
+                : ChatManager.GetStringSize(font, text, scale, maxWidth);
+
+            ChatManager.DrawColorCodedStringWithShadow(
+                spriteBatch,
+                font,
+                text,
+                position,
+                baseColor,
+                rotation,
+                origin.GetOrigin(size),
+                scale,
+                maxWidth,
+                spread
+            );
+        }
+    }
+#endregion
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
