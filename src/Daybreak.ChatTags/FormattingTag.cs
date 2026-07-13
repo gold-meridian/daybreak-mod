@@ -1,18 +1,20 @@
 ﻿using System;
-using Daybreak.Common.Features.ChatTags;
-using Daybreak.Common.Features.Hooks;
-using Daybreak.Common.Mathematics;
-using Daybreak.Common.Rendering;
+using Daybreak.Mathematics;
+using Daybreak.Rendering;
+using Daybreak.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoMod.Cil;
 using ReLogic.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.UI.Chat;
 
-namespace Daybreak.Content.ChatTags;
+namespace Daybreak.ChatTags;
 
-internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHandler>
+/// <summary>
+///     A tag that provides common text formatting utilities.
+/// </summary>
+public sealed class FormattingTag : ChatTag
 {
     private readonly record struct Options(
         bool Bold,
@@ -21,7 +23,7 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
         bool Strikethrough
     )
     {
-        public static Options Parse(string text)
+        public static Options Parse(ReadOnlySpan<char> text)
         {
             var bold = false;
             var italic = false;
@@ -66,7 +68,7 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
         }
     }
 
-    private sealed class Snippet : TextSnippet
+    private sealed class Snippet : TextSnippet, IUniqueDrawString
     {
         private readonly Options options;
 
@@ -80,7 +82,7 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
             this.options = options;
         }
 
-        public void DrawString(
+        public bool UniqueDrawString(
             SpriteBatch spriteBatch,
             DynamicSpriteFont font,
             string text,
@@ -88,10 +90,15 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
             Color color,
             float rotation,
             Vector2 origin,
-            Vector2 scale
+            Vector2 scale,
+            bool justCheckingSize,
+            out Vector2 size
         )
         {
             var textSize = font.MeasureString(text) * scale;
+            {
+                size = textSize;
+            }
 
             if (options.Underline)
             {
@@ -117,7 +124,7 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
                 }
             }
 
-            return;
+            return true;
 
             void DrawBoldOutline()
             {
@@ -180,10 +187,15 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
             {
                 const float size_ratio = 0.1f;
 
+                /*
                 var texture = Assets.Images.Formatting.RoundedLine.Asset;
                 {
                     texture.Wait();
                 }
+                */
+
+                const int texture_height = 9;
+                var texture = TextureAssets.MagicPixel.ImmediateValue;
 
                 var size = textSize.Y * size_ratio;
 
@@ -202,7 +214,7 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
                     edgeSize,
                     height
                 );
-                var leftSource = new Rectangle(0, 0, 3, texture.Height());
+                var leftSource = new Rectangle(0, 0, 3, texture_height);
 
                 var middlePosition = Vector2.Transform(new Vector2(edgeSize, 0) + offset, matrix) + position;
 
@@ -212,7 +224,7 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
                     (int)textSize.X - (edgeSize * 2),
                     height
                 );
-                var middleSource = new Rectangle(3, 0, 1, texture.Height());
+                var middleSource = new Rectangle(3, 0, 1, texture_height);
 
                 var rightPosition = Vector2.Transform(new Vector2(textSize.X - edgeSize, 0) + offset, matrix) + position;
 
@@ -222,11 +234,11 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
                     edgeSize,
                     height
                 );
-                var rightSource = new Rectangle(4, 0, 3, texture.Height());
+                var rightSource = new Rectangle(4, 0, 3, texture_height);
 
-                spriteBatch.Draw(texture.Value, leftDest, leftSource, color, rotation, Vector2.Zero, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture.Value, middleDest, middleSource, color, rotation, Vector2.Zero, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture.Value, rightDest, rightSource, color, rotation, Vector2.Zero, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, leftDest, leftSource, color, rotation, Vector2.Zero, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, middleDest, middleSource, color, rotation, Vector2.Zero, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, rightDest, rightSource, color, rotation, Vector2.Zero, SpriteEffects.None, 0f);
             }
         }
 
@@ -236,80 +248,13 @@ internal sealed class FormattingTagHandler : ILoadableTagHandler<FormattingTagHa
         }
     }
 
-    [OnLoad]
-    private static void Load()
-    {
-        // TODO(1.4.5): IL_ChatManager.DrawColorCodedString_SpriteBatch_DynamicSpriteFont_TextSnippetArray_Vector2_Color_float_Vector2_Vector2_refInt32_float_bool += DrawColorCodedString_TextSnippetArray_FormattedSnippets;
-    }
+    private static string Prefix => ModuleLoader.OwningMod is "Daybreak" or null ? "" : ModuleLoader.OwningMod + '_';
 
-    /*
-    private static void DrawColorCodedString_TextSnippetArray_FormattedSnippets(ILContext il)
-    {
-        var c = new ILCursor(il);
+    /// <inheritdoc />
+    public override string TagName { get; } = $"{Prefix}dbf";
 
-        var skipDrawStringTarget = c.DefineLabel();
-        var skipFormattedTarget = c.DefineLabel();
-
-        c.GotoNext(
-            MoveType.Before,
-            i => i.MatchCall(typeof(DynamicSpriteFontExtensionMethods), nameof(DynamicSpriteFontExtensionMethods.DrawString))
-        );
-
-        var textSnippetIndex = -1;
-
-        c.FindPrev(
-            out _,
-            i => i.MatchLdloc(out textSnippetIndex),
-            i => i.MatchLdfld<TextSnippet>(nameof(TextSnippet.Scale))
-        );
-
-        c.EmitLdloc(textSnippetIndex);
-        c.EmitDelegate(static (TextSnippet snippet) => snippet is Snippet);
-
-        c.EmitBrtrue(skipDrawStringTarget);
-
-        c.GotoNext(
-            MoveType.After,
-            i => i.MatchCall(typeof(DynamicSpriteFontExtensionMethods), nameof(DynamicSpriteFontExtensionMethods.DrawString))
-        );
-
-        c.EmitBr(skipFormattedTarget);
-
-        c.MarkLabel(skipDrawStringTarget);
-
-        c.EmitLdloc(textSnippetIndex);
-
-        c.EmitDelegate(
-            static (
-                SpriteBatch spriteBatch,
-                DynamicSpriteFont spriteFont,
-                string text,
-                Vector2 position,
-                Color color,
-                float rotation,
-                Vector2 origin,
-                Vector2 scale,
-                SpriteEffects _,
-                float _,
-                TextSnippet snippet
-            ) =>
-            {
-                if (snippet is not Snippet format)
-                {
-                    return;
-                }
-
-                format.DrawString(spriteBatch, spriteFont, text, position, color, rotation, origin, scale);
-            }
-        );
-
-        c.MarkLabel(skipFormattedTarget);
-    }
-    */
-
-    public string[] TagNames { get; } = ["dbf"];
-
-    TextSnippet ITagHandler.Parse(string text, Color baseColor, string? options)
+    /// <inheritdoc />
+    public override TextSnippet Parse(string text, Color baseColor = new(), string? options = null)
     {
         if (string.IsNullOrEmpty(options))
         {

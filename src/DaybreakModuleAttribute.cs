@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using JetBrains.Annotations;
 using log4net;
+using MonoMod.Cil;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
@@ -123,17 +124,35 @@ internal static class ModuleLoader
         // initializer through a source generator.  This means that when this
         // hook is actually called, it's the second time around, and
         // loadableTypes is already populated.  Because of this, we should avoid
-        // calling orig and prefer indexing loadableTypes directly. 
+        // calling orig and prefer indexing loadableTypes directly.
+
+        // To allow for modules to stack and modify the typeMap, we need to run
+        // orig (cascading).  To resolve this while using the correct type map,
+        // we must also IL edit the method to return the cached map.
+
+        MonoModHooks.Modify(
+            typeof(AssemblyManager).GetMethod(nameof(AssemblyManager.GetLoadableTypes), BindingFlags.NonPublic | BindingFlags.Static, [typeof(AssemblyManager.ModLoadContext), typeof(MetadataLoadContext)])!,
+            il =>
+            {
+                var c = new ILCursor(il);
+
+                c.EmitLdarg0();
+                c.EmitDelegate((AssemblyManager.ModLoadContext mod) => mod.loadableTypes);
+                c.EmitRet();
+            }
+        );
+
         MonoModHooks.Add(
             typeof(AssemblyManager).GetMethod(nameof(AssemblyManager.GetLoadableTypes), BindingFlags.NonPublic | BindingFlags.Static, [typeof(AssemblyManager.ModLoadContext), typeof(MetadataLoadContext)])!,
             (Func<AssemblyManager.ModLoadContext, MetadataLoadContext, Dictionary<Assembly, Type[]>> orig, AssemblyManager.ModLoadContext mod, MetadataLoadContext mlc) =>
             {
-                var typeMap = mod.loadableTypes;
-                if (typeMap is null || !typeMap.TryGetValue(mod.assembly, out var modTypes))
+                var typeMap = orig(mod, mlc);
+
+                if (!typeMap.TryGetValue(mod.assembly, out var modTypes))
                 {
-                    return orig(mod, mlc);
+                    return typeMap;
                 }
-                
+
                 if (OwningMod != mod.Name)
                 {
                     return typeMap;
