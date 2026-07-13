@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.DataStructures;
 
 namespace Daybreak.Rendering;
 
@@ -71,7 +72,7 @@ public struct SpriteBatchParameters
         CustomEffect = customEffect;
         TransformMatrix = transformMatrix;
     }
-    
+
     /// <summary>
     ///     Creates a new <see cref="SpriteBatchSnapshot"/>, with
     ///     <see langword="null"/> values being replaced with the values

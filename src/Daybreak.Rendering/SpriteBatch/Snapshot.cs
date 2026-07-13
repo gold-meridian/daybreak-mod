@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.DataStructures;
 
 namespace Daybreak.Rendering;
 
@@ -118,6 +119,23 @@ public struct SpriteBatchSnapshot
             TransformMatrix
         );
     }
+
+    /// <summary>
+    ///     Creates a new <see cref="SpriteBatchBeginner"/> from this snapshot.
+    /// </summary>
+    /// <returns></returns>
+    public readonly SpriteBatchBeginner ToBeginner()
+    {
+        return new SpriteBatchBeginner(
+            SortMode,
+            BlendState,
+            SamplerState,
+            DepthStencilState,
+            RasterizerState,
+            CustomEffect,
+            TransformMatrix
+        );
+    }
 }
 
 /// <summary>
@@ -169,6 +187,26 @@ public static class SpriteBatchSnapshotExtensions
         {
             sb.End();
             sb.Begin(ss);
+        }
+    }
+
+    extension(SpriteBatchBeginner beginner)
+    {
+        /// <summary>
+        ///     Converts the <paramref name="beginner"/> to a
+        ///     <see cref="SpriteBatchSnapshot"/>.
+        /// </summary>
+        public SpriteBatchSnapshot ToSnapshot()
+        {
+            return new SpriteBatchSnapshot(
+                beginner.sortMode,
+                beginner.blendState,
+                beginner.samplerState,
+                beginner.depthStencilState,
+                beginner.rasterizerState,
+                beginner.effect,
+                beginner.transformMatrix
+            );
         }
     }
 }
