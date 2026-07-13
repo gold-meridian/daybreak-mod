@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 using Terraria;
 using Terraria.UI.Chat;
 
@@ -700,7 +700,7 @@ public static class OriginExtensions
         )
         {
             var size = useRawStringSize
-                ? font.MeasureString(text)
+                ? font.MeasureString(text) * baseScale
                 : ChatManager.GetStringSize(font, text, baseScale, maxWidth);
 
             ChatManager.DrawColorCodedStringShadow(
@@ -732,7 +732,7 @@ public static class OriginExtensions
         )
         {
             var size = useRawStringSize
-                ? font.MeasureString(text)
+                ? font.MeasureString(text) * baseScale
                 : ChatManager.GetStringSize(font, text, baseScale, maxWidth);
 
             return ChatManager.DrawColorCodedString(
@@ -764,7 +764,7 @@ public static class OriginExtensions
         )
         {
             var size = useRawStringSize
-                ? font.MeasureString(text)
+                ? font.MeasureString(text) * scale
                 : ChatManager.GetStringSize(font, text, scale, maxWidth);
 
             ChatManager.DrawColorCodedStringWithShadow(
