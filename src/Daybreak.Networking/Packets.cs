@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Daybreak.Networking;
@@ -26,7 +27,7 @@ public interface IPacket<TSelf> : IPacket, ILoadable
     /// <summary>
     ///     The ID of the packet.
     /// </summary>
-    static virtual ushort Id => PacketHandler.PacketId<TSelf>.Value;
+    static virtual uint Id => PacketHandler.PacketId<TSelf>.Value;
 
     /// <summary>
     ///     The name of the packet.
@@ -42,9 +43,12 @@ public interface IPacket<TSelf> : IPacket, ILoadable
 
     void IPacket.Send(PacketDestination destination)
     {
-        var mp = PacketHandler.CreatePacket<TSelf>();
-        Write(mp);
-        mp.Send(destination.ToClient, destination.IgnoreClient);
+        var packet = new FastModPacket(PacketHandler.PacketId<TSelf>.Mod, MessageID.ModPacket);
+        PacketHandler.CreatePacket<TSelf>(in packet);
+        {
+            Write(packet.Writer);
+        }
+        packet.Send(destination);
     }
 
     /// <summary>
@@ -70,7 +74,7 @@ public static class PacketExtensions
         {
             packet.Send(dest);
         }
-        
+
         /// <summary>
         ///     Sends the packet.  If sent from the client, sends it to the
         ///     server.  If sent from the server, sends it to all clients.
@@ -81,7 +85,6 @@ public static class PacketExtensions
         }
     }
 
-    /*
     extension<TSelf>(IVanillaPacket<TSelf> packet)
         where TSelf : struct, IVanillaPacket<TSelf>
     {
@@ -90,14 +93,22 @@ public static class PacketExtensions
         {
             packet.Send(destination);
         }
+
+        /// <summary>
+        ///     Sends the packet.  If sent from the client, sends it to the
+        ///     server.  If sent from the server, sends it to all clients.
+        /// </summary>
+        public void Send()
+        {
+            packet.Send(PacketDestination.Broadcast);
+        }
     }
-    */
 
     extension<TSelf>(IPacket<TSelf>)
         where TSelf : struct, IPacket<TSelf>
     {
         /// <inheritdoc cref="IPacket{TSelf}.Id"/>
-        public static ushort Id => TSelf.Id;
+        public static uint Id => TSelf.Id;
 
         /// <inheritdoc cref="IPacket{TSelf}.Name"/>
         public static string Name => TSelf.Name;

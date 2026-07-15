@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Daybreak.Hooks;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Daybreak.Networking;
@@ -17,7 +19,7 @@ public static class PacketHandler
     internal static class PacketId<T> where T : struct, IPacket<T>
     {
         // ReSharper disable StaticMemberInGenericType
-        public static ushort Value { get; set; } = unregistered_id;
+        public static uint Value { get; set; } = unregistered_id;
 
         public static string Name { get; set; } = typeof(T).FullName ?? typeof(T).Name;
 
@@ -30,21 +32,31 @@ public static class PacketHandler
     private sealed record PendingPacket(
         string Name,
         PacketDispatcher Dispatcher,
-        Action<ushort> AssignId
+        Action<uint> AssignId
+    );
+
+    private sealed record FinalizedPacket(
+        string Name,
+        PacketDispatcher? Dispatcher
     );
 
     private sealed class ModState
     {
-        public PacketDispatcher[]? Dispatchers { get; set; }
+        public FinalizedPacket[]? Packets { get; set; }
 
         public List<PendingPacket> Pending { get; } = [];
 
         public HashSet<string> Names { get; } = new(StringComparer.Ordinal);
+
+        public byte PacketIdByteCount { get; set; } = 1;
+
+        // Only MP clients need to receive handshakes.
+        public bool HasReceivedHandshake { get; set; } = Main.netMode != NetmodeID.MultiplayerClient;
     }
 
-    // TODO: Add a handshake packet to confirm packet presence and order... guh
-    // private const ushort HANDSHAKE_ID = 0;
-    private const ushort unregistered_id = ushort.MaxValue;
+    private const uint default_packet_count = 1;
+    private const uint handshake_id = 0;
+    private const uint unregistered_id = uint.MaxValue;
 
     private static readonly Dictionary<Mod, ModState> state_by_mod = [];
 
@@ -56,9 +68,9 @@ public static class PacketHandler
         where T : struct, IPacket<T>
     {
         var state = GetStateForMod(mod);
-        if (state.Dispatchers is not null)
+        if (state.Packets is not null)
         {
-            throw new InvalidOperationException($"Cannot register packet type '{typeof(T).Name}' after dispatchers have been finalized!");
+            throw new InvalidOperationException($"Cannot register packet type '{typeof(T).Name}' after packets have been finalized!");
         }
 
         PacketId<T>.Mod = mod;
@@ -81,7 +93,7 @@ public static class PacketHandler
 
         // Separate function to avoid generating an anonymous delegate with a
         // pointless object instance.
-        static void SetPacketId(ushort id)
+        static void SetPacketId(uint id)
         {
             PacketId<T>.Value = id;
         }
@@ -90,31 +102,34 @@ public static class PacketHandler
     [ModSystemHooks.PostSetupContent]
     private static void BuildPackets()
     {
-        // For if we ever add the handshake packet.
-        const int default_packet_count = 0;
-
         foreach (var (_, state) in state_by_mod)
         {
+            // This is a possible solution, but kinda dumb.  We use a handshake
+            // packet for validation, and we should just rely on tModLoader's
+            // guaranteed load ordering.
+            /*
             // We can reliably reorder these since it's just for syncing.  This
             // ensures misalignments only occur when there is actually a
             // discrepancy in which packets are present, rather than just load
             // order.
             state.Pending.Sort(static (a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
+            */
 
             var count = state.Pending.Count;
-            if (count > ushort.MaxValue - 1)
-            {
-                throw new InvalidOperationException($"Too many packet types registered ({count}); maximum is {ushort.MaxValue - 1}.");
-            }
+            state.PacketIdByteCount = GetPacketIdSize(count);
 
-            state.Dispatchers = new PacketDispatcher[count + default_packet_count];
+            state.Packets = new FinalizedPacket[count + default_packet_count];
+            {
+                state.Packets[handshake_id] = new FinalizedPacket("Handshake", null);
+            }
 
             for (var i = 0; i < count; i++)
             {
                 var id = i + default_packet_count;
-                var pending = state.Pending[id];
-                pending.AssignId((ushort)id);
-                state.Dispatchers[id] = pending.Dispatcher;
+                var pending = state.Pending[i];
+
+                pending.AssignId((uint)id);
+                state.Packets[id] = new FinalizedPacket(pending.Name, pending.Dispatcher);
             }
 
             state.Pending.Clear();
@@ -129,12 +144,55 @@ public static class PacketHandler
     public static void Handle(Mod mod, BinaryReader reader, int fromWho)
     {
         var state = GetStateForMod(mod);
-        if (state.Dispatchers is not { } dispatchers)
+        if (state.Packets is not { } dispatchers)
         {
-            throw new InvalidOperationException($"Never finalized packet dispatchers; cannot handle packets for mod: {mod.Name}");
+            throw new InvalidOperationException($"Never finalized packets; cannot handle packets for mod: {mod.Name}");
         }
 
-        var id = reader.ReadUInt16();
+        if (Main.netMode == NetmodeID.MultiplayerClient && !state.HasReceivedHandshake)
+        {
+            mod.Logger.Debug("Received packet before handshake has been verified; assuming handshake packet.");
+
+            try
+            {
+                var packetIdByteSize = reader.ReadByte();
+                if (packetIdByteSize != state.PacketIdByteCount)
+                {
+                    DisconnectClient($"Packet ID size mismatch: expected '{state.PacketIdByteCount}' but got '{packetIdByteSize}'");
+                    return;
+                }
+
+                var packetCount = reader.ReadInt32();
+                if (packetCount != state.Packets.Length)
+                {
+                    DisconnectClient($"Packet count mismatch: expected '{state.Packets.Length}' but got '{packetCount}'");
+                    return;
+                }
+
+                for (var i = 0; i < packetCount; i++)
+                {
+                    var packetName = reader.ReadString();
+                    if (string.Equals(packetName, state.Packets[i].Name))
+                    {
+                        continue;
+                    }
+                    
+                    DisconnectClient($"Packet name mismatch: expected '{state.Packets[i].Name}' but got '{packetName}'");
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                mod.Logger.Error("Failed to decode anticipated handshake packet!", e);
+                DisconnectClient($"Handshake packet for mod '{mod.Name}' failed; check logs");
+                throw;
+            }
+
+            state.HasReceivedHandshake = true;
+            return;
+        }
+
+        var id = ReadPacketId(reader, state.PacketIdByteCount);
         if (id >= (uint)dispatchers.Length)
         {
             // This will cause a read underflow, but whatever.
@@ -142,12 +200,21 @@ public static class PacketHandler
             return;
         }
 
-        state.Dispatchers[id].Invoke(reader, fromWho);
+        state.Packets[id].Dispatcher?.Invoke(reader, fromWho);
+
+        return;
+
+        static void DisconnectClient(string reason)
+        {
+            Netplay.Disconnect = true;
+            Main.statusText = reason; // TODO: Localization NetworkText.Deserialize(reader).ToString();
+
+            // Added by TML.
+            Main.menuMode = MenuID.MultiplayerJoining;
+        }
     }
 
-    // TODO: Decide whether to keep this API as-is or provide custom
-    //       implementation?
-    internal static ModPacket CreatePacket<T>()
+    internal static void CreatePacket<T>(in FastModPacket packet)
         where T : struct, IPacket<T>
     {
         var id = T.Id;
@@ -162,10 +229,75 @@ public static class PacketHandler
             throw new InvalidOperationException($"The packet '{T.Name}' has no corresponding mod registered and cannot be sent (was it loaded?).");
         }
 
-        var mp = mod.GetPacket();
-        mp.Write(id);
+        var writer = packet.Writer;
+        {
+            if (ModNet.NetModCount < 256)
+            {
+                writer.Write((byte)mod.netID);
+            }
+            else
+            {
+                writer.Write(mod.netID);
+            }
+        }
 
-        return mp;
+        WritePacketId(writer, id, GetStateForMod(mod).PacketIdByteCount);
+    }
+
+    [ModSystemHooks.HijackSendData]
+    private static void SendHandshakePacket(
+        int whoAmI,
+        int msgType,
+        int remoteClient,
+        int ignoreClient,
+        Terraria.Localization.NetworkText text,
+        int number,
+        float number2,
+        float number3,
+        float number4,
+        int number5,
+        int number6,
+        int number7
+    )
+    {
+        if (Main.netMode != NetmodeID.Server)
+        {
+            return;
+        }
+
+        foreach (var (mod, state) in state_by_mod)
+        {
+            mod.Logger.Debug($"[Daybreak.Networking] Sending handshake packet to: {remoteClient}");
+
+            if (state.Packets is null)
+            {
+                mod.Logger.Warn("[Daybreak.Networking] Packets are uninitialized?!");
+                continue;
+            }
+
+            var packet = new FastModPacket(mod, MessageID.ModPacket);
+            var writer = packet.Writer;
+            {
+                if (ModNet.NetModCount < 256)
+                {
+                    writer.Write((byte)mod.netID);
+                }
+                else
+                {
+                    writer.Write(mod.netID);
+                }
+            }
+
+            writer.Write(state.PacketIdByteCount);
+            writer.Write(state.Packets.Length);
+            foreach (var packetDef in state.Packets)
+            {
+                writer.Write(packetDef.Name);
+            }
+
+            // whoAmI is more correct, but I'm paranoid.
+            packet.Send(PacketDestination.Only(remoteClient));
+        }
     }
 
     private static ModState GetStateForMod(Mod mod)
@@ -176,5 +308,62 @@ public static class PacketHandler
         }
 
         return state;
+    }
+
+    private static byte GetPacketIdSize(int packetCount)
+    {
+        if (packetCount <= byte.MaxValue)
+        {
+            return 1;
+        }
+
+        if (packetCount <= ushort.MaxValue)
+        {
+            return 2;
+        }
+
+        if (packetCount <= 0xFFFFFF)
+        {
+            return 3;
+        }
+
+        return 4;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void WritePacketId(BinaryWriter writer, uint id, byte byteCount)
+    {
+        switch (byteCount)
+        {
+            case 1:
+                writer.Write((byte)id);
+                break;
+
+            case 2:
+                writer.Write((ushort)id);
+                break;
+
+            case 3:
+                writer.Write((byte)id);
+                writer.Write((ushort)(id >> 8));
+                break;
+
+            case 4:
+                writer.Write(id);
+                break;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static uint ReadPacketId(BinaryReader reader, byte byteCount)
+    {
+        return byteCount switch
+        {
+            1 => reader.ReadByte(),
+            2 => reader.ReadUInt16(),
+            3 => (uint)(reader.ReadByte() | (reader.ReadUInt16() << 8)),
+            4 => reader.ReadUInt32(),
+            _ => throw new InvalidOperationException(),
+        };
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Daybreak.Networking;
+﻿using System.Runtime.CompilerServices;
+
+namespace Daybreak.Networking;
 
 /// <summary>
 ///     Describes the routing target of a packet send request.
@@ -31,6 +33,7 @@ public readonly struct PacketDestination
     /// <summary>
     ///     Sends the packet from the server to only the specified client.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static PacketDestination Only(int clientId)
     {
         return new PacketDestination(toClient: clientId, ignoreClient: -1);
@@ -40,8 +43,22 @@ public readonly struct PacketDestination
     ///     Sends the packet from the server to all clients but the specified
     ///     client.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static PacketDestination AllExcept(int clientId)
     {
         return new PacketDestination(toClient: -1, ignoreClient: clientId);
+    }
+
+    /// <summary>
+    ///     Dangerously constructs a packet destination from vanilla values.
+    ///     <br />
+    ///     <br />
+    ///     This should only be used when converting from vanilla paremeters, as
+    ///     it may be used to represent illegal state.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static PacketDestination DangerouslyFromVanillaValues(int toClient, int ignoreClient)
+    {
+        return new PacketDestination(toClient, ignoreClient);
     }
 }
