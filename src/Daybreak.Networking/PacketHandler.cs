@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Daybreak.Hooks;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Daybreak.Networking;
@@ -50,8 +51,7 @@ public static class PacketHandler
 
         public byte PacketIdByteCount { get; set; } = 1;
 
-        // Only MP clients need to receive handshakes.
-        public bool HasReceivedHandshake { get; set; } = Main.netMode != NetmodeID.MultiplayerClient;
+        public bool HandleHandshakePacket { get; set; }
     }
 
     private const uint default_packet_count = 1;
@@ -149,7 +149,7 @@ public static class PacketHandler
             throw new InvalidOperationException($"Never finalized packets; cannot handle packets for mod: {mod.Name}");
         }
 
-        if (Main.netMode == NetmodeID.MultiplayerClient && !state.HasReceivedHandshake)
+        if (Main.netMode == NetmodeID.MultiplayerClient && !state.HandleHandshakePacket)
         {
             mod.Logger.Debug("Received packet before handshake has been verified; assuming handshake packet.");
 
@@ -176,7 +176,7 @@ public static class PacketHandler
                     {
                         continue;
                     }
-                    
+
                     DisconnectClient($"Packet name mismatch: expected '{state.Packets[i].Name}' but got '{packetName}'");
                     return;
                 }
@@ -188,7 +188,7 @@ public static class PacketHandler
                 throw;
             }
 
-            state.HasReceivedHandshake = true;
+            state.HandleHandshakePacket = true;
             return;
         }
 
@@ -244,13 +244,18 @@ public static class PacketHandler
         WritePacketId(writer, id, GetStateForMod(mod).PacketIdByteCount);
     }
 
-    [ModSystemHooks.HijackSendData]
+    [OnLoad]
+    private static void ApplyHooks()
+    {
+        On_NetMessage.SendData += SendHandshakePacket;
+    }
+
     private static void SendHandshakePacket(
-        int whoAmI,
+        On_NetMessage.orig_SendData orig,
         int msgType,
         int remoteClient,
         int ignoreClient,
-        Terraria.Localization.NetworkText text,
+        NetworkText text,
         int number,
         float number2,
         float number3,
@@ -260,6 +265,20 @@ public static class PacketHandler
         int number7
     )
     {
+        orig(
+            msgType,
+            remoteClient,
+            ignoreClient,
+            text,
+            number,
+            number2,
+            number3,
+            number4,
+            number5,
+            number6,
+            number7
+        );
+
         if (Main.netMode != NetmodeID.Server)
         {
             return;
@@ -302,6 +321,20 @@ public static class PacketHandler
 
             // whoAmI is more correct, but I'm paranoid.
             packet.Send(PacketDestination.Only(remoteClient));
+        }
+    }
+
+    [ModSystemHooks.HijackGetData]
+    private static void AnticipateHandshakePacket(ref byte messageType, ref BinaryReader reader, int playerNumber)
+    {
+        if (Main.netMode != NetmodeID.MultiplayerClient || messageType != MessageID.PlayerInfo)
+        {
+            return;
+        }
+
+        foreach (var (_, state) in state_by_mod)
+        {
+            state.HandleHandshakePacket = false;
         }
     }
 
