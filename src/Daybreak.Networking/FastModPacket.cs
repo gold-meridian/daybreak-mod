@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -12,8 +13,7 @@ namespace Daybreak.Networking;
 /// </summary>
 internal readonly ref struct FastModPacket
 {
-    private static readonly byte[] buffer = new byte[ushort.MaxValue];
-    private static readonly MemoryStream stream = new(buffer);
+    private static readonly MemoryStream stream = new([]);
     private static readonly BinaryWriter writer = new(stream);
 
     public BinaryWriter Writer => writer;
@@ -56,7 +56,7 @@ internal readonly ref struct FastModPacket
 
         if (Main.netMode == NetmodeID.MultiplayerClient)
         {
-            Netplay.Connection.Socket.AsyncSend(buffer, 0, length, SendCallback);
+            Netplay.Connection.Socket.AsyncSend(buffer, 0, length, SendCallback, buffer);
 
             if (netId >= 0)
             {
@@ -66,7 +66,7 @@ internal readonly ref struct FastModPacket
         }
         else if (destination.ToClient != -1)
         {
-            Netplay.Clients[destination.ToClient].Socket.AsyncSend(buffer, 0, length, SendCallback);
+            Netplay.Clients[destination.ToClient].Socket.AsyncSend(buffer, 0, length, SendCallback, buffer);
         }
         else
         {
@@ -74,17 +74,25 @@ internal readonly ref struct FastModPacket
             {
                 if (i != destination.IgnoreClient && Netplay.Clients[i].IsConnected() && NetMessage.buffer[i].broadcast)
                 {
-                    Netplay.Clients[i].Socket.AsyncSend(buffer, 0, length, SendCallback);
+                    Netplay.Clients[i].Socket.AsyncSend(buffer, 0, length, SendCallback, buffer);
                 }
             }
         }
 
         return;
 
-        static void SendCallback(object obj) { }
+        static void SendCallback(object obj)
+        {
+            if (obj is not byte[] usedBuffer)
+            {
+                return;
+            }
+
+            ArrayPool<byte>.Shared.Return(usedBuffer);
+        }
     }
 
-    private ushort Finish()
+    private static ushort Finish(out byte[] buffer)
     {
         if (stream.Position > ushort.MaxValue)
         {
@@ -98,6 +106,7 @@ internal readonly ref struct FastModPacket
             writer.Write(length);
         }
 
+        buffer = MemoryStreamAccessor.GetBufferRef(stream);
         return length;
     }
 
@@ -109,6 +118,16 @@ internal readonly ref struct FastModPacket
 
     private static void ResetBuffer()
     {
+        ref var buffer = ref MemoryStreamAccessor.GetBufferRef(stream);
+
+        // Special case upon initialization.
+        if (buffer.Length == 0)
+        {
+            buffer = InitBuffer();
+            MemoryStreamAccessor.GetLengthRef(stream) = buffer.Length;
+            return;
+        }
+
         var written = (int)stream.Position;
         if (written == 0 && stream.Length == 0)
         {
@@ -123,5 +142,10 @@ internal readonly ref struct FastModPacket
 
         stream.Position = 0;
         stream.SetLength(0);
+    }
+
+    private static byte[] InitBuffer()
+    {
+        return ArrayPool<byte>.Shared.Rent(ushort.MaxValue);
     }
 }
