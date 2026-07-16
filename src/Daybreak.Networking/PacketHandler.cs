@@ -265,6 +265,11 @@ public static class PacketHandler
             return;
         }
 
+        if (msgType != MessageID.PlayerInfo)
+        {
+            return;
+        }
+
         foreach (var (mod, state) in state_by_mod)
         {
             mod.Logger.Debug($"[Daybreak.Networking] Sending handshake packet to: {remoteClient}");
