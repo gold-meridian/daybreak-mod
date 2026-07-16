@@ -13,7 +13,7 @@ namespace Daybreak.Networking;
 /// </summary>
 internal readonly ref struct FastModPacket
 {
-    private static readonly MemoryStream stream = new([]);
+    private static readonly SlimMemoryStream stream = new();
     private static readonly BinaryWriter writer = new(stream);
 
     public BinaryWriter Writer => writer;
@@ -47,7 +47,7 @@ internal readonly ref struct FastModPacket
 
     public void Send(PacketDestination destination)
     {
-        var length = Finish();
+        var length = Finish(out var buffer);
 
         if (ModNet.DetailedLogging)
         {
@@ -106,7 +106,7 @@ internal readonly ref struct FastModPacket
             writer.Write(length);
         }
 
-        buffer = MemoryStreamAccessor.GetBufferRef(stream);
+        buffer = stream.GetBuffer();
         return length;
     }
 
@@ -118,13 +118,12 @@ internal readonly ref struct FastModPacket
 
     private static void ResetBuffer()
     {
-        ref var buffer = ref MemoryStreamAccessor.GetBufferRef(stream);
+        var buffer = stream.GetBuffer();
 
         // Special case upon initialization.
         if (buffer.Length == 0)
         {
-            buffer = InitBuffer();
-            MemoryStreamAccessor.GetLengthRef(stream) = buffer.Length;
+            stream.SetBuffer(InitBuffer(), ushort.MaxValue);
             return;
         }
 
@@ -134,14 +133,7 @@ internal readonly ref struct FastModPacket
             return;
         }
 
-        // Clearing is not necessary under normal circumstances, since
-        // BinaryWriter itself does not expose incrementing Position.
-        // Unfortunately, the underlying Stream can be accessed, which does
-        // expose an API for this.
-        Array.Clear(buffer, 0, written);
-
-        stream.Position = 0;
-        stream.SetLength(0);
+        stream.SetBuffer(InitBuffer(), ushort.MaxValue);
     }
 
     private static byte[] InitBuffer()
