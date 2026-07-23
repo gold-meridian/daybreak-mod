@@ -223,7 +223,9 @@ public struct DrawParameters
 
         var result = this;
         {
-            result.Position += (newOriginPos - r.Origin) * r.Scale;
+            //var sourceSize = new Vector2(r.SrcW, r.SrcH);
+            //result.Position += ((newOriginPos - r.Origin) / sourceSize) * sourceSize * r.Scale;
+            result.Position += (newOriginPos - r.Origin) * r.Scale; 
             result.Origin = newOrigin;
         }
 
