@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
@@ -51,6 +52,20 @@ public sealed class ModuleInitializerGenerator : IIncrementalGenerator
         sb.AppendLine("    [ModuleInitializer]");
         sb.AppendLine("    public static void EnsureDependencyModuleInitializersAreRun()");
         sb.AppendLine("    {");
+        sb.AppendLine("        try");
+        sb.AppendLine("        {");
+        sb.AppendLine("            EnsureDependencyModuleInitializersAreRun_Inner();");
+        sb.AppendLine("        }");
+        sb.AppendLine("        catch");
+        sb.AppendLine("        {");
+        sb.AppendLine("            // no-op");
+        sb.AppendLine("        }");
+        sb.AppendLine("    }");
+        sb.AppendLine("#pragma warning restore CA2255");
+        sb.AppendLine();
+        sb.AppendLine("    [MethodImpl(MethodImplOptions.NoInlining)]");
+        sb.AppendLine("    private static void EnsureDependencyModuleInitializersAreRun_Inner()");
+        sb.AppendLine("    {");
         sb.AppendLine("        if (AssemblyLoadContext.GetLoadContext(typeof(__ModuleInitializerRunner_ToFixDumbBug).Assembly) is not { } alc)");
         sb.AppendLine("        {");
         sb.AppendLine($"            // throw new InvalidOperationException(\"Failed to load mod '{assemblyName}'; could not resolve owning AssemblyLoadContext!\");");
@@ -77,7 +92,6 @@ public sealed class ModuleInitializerGenerator : IIncrementalGenerator
         sb.AppendLine("        var mlc = new MetadataLoadContext((MetadataAssemblyResolver)metadataResolver);");
         sb.AppendLine("        type.GetField(\"loadableTypes\", BindingFlags.Public | BindingFlags.Instance)!.SetValue(alc, typeof(AssemblyManager).GetMethods(BindingFlags.NonPublic | BindingFlags.Static).First(x => x.Name == \"GetLoadableTypes\" && x.GetParameters().Length == 2)!.Invoke(null, [alc, mlc]));");
         sb.AppendLine("    }");
-        sb.AppendLine("#pragma warning restore CA2255");
         sb.AppendLine("}");
 
         return sb.ToString();
