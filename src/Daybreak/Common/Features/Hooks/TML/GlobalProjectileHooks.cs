@@ -45,6 +45,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Nullable`1<System.Boolean> Terraria.ModLoader.GlobalProjectile::GrappleCanLatchOnTo(Terraria.Projectile,Terraria.Player,System.Int32,System.Int32)
 //     System.Void Terraria.ModLoader.GlobalProjectile::PrepareBombToBlow(Terraria.Projectile)
 //     System.Void Terraria.ModLoader.GlobalProjectile::EmitEnchantmentVisualsAt(Terraria.Projectile,Microsoft.Xna.Framework.Vector2,System.Int32,System.Int32)
+//     System.Boolean Terraria.ModLoader.GlobalProjectile::DisplayDollSettings(Terraria.Projectile,Terraria.Player,Terraria.GameContent.Tile_Entities.TEDisplayDoll/DisplayDollPose,System.Int32&,System.Int32&)
 public static partial class GlobalProjectileHooks
 {
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
@@ -993,6 +994,39 @@ public static partial class GlobalProjectileHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalProjectile_EmitEnchantmentVisualsAt_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalProjectile::EmitEnchantmentVisualsAt")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::EmitEnchantmentVisualsAt; use a flag to disable behavior.");
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [HookMetadata(TypeContainingEvent = typeof(DisplayDollSettings), EventName = "Event", DelegateName = "Definition")]
+    public sealed class DisplayDollSettingsAttribute : SubscribesToAttribute;
+
+    public sealed partial class DisplayDollSettings
+    {
+        public delegate bool Original(
+            Terraria.Projectile projectile,
+            Terraria.Player doll,
+            Terraria.GameContent.Tile_Entities.TEDisplayDoll.DisplayDollPose pose,
+            ref int aiStyle,
+            ref int aiType
+        );
+
+        [return: PermitsVoidInvokeParameterWithParameters("orig")]
+        public delegate bool Definition(
+            [Omittable] Original orig,
+            [Omittable] Terraria.ModLoader.GlobalProjectile self,
+            Terraria.Projectile projectile,
+            Terraria.Player doll,
+            Terraria.GameContent.Tile_Entities.TEDisplayDoll.DisplayDollPose pose,
+            ref int aiStyle,
+            ref int aiType
+        );
+
+        public static event Definition? Event
+        {
+            add => HookLoader.GetModOrThrow().AddContent(new GlobalProjectile_DisplayDollSettings_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalProjectile::DisplayDollSettings")));
+
+            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalProjectile::DisplayDollSettings; use a flag to disable behavior.");
         }
     }
 }
@@ -2402,6 +2436,57 @@ public sealed partial class GlobalProjectile_EmitEnchantmentVisualsAt_Impl : Ter
             boxPosition,
             boxWidth,
             boxHeight
+        );
+    }
+}
+
+[Terraria.ModLoader.Autoload(false)]
+public sealed partial class GlobalProjectile_DisplayDollSettings_Impl : Terraria.ModLoader.GlobalProjectile
+{
+    [field: Terraria.ModLoader.CloneByReference]
+    private readonly GlobalProjectileHooks.DisplayDollSettings.Definition hook;
+
+    [field: Terraria.ModLoader.CloneByReference]
+    public override string Name => base.Name + '_' + field;
+
+    public override bool InstancePerEntity => true;
+
+    protected override bool CloneNewInstances => true;
+
+    public GlobalProjectile_DisplayDollSettings_Impl(GlobalProjectileHooks.DisplayDollSettings.Definition hook)
+    {
+        this.hook = hook;
+        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
+    }
+
+    public override bool DisplayDollSettings(
+        Terraria.Projectile projectile,
+        Terraria.Player doll,
+        Terraria.GameContent.Tile_Entities.TEDisplayDoll.DisplayDollPose pose,
+        ref int aiStyle,
+        ref int aiType
+    )
+    {
+        return hook(
+            (
+                Terraria.Projectile projectile_captured,
+                Terraria.Player doll_captured,
+                Terraria.GameContent.Tile_Entities.TEDisplayDoll.DisplayDollPose pose_captured,
+                ref int aiStyle_captured,
+                ref int aiType_captured
+            ) => base.DisplayDollSettings(
+                projectile_captured,
+                doll_captured,
+                pose_captured,
+                ref aiStyle_captured,
+                ref aiType_captured
+            ),
+            this,
+            projectile,
+            doll,
+            pose,
+            ref aiStyle,
+            ref aiType
         );
     }
 }

@@ -52,7 +52,7 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Boolean Terraria.ModLoader.GlobalBlockType::CanExplode(System.Int32,System.Int32,System.Int32)
 //     System.Boolean Terraria.ModLoader.GlobalBlockType::PreDraw(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteBatch)
 //     System.Void Terraria.ModLoader.GlobalBlockType::PostDraw(System.Int32,System.Int32,System.Int32,Microsoft.Xna.Framework.Graphics.SpriteBatch)
-//     System.Void Terraria.ModLoader.GlobalBlockType::RandomUpdate(System.Int32,System.Int32,System.Int32)
+//     System.Void Terraria.ModLoader.GlobalBlockType::RandomUpdate(System.Int32,System.Int32,System.Int32,System.Boolean)
 //     System.Void Terraria.ModLoader.GlobalBlockType::PlaceInWorld(System.Int32,System.Int32,System.Int32,Terraria.Item)
 //     System.Void Terraria.ModLoader.GlobalBlockType::ModifyLight(System.Int32,System.Int32,System.Int32,System.Single&,System.Single&,System.Single&)
 public static partial class GlobalTileHooks
@@ -1342,7 +1342,8 @@ public static partial class GlobalTileHooks
         public delegate void Original(
             int i,
             int j,
-            int type
+            int type,
+            bool underground
         );
 
         public delegate void Definition(
@@ -1350,7 +1351,8 @@ public static partial class GlobalTileHooks
             [Omittable] Terraria.ModLoader.GlobalBlockType self,
             int i,
             int j,
-            int type
+            int type,
+            bool underground
         );
 
         public static event Definition? Event
@@ -3240,23 +3242,27 @@ public sealed partial class GlobalTile_RandomUpdate_Impl : Terraria.ModLoader.Gl
     public override void RandomUpdate(
         int i,
         int j,
-        int type
+        int type,
+        bool underground
     )
     {
         hook(
             (
                 int i_captured,
                 int j_captured,
-                int type_captured
+                int type_captured,
+                bool underground_captured
             ) => base.RandomUpdate(
                 i_captured,
                 j_captured,
-                type_captured
+                type_captured,
+                underground_captured
             ),
             this,
             i,
             j,
-            type
+            type,
+            underground
         );
     }
 }
