@@ -195,9 +195,9 @@ public abstract class CattailTile : ModTile, ICattail
     }
 
     /// <inheritdoc />
-    public override void RandomUpdate(int i, int j)
+    public override void RandomUpdate(int i, int j, bool underground)
     {
-        base.RandomUpdate(i, j);
+        base.RandomUpdate(i, j, underground);
 
         CheckCattail(i, j);
         if (!Main.tile[i, j].HasTile || !WorldGen.genRand.NextBool(8))

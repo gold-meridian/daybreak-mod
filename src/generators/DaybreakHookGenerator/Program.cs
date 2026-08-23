@@ -49,7 +49,8 @@ internal static class Program
                     nameof(GlobalItem.NetSend),
                     nameof(GlobalItem.NetReceive),
                     nameof(GlobalItem.SaveData),
-                    nameof(GlobalItem.LoadData)
+                    nameof(GlobalItem.LoadData),
+                    nameof(GlobalItem.PreModifyItemDraw)
                 ),
             new TypeHookDefinition(typeof(GlobalNPC))
                .WithExclusions(

@@ -110,7 +110,6 @@ namespace Daybreak.Common.Features.Hooks;
 //     System.Void Terraria.ModLoader.GlobalItem::PostDrawInWorld(Terraria.WorldItem,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,System.Single,System.Single,System.Int32)
 //     System.Boolean Terraria.ModLoader.GlobalItem::PreDrawInInventory(Terraria.Item,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,System.Single)
 //     System.Void Terraria.ModLoader.GlobalItem::PostDrawInInventory(Terraria.Item,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,System.Single)
-//     System.Void Terraria.ModLoader.GlobalItem::PreModifyItemDraw(Terraria.Item,Terraria.DataStructures.PlayerDrawSet&,Terraria.DataStructures.DrawData&,System.Nullable`1<Terraria.DataStructures.DrawData>&,System.Nullable`1<Terraria.DataStructures.DrawData>&)
 //     System.Void Terraria.ModLoader.GlobalItem::PostModifyItemDraw(Terraria.Item,Terraria.DataStructures.PlayerDrawSet&,Terraria.DataStructures.DrawData,System.Nullable`1<Terraria.DataStructures.DrawData>,System.Nullable`1<Terraria.DataStructures.DrawData>)
 //     System.Nullable`1<Microsoft.Xna.Framework.Vector2> Terraria.ModLoader.GlobalItem::HoldoutOffset(System.Int32)
 //     System.Nullable`1<Microsoft.Xna.Framework.Vector2> Terraria.ModLoader.GlobalItem::HoldoutOrigin(System.Int32)
@@ -2973,38 +2972,6 @@ public static partial class GlobalItemHooks
             add => HookLoader.GetModOrThrow().AddContent(new GlobalItem_PostDrawInInventory_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalItem::PostDrawInInventory")));
 
             remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::PostDrawInInventory; use a flag to disable behavior.");
-        }
-    }
-
-    [System.AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    [HookMetadata(TypeContainingEvent = typeof(PreModifyItemDraw), EventName = "Event", DelegateName = "Definition")]
-    public sealed class PreModifyItemDrawAttribute : SubscribesToAttribute;
-
-    public sealed partial class PreModifyItemDraw
-    {
-        public delegate void Original(
-            Terraria.Item item,
-            ref Terraria.DataStructures.PlayerDrawSet drawInfo,
-            ref Terraria.DataStructures.DrawData drawData,
-            ref System.Nullable coloredDrawData,
-            ref System.Nullable glowMaskDrawData
-        );
-
-        public delegate void Definition(
-            [Omittable] Original orig,
-            [Omittable] Terraria.ModLoader.GlobalItem self,
-            Terraria.Item item,
-            ref Terraria.DataStructures.PlayerDrawSet drawInfo,
-            ref Terraria.DataStructures.DrawData drawData,
-            ref System.Nullable coloredDrawData,
-            ref System.Nullable glowMaskDrawData
-        );
-
-        public static event Definition? Event
-        {
-            add => HookLoader.GetModOrThrow().AddContent(new GlobalItem_PreModifyItemDraw_Impl(value ?? throw new System.InvalidOperationException("Cannot subscribe to a DAYBREAK-generated mod loader hook with a null value: GlobalItem::PreModifyItemDraw")));
-
-            remove => throw new System.InvalidOperationException("Cannot remove DAYBREAK-generated mod loader hook: GlobalItem::PreModifyItemDraw; use a flag to disable behavior.");
         }
     }
 
@@ -7731,57 +7698,6 @@ public sealed partial class GlobalItem_PostDrawInInventory_Impl : Terraria.ModLo
             itemColor,
             origin,
             scale
-        );
-    }
-}
-
-[Terraria.ModLoader.Autoload(false)]
-public sealed partial class GlobalItem_PreModifyItemDraw_Impl : Terraria.ModLoader.GlobalItem
-{
-    [field: Terraria.ModLoader.CloneByReference]
-    private readonly GlobalItemHooks.PreModifyItemDraw.Definition hook;
-
-    [field: Terraria.ModLoader.CloneByReference]
-    public override string Name => base.Name + '_' + field;
-
-    public override bool InstancePerEntity => true;
-
-    protected override bool CloneNewInstances => true;
-
-    public GlobalItem_PreModifyItemDraw_Impl(GlobalItemHooks.PreModifyItemDraw.Definition hook)
-    {
-        this.hook = hook;
-        Name = System.Convert.ToBase64String(System.BitConverter.GetBytes(System.DateTime.Now.Ticks));
-    }
-
-    public override void PreModifyItemDraw(
-        Terraria.Item item,
-        ref Terraria.DataStructures.PlayerDrawSet drawInfo,
-        ref Terraria.DataStructures.DrawData drawData,
-        ref System.Nullable coloredDrawData,
-        ref System.Nullable glowMaskDrawData
-    )
-    {
-        hook(
-            (
-                Terraria.Item item_captured,
-                ref Terraria.DataStructures.PlayerDrawSet drawInfo_captured,
-                ref Terraria.DataStructures.DrawData drawData_captured,
-                ref System.Nullable coloredDrawData_captured,
-                ref System.Nullable glowMaskDrawData_captured
-            ) => base.PreModifyItemDraw(
-                item_captured,
-                ref drawInfo_captured,
-                ref drawData_captured,
-                ref coloredDrawData_captured,
-                ref glowMaskDrawData_captured
-            ),
-            this,
-            item,
-            ref drawInfo,
-            ref drawData,
-            ref coloredDrawData,
-            ref glowMaskDrawData
         );
     }
 }
