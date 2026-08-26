@@ -58,28 +58,37 @@ public sealed class ItemSlotLoader : ModSystem
         return context.HasValue ? GetItemSlot(context.Value) : null;
     }
 
-    //       Handle(Item[] inv, int context = 0, int slot = 0)
-    // DONE: OverrideHover(Item[] inv, int context = 0, int slot = 0)
-    //       OverrideLeftClick(Item[] inv, int context = 0, int slot = 0)
-    //       IsAccessoryContext(int context)
-    // DONE: LeftClick(Item[] inv, int context = 0, int slot = 0)
+    //       Handle(Item[] inv, int context = 0, int slot = 0, bool allowInteract = true)
+    //       OverrideHover(Item[] inv, int context = 0, int slot = 0)
+    //       GetAlternateClickAction(Item[] inv, int context, int slot): AlternateClickAction?
+    //       OverrideLeftClick(Item[] inv, int context = 0, int slot = 0): bool
+    //       IsAccessoryContext(int context): bool (inlined)
+    //       LeftClick(Item[] inv, int context = 0, int slot = 0)
+    //       ShouldHighlightSlotForMouseItem(int context, int slot, Item checkItem): bool
+    //       GetDimSlotForMouseItem(int context, int slot, Item checkItem, out float itemFade)
+    //       PickItemMovementAction(Item[] inv, int context, int slot, Item checkItem)
+    //       RightClick(Item[] inv, int context = 0, int slot = 0)
+    //       PickupItemIntoMouse(Item[] inv, int context, int slot, Player player)
+    //       TryOpenContainer(Item[] inv, int context, int slot, Player player)
+    //       SwapVanityEquip(Item[] inv, int context, int slot, Player player)
+    //       Draw(SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor = default(Color))
+    //       GetColorByLoadout(int slot, int context): Color (inlined)
+    //       TryGetSlotColor(int loadoutIndex, int context, out Color color): bool
+    //       DrawItemIcon(Item item, int context, SpriteBatch spriteBatch, Vector2 screenPositionForItemCenter, float scale, float sizeLimit, Color environmentColor): float
+    //       GetGamepadPointForSlot(Item[] inv, int context, int slot): int
+    //       MouseHover(Item[] inv, int context = 0, int slot = 0)
+    //       SwapEquip(Item[] inv, int context, int slot)
+    //       AddCooldown(int context, int slot, int time) (inlined)
+    //       GetGamepadInstructions(Item[] inv, int context = 0, int slot = 0): string
+    //       TryEnteringFastUseMode(Item[] inv, int context, int slot, Player player, ref string s): bool
+    //       TryEnteringBuildingMode(Item[] inv, int context, int slot, Player player, ref string s): bool
+    
+    // Removed in 1.4.5:
     //       LeftClick_SellOrTrash(Item[] inv, int context, int slot)
     //       SellOrTrash(Item[] inv, int context, int slot)
-    // DONE: GetOverrideInstructions(Item[] inv, int context, int slot)
-    // DONE: PickItemMovementAction(Item[] inv, int context, int slot, Item checkItem)
-    // DONE: RightClick(Item[] inv, int context = 0, int slot = 0)
-    //       PickupItemIntoMouse(Item[] inv, int context, int slot, Player player)
-    // DONE: SwapVanityEquip(Item[] inv, int context, int slot, Player player)
+    //       GetOverrideInstructions(Item[] inv, int context, int slot) (maybe GetGamepadInstructions now)
     //       TryPickupDyeToCursor(int context, Item[] inv, int slot, Player player)
-    // DONE: Draw(SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor = default(Color))
-    //       GetColorByLoadout(int slot, int context)
-    //       TryGetSlotColor(int loadoutIndex, int context, out Color color)
-    //       DrawItemIcon(Item item, int context, SpriteBatch spriteBatch, Vector2 screenPositionForItemCenter, float scale, float sizeLimit, Color environmentColor)
-    // DONE: MouseHover(Item[] inv, int context = 0, int slot = 0)
-    // DONE: SwapEquip(Item[] inv, int context, int slot)
     //       Equippable(Item[] inv, int context, int slot)
-    //       TryEnteringFastUseMode(Item[] inv, int context, int slot, Player player, ref string s)
-    //       TryEnteringBuildingMode(Item[] inv, int context, int slot, Player player, ref string s)
 
     /// <inheritdoc />
     public override void ResizeArrays()
