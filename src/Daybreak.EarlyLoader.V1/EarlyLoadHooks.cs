@@ -156,10 +156,47 @@ public static class EarlyLoadHooks
         );
     }
 
+    private static readonly Dictionary<Mod, bool> eligible_for_special_loading = [];
+
     private static bool ModIsEligibleForSpecialLoading(Mod mod)
     {
-        // TODO: Could also walk the weakReferences/modReferences trees?
-        return mod.Name == ModuleLoader.OwningMod || mod.Code.GetReferencedAssemblies().Any(x => x.Name == ModuleLoader.OwningMod);
+        if (eligible_for_special_loading.TryGetValue(mod, out var eligible))
+        {
+            return eligible;
+        }
+
+        return eligible_for_special_loading[mod] = mod.Name == ModuleLoader.OwningMod || RecursivelyCheckDependencies(GetLoadContext(mod));
+
+        static AssemblyManager.ModLoadContext? GetLoadContext(Mod mod)
+        {
+            return AssemblyManager.loadedModContexts.GetValueOrDefault(mod.Name);
+        }
+
+        static bool RecursivelyCheckDependencies(AssemblyManager.ModLoadContext? alc)
+        {
+            if (alc is null)
+            {
+                return false;
+            }
+
+            foreach (var dependency in alc.dependencies)
+            {
+                if (dependency.Name == ModuleLoader.OwningMod)
+                {
+                    return true;
+                }
+            }
+
+            foreach (var dependency in alc.dependencies)
+            {
+                if (RecursivelyCheckDependencies(dependency))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 
     private static bool AddContent_Instanced_OnLoads(Func<Mod, ILoadable, bool> orig, Mod self, ILoadable instance)

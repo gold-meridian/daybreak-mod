@@ -7,6 +7,4 @@ side = NoSync
 sortBefore = BetterExpertRarity, PrettyRarities, Luminance
 weakReferences = BetterExpertRarity, PrettyRarities, Luminance
 
-# Normally, Daybreak-style modules would be provided through dllReferences, but
-# since Daybreak itself would need to be loaded before its own dllReferences,
-# the list is managed specially.
+dllReferences = modules/Daybreak.ChatTags.V1, modules/Daybreak.Contracts.V1, modules/Daybreak.EarlyLoader.V1, modules/Daybreak.Hooks.V1, modules/Daybreak.Mathematics.V1, modules/Daybreak.Models.V1, modules/Daybreak.MonoMod.V1, modules/Daybreak.Networking.V1, modules/Daybreak.Rendering.V1, modules/Daybreak.Rendering.Buffers.V1, modules/Daybreak.Rendering.Buffers.Entities.V1, modules/Daybreak.Resources.V1
