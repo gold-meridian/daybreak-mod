@@ -14,7 +14,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Daybreak.Rendering.ItemBuffering.V1;
+namespace Daybreak.Rendering.Buffers.Entities.V1;
 
 /// <summary>
 ///     Determines whether a re-render of the cached item texture is required.

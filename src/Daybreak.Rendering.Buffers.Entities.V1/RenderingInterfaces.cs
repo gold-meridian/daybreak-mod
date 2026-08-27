@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 
-namespace Daybreak.Rendering.ItemBuffering.V1;
+namespace Daybreak.Rendering.Buffers.Entities.V1;
 
 /// <summary>
 ///     Provides mechanics for dynamically modifying the texture of an item.
