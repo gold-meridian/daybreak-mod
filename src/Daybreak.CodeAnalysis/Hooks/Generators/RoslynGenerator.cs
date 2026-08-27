@@ -49,8 +49,8 @@ internal sealed class RoslynGenerator(Compilation compilation, INamedTypeSymbol 
 
         sb.AppendLine("#nullable enable");
         sb.AppendLine();
-        sb.AppendLine("using Daybreak.EarlyLoader;");
-        sb.AppendLine("using Daybreak.Hooks;");
+        sb.AppendLine("using Daybreak.EarlyLoader.V1;");
+        sb.AppendLine("using Daybreak.Hooks.V1;");
         sb.AppendLine("using Terraria.ModLoader;");
         sb.AppendLine();
         sb.AppendLine("// ReSharper disable ConvertToPrimaryConstructor");

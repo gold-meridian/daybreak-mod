@@ -2,7 +2,7 @@
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
-namespace Daybreak.ChatTags;
+namespace Daybreak.ChatTags.V1;
 
 /// <summary>
 ///     An autoloaded chat tag.  Chat tags provide <see cref="TextSnippet"/>

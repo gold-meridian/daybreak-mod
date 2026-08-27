@@ -3,7 +3,7 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 using MonoMod.Cil;
 
-namespace Daybreak.MonoMod;
+namespace Daybreak.MonoMod.V1;
 
 partial class Extensions
 {

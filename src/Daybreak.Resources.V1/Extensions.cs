@@ -1,6 +1,6 @@
 ﻿using ReLogic.Content;
 
-namespace Daybreak.Resources;
+namespace Daybreak.Resources.V1;
 
 /// <summary>
 ///     Extensions to <see cref="Asset{T}"/> and related APIs.

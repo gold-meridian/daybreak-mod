@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
-namespace Daybreak.Mathematics;
+namespace Daybreak.Mathematics.V1;
 
 /// <summary>
 ///     A type-safe representation of an angle, stored in radians.

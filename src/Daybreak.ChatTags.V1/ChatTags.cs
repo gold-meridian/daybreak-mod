@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Daybreak.Hooks;
+using Daybreak.Hooks.V1;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI.Chat;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
-namespace Daybreak.ChatTags;
+namespace Daybreak.ChatTags.V1;
 
 /// <summary>
 ///     Utilities and other APIs relating to chat tags.

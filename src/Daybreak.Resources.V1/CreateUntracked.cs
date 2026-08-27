@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using ReLogic.Content;
 
-namespace Daybreak.Resources;
+namespace Daybreak.Resources.V1;
 
 /// <summary>
 ///     Supplemental APIs for untracked assets.

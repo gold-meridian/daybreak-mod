@@ -1,7 +1,8 @@
 ﻿using System;
+using Daybreak.Rendering.V1;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Daybreak.Rendering.Buffers;
+namespace Daybreak.Rendering.Buffers.V1;
 
 /// <summary>
 ///     Describes the creation parameters of a render target.

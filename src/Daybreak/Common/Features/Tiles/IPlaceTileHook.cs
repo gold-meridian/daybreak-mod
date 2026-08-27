@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using Daybreak.Common.Features.Hooks;
 using MonoMod.Cil;
 using Terraria;
 using Terraria.ModLoader;

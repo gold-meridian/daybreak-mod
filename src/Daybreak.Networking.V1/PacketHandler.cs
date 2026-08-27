@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Daybreak.Hooks;
+using Daybreak.Hooks.V1;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Daybreak.Networking;
+namespace Daybreak.Networking.V1;
 
 /// <summary>
 ///     Central packet registry that assigns deterministic packet IDs and links

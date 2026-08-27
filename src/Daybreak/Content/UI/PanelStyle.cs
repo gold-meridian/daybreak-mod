@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using Daybreak.Common.Features.ModPanel;
-using Daybreak.Common.Rendering;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

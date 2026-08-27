@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Daybreak.Rendering.Buffers;
+namespace Daybreak.Rendering.Buffers.V1;
 
 /// <summary>
 ///     Represents a lease on a buffer.

@@ -1,7 +1,7 @@
 ﻿using Daybreak.Hooks;
 using Terraria.ID;
 
-namespace Daybreak.Rendering.ItemBuffering;
+namespace Daybreak.Rendering.ItemBuffering.V1;
 
 /// <summary>
 ///     Item sets for item rendering.

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Daybreak.Hooks;
+using Daybreak.Hooks.V1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Daybreak.Rendering.Buffers;
+namespace Daybreak.Rendering.Buffers.V1;
 
 /* Credit to Verminoid Creature for the original implementation, based on:
  * <https://github.com/JasperDawg/Cataphract/blob/f33541642d1f2aec575b2a4f580afe13a2de2cfa/Common/Buffers.cs>.

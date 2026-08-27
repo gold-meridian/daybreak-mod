@@ -1,7 +1,7 @@
 using System;
 using MonoMod.Cil;
 
-namespace Daybreak.MonoMod;
+namespace Daybreak.MonoMod.V1;
 
 partial class Extensions
 {

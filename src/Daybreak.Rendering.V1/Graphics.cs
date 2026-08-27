@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace Daybreak.Rendering;
+namespace Daybreak.Rendering.V1;
 
 /// <summary>
 ///     Utilities for FNA graphics.

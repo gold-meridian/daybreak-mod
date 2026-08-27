@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.UI;
 using Daybreak.Core;
 using Microsoft.Xna.Framework;

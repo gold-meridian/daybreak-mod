@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Daybreak.Contracts;
+namespace Daybreak.Contracts.V1;
 
 /// <summary>
 ///     Any types decorated with this attribute will cause a type to run its

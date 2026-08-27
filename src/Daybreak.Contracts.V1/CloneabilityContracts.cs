@@ -2,7 +2,7 @@
 using System.Reflection;
 using Terraria.ModLoader;
 
-namespace Daybreak.Contracts;
+namespace Daybreak.Contracts.V1;
 
 /// <summary>
 ///     Requires that the annotated type's <c>IsCloneable</c> property be equal

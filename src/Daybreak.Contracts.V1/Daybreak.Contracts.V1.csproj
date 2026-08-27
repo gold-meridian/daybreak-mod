@@ -1,13 +1,9 @@
 ﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
 
-    <PropertyGroup>
-      <RootNamespace>Daybreak.Contracts</RootNamespace>
-    </PropertyGroup>
-
     <Import Project="../Module.props"/>
 
     <ItemGroup>
-        <ProjectReference Include="..\Daybreak.EarlyLoader.V1\Daybreak.EarlyLoader.V1.csproj" />
+        <ProjectReference Include="..\Daybreak.EarlyLoader.V1\Daybreak.EarlyLoader.V1.csproj"/>
     </ItemGroup>
 
 </Project>

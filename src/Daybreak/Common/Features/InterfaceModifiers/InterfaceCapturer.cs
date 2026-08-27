@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using Daybreak.Common.Features.Hooks;
-using Daybreak.Common.Rendering;
-using Daybreak.Rendering.Buffers;
+using Daybreak.Rendering.Buffers.V1;
 using Microsoft.Xna.Framework;
-using MonoMod.Cil;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ModLoader;

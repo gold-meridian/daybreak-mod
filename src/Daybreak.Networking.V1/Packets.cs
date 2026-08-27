@@ -2,7 +2,7 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Daybreak.Networking;
+namespace Daybreak.Networking.V1;
 
 /// <summary>
 ///     A packet object that may be sent.

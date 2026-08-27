@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Daybreak.EarlyLoader;
+using Daybreak.EarlyLoader.V1;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
-namespace Daybreak.Hooks;
+namespace Daybreak.Hooks.V1;
 
 internal static class HookLoader
 {

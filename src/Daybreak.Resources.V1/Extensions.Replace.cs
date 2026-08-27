@@ -1,7 +1,7 @@
 ﻿using System;
 using ReLogic.Content;
 
-namespace Daybreak.Resources;
+namespace Daybreak.Resources.V1;
 
 /// <summary>
 ///     An asset replacement handle that, when disposed of, restores the

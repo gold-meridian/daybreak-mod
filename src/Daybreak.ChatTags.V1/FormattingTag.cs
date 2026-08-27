@@ -1,7 +1,7 @@
 ﻿using System;
-using Daybreak.Mathematics;
-using Daybreak.Rendering;
-using Daybreak.Resources;
+using Daybreak.Mathematics.V1;
+using Daybreak.Rendering.V1;
+using Daybreak.Resources.V1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -9,7 +9,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.UI.Chat;
 
-namespace Daybreak.ChatTags;
+namespace Daybreak.ChatTags.V1;
 
 /// <summary>
 ///     A tag that provides common text formatting utilities.

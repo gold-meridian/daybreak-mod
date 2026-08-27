@@ -1,6 +1,6 @@
 ﻿using MonoMod.Cil;
 
-namespace Daybreak.MonoMod;
+namespace Daybreak.MonoMod.V1;
 
 /// <summary>
 ///     Common extensions for <see cref="ILCursor"/> and related types.

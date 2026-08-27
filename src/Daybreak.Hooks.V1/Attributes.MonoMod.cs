@@ -1,4 +1,4 @@
-﻿namespace Daybreak.Hooks;
+﻿namespace Daybreak.Hooks.V1;
 
 /*
 [PublicAPI]

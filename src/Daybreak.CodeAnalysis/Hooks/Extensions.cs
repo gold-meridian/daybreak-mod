@@ -62,15 +62,15 @@ internal static class Extensions
 
     extension(Compilation compilation)
     {
-        public INamedTypeSymbol? BaseHook => compilation.GetTypeByMetadataName("Daybreak.Hooks.BaseHookAttribute");
+        public INamedTypeSymbol? BaseHook => compilation.GetTypeByMetadataName("Daybreak.Hooks.V1.BaseHookAttribute");
 
-        public INamedTypeSymbol? HookMetadata => compilation.GetTypeByMetadataName("Daybreak.Hooks.HookMetadataAttribute");
+        public INamedTypeSymbol? HookMetadata => compilation.GetTypeByMetadataName("Daybreak.Hooks.V1.HookMetadataAttribute");
 
-        public INamedTypeSymbol? Omittable => compilation.GetTypeByMetadataName("Daybreak.Hooks.OmittableAttribute");
+        public INamedTypeSymbol? Omittable => compilation.GetTypeByMetadataName("Daybreak.Hooks.V1.OmittableAttribute");
 
-        public INamedTypeSymbol? OriginalName => compilation.GetTypeByMetadataName("Daybreak.Hooks.OriginalNameAttribute");
+        public INamedTypeSymbol? OriginalName => compilation.GetTypeByMetadataName("Daybreak.Hooks.V1.OriginalNameAttribute");
 
-        public INamedTypeSymbol? AbstractPermitsVoid => compilation.GetTypeByMetadataName("Daybreak.Hooks.AbstractPermitsVoidAttribute");
+        public INamedTypeSymbol? AbstractPermitsVoid => compilation.GetTypeByMetadataName("Daybreak.Hooks.V1.AbstractPermitsVoidAttribute");
 
         public bool TryGetHookAttributes(out HookAttributes attributes)
         {

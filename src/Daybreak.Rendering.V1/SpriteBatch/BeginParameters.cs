@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.DataStructures;
 
-namespace Daybreak.Rendering;
+namespace Daybreak.Rendering.V1;
 
 /// <summary>
 ///     Wraps the parameters of a <see cref="SpriteBatch"/> <c>Begin</c> call

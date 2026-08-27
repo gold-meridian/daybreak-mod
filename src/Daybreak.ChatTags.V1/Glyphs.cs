@@ -1,4 +1,4 @@
-﻿namespace Daybreak.ChatTags;
+﻿namespace Daybreak.ChatTags.V1;
 
 /// <summary>
 ///     A controller glyph for use in a chat tag.

@@ -1,7 +1,7 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
 
-namespace Daybreak.MonoMod;
+namespace Daybreak.MonoMod.V1;
 
 /// <summary>
 ///     A strongly typed parameter index in a method definition.

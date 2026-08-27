@@ -1,6 +1,5 @@
 using System;
 using Daybreak.Common.Features.Authorship;
-using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.Features.Models;
 using Daybreak.Common.Features.ModPanel;
 using Daybreak.Content.UI;

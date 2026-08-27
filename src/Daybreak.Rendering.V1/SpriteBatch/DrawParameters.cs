@@ -1,12 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
-using Daybreak.Mathematics;
+using Daybreak.Mathematics.V1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 
-namespace Daybreak.Rendering;
+namespace Daybreak.Rendering.V1;
 
 /// <summary>
 ///     Encapsulates the full set of parameters for a single

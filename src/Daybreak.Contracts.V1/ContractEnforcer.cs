@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Daybreak.EarlyLoader;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
-namespace Daybreak.Contracts;
+namespace Daybreak.Contracts.V1;
 
 internal static partial class ContractEnforcer
 {

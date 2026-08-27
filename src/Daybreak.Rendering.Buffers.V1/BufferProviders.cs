@@ -1,4 +1,4 @@
-﻿namespace Daybreak.Rendering.Buffers;
+﻿namespace Daybreak.Rendering.Buffers.V1;
 
 /// <summary>
 ///     Handles the provision of buffers.

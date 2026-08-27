@@ -2,7 +2,7 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Daybreak.Models;
+namespace Daybreak.Models.V1;
 
 /// <summary>
 ///     Initializes <see cref="Instance"/> on load and uninitializes it on

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using Daybreak.EarlyLoader;
+using Daybreak.EarlyLoader.V1;
 using Daybreak.Hooks;
-using Daybreak.Rendering.Buffers;
-using Daybreak.Resources;
+using Daybreak.Hooks.V1;
+using Daybreak.Rendering.Buffers.V1;
+using Daybreak.Rendering.V1;
+using Daybreak.Resources.V1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -12,7 +14,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Daybreak.Rendering.ItemBuffering;
+namespace Daybreak.Rendering.ItemBuffering.V1;
 
 /// <summary>
 ///     Determines whether a re-render of the cached item texture is required.

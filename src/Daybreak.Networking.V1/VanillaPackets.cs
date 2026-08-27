@@ -2,7 +2,7 @@
 using Terraria.ID;
 using Terraria.Localization;
 
-namespace Daybreak.Networking;
+namespace Daybreak.Networking.V1;
 
 /// <summary>
 ///     A chiefly stack-allocated record of vanilla <see cref="NetMessage"/>

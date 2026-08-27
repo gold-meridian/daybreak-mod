@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Daybreak.Networking;
+namespace Daybreak.Networking.V1;
 
 /// <summary>
 ///     Describes the routing target of a packet send request.

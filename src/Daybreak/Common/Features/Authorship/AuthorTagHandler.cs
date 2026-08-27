@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using Daybreak.Common.Features.ChatTags;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 

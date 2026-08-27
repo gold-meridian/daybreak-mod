@@ -3,7 +3,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Terraria.ModLoader;
 
-namespace Daybreak.Hooks;
+namespace Daybreak.Hooks.V1;
 
 /// <summary>
 ///     Automatically calls the decorated function on load.

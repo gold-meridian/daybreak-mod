@@ -1,5 +1,3 @@
-using Daybreak.Common.CIL;
-using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.IDs;
 using MonoMod.Cil;
 using Terraria;

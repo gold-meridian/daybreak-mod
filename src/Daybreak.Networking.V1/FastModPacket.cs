@@ -6,7 +6,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Daybreak.Networking;
+namespace Daybreak.Networking.V1;
 
 /// <summary>
 ///     Reimplements the functionality of <see cref="ModPacket"/>.

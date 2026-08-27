@@ -5,12 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using MonoMod.Cil;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.ModLoader.Default;
 
-namespace Daybreak.EarlyLoader;
+namespace Daybreak.EarlyLoader.V1;
 
 /// <summary>
 ///     Exposes convenient early loading hooks for mods.
@@ -78,7 +77,7 @@ public static class EarlyLoadHooks
         // AutoloadConfig hook not being run (resulting in an assertion
         // failure), and deadlocks in MonoMod hook application pertaining to mod
         // loading-thread APIs such as Mod::AddContent.
-        
+
         // Main.RunOnMainThread(ApplyHooks);
 
         /*
@@ -87,7 +86,7 @@ public static class EarlyLoadHooks
             ApplyHooks();
         }
         */
-        
+
         ApplyHooks();
     }
 #pragma warning restore CA2255

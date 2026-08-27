@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Daybreak.Hooks;
+using Daybreak.Hooks.V1;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Daybreak.Rendering.Buffers;
+namespace Daybreak.Rendering.Buffers.V1;
 
 /// <summary>
 ///     Provides <see cref="RenderTarget2D"/>s that are dependent on the screen

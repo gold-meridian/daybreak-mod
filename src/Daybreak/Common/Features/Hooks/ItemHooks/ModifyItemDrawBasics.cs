@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;

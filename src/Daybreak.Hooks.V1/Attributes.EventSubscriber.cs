@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using JetBrains.Annotations;
-using Terraria.ModLoader;
-using Terraria.ModLoader.Core;
 
-namespace Daybreak.Hooks;
+namespace Daybreak.Hooks.V1;
 
 /*
 [PublicAPI]

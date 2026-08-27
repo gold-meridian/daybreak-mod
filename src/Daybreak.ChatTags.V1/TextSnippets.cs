@@ -1,13 +1,13 @@
 ﻿using System.Text.RegularExpressions;
-using Daybreak.Hooks;
-using Daybreak.MonoMod;
+using Daybreak.Hooks.V1;
+using Daybreak.MonoMod.V1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using ReLogic.Graphics;
 using Terraria.UI.Chat;
 
-namespace Daybreak.ChatTags;
+namespace Daybreak.ChatTags.V1;
 
 /// <summary>
 ///     Provides a hook to <see cref="TextSnippet"/>s that mirrors the

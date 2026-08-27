@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Daybreak.Networking;
+namespace Daybreak.Networking.V1;
 
 internal sealed class SlimMemoryStream : Stream
 {

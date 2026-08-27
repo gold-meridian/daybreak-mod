@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Daybreak.Common.Features.Hooks;
 using MonoMod.Cil;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;

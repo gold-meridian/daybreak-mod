@@ -1,4 +1,3 @@
-using Daybreak.Common.Features.Rendering;
 using JetBrains.Annotations;
 using Terraria.ID;
 using Terraria.ModLoader;

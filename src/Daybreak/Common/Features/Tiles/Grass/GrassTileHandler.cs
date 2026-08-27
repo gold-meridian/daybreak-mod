@@ -1,4 +1,3 @@
-using Daybreak.Common.Features.Hooks;
 using Terraria.ModLoader;
 
 namespace Daybreak.Common.Features.Tiles;

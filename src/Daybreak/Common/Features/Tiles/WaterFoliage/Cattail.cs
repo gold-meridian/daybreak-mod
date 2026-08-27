@@ -1,4 +1,3 @@
-using Daybreak.Common.Features.Hooks;
 using Daybreak.Common.IDs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

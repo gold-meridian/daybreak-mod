@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using Daybreak.Rendering.V1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Daybreak.Rendering.Buffers;
+namespace Daybreak.Rendering.Buffers.V1;
 
 /* Credit to Verminoid Creature for the original implementation, based on:
  * <https://github.com/JasperDawg/Cataphract/blob/f33541642d1f2aec575b2a4f580afe13a2de2cfa/Common/Buffers.cs>.

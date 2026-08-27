@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.Utils;
 
-namespace Daybreak.MonoMod;
+namespace Daybreak.MonoMod.V1;
 
 partial class Extensions
 {

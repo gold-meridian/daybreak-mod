@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Daybreak.Rendering;
+namespace Daybreak.Rendering.V1;
 
 /// <summary>
 ///     Temporarily suspends a <see cref="SpriteBatch"/>'s active <c>Begin</c>
