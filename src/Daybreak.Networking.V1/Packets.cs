@@ -67,7 +67,8 @@ public interface IPacket<TSelf> : IPacket, ILoadable
 /// </summary>
 public static class PacketExtensions
 {
-    extension(IPacket packet)
+    extension<T>(T packet)
+        where T : IPacket
     {
         /// <inheritdoc cref="IPacket.Send"/>
         public void Send(PacketDestination dest)
