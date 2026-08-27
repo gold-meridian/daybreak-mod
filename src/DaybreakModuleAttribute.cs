@@ -30,7 +30,7 @@ internal sealed class DaybreakModuleAttribute : Attribute
     ///     have its special types (e.g. <see cref="ILoadable"/>) handled
     ///     accordingly.
     /// </summary>
-    public bool UseModLoadCycle { get; init; } = false;
+    public bool UseModLoadCycle { get; init; }
 
     /// <summary>
     ///     The mod that owns this module.  If set, then the module may only be
