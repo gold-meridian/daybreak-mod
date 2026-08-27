@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -24,7 +24,7 @@
         <Publicize Include="FNA;ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
     </ItemGroup>
 
-    <Target Name="CopyReferenceAssemblies" AfterTargets="Build">
+    <Target Name="CopyReferenceAssemblies" AfterTargets="Build" Inputs="$(OutputPath)\$(ProjectName).dll" Outputs="$(DirectoryToCopyImportantFilesTo)\$(ProjectName).dll">
         <ItemGroup>
             <ReferenceAssemblies Include="$(OutputPath)\$(ProjectName).dll"/>
             <ReferenceAssemblies Include="$(OutputPath)\$(ProjectName).pdb"/>
