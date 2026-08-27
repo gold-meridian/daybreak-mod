@@ -1,9 +1,0 @@
-﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
-
-    <Import Project="../Module.props"/>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Daybreak.EarlyLoader\Daybreak.EarlyLoader.csproj"/>
-    </ItemGroup>
-
-</Project>

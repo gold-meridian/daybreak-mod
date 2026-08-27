@@ -1,0 +1,17 @@
+﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
+
+    <PropertyGroup>
+      <RootNamespace>Daybreak.ChatTags</RootNamespace>
+    </PropertyGroup>
+
+    <Import Project="../Module.props"/>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Daybreak.Hooks.V1\Daybreak.Hooks.V1.csproj" />
+        <ProjectReference Include="..\Daybreak.Mathematics.V1\Daybreak.Mathematics.V1.csproj" />
+        <ProjectReference Include="..\Daybreak.MonoMod.V1\Daybreak.MonoMod.V1.csproj" />
+        <ProjectReference Include="..\Daybreak.Rendering.V1\Daybreak.Rendering.V1.csproj" />
+        <ProjectReference Include="..\Daybreak.Resources.V1\Daybreak.Resources.V1.csproj" />
+    </ItemGroup>
+
+</Project>

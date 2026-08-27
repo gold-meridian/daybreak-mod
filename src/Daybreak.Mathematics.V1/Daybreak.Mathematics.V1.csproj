@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
 
+    <PropertyGroup>
+      <RootNamespace>Daybreak.Mathematics</RootNamespace>
+    </PropertyGroup>
+
     <Import Project="../Module.props"/>
 
 </Project>

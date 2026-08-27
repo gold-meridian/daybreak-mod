@@ -1,0 +1,13 @@
+﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
+
+    <PropertyGroup>
+      <RootNamespace>Daybreak.Rendering</RootNamespace>
+    </PropertyGroup>
+
+    <Import Project="../Module.props"/>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Daybreak.Mathematics.V1\Daybreak.Mathematics.V1.csproj" />
+    </ItemGroup>
+
+</Project>
