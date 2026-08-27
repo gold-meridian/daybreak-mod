@@ -1,0 +1,5 @@
+DAYBREAK is a library mod. It does nothing on its own! Only use this if a mod depends on it.
+
+For more information:
+- https://github.com/gold-meridian/daybreak-mod
+- https://discord.gg/6Fm4ZTHVub

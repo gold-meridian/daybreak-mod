@@ -1,0 +1,33 @@
+﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
+
+    <PropertyGroup>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <TmlBuildUseDefaultModImpl>true</TmlBuildUseDefaultModImpl>
+
+        <TargetFramework>net10.0</TargetFramework>
+        <TmlVersion>dev</TmlVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Publicize Include="FNA" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
+        <Publicize Include="ReLogic" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
+        <Publicize Include="Luminance" IncludeCompilerGeneratedMembers="false" IncludeVirtualMembers="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Daybreak.ChatTags.V1\Daybreak.ChatTags.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.CodeAnalysis\Daybreak.CodeAnalysis.csproj" PrivateAssets="All" ReferenceOutputAssembly="false" OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\Daybreak.Contracts.V1\Daybreak.Contracts.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.EarlyLoader.V1\Daybreak.EarlyLoader.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.Hooks.V1\Daybreak.Hooks.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.Mathematics.V1\Daybreak.Mathematics.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.Models.V1\Daybreak.Models.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.MonoMod.V1\Daybreak.MonoMod.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.Networking.V1\Daybreak.Networking.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.Rendering.Buffers.V1\Daybreak.Rendering.Buffers.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.Rendering.Buffers.Entities.V1\Daybreak.Rendering.Buffers.Entities.V1.csproj" />
+        <ProjectReference Include="..\Daybreak.Rendering.V1\Daybreak.Rendering.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.Resources.V1\Daybreak.Resources.V1.csproj"/>
+    </ItemGroup>
+
+</Project>

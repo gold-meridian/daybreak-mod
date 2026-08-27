@@ -1,54 +1,16 @@
-using System;
-using Daybreak.Common.Features.Authorship;
-using Daybreak.Common.Features.Models;
-using Daybreak.Common.Features.ModPanel;
-using Daybreak.Content.UI;
-using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.UI;
 
 namespace Daybreak;
 
 /// <summary>
 ///     The <see cref="Mod" /> implementation for DAYBREAK.
 /// </summary>
-partial class ModImpl : IHasCustomModConfigButton, IHasCustomAuthorMessage, INameProvider
+partial class ModImpl
 {
     /// <inheritdoc />
     public ModImpl()
     {
         // Handled by the asset generator.
         MusicAutoloadingEnabled = false;
-    }
-
-    UIButton<string> IHasCustomModConfigButton.CreateModConfigButton(UIButton<string> button)
-    {
-        var originalText = button.Text;
-
-        button.OnUpdate += _ =>
-        {
-            button.SetText(PanelStyle.ModName.GetPulsatingText(originalText, Main.GlobalTimeWrappedHourly));
-        };
-
-        return button;
-    }
-
-    string IHasCustomAuthorMessage.GetAuthorText()
-    {
-        return AuthorText.GetAuthorTooltip(this, headerText: null);
-    }
-
-    string INameProvider.GetName(Type type)
-    {
-        return NameProvider.GetNestedName(type);
-    }
-}
-
-class Test
-{
-    [ModSystemHooks.PostDrawInterface]
-    public void A(ModSystemHooks.PostDrawInterface.Original orig, ModSystem self, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
-    {
-        throw new NotImplementedException();
     }
 }
