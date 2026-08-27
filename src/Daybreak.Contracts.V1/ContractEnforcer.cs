@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Daybreak.EarlyLoader.V1;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
