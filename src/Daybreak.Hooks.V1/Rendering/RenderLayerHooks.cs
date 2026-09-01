@@ -24,6 +24,7 @@ file delegate void RenderLayerDefinition(
 [HookMetadata(DelegateType = typeof(RenderLayerDefinition))]
 public sealed class RenderLayerAttribute(RenderLayers layer) : BaseHookAttribute
 {
+    /// <inheritdoc />
     public override void Apply(MethodInfo bindingMethod, object? instance)
     {
         var method = HookSubscriber.BuildWrapper<RenderLayerDefinition>(bindingMethod, instance);

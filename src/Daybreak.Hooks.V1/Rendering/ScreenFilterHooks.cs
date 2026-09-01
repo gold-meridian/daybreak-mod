@@ -57,6 +57,7 @@ file delegate bool ScreenFilterDefinition(
 [HookMetadata(DelegateType = typeof(ScreenFilterDefinition))]
 public sealed class ScreenFilterAttribute(EffectPriority priority) : SubscribesToAttribute
 {
+    /// <inheritdoc />
     public override void Apply(MethodInfo bindingMethod, object? instance)
     {
         var method = HookSubscriber.BuildWrapper<ScreenFilterDefinition>(bindingMethod, instance);
