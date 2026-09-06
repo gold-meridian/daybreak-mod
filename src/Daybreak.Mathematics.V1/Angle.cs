@@ -338,6 +338,16 @@ public readonly record struct Angle : IAdditionOperators<Angle, Angle, Angle>,
     {
         return value.Radians;
     }
+    
+    /// <summary>
+    ///     Implicitly casts a radian <see cref="float"/> to an
+    ///     <see cref="Angle"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static implicit operator Angle(float value)
+    {
+        return new Angle(value);
+    }
 
 #region Factories
     /// <summary>
