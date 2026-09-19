@@ -28,6 +28,7 @@
         <ProjectReference Include="..\Daybreak.Rendering.Buffers.Entities.V1\Daybreak.Rendering.Buffers.Entities.V1.csproj" />
         <ProjectReference Include="..\Daybreak.Rendering.V1\Daybreak.Rendering.V1.csproj"/>
         <ProjectReference Include="..\Daybreak.Resources.V1\Daybreak.Resources.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.UI.V1\Daybreak.UI.V1.csproj"/>
     </ItemGroup>
 
 </Project>
