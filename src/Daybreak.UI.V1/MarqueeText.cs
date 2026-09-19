@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Daybreak.Rendering.V1;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
+using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using Daybreak.Rendering.V1;
-using Terraria.GameContent.UI.Elements;
 
 namespace Daybreak.UI.V1;
 
@@ -133,13 +133,9 @@ public class MarqueeText<T> : UIElement
             const int scroll_delay = 30;
 
             // Each half of the text separated by the alignment
-            var left =
-                (textSize.X * TextAlignX) -
-                (dims.Width * TextAlignX);
+            var left = TextAlignX * (textSize.X - dims.Width);
 
-            var right =
-                (textSize.X * (1f - TextAlignX)) -
-                (dims.Width * (1f - TextAlignX));
+            var right = (1f - TextAlignX) * (textSize.X - dims.Width);
 
             scrollTimer--;
 
