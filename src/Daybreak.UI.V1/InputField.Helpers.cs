@@ -35,9 +35,10 @@ public static class InputHelpers
     private const int key_timer_delay = 45;
 
     private static readonly char[] invalid_chars =
-        [.. Enumerable.Range('\x0', '\x1F' + 1).Select(i => (char)i), // Invisible characters from Null to Unit Separator, stopping before Space
+    [
+        .. Enumerable.Range('\x0', '\x1F' + 1).Select(i => (char)i),  // Invisible characters from Null to Unit Separator, stopping before Space
         '\x7F',                                                       // Delete
-        ];
+    ];
 
     private static int leftArrowTimer = key_timer_delay;
 
