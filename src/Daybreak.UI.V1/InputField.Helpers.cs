@@ -176,9 +176,9 @@ public static class InputHelpers
                 leftArrowTimer = key_timer_delay;
             }
 
-            if (Keys.Left.JustPressed ||
-                (Keys.Left.Held &&
-                leftArrowTimer <= 0))
+            if (Keys.Left.JustPressed
+             || (Keys.Left.Held
+              && leftArrowTimer <= 0))
             {
                 CursorPositon -= left;
             }
@@ -193,9 +193,9 @@ public static class InputHelpers
                 rightArrowTimer = key_timer_delay;
             }
 
-            if (Keys.Right.JustPressed ||
-                (Keys.Right.Held &&
-                rightArrowTimer <= 0))
+            if (Keys.Right.JustPressed
+             || (Keys.Right.Held
+              && rightArrowTimer <= 0))
             {
                 CursorPositon += right;
             }
@@ -219,25 +219,27 @@ public static class InputHelpers
         // Special actions
         {
             var controlPressed =
-                (Keys.LeftControl.Pressed ||
-                Keys.RightControl.Pressed) &&
-                !Keys.LeftAlt.Pressed &&
-                !Keys.RightAlt.Pressed;
+                (Keys.LeftControl.Pressed
+              || Keys.RightControl.Pressed)
+             && !Keys.LeftAlt.Pressed
+             && !Keys.RightAlt.Pressed;
 
             var shiftPressed =
-                Keys.LeftShift.Pressed ||
-                Keys.RightShift.Pressed;
+                Keys.LeftShift.Pressed
+             || Keys.RightShift.Pressed;
 
             // Clear
-            if (controlPressed && Keys.Z.JustPressed)
+            if (controlPressed
+             && Keys.Z.JustPressed)
             {
                 output = string.Empty;
                 CursorPositon = 0;
             }
             // Cut
-            else if (
-                (controlPressed && Keys.X.JustPressed) ||
-                (shiftPressed && Keys.Delete.JustPressed))
+            else if ((controlPressed 
+              && Keys.X.JustPressed)
+             || (shiftPressed
+              && Keys.Delete.JustPressed))
             {
                 Platform.Get<IClipboard>().Value = output;
                 output = string.Empty;
@@ -249,9 +251,10 @@ public static class InputHelpers
                 Platform.Get<IClipboard>().Value = output;
             }
             // Paste
-            else if (
-                (controlPressed && Keys.V.JustPressed) ||
-                (shiftPressed && Keys.Insert.JustPressed))
+            else if ((controlPressed 
+              && Keys.V.JustPressed)
+             || (shiftPressed
+              && Keys.Insert.JustPressed))
             {
                 var paste = RemoveInvalidCharacters(GetPaste(output, allowLineBreaks));
 
@@ -285,11 +288,11 @@ public static class InputHelpers
             {
                 backspaceTimer = key_timer_delay;
             }
-            if ((Keys.Back.JustPressed ||
-                (Keys.Back.Held &&
-                backspaceTimer <= 0)) &&
-                output.Length >= 1 &&
-                CursorPositon >= 1)
+            if ((Keys.Back.JustPressed
+              || (Keys.Back.Held
+               && backspaceTimer <= 0))
+             && output.Length >= 1
+             && CursorPositon >= 1)
             {
                 output = string.Concat(output.AsSpan(0, CursorPositon - 1),
                     output.AsSpan(CursorPositon, output.Length - CursorPositon));
@@ -308,10 +311,10 @@ public static class InputHelpers
                 deleteTimer = key_timer_delay;
             }
 
-            if ((Keys.Delete.JustPressed ||
-                 (Keys.Delete.Held &&
-                  deleteTimer <= 0)) &&
-                CursorPositon < output.Length)
+            if ((Keys.Delete.JustPressed
+              || (Keys.Delete.Held
+              && deleteTimer <= 0))
+             && CursorPositon < output.Length)
             {
                 output = string.Concat(
                     output.AsSpan(0, CursorPositon),

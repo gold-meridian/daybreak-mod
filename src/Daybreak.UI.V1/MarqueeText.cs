@@ -103,7 +103,7 @@ public class MarqueeText<T> : UIElement
 
         var font = Large ? FontAssets.DeathText.Value : FontAssets.MouseText.Value;
 
-        var textSize = font.MeasureString(Text) * new Vector2(MaxTextScale);
+        var textSize = font.MeasureString(Text) * MaxTextScale;
 
         var dims = this.InnerDimensions;
 

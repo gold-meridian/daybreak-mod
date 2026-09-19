@@ -298,27 +298,29 @@ public class InputField : UIElement
 
         var cursorIndex = Math.Min(InputHelpers.CursorPositon, Text.Length);
 
-        if (currentlyWriting && textSize.X * TextScale >= dims.Width)
+        if (!currentlyWriting || textSize.X * TextScale < dims.Width)
         {
-            var cursorPosition =
-                AllowChatTags
+            return position;
+        }
+
+        var cursorPos =
+            AllowChatTags
                 ? ChatManager.GetStringSize(font, text[..cursorIndex], Vector2.One).X
                 : font.MeasureString(text[..cursorIndex]).X;
 
-            cursorPosition -= origin.X;
+        cursorPos -= origin.X;
 
-            var offset = cursorPosition * TextScale;
+        var offset = cursorPos * TextScale;
 
-            // Each half of the text separated by the alignment
-            var width =
-                Math.Sign(offset) <= 0
-              ? (dims.Width * TextAlignX)
-              : (dims.Width * (1f - TextAlignX));
+        // Each half of the text separated by the alignment
+        var width =
+            Math.Sign(offset) <= 0
+                ? (dims.Width * TextAlignX)
+                : (dims.Width * (1f - TextAlignX));
 
-            offset = Utils.Remap(Math.Abs(offset), width, textSize.X * TextScale, 0f, (textSize.X * TextScale) - width) * Math.Sign(offset);
-            {
-                position.X -= offset;
-            }
+        offset = Utils.Remap(Math.Abs(offset), width, textSize.X * TextScale, 0f, (textSize.X * TextScale) - width) * Math.Sign(offset);
+        {
+            position.X -= offset;
         }
 
         return position;
