@@ -1,0 +1,3 @@
+﻿using Daybreak;
+
+[assembly: DaybreakModule]
