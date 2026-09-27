@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Daybreak.Rendering.V1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -34,7 +36,7 @@ public readonly struct RenderTargetScope : IDisposable
     ///     Creates a new scope, saving the current device targets and starts
     ///     rendering to the new one instead.
     /// </summary>
-    /// <param name="target">The target to render to.</param>
+    /// <param name="targets">The target to render to.</param>
     /// <param name="preserveContents">
     ///     Whether to ensure swapped targets preserve their contents.
     /// </param>
@@ -42,12 +44,12 @@ public readonly struct RenderTargetScope : IDisposable
     ///     If not null, clears the target to the given color.
     /// </param>
     public RenderTargetScope(
-        RenderTarget2D target,
+        IEnumerable<RenderTarget2D> targets,
         bool preserveContents = true,
         Color? clearColor = null
     )
     {
-        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(targets);
 
         // PERF: If we're going to be clearing it anyway, no reason to permit
         // the default discard behavior!
@@ -97,13 +99,21 @@ public readonly struct RenderTargetScope : IDisposable
             // Debug.Assert(oldUsage.HasValue);
         }
 
-        GraphicsDevice.SetRenderTargets(target);
+        // TODO: Reduce allocations here please
+        GraphicsDevice.SetRenderTargets([.. targets.Select(x => new RenderTargetBinding(x))]);
 
         if (clearColor.HasValue)
         {
             GraphicsDevice.Clear(clearColor.Value);
         }
     }
+
+    /// <inheritdoc/>
+    public RenderTargetScope(
+        RenderTarget2D target,
+        bool preserveContents = true,
+        Color? clearColor = null
+    ) : this([target], preserveContents, clearColor) { }
 
     /// <summary>
     ///     Sets the device to use the targets that were in use before this
@@ -166,7 +176,7 @@ public static class RenderTargetScopeExtensions
     )
     {
         return new RenderTargetScope(
-            target,
+            [target],
             preserveContents,
             clearColor
         );
@@ -180,7 +190,7 @@ public static class RenderTargetScopeExtensions
     )
     {
         return new RenderTargetScope(
-            target.Buffer,
+            [target.Buffer],
             preserveContents,
             clearColor
         );
