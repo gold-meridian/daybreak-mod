@@ -1,3 +1,3 @@
 ﻿using Daybreak;
 
-[assembly: DaybreakModule]
+[assembly: DaybreakModule(UseModLoadCycle = true)]
