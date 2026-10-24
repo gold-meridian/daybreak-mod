@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text;
 using Daybreak.Hooks.V1;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -189,7 +190,7 @@ public static class ChatTags
         $"[{switch_glyph_tag}:25]",
     ];
 
-    // This lets us keep track of registered modded ChatTags, but also allows us
+    // This lets us keep track of registered modded ChatTags but also allows us
     // to register them to ChatManager without needing a generic parameter (and
     // without allocating a new instance).
     /// <summary>
@@ -229,9 +230,6 @@ public static class ChatTags
         /// <summary>
         ///     Generates a color tag.
         /// </summary>
-        /// <param name="color"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GenerateTag(Color color, string message)
         {
@@ -239,61 +237,57 @@ public static class ChatTags
         }
     }
 
-    /*
-    private static readonly List<string> item_tag_parts = new(capacity: 2);
-
-    private static void PopulateItemTagParts(int stack, int prefix)
+    extension(ItemTagHandler)
     {
-        item_tag_parts.Clear();
+        // Already has a GenerateTag for Item, this lets you specify stuff
+        // manually.
+        // TODO: Overloads for modded base64 data instead?
 
-        if (stack > 1)
+        /// <inheritdoc cref="ItemTagHandler.GenerateTag"/>
+        public static string GenerateTag(int itemId, int stack = 1, int prefix = 0)
         {
-            item_tag_parts.Add($"s{stack}");
+            return ItemTagHandler.GenerateTagInternal(itemId.ToString(), stack, prefix);
         }
 
-        if (prefix > 0)
+        /// <inheritdoc cref="ItemTagHandler.GenerateTag"/>
+        public static string GenerateTag(string itemId, int stack = 1, int prefix = 0)
         {
-            item_tag_parts.Add($"p{prefix}");
+            return ItemTagHandler.GenerateTagInternal(itemId, stack, prefix);
         }
-    }
 
-    extension(ItemTagHandler _)
-    {
-        public string MakeString(int itemId, int stack = 1, int prefix = 0)
+        private static string GenerateTagInternal(string itemId, int stack, int prefix)
         {
-            PopulateItemTagParts(stack, prefix);
-
-            if (item_tag_parts.Count == 0)
+            var sb = new StringBuilder();
             {
-                return $"[i:{itemId}]";
+                sb.Append("[i");
+                {
+                    var addedAny = false;
+
+                    if (prefix != 0)
+                    {
+                        sb.Append(addedAny ? ",p" : "/p");
+                        sb.Append(prefix);
+
+                        addedAny = true;
+                    }
+
+                    if (stack != 1)
+                    {
+                        sb.Append(addedAny ? ",s" : "/s");
+                        sb.Append(stack);
+
+                        addedAny = true;
+                    }
+                }
+                sb.Append(':');
+                sb.Append(itemId);
             }
-
-            return $"[i/{string.Join(",", item_tag_parts)}:{itemId}]";
-        }
-
-        public string MakeString(string itemId, int stack = 1, int prefix = 0)
-        {
-            PopulateItemTagParts(stack, prefix);
-
-            if (item_tag_parts.Count == 0)
-            {
-                return $"[i:{itemId}]";
-            }
-
-            return $"[i/{string.Join(",", item_tag_parts)}:{itemId}]";
+            return sb.ToString();
         }
     }
-    */
 
-    /*
-    extension(NameTagHandler _)
-    {
-        public string MakeString(string name)
-        {
-            return ""
-        }
-    }
-    */
+    // Already has a GenerateTag
+    // extension(NameTagHandler) { }
 
     extension(AchievementTagHandler)
     {
@@ -309,9 +303,14 @@ public static class ChatTags
 
     extension(GlyphTagHandler)
     {
+        // TODO: When will ReLogic fix this?
         /// <summary>
-        ///     Generates a glyph tag.
+        ///     Generates a generic glyph tag.
         /// </summary>
+        /// <remarks>
+        ///     This should generate a glyph whose visuals change based on the
+        ///     currently used controller but appears to be broken.
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GenerateTag(Glyphs glyph)
         {
@@ -319,7 +318,7 @@ public static class ChatTags
         }
 
         /// <summary>
-        ///     Generates a glyph tag.
+        ///     Generates an XBOX glyph tag.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GenerateXboxTag(int index)
@@ -328,16 +327,16 @@ public static class ChatTags
         }
 
         /// <summary>
-        ///     Generates a glyph tag.
+        ///     Generates an XBOX glyph tag.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GenerateXboxTag(Glyphs glyph)
         {
             return cached_tags_glyph_xbox[(int)glyph];
         }
-        
+
         /// <summary>
-        ///     Generates a glyph tag.
+        ///     Generates a PlayStation glyph tag.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GeneratePsTag(int index)
@@ -346,16 +345,16 @@ public static class ChatTags
         }
 
         /// <summary>
-        ///     Generates a glyph tag.
+        ///     Generates a PlayStation glyph tag.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GeneratePsTag(Glyphs glyph)
         {
             return cached_tags_glyph_ps[(int)glyph];
         }
-        
+
         /// <summary>
-        ///     Generates a glyph tag.
+        ///     Generates a Nintendo Switch glyph tag.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GenerateSwitchTag(int index)
@@ -364,7 +363,7 @@ public static class ChatTags
         }
 
         /// <summary>
-        ///     Generates a glyph tag.
+        ///     Generates a Nintendo Switch glyph tag.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GenerateSwitchTag(Glyphs glyph)
