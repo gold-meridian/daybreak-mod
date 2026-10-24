@@ -15,7 +15,7 @@ namespace Daybreak.ChatTags.V1;
 ///     parameters necessary for string drawing.
 ///     <br />
 ///     <br />
-///     Due to restrctions in how snippets are laid out, overriding
+///     Due to restrictions in how snippets are laid out, overriding
 ///     <see cref="TextSnippet.UniqueDraw"/> is still necessary if your unique
 ///     string rendering is not identical to the normal string size.
 ///     <br />

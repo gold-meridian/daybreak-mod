@@ -1,4 +1,5 @@
 ﻿using System;
+using Daybreak.ChatTags.V1;
 using Daybreak.Mathematics.V1;
 using Daybreak.Rendering.V1;
 using Daybreak.Resources.V1;
@@ -9,7 +10,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.UI.Chat;
 
-namespace Daybreak.ChatTags.V1;
+namespace Daybreak.ChatTags.CommonTags.V1;
 
 /// <summary>
 ///     A tag that provides common text formatting utilities.
