@@ -1,16 +1,14 @@
 ﻿using System;
-using Daybreak.ChatTags.V1;
 using Daybreak.Mathematics.V1;
 using Daybreak.Rendering.V1;
 using Daybreak.Resources.V1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
-using Terraria;
 using Terraria.GameContent;
 using Terraria.UI.Chat;
 
-namespace Daybreak.ChatTags.CommonTags.V1;
+namespace Daybreak.ChatTags.V1;
 
 /// <summary>
 ///     A tag that provides common text formatting utilities.
@@ -249,10 +247,8 @@ public sealed class FormattingTag : ChatTag
         }
     }
 
-    private static string Prefix => ModuleLoader.OwningMod is "Daybreak" or null ? "" : ModuleLoader.OwningMod + '_';
-
     /// <inheritdoc />
-    public override string TagName { get; } = $"{Prefix}dbf";
+    public override string TagName { get; } = "dbf";
 
     /// <inheritdoc />
     public override TextSnippet Parse(string text, Color baseColor = new(), string? options = null)

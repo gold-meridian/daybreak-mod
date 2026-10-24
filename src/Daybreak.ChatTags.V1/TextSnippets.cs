@@ -44,27 +44,12 @@ public interface IUniqueDrawString
     );
 }
 
-internal static partial class TextSnippets
+internal static class TextSnippets
 {
-    private static readonly Regex tag_format = TagFormatRegex();
-
     [OnLoad]
     private static void ApplyHooks()
     {
-        IL_ChatManager.ParseMessage += OverrideVanillaRegex;
-        IL_ChatManager.MayNeedParsing += OverrideVanillaRegex;
         IL_ChatManager.DrawColorCodedString_SpriteBatch_DynamicSpriteFont_IEnumerable1_Vector2_float_Vector2_Vector2_refInt32_Nullable1 += DrawColorCodedStringWithUniqueDrawString;
-    }
-
-    private static void OverrideVanillaRegex(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        while (c.TryGotoNext(MoveType.After, x => x.MatchLdsfld(typeof(ChatManager.Regexes), nameof(ChatManager.Regexes.Format))))
-        {
-            c.EmitPop();
-            c.EmitStaticDelegateUnsafe(() => tag_format);
-        }
     }
 
     private static void DrawColorCodedStringWithUniqueDrawString(ILContext il)
@@ -118,10 +103,4 @@ internal static partial class TextSnippets
         );
         c.EmitOr();
     }
-
-    // Changes to vanilla:
-    // - made '_' a valid character (for mod separation),
-    // - made max valid character count unlimited (from 10).
-    [GeneratedRegex(@"(?<!\\)\[(?<tag>[a-zA-Z_]+)(\/(?<options>[^:]+))?:(?<text>.+?)(?<!\\)\]")]
-    private static partial Regex TagFormatRegex();
 }
