@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Daybreak.Hooks.V1;
+﻿using Daybreak.Hooks.V1;
 using Daybreak.MonoMod.V1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

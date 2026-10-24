@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Daybreak.ChatTags.V1\Daybreak.ChatTags.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.MonoMod.V1\Daybreak.MonoMod.V1.csproj"/>
         <ProjectReference Include="..\Daybreak.Rendering.V1\Daybreak.Rendering.V1.csproj"/>
         <ProjectReference Include="..\Daybreak.Resources.V1\Daybreak.Resources.V1.csproj"/>
     </ItemGroup>
