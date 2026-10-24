@@ -1,0 +1,9 @@
+<Project>
+
+    <!-- Possible mitigation for modules being randomly dirtied in unrelated
+         builds?? -->
+    <ItemGroup Condition="'$(TmlBuildMod)' == 'false' And !Exists('$(MSBuildProjectDirectory)/build.txt')">
+        <AdditionalFiles Remove="build.txt"/>
+    </ItemGroup>
+
+</Project>
