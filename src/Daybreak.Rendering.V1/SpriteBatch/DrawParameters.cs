@@ -214,7 +214,9 @@ public struct DrawParameters
     }
 
     /// <summary>
-    ///     Sets a new origin while keeping the resolved position the same.
+    ///     Sets a new origin while preserving the rendered quad's placement
+    ///     at the current scale and rotation.  Subsequent changes to scale or
+    ///     rotation act around the new origin.
     /// </summary>
     public readonly DrawParameters WithOrigin(Origin newOrigin)
     {
@@ -223,7 +225,7 @@ public struct DrawParameters
 
         var result = this;
         {
-            result.Position += (newOriginPos - r.Origin) * r.Scale;
+            result.Position += Rotation.Rotate((newOriginPos - r.Origin) * r.Scale);
             result.Origin = newOrigin;
         }
 
