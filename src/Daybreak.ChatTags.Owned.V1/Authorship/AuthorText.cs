@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Terraria.ModLoader;
 
-namespace Daybreak.Common.Features.Authorship;
+namespace Daybreak.ChatTags.V1;
 
 /// <summary>
 ///     Utilities for dealing with authorship text.

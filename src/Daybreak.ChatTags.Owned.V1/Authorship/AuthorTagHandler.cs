@@ -1,11 +1,10 @@
-﻿using Daybreak.ChatTags.V1;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics.CodeAnalysis;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
-namespace Daybreak.Common.Features.Authorship;
+namespace Daybreak.ChatTags.V1;
 
 internal sealed class AuthorTagHandler : ChatTag
 {

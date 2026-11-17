@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Daybreak.Common.Features.Authorship;
+namespace Daybreak.ChatTags.V1;
 
 /// <summary>
 ///     An author tag to be automatically loaded and displayed in the Mods List

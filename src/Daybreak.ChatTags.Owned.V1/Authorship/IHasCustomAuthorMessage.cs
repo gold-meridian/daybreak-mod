@@ -6,7 +6,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 
-namespace Daybreak.Common.Features.Authorship;
+namespace Daybreak.ChatTags.V1;
 
 /// <summary>
 ///     When implemented by a <see cref="Mod" />, allows the mod to modify their
