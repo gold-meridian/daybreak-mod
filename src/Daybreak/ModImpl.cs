@@ -1,4 +1,4 @@
-﻿using Daybreak.Common.Features.Authorship;
+﻿using Daybreak.ChatTags.V1;
 using Terraria.ModLoader;
 
 namespace Daybreak;

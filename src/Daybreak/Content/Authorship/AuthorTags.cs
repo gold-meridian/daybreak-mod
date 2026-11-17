@@ -1,7 +1,7 @@
-﻿using Daybreak.Common.Features.Authorship;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Daybreak.ChatTags.V1;
 using Terraria;
 using Terraria.ModLoader;
 
