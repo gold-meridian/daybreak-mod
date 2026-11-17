@@ -64,7 +64,7 @@ public class ZoeyTag : DaybreakAuthorTag
 
         sb.Draw(
             icon.Value,
-            new Rectangle((int)position.X, (int)position.Y - 5, 26, 30),
+            new Rectangle((int)position.X, (int)position.Y - 4, 26, 30),
             Color.White
         );
     }
