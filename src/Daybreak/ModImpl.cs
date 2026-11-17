@@ -1,3 +1,4 @@
+﻿using Daybreak.Common.Features.Authorship;
 using Terraria.ModLoader;
 
 namespace Daybreak;
@@ -5,7 +6,7 @@ namespace Daybreak;
 /// <summary>
 ///     The <see cref="Mod" /> implementation for DAYBREAK.
 /// </summary>
-partial class ModImpl
+partial class ModImpl : IHasCustomAuthorMessage
 {
     /// <inheritdoc />
     public ModImpl()
@@ -13,4 +14,6 @@ partial class ModImpl
         // Handled by the asset generator.
         MusicAutoloadingEnabled = false;
     }
+
+    string IHasCustomAuthorMessage.GetAuthorText() => AuthorText.GetAuthorTooltip(this, null);
 }
