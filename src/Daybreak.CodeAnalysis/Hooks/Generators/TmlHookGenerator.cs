@@ -56,6 +56,8 @@ public sealed class TmlHookGenerator : IIncrementalGenerator
                     ".LoadData"
                 ),
 
+            new TypeHookDefinition("Terraria.ModLoader.GlobalLiquid"),
+
             new TypeHookDefinition("Terraria.ModLoader.GlobalNPC")
                .WithExclusions(
                     "SendExtraAI",
