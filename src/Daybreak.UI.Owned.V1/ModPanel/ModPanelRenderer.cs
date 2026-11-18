@@ -140,7 +140,7 @@ internal sealed class ModPanelRenderer
             else
             {
                 // TODO: Custom UIElement for this?
-                var ratingUp = UserInterface.ActiveInstance.MousePosition.Y < _rateButton.Dimensions.Y;
+                var ratingUp = UserInterface.ActiveInstance.MousePosition.Y < _rateButton.Dimensions.Center.Y;
 
                 if ((_ratedUp != true) && ratingUp)
                 {
