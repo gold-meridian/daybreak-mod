@@ -22,10 +22,7 @@ public interface IHasCustomAuthorMessage
     ///     Returns the author text to display.
     /// </summary>
     string GetAuthorText();
-}
 
-file static class CustomAuthorMessageImpl_TEMP
-{
     [OnLoad]
     private static void Load()
     {
