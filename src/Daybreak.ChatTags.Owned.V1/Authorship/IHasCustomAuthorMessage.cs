@@ -1,10 +1,4 @@
-﻿using Daybreak.Hooks.V1;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Reflection;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.ModLoader.UI;
+﻿using Terraria.ModLoader;
 
 namespace Daybreak.ChatTags.V1;
 
@@ -22,7 +16,8 @@ public interface IHasCustomAuthorMessage
     ///     Returns the author text to display.
     /// </summary>
     string GetAuthorText();
-
+    
+    /*
     [OnLoad]
     private static void Load()
     {
@@ -49,4 +44,5 @@ public interface IHasCustomAuthorMessage
 
         self._tooltip = authorMessageProvider.GetAuthorText();
     }
+    */
 }
