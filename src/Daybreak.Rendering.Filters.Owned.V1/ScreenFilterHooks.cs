@@ -214,6 +214,9 @@ file static class ScreenFilterRenderer
 
             if (remainingFilter is not null && p == remainingFilter.Priority)
             {
+                device.SetRenderTarget(target2);
+                device.Clear(Color.Transparent);
+
                 sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                 {
                     remainingFilter.Apply(target.Size(), sceneSize, sceneOffset);
