@@ -1,16 +1,19 @@
-﻿using JetBrains.Annotations;
+﻿using Daybreak.MonoMod.V1;
+using Daybreak.Rendering.V1;
+using JetBrains.Annotations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Daybreak.MonoMod.V1;
+using Daybreak.Hooks;
+using Daybreak.Hooks.V1;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
-namespace Daybreak.Hooks.V1;
+namespace Daybreak.Rendering.Filters.V1;
 
 file delegate bool ScreenFilterDefinition(
     SpriteBatch sb,
@@ -89,7 +92,12 @@ file static class ScreenFilterRenderer
 
         var tIndex = VariableIndex.Invalid;
         var t2Index = VariableIndex.Invalid;
+
+        var filterIndex = VariableIndex.Invalid;
         var value2Index = VariableIndex.Invalid;
+
+        var sceneSizeIndex = ParameterIndex.Invalid;
+        var sceneOffsetIndex = ParameterIndex.Invalid;
 
         c.GotoNext(
             MoveType.After,
@@ -100,9 +108,22 @@ file static class ScreenFilterRenderer
 
         c.GotoNext(
             MoveType.After,
+            i => i.MatchLdnull(),
+            i => i.MatchStloc(out filterIndex)
+        );
+
+        c.GotoNext(
+            MoveType.After,
             i => i.MatchLdloc(out int _),
             i => i.MatchCallvirt<LinkedListNode<Filter>>($"get_{nameof(LinkedListNode<>.Value)}"),
             i => i.MatchStloc(out value2Index)
+        );
+
+        c.Clone().GotoNext(
+            MoveType.After,
+            i => i.MatchLdarg(out sceneSizeIndex),
+            i => i.MatchLdarg(out sceneOffsetIndex),
+            i => i.MatchCallvirt<Filter>(nameof(Filter.Apply))
         );
 
         c.EmitLdloca((int)tIndex);
@@ -118,15 +139,20 @@ file static class ScreenFilterRenderer
             )!.GetMethod!
         );
 
+        c.EmitLdarg((int)sceneSizeIndex);
+        c.EmitLdarg((int)sceneOffsetIndex);
+
+        c.EmitLdnull();
+
         c.EmitDelegate(ApplyFiltersToPriority);
 
         // Run all remaining shaders if the VeryHigh priority was not reached
         c.GotoNext(
             MoveType.Before,
-            i => i.MatchLdloc(out int _),
-            i => i.MatchLdarg(out int _),
-            i => i.MatchCallvirt<GraphicsDevice>(nameof(GraphicsDevice.SetRenderTarget))
+            i => i.MatchCall(typeof(SystemLoader), nameof(SystemLoader.RequiresScreenTarget))
         );
+
+        c.MoveAfterLabels();
 
         c.EmitLdloca((int)tIndex);
         c.EmitLdloca((int)t2Index);
@@ -134,10 +160,25 @@ file static class ScreenFilterRenderer
         c.EmitLdloca(priorPriorityReference);
         c.EmitLdcI4((int)EffectPriority.VeryHigh);
 
+        c.EmitLdarg((int)sceneSizeIndex);
+        c.EmitLdarg((int)sceneOffsetIndex);
+
+        c.EmitLdloc((int)filterIndex);
+
         c.EmitDelegate(ApplyFiltersToPriority);
+
+        c.EmitLdnull();
+        c.EmitStloc((int)filterIndex);
     }
 
-    private static void ApplyFiltersToPriority(ref RenderTarget2D target, ref RenderTarget2D target2, ref EffectPriority? prior, EffectPriority nextPriority)
+    private static void ApplyFiltersToPriority(
+        ref RenderTarget2D target,
+        ref RenderTarget2D target2,
+        ref EffectPriority? prior,
+        EffectPriority nextPriority,
+        Vector2 sceneSize,
+        Vector2 sceneOffset,
+        Filter? remainingFilter = null)
     {
         if (ModLoader.isLoading)
         {
@@ -154,19 +195,33 @@ file static class ScreenFilterRenderer
 
         prior ??= EffectPriority.VeryLow;
 
+        var sb = Main.spriteBatch;
+
+        var device = Graphics.Device;
+
         for (var p = prior.Value; p <= nextPriority; p++)
         {
-            if (!FILTERS_BY_PRIORITY.TryGetValue(p, out var filters))
+            if (FILTERS_BY_PRIORITY.TryGetValue(p, out var filters))
             {
-                continue;
+                foreach (var filter in filters)
+                {
+                    if (filter(sb, device, target, target2, color))
+                    {
+                        Utils.Swap(ref target2, ref target);
+                    }
+                }
             }
 
-            foreach (var filter in filters)
+            if (remainingFilter is not null && p == remainingFilter.Priority)
             {
-                if (filter(Main.spriteBatch, Main.graphics.GraphicsDevice, target, target2, color))
+                sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                 {
-                    Utils.Swap(ref target2, ref target);
+                    remainingFilter.Apply(target.Size(), sceneSize, sceneOffset);
+                    sb.Draw(target, Vector2.Zero, device.Viewport.Bounds, Main.ColorOfTheSkies);
                 }
+                sb.End();
+
+                Utils.Swap(ref target2, ref target);
             }
         }
         prior = nextPriority;

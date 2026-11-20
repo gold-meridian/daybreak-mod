@@ -27,6 +27,7 @@
         <ProjectReference Include="..\Daybreak.Networking.V1\Daybreak.Networking.V1.csproj"/>
         <ProjectReference Include="..\Daybreak.Rendering.Buffers.V1\Daybreak.Rendering.Buffers.V1.csproj"/>
         <ProjectReference Include="..\Daybreak.Rendering.Buffers.Entities.V1\Daybreak.Rendering.Buffers.Entities.V1.csproj"/>
+        <ProjectReference Include="..\Daybreak.Rendering.Filters.Owned.V1\Daybreak.Rendering.Filters.Owned.V1.csproj"/>
         <ProjectReference Include="..\Daybreak.Rendering.V1\Daybreak.Rendering.V1.csproj"/>
         <ProjectReference Include="..\Daybreak.Resources.V1\Daybreak.Resources.V1.csproj"/>
         <ProjectReference Include="..\Daybreak.UI.Owned.V1\Daybreak.UI.Owned.V1.csproj"/>
